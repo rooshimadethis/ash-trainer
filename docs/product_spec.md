@@ -45,8 +45,10 @@ Ash creates personalized plans including:
 - **Workout Days**: Specific runs with distance/time/pace targets
 - **Intensity Levels**: Easy runs, tempo runs, intervals, long runs
 - **Rest Days**: Active recovery and complete rest
-- **Cross-Training**: Strength work, bodybuilding sessions (if applicable)
-- **Injury Prevention**: Mobility work, stretching routines, strength exercises
+- **Strength Training**: User-configurable pillar with priority settings (High/Med/Low)
+- **Mobility Work**: Stretching routines, dynamic warm-ups, recovery sessions
+- **Injury Prevention**: Targeted exercises and movement patterns
+- **Low-Impact Alternatives**: Cycling, swimming, elliptical (only for injury recovery)
 - **Progression**: Gradual build-up following proven training principles
 
 ---
@@ -68,7 +70,7 @@ Users can communicate their current state, and Ash adapts:
 | "I'm feeling a slight ache in my knees" | "Let's swap today's interval session for an easy recovery run and add some knee-strengthening exercises. Your goal confidence remains at 87%." | Reduces impact, adds preventive work |
 | "I have an unavoidable social event today" | "No problem! We can move today's long run to tomorrow and shift your rest day to today. This won't affect your goal timeline." | Reschedules within the week |
 | "I'm feeling weak today but can still do a little bit" | "I hear you. Let's do a light 20-minute easy run instead of the planned tempo. Recovery is part of training! Goal confidence: 85%." | Reduces intensity while maintaining consistency |
-| "I want to skip today" | "I understand rest is important, but you've already had 2 rest days this week. How about a gentle 15-minute walk? It'll help with recovery without adding stress. Your goal confidence would drop to 78% if we skip entirely." | Gentle pushback with alternatives |
+| "I want to skip today" | "I understand wanting a break. You've already had 2 rest days this week though—how about a gentle 15-minute walk instead? If we skip entirely, your goal confidence would drop to 78%. What feels right to you?" | Light pushback with choice |
 
 #### Conversation Flow
 - **Natural Language**: Users can type or speak naturally
@@ -134,8 +136,9 @@ Each workout type has a distinct color for instant recognition:
 | **Intervals** | Red | High-intensity speed work |
 | **Long Run** | Purple | Weekend long runs |
 | **Rest Day** | Light Gray | Complete rest |
-| **Cross-Training** | Green | Strength, cycling, swimming |
-| **Injury Prevention** | Teal | Mobility, stretching, PT exercises |
+| **Strength Training** | Green | Lifting, bodyweight circuits |
+| **Mobility** | Teal | Stretching, yoga, foam rolling |
+| **Low-Impact Alternative** | Cyan | Cycling, swimming (injury recovery only) |
 | **Race Day** | Gold | Goal race or tune-up race |
 
 **Multiple Workouts Per Day:**
@@ -421,7 +424,32 @@ WEEKLY VIEW WITH VACATION PERIOD
 
 ---
 
-### 5. Schedule Vacation / Time Off
+### 6. Nutrition & Fueling Guidance (General Tips Only)
+
+#### Scope
+Ash provides **general hydration and fueling tips**, especially for beginners who may be unfamiliar with endurance nutrition strategies. However, **specific meal planning and nutrition prescriptions are out of scope**.
+
+#### What Ash DOES Provide
+- **Hydration Reminders**: "Don't forget to hydrate before your long run!"
+- **General Fueling Strategies**: 
+  - "For runs over 90 minutes, consider bringing energy gels or chews"
+  - "Post-run recovery: aim for protein and carbs within 30-60 minutes"
+- **Race Day Basics**: "Avoid trying new foods on race day—stick with what you've practiced"
+- **Beginner Education**: Brief explanations of why fueling matters for performance
+
+#### What Ash Does NOT Provide
+- ❌ Specific calorie targets or macro breakdowns
+- ❌ Meal plans or recipes
+- ❌ Weight loss/gain nutrition programs
+- ❌ Supplement recommendations beyond general sports nutrition (gels, electrolytes)
+- ❌ Medical nutrition advice for health conditions
+
+#### Philosophy
+> "I can point you in the right direction for fueling your training, but nutrition is personal. For detailed meal planning, consult a registered dietitian or sports nutritionist."
+
+---
+
+### 7. Schedule Vacation / Time Off
 
 #### Proactive Planning
 Users can schedule time off in advance to prevent interruptions during busy periods or actual vacations.
@@ -445,16 +473,19 @@ When time off is scheduled, Ash:
 1. **Acknowledges**: "Got it! I've blocked out June 15-22 for your vacation 🏖️"
 2. **Adjusts Training Plan**: Redistributes workouts around the blocked period
 3. **Updates Goal Confidence**: Recalculates based on new timeline
-4. **Suggests Alternatives** (optional): "Would you like some light mobility exercises you can do on vacation, or complete rest?"
+4. **Turns Off Notifications**: No training reminders during this period
+5. **Ad-Hoc Exercise Access**: If you open the app during vacation, you can request optional exercises ("Want a quick hotel room workout?")
 
 **During Time Off:**
-- **No Training Notifications**: Ash stays quiet during blocked periods
-- **Easy Reactivation**: "Back early? Tap here to resume training" or "Have some free time? Log a one-off session without ending your vacation"
+- **No Training Notifications**: Ash stays completely quiet during vacation
+- **Optional Workouts**: Open the app anytime to request an ad-hoc exercise ("Give me a 20-min hotel room strength workout")
+- **No Pressure**: Workouts during vacation don't affect goal confidence or adherence metrics
+- **Early Return**: "Back early? Tap here to resume your regular training plan"
 
 **Return from Time Off:**
 - **Welcome Back**: "Welcome back! Hope you had a great vacation 🎉"
 - **Gentle Restart**: First workout back is always easy/recovery pace
-- **Plan Review**: "Here's your updated schedule. Your goal confidence is now 82%."
+- **Plan Adjustment**: Training plan automatically adjusted based on time off duration
 - **Flexibility**: "Feeling rusty? We can ease back in slower if needed."
 
 #### Smart Adjustments
@@ -475,15 +506,19 @@ When time off is scheduled, Ash:
 - Goal deadline may need extension
 - Ash proactively asks: "Your marathon is in 8 weeks, but you're taking 2 weeks off. Should we push the goal to 10 weeks, or keep the deadline and adjust the target?"
 
-#### Vacation Mode Options
+#### Vacation Duration Guidelines
 
-Users can customize their time-off experience:
+**Short Breaks (<1 week):**
+- Minimal impact on training plan
+- "Maintenance Mode": Keep the long run if possible, otherwise easy runs for fun
+- No stress, no notifications
+- If you open the app, request ad-hoc workouts anytime
 
-| Mode | Training | Notifications | Use Case |
-|------|----------|---------------|----------|
-| **Complete Rest** | None | None (except optional single check-in) | True vacation, injury recovery |
-| **Maintenance** | Optional light workouts suggested | Minimal (1 notification per 3 days) | Work travel, can fit in some runs |
-| **Flexible** | Suggested workouts, no pressure | Daily optional check-in | Busy period, will train if possible |
+**Long Breaks (>2 weeks):**
+- Treated as "Training Break"
+- On return, volume reduced by 20% for first week back
+- May require fitness re-assessment
+- Plan automatically adjusts timeline and goal confidence
 
 ---
 
@@ -515,13 +550,21 @@ Users can customize their time-off experience:
 - **Physiological Data**: Heart rate, pace, distance (if available via integrations)
 - **Environmental Factors**: Weather, terrain, altitude
 - **Life Context**: Work schedule, travel, stress levels
+- **Pillar Priorities**: User-defined importance of Running, Strength, and Mobility
 
 ### Coaching Personality
 - **Supportive**: Celebrates wins, empathizes with struggles
 - **Knowledgeable**: Explains training science in accessible terms
 - **Adaptive**: Learns user preferences (strict vs. flexible, detailed vs. simple)
-- **Motivational**: Provides encouragement without being pushy
+- **Motivational**: Provides encouragement with light pushback when helpful
 - **Honest**: Transparent about goal feasibility and progress
+- **Pattern-Aware**: Detects when frequent skipping signals deeper issues
+
+### Coaching Tone Strategy
+- **First Skip**: Empathetic exploration ("What's going on?")
+- **Light Pushback**: Shows impact with choice ("This would drop confidence to 78%—what feels right?")
+- **Frequent Pattern**: Dig deeper into root causes (motivation, burnout, goal misalignment)
+- **Never Guilt-Trip**: Focus on solutions, not blame
 
 ### Learning & Improvement
 - **Feedback Loop**: Users can rate workouts and Ash's suggestions

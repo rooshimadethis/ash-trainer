@@ -23,9 +23,9 @@ We will adopt a **Dynamic Progression Model** that shifts based on user experien
 
 ### **C. Out of Scope**
 Ash focuses on **training prescription**, not:
-*   **Nutrition/Fueling:** Users are responsible for their own diet. (Future: May add basic long-run fueling reminders)
+*   **Nutrition/Meal Planning:** Ash provides general hydration and fueling tips (especially for beginners), but does not create meal plans or prescribe specific diets.
 *   **Medical Diagnosis:** Persistent pain or injury requires professional evaluation
-*   **Cross-Training Programs:** Ash is built for running, strength, and mobility—not cycling/swimming coaching
+*   **Sport-Specific Cross-Training Programs:** Ash is built for running, strength, and mobility—not cycling/swimming coaching (these are only used as low-impact alternatives during injury recovery)
 
 ## 2. Holistic "Three-Pillar" Integration
 
@@ -140,6 +140,25 @@ A **microcycle** is a single week of training within a mesocycle. It balances st
 
 When a user has a target race, Ash structures training into distinct phases leading to a **taper**.
 
+#### **Race Types**
+
+Ash tracks multiple types of racing and athletic events:
+
+| Event Type | Icon/Color | Training Impact | Examples |
+|------------|------------|-----------------|----------|
+| **Goal Race** | 🏆 Gold star | Primary goal - all training builds toward this | Target marathon, first 10K |
+| **Tune-Up Race** | 🎯 Gold outline | Practice race - reduced training 2-3 days before | 5K before marathon, half marathon speed test |
+| **Fun Run / Casual Event** | 🏃 Orange dot | Social run - treated as a workout, not a race | Charity 5K, parkrun, team relay |
+| **Non-Running Event** | 📅 Purple | Other athletic events | Triathlon, obstacle course, hiking trip |
+
+#### **Smart Planning Around Events**
+
+When an event is added:
+1. **Goal Race**: Automatic taper period (reduced volume 1-3 weeks before depending on distance)
+2. **Tune-Up Race**: Light training 2-3 days before, recovery day after
+3. **Fun Run**: Slight intensity reduction day before, count as workout
+4. **Recovery**: Easy week scheduled post-race based on event distance and effort
+
 #### **Phase Structure**
 | Phase | Duration | Focus |
 |-------|----------|-------|
@@ -201,15 +220,16 @@ The "Ash Planning Prompts" must handle these scenarios rigorously.
         2.  **Boost Low Impact:** Replace with specific *Rehab/Prehab* (e.g., Glute bridges, hip mobility) or Upper Body Strength.
         3.  **Maintain Volume (Optional):** If pain persists after modifications, see cross-training protocol below.
 
-### **Cross-Training as a Last Resort**
-Ash does not prescribe cross-training (cycling, swimming, elliptical) as part of regular programming. It is only suggested when:
+### **Low-Impact Alternatives (Injury Recovery Only)**
+
+Ash does not prescribe low-impact alternatives (cycling, swimming, elliptical) as part of regular programming. These are only suggested when:
 1. User reports persistent pain that prevents running
 2. Intensity and volume reductions have not resolved the issue
 3. User wants to maintain cardiovascular fitness during recovery
 
 **Escalation Protocol:**
 *   **Days 1-3 of pain:** Reduce running intensity/volume, add mobility/rehab work
-*   **Days 3-5 of pain:** Suggest cross-training as temporary substitute if user requests it
+*   **Days 3-5 of pain:** Suggest low-impact alternatives as temporary substitute if user requests it
 *   **Days 5+ of pain:** Recommend medical consultation, pause running sessions
 
 **Medical Disclaimer:**
@@ -217,17 +237,19 @@ If pain persists beyond 5 days or worsens, Ash will:
 *   Recommend seeing a healthcare professional (physiotherapist, sports doctor)
 *   Pause all running sessions until user confirms clearance
 *   Offer optional strength/mobility for unaffected body parts
-*   Provide a "Return from Injury" protocol once cleared (see Section 6)
+*   Provide a "Return from Injury" protocol once cleared (see Section 7)
 
 **Philosophy:** "I'm here to help you train, not diagnose injuries. If something hurts for more than a few days, it's time to see a pro."
 
-**User-Initiated Cross-Training:**
-If the user proactively asks about cross-training:
+**User-Initiated Low-Impact Alternatives:**
+If the user proactively asks about cycling, swimming, or elliptical:
 > "Cycling/swimming can be a good low-impact alternative if you're dealing with an injury. However, Ash is designed specifically for running, strength, and mobility training. If you're looking to replace running long-term, I'd recommend finding a sport-specific coach or program. If this is just temporary while you heal, let me know what's going on, and we can adjust your plan."
 
 ### **C. Vacations**
-*   **Short (< 1 week):** "Maintenance Mode." Keep the Long Run if possible, otherwise just easy runs for fun (sightseeing). No stress.
-*   **Long (> 2 weeks):** Treat as a "Training Break." On return, re-test or reduce volume by 20% for the first cycle.
+*   **Short (<1 week):** "Maintenance Mode." Keep the Long Run if possible, otherwise just easy runs for fun (sightseeing). No stress, no notifications.
+*   **Long (>2 weeks):** Treat as a "Training Break." On return, re-test or reduce volume by 20% for the first cycle.
+*   **Ad-Hoc Exercises:** If user opens app during vacation, they can request optional workouts ("Give me a hotel room strength session"). These don't affect goal metrics.
+*   **Notifications:** All training reminders turned off during vacation period.
 
 ### **D. The "Swap Engine" (Mood & Pain)**
 *   **Scenario 1: Mood Swap:** "I just want to lift today." -> *Logic:* Check cost, allow if not a key session.
@@ -274,9 +296,12 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
     *   Suggest Maintenance Mode if life is overwhelming.
 
 #### **Philosophy**
-*   **Never guilt-trip:** "Missing a workout is not a failure. Let's figure out what works for you."
-*   **Distinguish fatigue from motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
-*   **Celebrate showing up, even small:** "A 10-minute walk still counts. You moved today."
+*   **First Skip - Empathetic Exploration:** "Totally okay to feel that way. What's going on?"
+*   **Light Pushback with Choice:** "You've had 2 rest days this week. If we skip today, confidence drops to 78%. How about a 15-min walk instead? What feels right?"
+*   **Frequent Pattern (3+ skips in 2 weeks):** Dig deeper into root causes—ask about motivation, stress, goal fit
+*   **Never Guilt-Trip:** "Missing a workout is not a failure. Let's figure out what works for you."
+*   **Distinguish Fatigue from Motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
+*   **Celebrate Small Wins:** "A 10-minute walk still counts. You moved today."
 
 ## 7. Return-to-Training Protocols
 
