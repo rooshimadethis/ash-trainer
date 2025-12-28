@@ -751,6 +751,39 @@ recovery day to avoid overtraining. Sound good?"
 
 ---
 
+## 7. Technical Architecture & Data Processing
+
+Ash uses a **Hybrid Local-First Architecture** to balance cost, performance, and AI intelligence.
+
+### **1. On-Device "Training Engine" (The Cortex)**
+*   **Role**: Deterministic logic engine (Pure Dart).
+*   **Responsibilities**:
+    *   Schedule management (moving dates, detecting conflicts).
+    *   Hard math (Goal confidence calculation, 10% volume rules).
+    *   Heuristic adjustments (Simple "Skip Day" actions).
+*   **Benefit**: Zero API cost, instant UI updates, offline capable.
+
+### **2. Cloud AI (The Coach)**
+*   **Role**: Empathetic reasoning and complex planning.
+*   **Model Strategy**: Tiered approach (Fast/Cheap for chat vs. Reasoning/Expensive for deep replanning).
+*   **Responsibilities**:
+    *   Motivation & Chat.
+    *   Complex injury replanning.
+    *   Analysis of subjective feedback.
+
+### **3. Tiered Context Memory**
+To maintain long-term coherence without token overload, Ash uses a 3-tier memory system:
+*   **Long-Term**: Narratives of user journey (>1 month).
+*   **Medium-Term**: Recent trends & deviations (7-30 days).
+*   **Short-Term**: High-fidelity logs for immediate planning (Last/Next 7 days).
+
+### **4. "Reset" Flow**
+If a user's life changes drastically (injury, long break), Ash avoids "sunk cost" errors by offering a **Reset Flow**. This redirects the user back to Onboarding to establish a fresh baseline plan.
+
+See [DATA_PROCESSING_PLAN.md](DATA_PROCESSING_PLAN.md) for full details.
+
+---
+
 ## 📝 Next Steps
 
 ### Immediate Actions
