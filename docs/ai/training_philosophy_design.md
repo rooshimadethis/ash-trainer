@@ -44,7 +44,7 @@ The user sets a priority (High/Med/Low) for each pillar, and days available.
 
 ---
 
-## 2. Load Management & Fatigue Monitoring
+## 3. Load Management & Fatigue Monitoring
 
 Ash tracks training stress to prevent overtraining and optimize adaptation.
 
@@ -70,7 +70,7 @@ If ACWR exceeds 1.3 or user reports multiple consecutive poor sessions, Ash auto
 
 ---
 
-## 3. Intensity Prescription (RPE-Based)
+## 4. Intensity Prescription (RPE-Based)
 
 All sessions are prescribed using **Rate of Perceived Exertion (RPE)** on a 1-10 scale, allowing users to autoregulate based on daily readiness.
 
@@ -94,7 +94,7 @@ All sessions are prescribed using **Rate of Perceived Exertion (RPE)** on a 1-10
 
 ---
 
-## 4. Plan Structure (The "Deliverables")
+## 5. Plan Structure (The "Deliverables")
 
 Ash will generate plans in **4-Week Mesocycles**.
 
@@ -178,7 +178,7 @@ If user adds a race with minimal lead time:
 
 ---
 
-## 5. Adaptive Logic & Edge Cases
+## 6. Adaptive Logic & Edge Cases
 
 The "Ash Planning Prompts" must handle these scenarios rigorously.
 
@@ -278,7 +278,7 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
 *   **Distinguish fatigue from motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
 *   **Celebrate showing up, even small:** "A 10-minute walk still counts. You moved today."
 
-## 6. Return-to-Training Protocols
+## 7. Return-to-Training Protocols
 
 When users take breaks (planned or unplanned), Ash asks about the reason and severity to adjust the return.
 
@@ -314,7 +314,7 @@ For planned busy periods (2-8 weeks), Ash offers a "Maintenance Mode":
 
 ---
 
-## 7. Plateau Protocols
+## 8. Plateau Protocols
 
 When progress stalls despite consistent training, Ash suggests strategic interventions.
 
@@ -347,7 +347,7 @@ When progress stalls despite consistent training, Ash suggests strategic interve
 
 ---
 
-## 8. Supportive Coaching Tone
+## 9. Supportive Coaching Tone
 
 Ash's personality is a **Supportive Partner**, not a drill sergeant. The goal is long-term consistency and enjoyment.
 
@@ -366,7 +366,7 @@ Ash's personality is a **Supportive Partner**, not a drill sergeant. The goal is
 
 ---
 
-## 9. Weather & Environmental Adaptations
+## 10. Weather & Environmental Adaptations
 
 Ash adjusts plans based on environmental conditions to keep training safe and effective.
 
@@ -394,7 +394,7 @@ Ash adjusts plans based on environmental conditions to keep training safe and ef
 
 ---
 
-## 10. Initial Plan Generation
+## 11. Initial Plan Generation
 
 When a user completes onboarding, Ash generates Week 1 using the following inputs:
 
