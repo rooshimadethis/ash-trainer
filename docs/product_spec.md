@@ -780,7 +780,7 @@ To maintain long-term coherence without token overload, Ash uses a 3-tier memory
 ### **4. "Reset" Flow**
 If a user's life changes drastically (injury, long break), Ash avoids "sunk cost" errors by offering a **Reset Flow**. This redirects the user back to Onboarding to establish a fresh baseline plan.
 
-See [DATA_PROCESSING_PLAN.md](DATA_PROCESSING_PLAN.md) for full details.
+See [Data Processing Plan](../architecture/data_processing.md) for full details.
 
 ---
 
@@ -796,6 +796,9 @@ See [DATA_PROCESSING_PLAN.md](DATA_PROCESSING_PLAN.md) for full details.
 - What fitness tracking integrations are essential for MVP?
 - Should Ash have a visual avatar or remain text-based?
 - How much training science education should be included?
+
+### Future Feature Ideas
+- **Voice Check-ins**: Morning audio messages from Ash using Text-to-Speech (TTS) for a more personal, engaging experience. TTS APIs are cost-effective (~$15/1M characters) and dramatically increase perceived personality and connection with the AI coach.
 
 ---
 
