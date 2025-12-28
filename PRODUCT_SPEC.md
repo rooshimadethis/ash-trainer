@@ -452,24 +452,6 @@ Users can customize their time-off experience:
 
 ---
 
-## 🔮 Future Feature Ideas
-
-### Phase 2 Enhancements
-- **Community Features**: Connect with other runners, share achievements
-- **Race Day Mode**: Specific guidance for race week and race day
-- **Nutrition Guidance**: Meal planning for training and recovery
-- **Sleep Tracking**: Integration with sleep data for recovery optimization
-- **Weather Integration**: Automatic adjustments based on extreme weather
-- **Route Suggestions**: AI-generated running routes based on training needs
-
-### Advanced Integrations
-- **Wearable Sync**: Garmin, Apple Watch, Fitbit, Strava
-- **Health Apps**: Apple Health, Google Fit
-- **Music Integration**: Curated playlists for different workout types
-- **Social Sharing**: Post achievements to social media
-
----
-
 ## 🎯 Success Metrics
 
 ### User Engagement
@@ -572,39 +554,11 @@ Ash needs access to workout data to provide intelligent coaching. For Android + 
 Implement multiple integration options to maximize compatibility:
 
 1. **Primary**: Health Connect integration (works with any wearable)
-2. **Alternative**: Manual FIT/GPX import (fallback, testing)
-3. **Future**: Suunto Cloud API (once Partner Program approved)
-
-**Why Health Connect First?**
-- Works with Suunto, Garmin, Polar, Apple Watch (via third-party sync), etc.
-- Future-proof as you expand to more users
-- Faster to implement than Partner Program approval
-- Users already familiar with Health Connect permissions
-
-**Implementation Steps:**
-1. Add `health` package to Flutter project
-2. Request Health Connect permissions in AndroidManifest.xml
-3. Implement data reading for:
-   - Workouts (distance, duration, pace, heart rate)
-   - Daily steps
-   - Sleep data (for recovery tracking)
-4. Create onboarding flow explaining Health Sync setup
-5. Add manual import as backup option
-
----
+2. **Alternative**: Manual FIT/GPX import (fallback, testing) + screenshot upload
 
 ---
 
 ### Health Connect: Sync Behavior & Capabilities
-
-**Can we pull data manually on app startup?**
-✅ **Yes!** Health Connect supports manual data pulls at any time, including app startup.
-
-**How it works:**
-- Use the `health` Flutter package's `getHealthDataFromTypes()` method
-- Specify a date range (e.g., last 7 days, last 30 days, all time)
-- Pull data on-demand when the app starts or when user requests a refresh
-- No need to wait for automatic background sync
 
 **Example Use Cases:**
 - **App Startup**: Pull last 7 days of workouts to show recent activity
@@ -649,19 +603,7 @@ While Health Connect provides comprehensive basic metrics, some advanced trainin
 - **Impact**: Limited insight into user's readiness to train
 - **Workaround**: Use sleep quality and resting HR trends as proxy for recovery
 
-**4. Running Dynamics**
-- **What's Missing**: Cadence, vertical oscillation, ground contact time, stride length
-- **What's Available**: Basic speed and distance
-- **Impact**: Can't analyze running form or efficiency
-- **Workaround**: Not critical for MVP, can add later via direct watch integration
-
-**5. Lactate Threshold / VO2 Max**
-- **What's Missing**: Watch-calculated fitness estimates
-- **What's Available**: VO2 max can be stored in Health Connect, but depends on watch writing it
-- **Impact**: Less precise fitness level assessment
-- **Workaround**: Estimate from race times or time trials
-
-**6. Workout Structure**
+**4. Workout Structure**
 - **What's Missing**: Interval details (warm-up, intervals, recovery, cool-down segments)
 - **What's Available**: Overall workout summary
 - **Impact**: Can't see if user completed structured workouts as prescribed
@@ -717,11 +659,6 @@ Users can upload screenshots showing:
 - Pain location diagrams
 - Physical therapy exercises
 - Doctor's notes or recommendations
-
-**4. Nutrition / Weight Tracking**
-- Meal photos for nutrition context
-- Weight trends from smart scales
-- Hydration tracking
 
 #### Implementation
 
