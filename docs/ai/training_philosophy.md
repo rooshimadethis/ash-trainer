@@ -429,7 +429,6 @@ When a user completes onboarding, Ash generates Week 1 using the following input
 | Activity level | Starting volume (Chronic Load baseline) |
 | Training types enjoyed | Pillar composition & exercise pool |
 | Available days | Microcycle structure |
-| Equipment access | Exercise selection constraints |
 | Injuries/limitations | Movement exclusions + caution flags |
 | Event date (if provided) | Periodization phases with taper |
 

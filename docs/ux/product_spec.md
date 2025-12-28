@@ -31,7 +31,6 @@
 Users can set various goal formats:
 - **Distance Milestone**: "I want to complete my first 10k in 8 weeks"
 - **Time-Based Performance**: "I want to run a 30-minute 5k as soon as possible"
-- **Long-Term Multi-Sport**: "I want to run a marathon next year while building muscle through bodybuilding"
 - **Maintenance Goals**: "I want to maintain my current 5k time while increasing weekly mileage"
 
 #### Goal Components
