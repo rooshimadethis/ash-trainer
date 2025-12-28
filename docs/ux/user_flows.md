@@ -121,7 +121,8 @@ flowchart TD
 
 ##### Morning Notification
 - **Time:** User-configured (default 7:00 AM)
-- **Content:** "Good morning! Here's what I have planned for you today 🏃"
+- **Content:** "Good morning! Here's what I have planned for you today [emoji]"
+  - Emoji changes based on workout type (can be multiple): 🏃 (run), 💪 (strength), 🧘 (mobility), 🛌 (rest)
 - **Action:** Tap to open app
 
 ##### Today's Workout Screen
@@ -166,9 +167,7 @@ flowchart TD
   - 5-6: Moderate
   - 7-8: Hard
   - 9-10: Maximum effort
-- **Optional Fields:**
-  - Notes (voice or text)
-  - How you felt (emoji picker)
+- **Optional Field:**
   - Any pain/discomfort/other things I should know? (flags for Ash)
 - **Ash Response:**
   - "Nice work! That RPE tells me you're recovering well."
@@ -206,23 +205,17 @@ flowchart TD
 
 #### Screen Details
 
-##### Add Vacation Screen
+##### Add Time Off Screen
 - **Title:** "Schedule Time Off"
 - **Date Picker:** Start date → End date
-- **Dropdown:** "What type of break?"
-  - 🏖️ Vacation (complete rest)
-  - 🧳 Work travel (limited access)
-  - 📚 Life event (busy period)
-  - 🔄 Recovery week (planned deload)
-- **Vacation Mode Selection:**
-  | Mode | Description | Calendar Display |
-  |------|-------------|------------------|
-  | Complete Rest | No workouts, notifications off | 🏖️ Solid block |
-  | Maintenance | Light optional workouts available | 🧘 Dotted pattern |
-  | Flexible | Ad-hoc workouts on request | ⏸️ Outline only |
+- **Behavior:**
+  - No scheduled workouts during this period
+  - Notifications turned off
+  - If user opens app, they can request ad-hoc workouts for that day
+  - Calendar displays blocked period with 📴 icon
 
 ##### Ash's Response Screen
-- **Acknowledgment:** "Got it! I've blocked out June 15-22 for your vacation 🏖️"
+- **Acknowledgment:** "Got it! I've blocked out June 15-22 for time off 📴"
 - **Training Adjustments:**
   - "I've rescheduled your long run to June 14"
   - "You'll have an easy comeback workout on June 23"
@@ -231,10 +224,10 @@ flowchart TD
   - **After:** 89% confidence
   - "This won't meaningfully affect your marathon goal."
 - **What Happens:**
-  - ✅ No push notifications during vacation
-  - ✅ Open app anytime for ad-hoc workouts
-  - ✅ Workouts don't count toward goal metrics
-- **CTA:** "Confirm Vacation" / "Adjust Dates"
+  - ✅ No push notifications during time off
+  - ✅ Open app anytime to request ad-hoc workouts for that day
+  - ✅ Ad-hoc workouts don't count toward goal metrics
+- **CTA:** "Confirm Time Off" / "Adjust Dates"
 
 **Philosophy Link:** Maps to **Schedule Vacation / Time Off** ([product_spec.md:452-522](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/product_spec.md#L452-L522))
 
@@ -470,11 +463,18 @@ I'll be here after the race to celebrate. Go get it! 🏆"
 
 ```
 ┌─────────────────────────────────────┐
+│  Ash Trainer            👤 Profile  │  ← App Bar
+├─────────────────────────────────────┤
 │         Bottom Navigation           │
 ├─────────────────────────────────────┤
-│  🏠 Today  │  📅 Calendar  │  💬 Chat  │  👤 Profile  │
+│  🏠 Today  │  📅 Calendar  │  💬 Chat  │
 └─────────────────────────────────────┘
 ```
+
+#### App Bar (All Screens)
+- **Left:** App title or screen title
+- **Right:** Profile icon (👤)
+  - Tap to open Profile screen
 
 #### Tab 1: Today (Home)
 - Hero workout card (next scheduled session)
@@ -488,7 +488,7 @@ I'll be here after the race to celebrate. Go get it! 🏆"
 - Month view toggle
 - Color-coded workout badges
 - Tap day → Workout details
-- Add event/vacation button
+- Add event/time off button
 
 #### Tab 3: Chat with Ash
 - Conversational interface
@@ -496,7 +496,7 @@ I'll be here after the race to celebrate. Go get it! 🏆"
 - Voice input option
 - Chat history saved
 
-#### Tab 4: Profile
+#### Profile (Accessed from App Bar)
 - User stats (total miles, workouts completed)
 - Goal history
 - Settings (notifications, integrations)
@@ -545,32 +545,6 @@ I'll be here after the race to celebrate. Go get it! 🏆"
 - **Learns Patterns:** If user consistently works out at 6:00 AM, suggest moving morning check-in to 5:45 AM
 - **Context-Aware:** No reminders during scheduled vacation
 - **Weather Alerts:** "It's going to rain this afternoon—want to move your run to the morning?"
-
----
-
-## 📊 Success Metrics (How We Measure These Flows)
-
-### Onboarding
-- ✅ Completion rate (% who finish onboarding)
-- ✅ Time to first workout logged
-- ✅ Drop-off points (which screen loses users?)
-
-### Daily Loop
-- ✅ Morning notification open rate
-- ✅ Workout completion rate (planned vs actual)
-- ✅ Adjustment requests (how often users chat with Ash)
-- ✅ Post-workout logging rate
-
-### Engagement
-- ✅ Weekly active users
-- ✅ Average session duration
-- ✅ Streaks (consecutive training days)
-- ✅ Calendar interaction rate
-
-### Goal Achievement
-- ✅ Users hitting goal confidence >90%
-- ✅ Actual goal completion rate
-- ✅ Goal adjustments (deadline changes, target changes)
 
 ---
 
