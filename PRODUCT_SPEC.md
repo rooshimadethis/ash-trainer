@@ -104,7 +104,201 @@ Users can communicate their current state, and Ash adapts:
 
 ---
 
-### 4. Injury Prevention & Recovery
+### 4. Training Calendar
+
+#### Visual Planning Overview
+A beautiful, interactive calendar that shows users their entire training plan at a glance, with clear visual distinction between planned and completed workouts.
+
+#### Calendar Views
+
+**Weekly View (Default)**
+- Horizontal scrollable week-by-week layout
+- Each day shows color-coded workout badges
+- Compact view perfect for quick daily checks
+- Current day highlighted with special border/glow
+
+**Monthly View**
+- Traditional calendar grid layout
+- Color dots or mini-badges for each workout
+- Tap any day to see full workout details
+- Swipe between months
+
+#### Color Coding System
+
+Each workout type has a distinct color for instant recognition:
+
+| Workout Type | Color | Example |
+|--------------|-------|---------|
+| **Easy Run** | Soft Blue | Recovery runs, base building |
+| **Tempo Run** | Orange | Sustained effort, lactate threshold |
+| **Intervals** | Red | High-intensity speed work |
+| **Long Run** | Purple | Weekend long runs |
+| **Rest Day** | Light Gray | Complete rest |
+| **Cross-Training** | Green | Strength, cycling, swimming |
+| **Injury Prevention** | Teal | Mobility, stretching, PT exercises |
+| **Race Day** | Gold | Goal race or tune-up race |
+
+**Multiple Workouts Per Day:**
+- Show multiple color badges stacked or side-by-side
+- Example: Morning easy run (blue) + evening strength (green)
+- Tap to expand and see all workouts for that day
+
+#### Planned vs. Completed
+
+**Future Days (Planned):**
+- Color badges with **outlined/hollow** style
+- Subtle, lighter appearance
+- Shows what Ash has planned
+
+**Past Days (Completed):**
+- Color badges **filled solid**
+- Vibrant, bold appearance
+- Shows what user actually did
+- Checkmark icon overlay for completed workouts
+
+**Past Days (Missed):**
+- Grayed out or crossed-out badge
+- Shows planned workout that wasn't completed
+- Tap to see why (user skipped, rescheduled, etc.)
+
+**Today:**
+- Special highlight (border, glow, or background color)
+- Shows both planned and completion status
+- Updates in real-time as user logs workout
+
+#### Visual Examples
+
+```
+WEEKLY VIEW (Horizontal Scroll)
+┌─────────────────────────────────────────────────────────┐
+│  Mon 12/23   Tue 12/24   Wed 12/25   Thu 12/26   Fri... │
+│  ┌────────┐  ┌────────┐  ┌────────┐  ┌────────┐         │
+│  │ [BLUE] │  │ [RED]  │  │ [GRAY] │  │ [BLUE] │         │
+│  │  ✓ 5K  │  │ ✓ INT  │  │  REST  │  │ ○ 8K   │  ←Today │
+│  │ [GREEN]│  │        │  │        │  │ [TEAL] │         │
+│  │  ✓ STR │  │        │  │        │  │ ○ MOB  │         │
+│  └────────┘  └────────┘  └────────┘  └────────┘         │
+│  (completed) (completed)  (rest)     (planned)           │
+└─────────────────────────────────────────────────────────┘
+
+MONTHLY VIEW (Grid)
+┌──────────────────────────────────────────┐
+│         December 2024                    │
+│  S   M   T   W   T   F   S              │
+│  1   2   3   4   5   6   7              │
+│      ●   ●●  ○   ●   ○   ●              │
+│  8   9  10  11  12  13  14              │
+│  ○   ●   ●   ○   ●●  ○   ●              │
+│ 15  16  17  18  19  20  21              │
+│  ●   ○   ●   ●   ○   ●   ⭐             │
+│ 22  23  24  25  26  27  28              │
+│  ●   ●●  ●   ○   ●○  ○   ○              │
+│ (● = completed, ○ = planned, ⭐ = race)  │
+└──────────────────────────────────────────┘
+```
+
+#### Interactive Features
+
+**Tap on a Day:**
+- Opens detailed view showing:
+  - All workouts for that day (planned and/or completed)
+  - Workout details (distance, pace, duration, notes)
+  - Option to log workout if not yet completed
+  - Option to adjust/reschedule if planned
+
+**Long Press on a Day:**
+- Quick actions menu:
+  - "Mark as complete"
+  - "Skip this workout"
+  - "Reschedule to..."
+  - "Add note"
+
+**Swipe Gestures:**
+- Swipe left/right to navigate weeks/months
+- Pull down to refresh from Health Connect
+
+**Filter Options:**
+- Toggle workout types on/off (e.g., hide rest days)
+- Show only completed workouts
+- Show only upcoming workouts
+- Highlight specific workout types
+
+#### Workout Badges Design
+
+**Badge Components:**
+- **Color**: Workout type
+- **Icon**: Small icon representing activity (🏃 run, 💪 strength, 🧘 mobility)
+- **Text**: Short label (e.g., "5K Easy", "Intervals", "Rest")
+- **Status Indicator**: 
+  - ✓ Checkmark for completed
+  - ○ Hollow circle for planned
+  - ✗ X for missed/skipped
+
+**Example Badge Designs:**
+
+```
+Completed Easy Run:
+┌──────────────┐
+│ 🏃 5K Easy   │  ← Solid blue background
+│      ✓       │  ← Checkmark
+└──────────────┘
+
+Planned Tempo Run:
+┌──────────────┐
+│ 🏃 Tempo 8K  │  ← Outlined orange border
+│      ○       │  ← Hollow circle
+└──────────────┘
+
+Multiple Workouts:
+┌──────────────┐
+│ 🏃 5K ✓      │  ← Blue (completed)
+│ 💪 Strength○ │  ← Green (planned)
+└──────────────┘
+```
+
+#### Smart Features
+
+**Streak Tracking:**
+- Visual indicator of consecutive training days
+- "🔥 7-day streak!" badge on calendar
+- Encourages consistency
+
+**Progress Indicators:**
+- Weekly completion percentage
+- "4/5 workouts completed this week"
+- Progress bar showing adherence to plan
+
+**Adaptive Highlighting:**
+- Highlight weeks with important milestones
+- Show taper weeks before races
+- Indicate peak training weeks
+
+**Goal Countdown:**
+- Show days until goal race/deadline
+- "42 days until marathon!" at top of calendar
+- Visual progress toward goal date
+
+#### Integration with Other Features
+
+**Goal Confidence:**
+- Calendar shows color gradient based on confidence
+- Green weeks = on track
+- Yellow/orange weeks = falling behind
+- Tap to see confidence breakdown
+
+**Vacation Mode:**
+- Blocked-out dates shown with special pattern/color
+- "🏖️ Vacation" label
+- No workouts scheduled during this time
+
+**Injury Prevention:**
+- Warning indicators if training load is too high
+- Suggested rest days highlighted
+- Recovery weeks visually distinct
+
+---
+
+### 5. Injury Prevention & Recovery
 
 #### Proactive Prevention
 - **Warm-Up Routines**: Dynamic stretching before runs
@@ -149,7 +343,6 @@ When time off is scheduled, Ash:
 
 **During Time Off:**
 - **No Training Notifications**: Ash stays quiet during blocked periods
-- **Optional Check-In**: Single notification: "Hope you're enjoying your time off! See you on June 23rd 👋"
 - **Easy Reactivation**: "Back early? Tap here to resume training" or "Have some free time? Log a one-off session without ending your vacation"
 
 **Return from Time Off:**
@@ -624,18 +817,15 @@ recovery day to avoid overtraining. Sound good?"
 ## 📝 Next Steps
 
 ### Immediate Actions
-1. **Validate Concept**: User research with target runners
-2. **Design Mockups**: Create UI/UX designs for core flows
-3. **Technical Architecture**: Define tech stack and infrastructure
-4. **MVP Scope**: Prioritize features for initial release
-5. **Prototype**: Build working prototype for testing
+1. **Design Mockups**: Create UI/UX designs for core flows
+2. **Technical Architecture**: Define tech stack and infrastructure
+3. **MVP Scope**: Prioritize features for initial release
+4. **Prototype**: Build working prototype for testing
 
 ### Questions to Explore
 - What fitness tracking integrations are essential for MVP?
 - Should Ash have a visual avatar or remain text-based?
 - How much training science education should be included?
-- What's the monetization strategy (freemium, subscription, one-time purchase)?
-- How do we handle users with medical conditions or injuries?
 
 ---
 

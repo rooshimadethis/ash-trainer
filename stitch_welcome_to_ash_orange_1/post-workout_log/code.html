@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Post-Workout Log</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ff4400",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101622",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1e2430",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "1rem", "lg": "1.5rem", "xl": "2rem", "2xl": "2.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>.no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased selection:bg-primary selection:text-white">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-24">
+<header class="sticky top-0 z-50 flex items-center justify-between bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 pb-2">
+<button class="group flex h-10 w-10 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-[#111318] dark:text-white shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-[#111318] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Workout Complete</h2>
+<button class="group flex h-10 w-10 items-center justify-center rounded-full bg-surface-light dark:bg-surface-dark text-[#111318] dark:text-white shadow-sm transition-transform active:scale-95">
+<span class="material-symbols-outlined">close</span>
+</button>
+</header>
+<div class="px-4 py-2">
+<div class="relative flex flex-col justify-end overflow-hidden rounded-xl bg-[#111318] min-h-[220px] shadow-lg" data-alt="Runner stretching legs during sunset with vibrant colors" style='background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 50%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDw5oZmb8On_-zGWnWyb5jzc7bW1ER8fO8a33IOt_H5YYePA06YisPcRtEhM8a-yhANVsEzX2BqbnPX7_bPjVwWSsLby0zRMlG1y1-Za47SiEzE_RzVkVG260WGBA_6z7jdBKbAocxH_igjWKVUdm9cMvvPV1FrSHV6zZ_5Zb1JWKSZsodYkkgknEmIbICVam5ec8uALmTeB9NCnROq3mOWxykiqMNbrwplpiqsfEGGqbjq_RahZTbDAgx6GLObMihXA8X61PoLtQ"); background-size: cover; background-position: center;'>
+<div class="flex flex-col p-6">
+<div class="mb-2 flex items-center gap-2">
+<div class="flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-primary text-white">
+<span class="material-symbols-outlined text-[14px]">smart_toy</span>
+</div>
+<span class="text-xs font-bold uppercase tracking-wider text-white/80">Ash says:</span>
+</div>
+<p class="text-white text-3xl font-bold leading-tight tracking-tight">Great job, Athlete!</p>
+<p class="text-white/80 text-sm mt-1">You crushed that 5k. Pace was solid.</p>
+</div>
+</div>
+</div>
+<div class="px-4 pt-4">
+<div class="flex flex-wrap gap-3">
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5">
+<p class="text-[#637588] dark:text-[#9ca6ba] text-xs font-bold uppercase tracking-wider">Distance</p>
+<p class="text-[#111318] dark:text-white text-xl font-bold leading-tight">5.0 <span class="text-sm font-normal text-[#637588] dark:text-[#9ca6ba]">km</span></p>
+</div>
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5">
+<p class="text-[#637588] dark:text-[#9ca6ba] text-xs font-bold uppercase tracking-wider">Time</p>
+<p class="text-[#111318] dark:text-white text-xl font-bold leading-tight">28:45</p>
+</div>
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5">
+<p class="text-[#637588] dark:text-[#9ca6ba] text-xs font-bold uppercase tracking-wider">Avg Pace</p>
+<p class="text-[#111318] dark:text-white text-xl font-bold leading-tight">5:45 <span class="text-sm font-normal text-[#637588] dark:text-[#9ca6ba]">/km</span></p>
+</div>
+</div>
+</div>
+<div class="px-4 pt-8">
+<div class="flex items-center justify-between pb-4">
+<h3 class="text-[#111318] dark:text-white text-xl font-bold">How hard was that?</h3>
+<span class="rounded-full bg-primary/10 px-3 py-1 text-sm font-bold text-primary">RPE 7</span>
+</div>
+<div class="rounded-xl bg-surface-light dark:bg-surface-dark p-6 shadow-sm border border-transparent dark:border-white/5">
+<div class="flex w-full items-center gap-4">
+<span class="text-xs font-bold text-[#637588] dark:text-[#9ca6ba]">Easy</span>
+<div class="relative flex h-8 flex-1 items-center">
+<div class="absolute w-full h-2 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
+<div class="h-full w-[70%] bg-gradient-to-r from-emerald-400 via-yellow-400 to-primary rounded-full"></div>
+</div>
+<div class="absolute w-full flex justify-between px-1 pointer-events-none opacity-30">
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+<div class="w-0.5 h-1 bg-black dark:bg-white"></div>
+</div>
+<div class="absolute left-[70%] h-7 w-7 rounded-full border-4 border-surface-light dark:border-surface-dark bg-primary shadow-lg cursor-pointer transform -translate-x-1/2 hover:scale-110 transition-transform"></div>
+</div>
+<span class="text-xs font-bold text-[#637588] dark:text-[#9ca6ba]">Max</span>
+</div>
+<div class="mt-4 text-center">
+<p class="text-sm font-medium text-[#111318] dark:text-white">Hard Activity</p>
+<p class="text-xs text-[#637588] dark:text-[#9ca6ba]">You could maintain this pace for a bit longer, but it was tough.</p>
+</div>
+</div>
+</div>
+<div class="px-4 pt-8">
+<h3 class="text-[#111318] dark:text-white text-xl font-bold pb-4">How does your body feel?</h3>
+<div class="grid grid-cols-2 gap-3 @[350px]:grid-cols-4">
+<button class="group relative flex flex-col items-center gap-2 rounded-xl bg-gradient-to-br from-orange-500 to-red-600 p-4 shadow-md transition-all active:scale-95 ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-white/20 text-white">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<span class="text-sm font-bold text-white">Strong</span>
+<div class="absolute top-2 right-2 h-2 w-2 rounded-full bg-white"></div>
+</button>
+<button class="group flex flex-col items-center gap-2 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-[#637588] dark:text-[#9ca6ba]">
+<span class="material-symbols-outlined">battery_low</span>
+</div>
+<span class="text-sm font-medium text-[#637588] dark:text-[#9ca6ba] group-hover:text-[#111318] dark:group-hover:text-white">Tired</span>
+</button>
+<button class="group flex flex-col items-center gap-2 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-[#637588] dark:text-[#9ca6ba]">
+<span class="material-symbols-outlined">healing</span>
+</div>
+<span class="text-sm font-medium text-[#637588] dark:text-[#9ca6ba] group-hover:text-[#111318] dark:group-hover:text-white">Sore</span>
+</button>
+<button class="group flex flex-col items-center gap-2 rounded-xl bg-surface-light dark:bg-surface-dark p-4 shadow-sm border border-transparent dark:border-white/5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95">
+<div class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-[#637588] dark:text-[#9ca6ba]">
+<span class="material-symbols-outlined">sentiment_satisfied</span>
+</div>
+<span class="text-sm font-medium text-[#637588] dark:text-[#9ca6ba] group-hover:text-[#111318] dark:group-hover:text-white">Good</span>
+</button>
+</div>
+</div>
+<div class="px-4 pt-8 pb-4">
+<h3 class="text-[#111318] dark:text-white text-xl font-bold pb-4">Anything else for Ash?</h3>
+<div class="relative">
+<textarea class="w-full h-32 resize-none rounded-xl border-none bg-surface-light dark:bg-surface-dark p-4 text-[#111318] dark:text-white placeholder-gray-400 dark:placeholder-gray-600 shadow-sm focus:ring-2 focus:ring-primary outline-none" placeholder="E.g. Right knee felt a bit tight around km 3..."></textarea>
+<button class="absolute bottom-4 right-4 flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-orange-400 to-primary text-white shadow-md transition-transform active:scale-95 hover:brightness-110">
+<span class="material-symbols-outlined text-[20px]">mic</span>
+</button>
+</div>
+</div>
+<div class="fixed bottom-0 left-0 z-40 w-full bg-gradient-to-t from-background-light dark:from-background-dark via-background-light/90 dark:via-background-dark/90 to-transparent pb-8 pt-12 px-4">
+<button class="relative w-full overflow-hidden rounded-full bg-gradient-to-r from-orange-500 to-red-600 py-4 text-center font-bold text-white shadow-xl shadow-primary/30 transition-transform active:scale-[0.98] group">
+<span class="relative z-10 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check_circle</span>
+                    Save &amp; Analyze
+                </span>
+<div class="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:animate-[shimmer_1.5s_infinite]"></div>
+</button>
+</div>
+</div>
+
+</body></html>
