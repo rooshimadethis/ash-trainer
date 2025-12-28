@@ -130,6 +130,40 @@ A **microcycle** is a single week of training within a mesocycle. It balances st
 
 **Note:** This is a template for a **4-day running week** with **2 strength sessions**. Ash customizes based on user's pillar priorities, available days, and current mesocycle week (Week 1-4).
 
+### **Event-Based Periodization (Race Goal)**
+
+When a user has a target race, Ash structures training into distinct phases leading to a **taper**.
+
+#### **Phase Structure**
+| Phase | Duration | Focus |
+|-------|----------|-------|
+| **Base** | 4-8 weeks | Volume building, aerobic foundation, injury-proofing |
+| **Build** | 4-6 weeks | Race-specific intensity, longer intervals, goal pace work |
+| **Peak** | 2-3 weeks | Highest intensity + volume week, sharpening |
+| **Taper** | 1-3 weeks | Volume reduction, maintain intensity, freshness |
+
+#### **Taper Protocols by Race Distance**
+
+| Race | Taper Length | Volume Reduction | Intensity |
+|------|--------------|------------------|-----------|
+| **5K** | 7-10 days | -30% week 1, -50% final 3-4 days | Maintain with short, sharp strides |
+| **10K** | 10-14 days | -30% week 1, -50% week 2 | 1-2 short tempo/interval sessions |
+| **Half Marathon** | 2 weeks | -30% week 1, -50% week 2 | One race pace tune-up |
+| **Marathon** | 3 weeks | -20% W1, -40% W2, -60% W3 | One moderate long run W1, easy thereafter |
+
+#### **Taper Principles**
+*   **Reduce volume, NOT intensity:** Keep some fast running to maintain neuromuscular sharpness
+*   **Protect sleep and recovery:** This is when adaptation happens
+*   **Strength during taper:** Reduce to 1 light maintenance session, no heavy legs in final week
+*   **Avoid new stressors:** No new shoes, foods, or training routes race week
+*   **Mental preparation:** Ash can offer pre-race confidence prompts
+
+#### **Short Notice Races (<3 weeks out)**
+If user adds a race with minimal lead time:
+*   Skip Build phase, go straight to abbreviated taper
+*   Suggest treating as "training race" (lower expectations, useful experience)
+*   Offer post-race analysis to inform future training
+
 ### **Monthly Mesocycle Logic (3 Steps Forward, 1 Back)**
 1.  **Week 1:** Base Volume
 2.  **Week 2:** Progression (+10% volume or added intensity)
@@ -172,7 +206,47 @@ The "Ash Planning Prompts" must handle these scenarios rigorously.
     *   *Action:* Swap today's Run for "Upper Body Strength" or "Knee-Friendly Mobility".
     *   *Ripple Effect:* Flag the next run for a "Pain Check-in" before starting.
 
----
+### **E. Mental Health & Motivation Days**
+
+When a user wants to skip a workout and doesn't mention illness, injury, or scheduling conflicts, Ash explores motivation before making adjustments.
+
+#### **Detection Triggers**
+*   User says: "I don't feel like it today" / "Not in the mood" / "Can I skip?"
+*   Multiple skipped sessions without explanation
+*   Declining session RPE engagement (not rating workouts)
+
+#### **Conversation Flow**
+1.  **Acknowledge without judgment:**
+    > "Totally okay to feel that way. Can I ask—what's going on?"
+    
+2.  **Offer options (not a quiz):**
+    > "Are you more tired than usual, stressed about something, or just not feeling motivated?"
+
+3.  **Branch based on response:**
+
+| Response | Ash's Action |
+|----------|--------------|
+| **"I'm exhausted / burnt out"** | Suggest rest day or light mobility. Check ACWR—may trigger early deload week. |
+| **"Stressed / life stuff"** | Offer a "mood boost" workout: short, easy, feel-good (e.g., 20-min walk or light yoga). No pressure. |
+| **"Just not motivated"** | Explore further: "Is it this specific workout, or training in general right now?" |
+| **"This workout feels boring"** | Offer swap: different exercise, outdoor vs. gym, music/podcast suggestion. |
+| **"Training feels pointless"** | Revisit goals: "Let's check in on what you're training for. Has anything changed?" |
+
+#### **Program Adjustments for Low Motivation**
+*   **Short-term (1-2 days):** Allow skips or swaps without guilt. "One rest day won't hurt."
+*   **Pattern detected (3+ days):** 
+    *   Reduce frequency: "Let's try 3 days this week instead of 4."
+    *   Shorten sessions: "What if we did 20-minute workouts for a bit?"
+    *   Change variety: Introduce new exercises, routes, or cross-training.
+*   **Extended slump (1+ weeks):**
+    *   Offer "Reset Week": All easy/fun sessions, no performance expectations.
+    *   Revisit onboarding goals: "Your goal was X—does that still feel right?"
+    *   Suggest Maintenance Mode if life is overwhelming.
+
+#### **Philosophy**
+*   **Never guilt-trip:** "Missing a workout is not a failure. Let's figure out what works for you."
+*   **Distinguish fatigue from motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
+*   **Celebrate showing up, even small:** "A 10-minute walk still counts. You moved today."
 
 ## 6. Return-to-Training Protocols
 
@@ -286,4 +360,33 @@ Ash adjusts plans based on environmental conditions to keep training safe and ef
 
 ### **Philosophy**
 *   "Training is important, but your health and safety come first."
-*   "A modified workout is better than a skipped workout or an injury." 
+*   "A modified workout is better than a skipped workout or an injury."
+
+---
+
+## 10. Initial Plan Generation
+
+When a user completes onboarding, Ash generates Week 1 using the following inputs:
+
+| Onboarding Input | Mapped To |
+|------------------|-----------|
+| Goal type | Pillar priority & periodization model (Pyramidal vs. Polarized) |
+| Activity level | Starting volume (Chronic Load baseline) |
+| Training types enjoyed | Pillar composition & exercise pool |
+| Available days | Microcycle structure |
+| Equipment access | Exercise selection constraints |
+| Injuries/limitations | Movement exclusions + caution flags |
+| Event date (if provided) | Periodization phases with taper |
+
+### Starting Volume Estimates
+
+| Activity Level | Est. Weekly Running | Est. Strength Sessions |
+|----------------|---------------------|------------------------|
+| Just getting started | 10-15 km | 1-2x (short, bodyweight) |
+| Casually active | 15-25 km | 2x |
+| Regularly training | 25-40 km | 2-3x |
+| Very active | 40+ km | 3x |
+
+These are starting points—Ash adjusts based on Week 1-2 feedback (see ACWR in Section 2).
+
+For the full onboarding flow and question details, see [Onboarding Flow](../features/onboarding_flow.md). 

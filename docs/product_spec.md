@@ -273,6 +273,112 @@ Multiple Workouts:
 - Show taper weeks before races
 - Indicate peak training weeks
 
+#### Event Tracking (Race Days & Special Events)
+
+Track important events directly on the calendar to help Ash plan training around them.
+
+**Event Types:**
+
+| Event Type | Icon/Color | Training Impact |
+|------------|------------|-----------------|
+| **Goal Race** | 🏆 Gold star | Primary goal - all training builds toward this |
+| **Tune-Up Race** | 🎯 Gold outline | Practice race - reduced training 2-3 days before |
+| **Fun Run / Casual Event** | 🏃 Orange dot | Social run - treated as a workout, not a race |
+| **Non-Running Event** | 📅 Purple | Triathlon, obstacle course, hiking trip, etc. |
+
+**Adding Events:**
+- **Quick Add**: Tap any date → "Add Event" → Select type
+- **From Other Apps**: Import from device calendar (birthday parties, weddings, travel dates)
+- **Voice Input**: "I have a 5K race on March 15th"
+
+**Ash's Smart Planning:**
+When an event is added:
+1. **Goal Race**: Automatic taper period (reduced volume 1-2 weeks before)
+2. **Tune-Up Race**: Light training 2-3 days before, recovery day after
+3. **Fun Run**: Slight intensity reduction day before
+4. **Recovery**: Easy week scheduled post-race based on event distance
+
+**Event Details View:**
+Tap on any event to see:
+- Event name and date
+- Distance/type
+- Notes (e.g., "Flat course, start at 7am")
+- Linked training adjustments ("Taper week starts Dec 10")
+- Goal time/pace expectations
+
+```
+EXAMPLE: Goal Race Entry
+┌────────────────────────────────┐
+│ 🏆 Austin Marathon             │
+│ Sunday, February 16, 2025      │
+│ Distance: 26.2 mi              │
+│                                │
+│ 📝 Notes: Hilly course,        │
+│    hotels booked downtown      │
+│                                │
+│ 🎯 Goal: Sub 4:00:00           │
+│                                │
+│ 📋 Training Impact:            │
+│    • Taper starts: Feb 3       │
+│    • Last long run: Feb 2      │
+│    • Shake-out run: Feb 15     │
+└────────────────────────────────┘
+```
+
+#### Vacation & Time-Off Visualization
+
+Scheduled time off is clearly displayed on the calendar with distinct visual treatment.
+
+**Visual Styling:**
+- **Blocked dates**: Diagonal stripe pattern or subtle texture overlay
+- **Color**: Muted gray or vacation-themed color (beach teal 🏖️)
+- **Label**: Shows vacation type ("Vacation", "Work Travel", "Rest Week")
+- **Icons**: 🏖️ 🧳 📴 depending on type
+
+**Calendar Display:**
+
+```
+MONTHLY VIEW WITH VACATION
+┌──────────────────────────────────────────┐
+│         February 2025                    │
+│  S   M   T   W   T   F   S              │
+│  2   3   4   5   6   7   8              │
+│  ●   ●   ●●  ○   ●   🏖️  🏖️            │
+│  9  10  11  12  13  14  15              │
+│  🏖️ 🏖️ 🏖️ 🏖️  ●   ○   🏆              │
+│                                          │
+│ Legend: 🏖️ = Vacation, 🏆 = Race Day    │
+└──────────────────────────────────────────┘
+
+WEEKLY VIEW WITH VACATION PERIOD
+┌─────────────────────────────────────────────────────────┐
+│  Feb 6-12: Vacation Mode 🏖️                            │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │   │
+│  │ 🏖️ Beach Vacation - Complete Rest               │   │
+│  │ "No workouts scheduled. Enjoy your break!"      │   │
+│  └──────────────────────────────────────────────────┘   │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Vacation Modes on Calendar:**
+
+| Mode | Calendar Display | Badge Style |
+|------|------------------|-------------|
+| **Complete Rest** | Solid blocked pattern | 🏖️ "Rest" |
+| **Maintenance** | Lighter pattern with optional workout dots | 🧘 "Light" |
+| **Flexible** | Dotted outline (not fully blocked) | ⏸️ "Flex" |
+
+**Interaction with Blocked Dates:**
+- **Tap blocked date**: Shows vacation details, option to end early or extend
+- **Tap return date**: Shows "Welcome Back" workout (always easy/recovery)
+- **Conflict warning**: If adding event during vacation, Ash asks for confirmation
+
+**Integration with Event Tracking:**
+- Block out travel days around races automatically
+- Suggest rest days after goal races
+- Warn if vacation conflicts with taper period
+
 **Goal Countdown:**
 - Show days until goal race/deadline
 - "42 days until marathon!" at top of calendar
