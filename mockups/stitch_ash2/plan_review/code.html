@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Plan Review - Ash AI Coach</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#FF5722",
+                        "primary-dark": "#E64A19",
+                        "accent": "#FF8A65",
+                        "background-light": "#f5f6f8",
+                        "background-dark": "#101422",
+                        "card-dark": "#181b25",
+                        "card-hover": "#1f222e",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "2xl": "2rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+        .glass-panel {
+            background: rgba(16, 20, 34, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #FF5722, #FFAB91);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-white font-display antialiased selection:bg-primary/30">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden pb-32">
+<div class="sticky top-0 z-30 flex items-center bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 pb-2 justify-between">
+<div class="text-slate-900 dark:text-white flex size-12 shrink-0 items-center justify-center rounded-full active:bg-slate-200 dark:active:bg-slate-800 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[24px]">arrow_back_ios_new</span>
+</div>
+<h2 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-12">Plan Review</h2>
+</div>
+<div class="flex p-4 @container">
+<div class="flex w-full flex-col gap-4">
+<div class="flex gap-4 items-center">
+<div class="relative shrink-0">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-16 w-16 border-2 border-primary shadow-[0_0_15px_rgba(255,87,34,0.3)]" data-alt="Futuristic AI avatar portrait with neon blue accents" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAWXbAdGe_bvU9FwXHq2bU8U6xB_KQc3fLFKG8BLud5clXPrvE9OP_be_AMiCxQIq-BMnvWjHR6EJK2GKvywhi5a0tG1069KfEX4wqJQPdVyegoGrpLe1n9Cje4dGEWd2Ttou8weNjPwVnU0GUW1IlDmUGQE6rnbLI9YB3_BXBiIQDiycYkzBAoNYlaM7cQ-voGwASTtOm54WnJPoGFxL2kaEb2o_vuDrMXFcRKdi35ySjuO8rtls07VWymVPRsG7GWAgrTzTwoARM");'></div>
+<div class="absolute -bottom-1 -right-1 bg-green-500 w-4 h-4 rounded-full border-2 border-background-dark"></div>
+</div>
+<div class="flex flex-col justify-center">
+<p class="text-slate-900 dark:text-white text-[20px] font-bold leading-tight tracking-[-0.015em]">Ash <span class="text-xs font-bold text-primary bg-primary/10 px-2 py-0.5 rounded-full ml-1 align-middle">YOUR COACH</span></p>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-sm font-normal leading-normal mt-1">High five! 🙌 I've built a custom plan to get you moving. Check out Week 1!</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-wrap gap-3 p-4 pt-0">
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-2xl p-4 bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">directions_run</span>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-xs font-bold uppercase tracking-wider">Total Miles</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">15 mi</p>
+</div>
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-2xl p-4 bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">fitness_center</span>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-xs font-bold uppercase tracking-wider">Workouts</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">4</p>
+</div>
+<div class="flex min-w-[100px] flex-1 flex-col gap-1 rounded-2xl p-4 bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary text-[20px]">timer</span>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-xs font-bold uppercase tracking-wider">Active Time</p>
+</div>
+<p class="text-slate-900 dark:text-white tracking-tight text-xl font-bold leading-tight">3h 20m</p>
+</div>
+</div>
+<div class="flex items-end justify-between px-4 pb-2 pt-2">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-tight">Week 1 Schedule</h3>
+<span class="text-primary text-sm font-bold bg-primary/10 px-3 py-1 rounded-full">Nov 12 - 19</span>
+</div>
+<div class="flex flex-col gap-3 px-4">
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm transition-all active:scale-[0.98]">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<div class="flex items-stretch p-4 gap-4">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-100 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#9ca3ba] text-xs font-bold uppercase">MON</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">12</p>
+</div>
+<div class="flex flex-1 flex-col gap-1 justify-center">
+<div class="flex items-center gap-2">
+<span class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Run</span>
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold px-1 rounded-full uppercase tracking-wider">• Easy</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Easy Peasy Run 🏃</p>
+<div class="flex items-center gap-1 text-slate-500 dark:text-[#9ca3ba] text-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>30 min</span>
+</div>
+</div>
+<div class="w-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Blurred abstract running track texture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA9rIZMQZZjZb2Fiq0GkKa6N0AkpLYfR_VdKlQbcrELHtgs0hpNvncEqRDMGn1KIp6YUInjjMppCdzauQC_t3Vqbx3pfpgHZ_uWEY6YeBnmRRefuhn8FO7eDwmwVkyh9bN93WBNhzLkih_b3q0i7jrvgDUD3TikDBGw2Og1WYqOpZlZo0VLxEmfvjXk7ltzYymEZAMeABQHStC_3hTVXuvoyCChiMZt20uMLOBcLlfTmbZKgselsd80qIEN2lVL3TmrNwq_Cdnveew");'>
+</div>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm transition-all active:scale-[0.98]">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-purple-500"></div>
+<div class="flex items-stretch p-4 gap-4">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-100 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#9ca3ba] text-xs font-bold uppercase">TUE</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">13</p>
+</div>
+<div class="flex flex-1 flex-col gap-1 justify-center">
+<div class="flex items-center gap-2">
+<span class="bg-purple-500/20 text-purple-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Strength</span>
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold px-1 rounded-full uppercase tracking-wider">• Full Body</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Iron Pump Sesh 🏋️</p>
+<div class="flex items-center gap-1 text-slate-500 dark:text-[#9ca3ba] text-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>45 min</span>
+</div>
+</div>
+<div class="w-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Dumbbells in a dark gym setting" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC5qiA4KNmzHglB0YQeb-TyAqExhQ1eRqqhVc0cDiu3KdyifsYeSN2DYrQYEK0khhUJma8-GrooJcdLJqd22H_sS8pMMWrAQJDwFOENpQwYKLbSFDTv4ncnkqDbAbj7XufsPW_qO1cU0FuuuR3dTy9RlPcAZeelPt11yDeRmw8YntjFzoydJ5HBHCDqqtxo27y3A7AfUedLzrC3ZTpV6pxUYjOOWC7Ys8pi0gCLYCclwT8GK-oGZfiU_eQoPcbw4FFnTDZzQC1E_48");'>
+</div>
+</div>
+</div>
+<div class="rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent dark:border-white/5 p-4 flex items-center gap-4 opacity-80">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-200 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#6b7280] text-xs font-bold uppercase">WED</p>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-xl font-bold">14</p>
+</div>
+<div class="flex flex-1 items-center justify-between">
+<div>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-base font-bold leading-tight">Rest &amp; Chill 😴</p>
+<p class="text-slate-400 dark:text-slate-500 text-xs mt-0.5 font-medium">Recharge your battery</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-600">bedtime</span>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm transition-all active:scale-[0.98]">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-orange-400"></div>
+<div class="flex items-stretch p-4 gap-4">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-100 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#9ca3ba] text-xs font-bold uppercase">THU</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">15</p>
+</div>
+<div class="flex flex-1 flex-col gap-1 justify-center">
+<div class="flex items-center gap-2">
+<span class="bg-orange-400/20 text-orange-400 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Speed</span>
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold px-1 rounded-full uppercase tracking-wider">• High Intensity</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Speed Demon Intervals ⚡</p>
+<div class="flex items-center gap-1 text-slate-500 dark:text-[#9ca3ba] text-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>35 min</span>
+</div>
+</div>
+<div class="w-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Blurred motion of running shoes on pavement" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA3FtMst8J4F3mjX3Isjo7xkXR7WTfqxb-fDyuMTCqIt3dqzJ-NrVfis5xWUerh7_9goFr0b39rlYQ2CeVeTSUejhyCNBJHFuwxNWsITn54ZaB7yW67g-Q39kZWFT6-bXWSCrVyjDQgPvKgJryzvxMLlHFc2ZVVkMzk1iRM_Pbj6tgBCJp4E_aDXwxVVuBIIz_XmIgp43k2LNcj9CKJ9ch3_eSj_ZUy91vt2Fs17Z7H2OHv26if0n26cKtYWM4Y_jG8PQ_eios-OC8");'>
+</div>
+</div>
+</div>
+<div class="rounded-xl bg-slate-50 dark:bg-white/5 border border-transparent dark:border-white/5 p-4 flex items-center gap-4 opacity-80">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-200 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#6b7280] text-xs font-bold uppercase">FRI</p>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-xl font-bold">16</p>
+</div>
+<div class="flex flex-1 items-center justify-between">
+<div>
+<p class="text-slate-500 dark:text-[#9ca3ba] text-base font-bold leading-tight">Active Vibes 🧘</p>
+<p class="text-slate-400 dark:text-slate-500 text-xs mt-0.5 font-medium">Light stretching or yoga</p>
+</div>
+<span class="material-symbols-outlined text-slate-400 dark:text-slate-600">self_improvement</span>
+</div>
+</div>
+<div class="group relative overflow-hidden rounded-xl bg-white dark:bg-card-dark border border-slate-200 dark:border-white/5 shadow-sm transition-all active:scale-[0.98]">
+<div class="absolute left-0 top-0 bottom-0 w-1.5 bg-primary"></div>
+<div class="flex items-stretch p-4 gap-4">
+<div class="flex flex-col justify-center items-center pr-2 border-r border-slate-100 dark:border-white/10 min-w-[3rem]">
+<p class="text-slate-400 dark:text-[#9ca3ba] text-xs font-bold uppercase">SAT</p>
+<p class="text-slate-900 dark:text-white text-xl font-bold">17</p>
+</div>
+<div class="flex flex-1 flex-col gap-1 justify-center">
+<div class="flex items-center gap-2">
+<span class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Run</span>
+<span class="text-slate-400 dark:text-slate-500 text-[10px] font-bold px-1 rounded-full uppercase tracking-wider">• Endurance</span>
+</div>
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Weekend Long Haul 🌄</p>
+<div class="flex items-center gap-1 text-slate-500 dark:text-[#9ca3ba] text-sm font-medium">
+<span class="material-symbols-outlined text-[16px]">timer</span>
+<span>60 min</span>
+</div>
+</div>
+<div class="w-20 bg-center bg-no-repeat bg-cover rounded-lg shrink-0 grayscale group-hover:grayscale-0 transition-all duration-500" data-alt="Scenic trail running path" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBf11SBKqdYgRErzOpI9MGbsBFy05xZ53l6HxSJFV5khKcnLmQz86Hr2Rz8d1FL72NNqwm8mIwnH3ov0_cYKRc-tv9n3rr9GJ-KhcFzWoGW4_nII_45K6qmEYcw8mOHOD_oShhPl4wN6vzbQZnz4QwTgDdxnB4zdlJtE-U_aw2LhHQZyOuMORYzsOGBbSbtuvN_Pj-nDkwD4GOQ3wUBiN_HxAl0JVIT855KGmFa_303sTyYTSBIzssuJEdjYcL66pdkEfz8BWj5OR8");'>
+</div>
+</div>
+</div>
+<div class="h-8"></div>
+</div>
+<div class="fixed bottom-0 left-0 right-0 glass-panel pb-6 pt-4 px-4 z-40">
+<div class="max-w-md mx-auto flex flex-col gap-3">
+<button class="flex w-full items-center justify-center gap-2 rounded-2xl bg-primary hover:bg-primary-dark transition-all active:scale-[0.98] py-4 shadow-[0_4px_20px_rgba(255,87,34,0.4)] relative overflow-hidden group">
+<div class="absolute inset-0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite] bg-gradient-to-r from-transparent via-white/20 to-transparent z-0"></div>
+<span class="text-white text-lg font-bold relative z-10">This rocks! Let's Go 🚀</span>
+</button>
+<button class="flex w-full items-center justify-center gap-2 rounded-2xl bg-transparent border border-slate-200 dark:border-white/10 hover:bg-slate-100 dark:hover:bg-white/5 transition-all py-3">
+<span class="material-symbols-outlined text-slate-600 dark:text-[#9ca3ba] text-[20px]">tune</span>
+<span class="text-slate-600 dark:text-[#9ca3ba] text-base font-bold">Let's tweak it first</span>
+</button>
+</div>
+</div>
+</div>
+<style>
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+    </style>
+
+</body></html>
