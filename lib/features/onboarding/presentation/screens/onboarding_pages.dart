@@ -14,125 +14,395 @@ class WelcomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AshScaffold(
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: Column(
-          children: [
-            const SizedBox(height: 16), // spacing
-            // Avatar / Image area
-            Expanded(
-              flex: 3,
-              child: Center(
-                child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    boxShadow: [
-                      BoxShadow(
-                        color: AshColors.primary.withOpacity(0.2),
-                        blurRadius: 30,
-                        spreadRadius: 5,
-                      ),
-                    ],
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: AspectRatio(
-                    aspectRatio: 4 / 5,
-                    child: Image.network(
-                      "https://lh3.googleusercontent.com/aida-public/AB6AXuDs-D1UA5-1YetZgjT_mK70OSof9_e0YkT06Ce6WPDNROxmWumhWVK7cobTZ9mvfrIvd0CK1BrY2VJ5sWXyUpb9fSmgAqbkGVPtvvqCjqtxm6tiYPR0po88JKKwx8jHk98WottOc5ZbYlK748UpYsz8Lfm0lTNVkFWYiN0lRtvFUp8NFp-VTEwTa3RJJNUMyHCk_grhnN9nF6uM3JrRwm3khdR4SivgojKhaWHwjvrsDGGAHOJG90N55NKiop7qS4HGLkuKdZzDoKI",
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 24),
-            Expanded(
-              flex: 4,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.center,
-                      text: TextSpan(
-                        style: AshTextStyles.h2.copyWith(height: 1.2),
-                        children: [
-                          const TextSpan(text: "Hey! I'm Ash, your energetic "),
-                          TextSpan(
-                            text: "workout buddy",
-                            style: AshTextStyles.h2.copyWith(
-                              color: AshColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    _buildFeatureItem(
-                      Icons.sentiment_satisfied,
-                      "Fun & Custom Plans",
-                      "No boring routines. Just workouts that fit your vibe.",
-                    ),
-                    const SizedBox(height: 12),
-                    _buildFeatureItem(
-                      Icons.bolt,
-                      "I've Got Your Back",
-                      "I'll spot your form and keep the energy high!",
-                    ),
-                    const SizedBox(height: 12),
-                    _buildFeatureItem(
-                      Icons.emoji_events,
-                      "Level Up Your Life",
-                      "Smash those milestones and celebrate every single win.",
-                    ),
-                    const SizedBox(height: 32),
+    return Scaffold(
+      backgroundColor: const Color(0xFF080a0c), // Darker background from mockup
+      body: Stack(
+        children: [
+          // Top glow
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            child: Container(
+              height: 500,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment.topCenter,
+                  radius: 1.0,
+                  colors: [
+                    const Color(0xFFFF4F18).withOpacity(0.2),
+                    Colors.transparent,
                   ],
                 ),
               ),
             ),
-            // Footer Button
-            Padding(
-              padding: const EdgeInsets.only(bottom: 24.0),
-              child: AshButton(
-                label: "Let's dive in!",
-                icon: Icons.rocket_launch,
-                onPressed: onNext,
+          ),
+          // Bottom lime glow
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              width: 320,
+              height: 320,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  colors: [
+                    const Color(0xFFa3ff00).withOpacity(0.1),
+                    Colors.transparent,
+                  ],
+                ),
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildFeatureItem(IconData icon, String title, String subtitle) {
-    return AshCard(
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: AshColors.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(icon, color: AshColors.primary, size: 24),
           ),
-          const SizedBox(width: 16),
-          Expanded(
+
+          SafeArea(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AshTextStyles.body.copyWith(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                    color: Colors.white,
+                // Header
+                Padding(
+                  padding: const EdgeInsets.all(24.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFFFF4F18,
+                                  ).withOpacity(0.5),
+                                  blurRadius: 15,
+                                ),
+                              ],
+                            ),
+                            child: const Icon(
+                              Icons.bolt,
+                              color: Color(0xFFFF4F18),
+                              size: 32,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            "ASH",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: onNext,
+                        child: Text(
+                          "Skip intro",
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.6),
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                Text(subtitle, style: AshTextStyles.bodyMedium),
+
+                const Spacer(),
+
+                // Avatar with BPM badge
+                Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Pulsing glow
+                    Container(
+                      width: 288,
+                      height: 288,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            const Color(0xFFFF4F18).withOpacity(0.3),
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                    ),
+                    // Avatar
+                    Container(
+                      width: 256,
+                      height: 256,
+                      margin: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.1),
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xFFFF4F18).withOpacity(0.4),
+                            blurRadius: 60,
+                          ),
+                        ],
+                      ),
+                      child: ClipOval(
+                        child: ColorFiltered(
+                          colorFilter: const ColorFilter.matrix([
+                            1.5,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1.25,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1.5,
+                            0,
+                            0,
+                            0,
+                            0,
+                            0,
+                            1,
+                            0,
+                          ]),
+                          child: Image.asset(
+                            "assets/images/ash_avatar.png",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    // BPM Badge
+                    Positioned(
+                      right: -8,
+                      top: 40,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.05),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.1),
+                          ),
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              blurRadius: 10,
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(
+                              Icons.favorite,
+                              color: Color(0xFFFF4F18),
+                              size: 16,
+                            ),
+                            SizedBox(width: 4),
+                            Text(
+                              "BPM Active",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 32),
+
+                // Title with gradient
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    children: [
+                      RichText(
+                        textAlign: TextAlign.center,
+                        text: TextSpan(
+                          style: const TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.bold,
+                            height: 0.95,
+                            letterSpacing: -1,
+                          ),
+                          children: [
+                            const TextSpan(
+                              text: "MEET ",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            TextSpan(
+                              text: "ASH.",
+                              style: TextStyle(
+                                foreground: Paint()
+                                  ..shader = const LinearGradient(
+                                    colors: [
+                                      Color(0xFFFF4F18),
+                                      Color(0xFFFF9966),
+                                      Color(0xFFFFCC66),
+                                    ],
+                                  ).createShader(Rect.fromLTWH(0, 0, 200, 70)),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Run Smarter, Not Harder.",
+                        style: TextStyle(
+                          color: Colors.white.withOpacity(0.9),
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 12),
+                      Text(
+                        "Ash analyzes your biometrics in real-time to build the perfect run, every single time.",
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                          height: 1.5,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Spacer(),
+
+                // Buttons and progress
+                Container(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 40),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        const Color(0xFF080a0c).withOpacity(0.95),
+                        const Color(0xFF080a0c),
+                      ],
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      // Start button
+                      Container(
+                        width: double.infinity,
+                        height: 56,
+                        decoration: BoxDecoration(
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFFF4F18), Color(0xFFFF7744)],
+                          ),
+                          borderRadius: BorderRadius.circular(28),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(0.05),
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: const Color(0xFFFF4F18).withOpacity(0.4),
+                              blurRadius: 30,
+                            ),
+                          ],
+                        ),
+                        child: Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            onTap: onNext,
+                            borderRadius: BorderRadius.circular(28),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: const [
+                                Text(
+                                  "Start Training",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                                SizedBox(width: 8),
+                                Icon(Icons.arrow_forward, color: Colors.white),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "I already have an account",
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Progress dots
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            width: 32,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFFF4F18),
+                              borderRadius: BorderRadius.circular(2),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFFFF4F18,
+                                  ).withOpacity(0.5),
+                                  blurRadius: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 8,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Container(
+                            width: 8,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(2),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
