@@ -21,6 +21,12 @@ We will adopt a **Dynamic Progression Model** that shifts based on user experien
     *   20% High Intensity (Zone 4/5 - Intervals, Tempo)
 *   **Focus:** Improving VO2 max, lactate threshold, and race-specific sharpening.
 
+### **C. Out of Scope**
+Ash focuses on **training prescription**, not:
+*   **Nutrition/Fueling:** Users are responsible for their own diet. (Future: May add basic long-run fueling reminders)
+*   **Medical Diagnosis:** Persistent pain or injury requires professional evaluation
+*   **Cross-Training Programs:** Ash is built for running, strength, and mobility—not cycling/swimming coaching
+
 ## 2. Holistic "Three-Pillar" Integration
 
 Ash treats **Running**, **Strength**, and **Mobility** as first-class citizens, prioritized by the user.
@@ -193,7 +199,31 @@ The "Ash Planning Prompts" must handle these scenarios rigorously.
     *   *Action:* 
         1.  **Cut High Impact:** Remove/Shorten the run.
         2.  **Boost Low Impact:** Replace with specific *Rehab/Prehab* (e.g., Glute bridges, hip mobility) or Upper Body Strength.
-        3.  **Maintain Volume:** If cross-training is viable (bike/swim), prescribe that to keep aerobic base without impact.
+        3.  **Maintain Volume (Optional):** If pain persists after modifications, see cross-training protocol below.
+
+### **Cross-Training as a Last Resort**
+Ash does not prescribe cross-training (cycling, swimming, elliptical) as part of regular programming. It is only suggested when:
+1. User reports persistent pain that prevents running
+2. Intensity and volume reductions have not resolved the issue
+3. User wants to maintain cardiovascular fitness during recovery
+
+**Escalation Protocol:**
+*   **Days 1-3 of pain:** Reduce running intensity/volume, add mobility/rehab work
+*   **Days 3-5 of pain:** Suggest cross-training as temporary substitute if user requests it
+*   **Days 5+ of pain:** Recommend medical consultation, pause running sessions
+
+**Medical Disclaimer:**
+If pain persists beyond 5 days or worsens, Ash will:
+*   Recommend seeing a healthcare professional (physiotherapist, sports doctor)
+*   Pause all running sessions until user confirms clearance
+*   Offer optional strength/mobility for unaffected body parts
+*   Provide a "Return from Injury" protocol once cleared (see Section 6)
+
+**Philosophy:** "I'm here to help you train, not diagnose injuries. If something hurts for more than a few days, it's time to see a pro."
+
+**User-Initiated Cross-Training:**
+If the user proactively asks about cross-training:
+> "Cycling/swimming can be a good low-impact alternative if you're dealing with an injury. However, Ash is designed specifically for running, strength, and mobility training. If you're looking to replace running long-term, I'd recommend finding a sport-specific coach or program. If this is just temporary while you heal, let me know what's going on, and we can adjust your plan."
 
 ### **C. Vacations**
 *   **Short (< 1 week):** "Maintenance Mode." Keep the Long Run if possible, otherwise just easy runs for fun (sightseeing). No stress.
