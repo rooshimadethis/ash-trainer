@@ -122,10 +122,13 @@ chronicLoad = workoutLogs.where(date >= today - 28 days).sum(sessionLoad) / 4
 currentACWR = acuteLoad / chronicLoad
 ```
 
-**ACWR Zones:**
+**ACWR Zones (Default):**
 - **< 0.8**: Undertraining - can increase volume
 - **0.8 - 1.3**: Safe Zone - maintain or progress gradually
 - **> 1.3**: High Risk - deload immediately
+
+> [!NOTE]
+> ACWR thresholds vary by goal type. See **Goal Type Configuration Reference** in Section 3.2 for goal-specific ranges (e.g., Maintenance uses 0.7-1.0, Event allows up to 1.4 during peak phases).
 
 **Key Relationships:**
 - One user → Many goals
@@ -166,6 +169,34 @@ class Goals extends Table {
   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
 }
 ```
+
+**Goal Type Configuration Reference:**
+
+Each goal type determines key training parameters. The Training Engine applies these configurations automatically based on `goalType`:
+
+| Goal Type | Intensity Model | Workout Prescription | ACWR Safe Range | Taper Duration |
+|-----------|-----------------|---------------------|-----------------|----------------|
+| `distance_milestone` | Pyramidal (75/20/5) | Time-based | 0.8 - 1.2 | 7-10 days |
+| `time_performance` | Polarized (80/0/20) | Distance-based | 0.8 - 1.3 | 1-2 weeks |
+| `event` | Phase-based (varies) | Mixed | 0.9 - 1.4 | 1-3 weeks (by race distance) |
+| `maintenance` | Flat (85/5/10) | Flexible | 0.7 - 1.0 | None |
+
+**Intensity Model Breakdown (Easy/Moderate/High):**
+- **Pyramidal:** 75% easy, 20% moderate, 5% high (beginners, distance milestones)
+- **Polarized:** 80% easy, 0% moderate, 20% high (performance-focused)
+- **Phase-based:** Varies by phase (base → build → peak → taper)
+- **Flat:** 85% easy, 5% moderate, 10% high (maintenance mode)
+
+**Workout Prescription Styles:**
+- **Time-based:** Workouts prescribed by duration (e.g., "run for 30 minutes")
+- **Distance-based:** Key workouts prescribed by distance (e.g., "6 × 400m intervals")
+- **Flexible:** Either style, user preference
+
+**Missed Workout Protocols by Goal Type:**
+- **Distance Milestone:** Skip and move on, never make up
+- **Time Performance:** Reschedule key workouts within 48 hours if fresh
+- **Event:** Attempt shortened versions in build/peak phases
+- **Maintenance:** All workouts flexible, skip without penalty
 
 **Confidence Score Calculation:**
 Computed by the Training Engine based on:

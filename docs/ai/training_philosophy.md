@@ -29,14 +29,241 @@ Ash focuses on **training prescription**, not:
 
 ### **D. Goal Types**
 
-Ash supports four primary goal types that determine training plan structure:
+Ash supports four primary goal types that determine training plan structure. Each goal type requires different training approaches, intensity distributions, and periodization strategies.
 
-*   **Distance Milestone (`distance_milestone`):** Completing a specific distance for the first time (e.g., "Run my first 10K")
-*   **Time Performance (`time_performance`):** Achieving a specific time target (e.g., "Sub-30 minute 5K")
-*   **Event (`event`):** Training for a specific race or event with a deadline (e.g., "Austin Marathon on Feb 16")
-*   **Maintenance (`maintenance`):** Maintaining current fitness level while managing other priorities (e.g., "Keep running 3x/week during busy season")
+#### **1. Distance Milestone Goals**
+*Examples: "Run my first 10K", "Complete a half marathon", "Run 5 miles without stopping"*
 
-*Note: Detailed goal type logic and training plan variations will be expanded in future iterations.*
+**Philosophy:** Completion over speed. Build endurance safely and prevent injury.
+
+**Workout Prescription:**
+*   **Time-based training:** Prescribe by duration, not distance (e.g., "run for 30 minutes" vs "run 5K")
+*   **Run/Walk intervals:** For true beginners, alternate running and walking
+*   **Gradual progression:** Increase duration by 5-10 minutes per week
+
+**Intensity Distribution (Pyramidal):**
+*   75-80% Easy/Aerobic (RPE 3-4)
+*   15-20% Moderate (RPE 6-7)
+*   0-5% High Intensity (RPE 8-9)
+
+**Key Workout Types:**
+*   Long run progression (gradually increase duration)
+*   Easy aerobic runs (build frequency and consistency)
+*   Minimal speed work (light strides for variety, not performance)
+
+**Mesocycle Structure:**
+*   **Base Phase:** 6-8 weeks of pure aerobic building
+*   **Distance Familiarization:** Practice runs at 80-90% of goal distance (no traditional peak phase)
+*   **Minimal Taper:** 7-10 days, 20-30% volume reduction
+*   **Recovery Weeks:** Every 3-4 weeks, reduce volume by 30%
+
+**Success Metrics:**
+*   Completing weekly long run without excessive fatigue
+*   Increasing total weekly running time
+*   Consistency (showing up for scheduled runs)
+*   Injury-free progression
+
+**ACWR Range:** 0.8 - 1.2 (conservative to prevent injury in newer runners)
+
+---
+
+#### **2. Time Performance Goals**
+*Examples: "Sub-30 minute 5K", "Break 2 hours in the half marathon", "Run a 10K 5 minutes faster"*
+
+**Philosophy:** Improve speed and efficiency. Track quantifiable progress.
+
+**Workout Prescription:**
+*   **Distance-based key workouts:** Intervals and tempo runs by distance (e.g., "6 × 400m", "5K at tempo pace")
+*   **Regular benchmarking:** Monthly time trials to track progress
+*   **Pace targets:** Specific goal pace ranges for workouts
+
+**Intensity Distribution (Polarized 80/20):**
+*   80% Easy (RPE 3-4, Zone 1-2)
+*   20% High Intensity (RPE 8-9, Zone 4-5: intervals, tempo, threshold)
+*   **Minimal moderate zone** - Avoid "junk miles"
+
+**Key Workout Types:**
+*   **Interval training:** Short bursts at or above goal race pace (400m, 800m, 1K repeats)
+*   **Tempo runs:** Sustained efforts at comfortably hard pace (RPE 7-8)
+*   **Race pace workouts:** Practice running at target pace for extended periods
+*   **Hill repeats:** Build power and running economy
+*   **Time trials:** Monthly benchmark tests
+
+**Mesocycle Structure:**
+*   **Base Phase (4-6 weeks):** Build aerobic foundation
+*   **Build Phase (4-6 weeks):** Introduce race-specific intensity
+*   **Peak Phase (2-3 weeks):** Highest volume + intensity, sharpening workouts
+*   **Taper (1-2 weeks):** Reduce volume 40-50%, maintain intensity with short, sharp efforts
+
+**Success Metrics:**
+*   Pace improvements in time trials
+*   Ability to sustain goal pace for longer durations
+*   Improved interval workout performance
+*   Race day PR achievement
+
+**ACWR Range:** 0.8 - 1.3 (standard range, allow higher peaks for intensity blocks)
+
+---
+
+#### **3. Event Goals (Race-Specific)**
+*Examples: "Austin Marathon on Feb 16", "NYC Half Marathon", "Boston Marathon qualifier"*
+
+**Philosophy:** Peak performance on a specific date. All training builds toward race day.
+
+**Workout Prescription:**
+*   **Race simulation:** Practice race-day conditions, fueling, pacing
+*   **Goal pace segments:** Increasingly longer segments at target race pace
+*   **Dress rehearsals:** Full race-day routine practice
+
+**Intensity Distribution (Varies by Phase):**
+*   **Base:** 80% easy, 15% moderate, 5% high
+*   **Build:** 75% easy, 10% moderate, 15% high
+*   **Peak:** 70% easy, 5% moderate, 25% high
+*   **Taper:** 85% easy, 15% high (short, sharp efforts)
+
+**Key Workout Types:**
+*   **Long runs with race-specific elements:**
+    *   Final miles at goal race pace
+    *   Practice fueling strategy every 45-60 minutes
+    *   Simulate race terrain (hills, elevation)
+*   **Goal pace workouts:** Build duration at target race pace
+*   **Tune-up races:** Shorter races 3-6 weeks before goal race (with 2-3 day mini-taper)
+
+**Plan Duration by Race Distance:**
+*   5K/10K: 8-12 weeks
+*   Half Marathon: 12-16 weeks
+*   Marathon: 16-20 weeks
+
+**Phase Breakdown:**
+1. **Base (40% of plan):** Aerobic foundation, gradual volume increase
+2. **Build (30% of plan):** Race-specific workouts, peak long runs
+3. **Peak (10% of plan):** Highest intensity + volume week
+4. **Taper (20% of plan):** Progressive volume reduction (see Section 5 for detailed taper protocols)
+
+**Post-Race Recovery:**
+*   5K: 3-5 days easy
+*   10K: 5-7 days easy
+*   Half Marathon: 1-2 weeks reduced volume
+*   Marathon: 2-4 weeks recovery, then rebuild
+
+**Success Metrics:**
+*   Completing key workouts at goal pace
+*   Successful tune-up race performances
+*   Hitting target long run distances
+*   Race day goal achievement
+
+**ACWR Range:** 0.9 - 1.4 (allow higher peaks during build/peak phases, strict monitoring)
+
+**Short-Notice Races (<3 weeks):**
+*   Skip Build phase, go straight to abbreviated taper
+*   Treat as "training race" (lower expectations, useful experience)
+*   Offer post-race analysis to inform future training
+
+---
+
+#### **4. Maintenance Goals**
+*Examples: "Keep running 3x/week during busy season", "Maintain current fitness while traveling", "Stay active without training stress"*
+
+**Philosophy:** Sustain current fitness with minimal effective dose. Reduce pressure, increase enjoyment.
+
+**Workout Prescription:**
+*   **Flexible scheduling:** Days are suggestions, not rigid rules
+*   **Effort-based:** Focus on how it feels, not hitting specific numbers
+*   **Variety encouraged:** Mix in cross-training for fun and recovery
+
+**Intensity Distribution:**
+*   85% Easy/Aerobic (RPE 3-4)
+*   5% Moderate (RPE 6-7)
+*   10% High Intensity (short, sharp efforts to maintain speed)
+
+**Key Workout Types:**
+*   **One quality session per week:** Either a long run OR intervals (not both)
+*   **Easy runs:** 2-3 short, conversational runs
+*   **Strides:** 4-6 × 20-second pickups after easy runs (maintain neuromuscular sharpness)
+*   **Cross-training:** Cycling, swimming, or other low-impact cardio
+*   **Strength training:** 1-2 sessions per week, compound movements
+
+**Mesocycle Structure:**
+*   **No traditional periodization** - Flat, consistent week-to-week
+*   **Volume:** 50-66% of previous training volume
+*   **Frequency:** Maintain running frequency (e.g., if you ran 4x/week, keep 4x/week but shorten duration)
+*   **Duration:** Can be sustained for 2-8 weeks without significant fitness loss
+
+**Weekly Template Example:**
+*   Monday: Rest or mobility
+*   Tuesday: Easy run (30 min) + strides
+*   Wednesday: Strength training (30-40 min)
+*   Thursday: Easy run (30 min)
+*   Friday: Rest or cross-training
+*   Saturday: Quality session (Long run 60 min OR Intervals 40 min)
+*   Sunday: Rest or easy cross-training
+
+**Transition Protocols:**
+*   **Entering Maintenance:** Reduce volume by 30-50% in first week, drop to 1-2 key sessions
+*   **Exiting Maintenance:** Resume at 80% of pre-maintenance volume, rebuild over 2-3 weeks
+
+**Success Metrics:**
+*   Maintaining consistency (showing up for scheduled sessions)
+*   Feeling fresh and recovered
+*   No significant performance decline in quality sessions
+*   Injury-free training
+
+**ACWR Range:** 0.7 - 1.0 (intentionally low, avoiding progressive overload)
+
+---
+
+#### **Pillar Coordination by Goal Type**
+
+| Goal Type | Running Priority | Strength Priority | Mobility Priority |
+|-----------|------------------|-------------------|-------------------|
+| Distance Milestone | High | Medium | Medium |
+| Time Performance | High | Medium-High | Medium |
+| Event (Race) | High | Medium (reduce in taper) | High (increase in taper) |
+| Maintenance | Medium | High | High |
+
+---
+
+#### **Missed Workout Protocols by Goal Type**
+
+**Distance Milestone:**
+*   Skip missed workouts entirely - don't try to make up
+*   Focus on next scheduled session
+*   Consistency over perfection
+
+**Time Performance:**
+*   If key workout missed: Attempt to reschedule within 48 hours if fresh
+*   If easy run missed: Skip it
+*   Never double up hard sessions
+
+**Event (Race):**
+*   Missed key workout in base phase: Skip it
+*   Missed key workout in build/peak: Attempt light version if 48+ hours to next hard session
+*   Missed long run: Do shortened version (60-70%) if possible
+
+**Maintenance:**
+*   All workouts are flexible - skip without guilt
+*   Maintain frequency over specific workouts
+
+---
+
+#### **Hybrid Goals**
+
+Some users may have combined goals (e.g., "Complete my first marathon in under 4 hours"):
+*   **Primary goal type:** Event (deadline-driven structure)
+*   **Secondary goal type:** Time Performance (pace targets during workouts)
+*   **Training approach:** Use Event periodization with Time Performance intensity distribution during build/peak phases
+
+---
+
+#### **Dynamic Goal Type Switching**
+
+Users may need to switch goal types mid-plan:
+*   **Event → Maintenance:** Automatic transition after race completion (2-4 week recovery period)
+*   **Time Performance → Event:** When user registers for a race (restructure into event-based periodization)
+*   **Distance Milestone → Time Performance:** After completing first distance goal (shift to pace-focused training)
+*   **Any → Maintenance:** When life gets overwhelming (immediate transition available)
+
+Ash should detect these transitions and offer to adjust the plan accordingly.
 
 ## 2. Holistic "Three-Pillar" Integration
 

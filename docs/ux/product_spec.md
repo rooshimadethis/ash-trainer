@@ -28,10 +28,83 @@
 ### 1. Goal Setting & Planning
 
 #### Goal Types
-Users can set various goal formats:
-- **Distance Milestone**: "I want to complete my first 10k in 8 weeks"
-- **Time-Based Performance**: "I want to run a 30-minute 5k as soon as possible"
-- **Maintenance Goals**: "I want to maintain my current 5k time while increasing weekly mileage"
+
+Ash supports four distinct goal types, each with a tailored training experience:
+
+---
+
+**🎯 Distance Milestone**
+*"I want to complete my first 10K"*
+
+For runners tackling a new distance for the first time. Training focuses on safe progression and building endurance.
+
+| Aspect | What to Expect |
+|--------|----------------|
+| **Training Style** | Workouts prescribed by time ("run for 30 minutes"), not distance |
+| **Intensity** | Mostly easy runs (75-80%), minimal speed work |
+| **Progression** | Conservative weekly increases, run/walk intervals for beginners |
+| **Success Metric** | Completing the distance—no time pressure |
+| **Flexibility** | High—skip workouts without guilt, consistency over perfection |
+
+---
+
+**⏱️ Time Performance**
+*"I want to run a sub-30 minute 5K"*
+
+For runners who can already complete the distance but want to get faster. Training focuses on speed development and measurable progress.
+
+| Aspect | What to Expect |
+|--------|----------------|
+| **Training Style** | Key workouts prescribed by distance ("6 × 400m intervals") |
+| **Intensity** | Polarized 80/20 approach—easy days truly easy, hard days truly hard |
+| **Progression** | Monthly time trials, structured interval and tempo workouts |
+| **Success Metric** | Pace improvements and hitting target times |
+| **Flexibility** | Medium—key workouts matter, but easy runs are flexible |
+
+---
+
+**🏆 Event (Race-Specific)**
+*"I'm running the Austin Marathon on February 16"*
+
+For runners with a specific race date. Training follows proven periodization with a proper taper leading to race day.
+
+| Aspect | What to Expect |
+|--------|----------------|
+| **Training Style** | Phases: Base → Build → Peak → Taper, with race simulation workouts |
+| **Intensity** | Varies by phase—progressive build with race-specific sharpening |
+| **Progression** | Countdown to race day with automatic taper and tune-up races |
+| **Success Metric** | Race day performance and goal achievement |
+| **Flexibility** | Lower during peak weeks—structured plan tied to race date |
+
+---
+
+**🔄 Maintenance**
+*"I want to keep running 3x/week during my busy season"*
+
+For runners who want to maintain fitness without progressive overload—during busy periods, between training cycles, or after a race.
+
+| Aspect | What to Expect |
+|--------|----------------|
+| **Training Style** | Flexible—one quality session per week, rest is easy running |
+| **Intensity** | Mostly easy with short strides to maintain speed |
+| **Progression** | Flat week-to-week, no volume increases |
+| **Success Metric** | Showing up consistently, staying healthy |
+| **Flexibility** | Very high—skip without penalty, no pressure |
+
+---
+
+#### Dynamic Goal Type Switching
+
+Life changes, and so can your goal. Ash automatically suggests goal type transitions:
+
+- **After a race** → Transition to Maintenance for recovery
+- **Register for a race** → Switch to Event mode with proper periodization
+- **Complete your first distance** → Celebrate! Then shift to Time Performance
+- **Life gets busy** → Maintenance mode is always available
+
+You can also manually switch goal types anytime via settings or by chatting with Ash.
+
+---
 
 #### Goal Components
 - **Target**: Specific, measurable outcome
@@ -40,15 +113,17 @@ Users can set various goal formats:
 - **Constraints**: Cross-training goals, injury history, available training days
 
 #### Training Plan Generation
-Ash creates personalized plans including:
-- **Workout Days**: Specific runs with distance/time/pace targets
-- **Intensity Levels**: Easy runs, tempo runs, intervals, long runs
+Ash creates personalized plans based on your goal type:
+
+**All goal types include:**
+- **Workout Days**: Runs with appropriate distance/time/pace targets for your goal type
+- **Intensity Levels**: Distribution tailored to goal (Pyramidal for distance, Polarized for performance)
 - **Rest Days**: Active recovery and complete rest
 - **Strength Training**: User-configurable pillar with priority settings (High/Med/Low)
 - **Mobility Work**: Stretching routines, dynamic warm-ups, recovery sessions
 - **Injury Prevention**: Targeted exercises and movement patterns
 - **Low-Impact Alternatives**: Cycling, swimming, elliptical (only for injury recovery)
-- **Progression**: Gradual build-up following proven training principles
+- **Progression**: Based on goal type—gradual for distance, structured phases for events
 
 ---
 
@@ -70,6 +145,26 @@ Users can communicate their current state, and Ash adapts:
 | "I have an unavoidable social event today" | "No problem! We can move today's long run to tomorrow and shift your rest day to today. This won't affect your goal timeline." | Reschedules within the week |
 | "I'm feeling weak today but can still do a little bit" | "I hear you. Let's do a light 20-minute easy run instead of the planned tempo. Recovery is part of training! Goal confidence: 85%." | Reduces intensity while maintaining consistency |
 | "I want to skip today" | "I understand wanting a break. You've already had 2 rest days this week though—how about a gentle 15-minute walk instead? If we skip entirely, your goal confidence would drop to 78%. What feels right to you?" | Light pushback with choice |
+
+#### Goal-Type-Specific Coaching Examples
+
+Ash's coaching tone and flexibility adapt based on your goal type:
+
+**Distance Milestone (Flexible)**
+> User: "I want to skip today's run"
+> Ash: "No problem! Consistency matters more than any single workout. Take the day off—we'll pick back up tomorrow. Your goal is still on track. 👍"
+
+**Time Performance (Balanced)**
+> User: "I want to skip today's intervals"
+> Ash: "Today's intervals are key for your speed goal. If you're tired, we could shorten them to 4 × 400m instead of 6. Or if you need full rest, we can try to fit them in Friday. What works?"
+
+**Event (Structured)**
+> User: "I want to skip today's tempo run"
+> Ash: "This tempo is important with your race 3 weeks out. If you're not feeling it, we could do an easier version—20 minutes at moderate pace instead of 30 at tempo. Skipping entirely would drop confidence to 82%. Let me know what feels doable."
+
+**Maintenance (Very Flexible)**
+> User: "I want to skip today"
+> Ash: "You're in maintenance mode, so flexibility is the name of the game. Skip without guilt—we'll see you when you're ready. 🙌"
 
 #### Conversation Flow
 - **Natural Language**: Users can type or speak naturally

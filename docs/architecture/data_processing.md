@@ -108,6 +108,19 @@ The On-Device Engine generates this JSON structure before each AI request:
        { "day": -2, "activity": "Run", "status": "Completed", "rpe": 4, "notes": "Easy 5K" },
        { "day": -1, "activity": "Strength", "status": "Skipped", "reason": "Not motivated" }
     ],
+    "goal_type_config": {
+      "goal_type": "event",
+      "intensity_model": "phase_based",
+      "workout_prescription": "mixed",
+      "acwr_safe_min": 0.9,
+      "acwr_safe_max": 1.4,
+      "missed_workout_policy": "reschedule_if_key",
+      "pillar_priorities_override": {
+        "running": "high",
+        "strength": "medium_reduce_in_taper",
+        "mobility": "high_increase_in_taper"
+      }
+    },
     "pillar_priorities": {
       "running": "High",
       "strength": "Medium",
@@ -155,6 +168,17 @@ The On-Device Engine generates this JSON structure before each AI request:
 - **Cross-Pillar Conflicts**: Avoid hard leg strength the day before a key run
 - **Hard Days Hard, Easy Days Easy**: Never stack high-intensity sessions back-to-back across pillars
 
+#### Pillar Priorities by Goal Type
+
+Different goal types emphasize pillars differently:
+
+| Goal Type | Running | Strength | Mobility | Notes |
+|-----------|---------|----------|----------|-------|
+| `distance_milestone` | High | Medium | Medium | Balanced approach for new runners |
+| `time_performance` | High | Medium-High | Medium | Strength supports speed development |
+| `event` | High | Medium → Low | Medium → High | Reduce strength in taper, increase mobility |
+| `maintenance` | Medium | High | High | Shift focus to maintain while reducing running |
+
 #### Recovery Week Adjustments
 
 | Pillar | Adjustment |
@@ -167,7 +191,7 @@ The On-Device Engine generates this JSON structure before each AI request:
 
 | Tool | Purpose | Key Params | Validation Logic | Called In |
 |------|---------|------------|------------------|----------|
-| `reschedule_workout` | Move workout to new date | `workout_id`, `new_date`, `reason` | Checks 48-hour rule, cross-pillar conflicts, vacation blocks, race taper periods | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Reschedule action |
+| `reschedule_workout` | Move workout to new date | `workout_id`, `new_date`, `reason` | Checks 48-hour rule, cross-pillar conflicts, vacation blocks, race taper periods. **Strictness varies by goal type** (strict for Event, flexible for Maintenance) | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Reschedule action |
 | `adjust_intensity` | Scale workout difficulty | `workout_id`, `factor` (e.g., 0.8) | Ensures adjustments respect RPE targets and recovery principles | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Chat adjustment flow (fatigue) |
 | `swap_workout` | Replace workout type | `workout_id`, `new_type` | Validates pillar coordination (no hard leg day before long run) | [Injury Management](../ux/user_flows.md#4-injury-management--recovery) - Swap run for strength |
 
@@ -177,13 +201,16 @@ The On-Device Engine generates this JSON structure before each AI request:
 
 **Purpose**: Track training load and prevent overtraining injuries using ACWR (Acute:Chronic Workload Ratio).
 
-#### ACWR Zones
+#### ACWR Zones by Goal Type
 
-| ACWR Range | Status | Recommendation |
-|------------|--------|----------------|
-| < 0.8 | Undertraining | Increase volume |
-| 0.8 - 1.3 | Safe Zone | Maintain or progress gradually |
-| > 1.3 | High Risk | Deload immediately |
+ACWR thresholds vary based on goal type to allow appropriate training stimulus:
+
+| Goal Type | Safe Min | Safe Max | Rationale |
+|-----------|----------|----------|-----------|
+| `distance_milestone` | 0.8 | 1.2 | Conservative - prevent injury in newer runners |
+| `time_performance` | 0.8 | 1.3 | Standard - allow intensity blocks |
+| `event` | 0.9 | 1.4 | Allow higher peaks during build/peak phases |
+| `maintenance` | 0.7 | 1.0 | Intentionally low - no progressive overload |
 
 **Formula**: Acute Load (last 7 days) ÷ Chronic Load (avg of last 3-4 weeks)
 
@@ -369,6 +396,55 @@ graph TD
 - Recovery (adequate rest, ACWR status)
 - Time remaining (proximity to deadline)
 - Recent performance trends
+
+---
+
+### 10. Goal Type Switching
+
+**Purpose**: Handle dynamic transitions between goal types as user circumstances change.
+
+#### Automatic Transitions
+
+The Training Engine detects situations that warrant goal type changes:
+
+| Trigger | From Type | To Type | Action |
+|---------|-----------|---------|--------|
+| Race completed | `event` | `maintenance` | 2-4 week recovery period with maintenance mode |
+| User registers for race | `time_performance` | `event` | Restructure into event-based periodization |
+| Distance goal completed | `distance_milestone` | `time_performance` | Shift to pace-focused training |
+| User reports life stress | Any | `maintenance` | Immediate transition available |
+| Long break detected (2+ weeks) | Any | `maintenance` | Suggest switching to maintenance |
+
+#### User-Initiated Transitions
+
+Users can manually switch goal types at any time via settings or chat.
+
+#### Tools
+
+| Tool | Purpose | Key Params | Logic | Called In |
+|------|---------|------------|-------|-----------|
+| `switch_goal_type` | Change goal type mid-plan | `goal_id`, `new_type`, `reason` | Restructures training plan, adjusts ACWR thresholds, updates pillar priorities | Chat conversation, Goal settings |
+| `detect_goal_type_mismatch` | Check if current training fits goal | None | Analyzes training patterns vs. goal type requirements | Background analysis, triggers proactive conversation |
+
+#### Transition Protocols
+
+**Event → Maintenance (Post-Race):**
+1. Auto-trigger 2-4 week recovery period based on race distance
+2. Switch intensity model from phase-based to flat
+3. Reduce volume to 50-66%
+4. Shift pillar priorities (increase strength/mobility, decrease running emphasis)
+
+**Maintenance → Event (New Race Goal):**
+1. Calculate weeks until race
+2. Determine if sufficient time for full periodization (Base → Build → Peak → Taper)
+3. If insufficient time, suggest treating as tune-up race or adjusting expectations
+4. Generate phase-based plan with appropriate taper
+
+**Distance Milestone → Time Performance:**
+1. Shift from time-based to distance-based workout prescription
+2. Change intensity model from pyramidal to polarized
+3. Introduce structured interval workouts
+4. Add monthly time trial benchmarks
 
 ---
 
