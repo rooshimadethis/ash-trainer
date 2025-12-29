@@ -10,33 +10,43 @@ Ash provides runner-specific strength training to prevent injuries, improve powe
 
 ## Phased Implementation
 
-### Phase 1: Prescribed Bodyweight Sessions (MVP)
+### Phase 1: Running-Supplemented Strength Training (MVP)
 
-**Goal**: Get runners doing strength work consistently without overwhelming them.
+**Goal**: Help runners add running-specific exercises to their existing strength routine without being prescriptive.
 
-#### Prescription Approach
-*   **Session-Based**: Ash prescribes 2-4 bodyweight exercises per strength session
-*   **Runner-Specific**: All exercises target running-relevant movement patterns
-*   **Simple Tracking**: Done/Not Done checkbox for the entire session
-*   **Frequency**: 2-3 sessions per week based on goal type and pillar priority
+#### Approach
+*   **User-Led Sessions**: Users do their own strength training (gym, home workouts, classes, etc.)
+*   **Ash's Contribution**: Suggests 2 runner-specific bodyweight exercises to include in each session
+*   **Simple Tracking**: "Did you do a strength session today?" (Yes/No)
+*   **Frequency Guidance**: Recommends 2-3 sessions per week based on goal type
 
-#### Example Session
+#### Example Suggestions
 ```
-Strength Session - Lower Body Focus (20 min)
-✓ Complete this session
+💪 Strength Session Reminder
 
-Exercises:
+Great! Before or after your workout, try adding these 2 exercises:
+
 1. Single-Leg Glute Bridge - 3x10 each side
-2. Bulgarian Split Squat - 3x8 each side
-3. Plank - 3x30 seconds
-4. Clamshells - 2x15 each side
+   → Strengthens glutes for powerful push-off
+
+2. Plank - 3x30 seconds
+   → Core stability for better running form
+
+These take ~5 minutes and target key running muscles.
 ```
+
+#### Rotation Strategy
+Ash rotates through different exercise pairs to ensure balanced development:
+- **Week 1**: Single-leg stability + Core
+- **Week 2**: Hip/Glute strength + Posterior chain
+- **Week 3**: Plyometrics + Core
+- **Week 4**: Single-leg stability + Hip/Glute strength
 
 #### Benefits
-*   **Low friction**: Users don't need to think about what exercises to do
-*   **Consistency**: Simple checkbox encourages completion
-*   **Education**: Users learn runner-specific exercises
-*   **Foundation**: Builds habit before adding complexity
+*   **Low friction**: Doesn't require users to change their existing routine
+*   **Education**: Introduces runner-specific exercises gradually
+*   **Flexibility**: Works with any strength training approach (gym, CrossFit, home workouts)
+*   **Foundation**: Builds awareness of running-specific needs before Phase 2
 
 ### Phase 2: Exercise Library & Detailed Tracking
 
