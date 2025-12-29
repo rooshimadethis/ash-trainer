@@ -140,6 +140,7 @@ The On-Device Engine generates this JSON structure before each AI request:
 | Tool | Purpose | Key Returns | Called In |
 |------|---------|-------------|----------|
 | `get_training_context` | Get current snapshot | Current goal, phase, adherence %, pillar priorities, ACWR, upcoming constraints, motivation patterns, weather conditions | All AI interactions (pre-request context loading) |
+| `get_workout_details` | Fetch full workout object | Complete PlannedWorkout with all fields (structure, RPE, distance, notes, etc.) | When AI needs to modify workouts beyond 7-day detailed window |
 
 ---
 
@@ -357,7 +358,7 @@ graph TD
 
 | Tool | Purpose | Key Params | Returns/Actions | Called In |
 |------|---------|------------|-----------------|----------|
-| `process_screenshot` | Extract data from images | `image_data`, `expected_type` | Uses OCR + AI vision to extract structured metrics | Chat conversation - user uploads training data/race results |
+| `process_screenshot` | Extract data from images | `image_data`, `expected_type` | Uses OCR + AI vision to extract structured metrics, then executes appropriate actions (log workout, update injury, etc.) and logs to ActionLogs. Image is not persisted. | Chat conversation - user uploads training data/race results/injury documentation |
 | `calculate_goal_confidence` | Multi-factor goal analysis | None | Confidence % (0-100%) with breakdown | Background calculation (aggressive), [Goal Confidence Monitoring](../ux/user_flows.md#5-goal-confidence-monitoring--adjustment) - Dashboard display |
 
 #### Goal Confidence Factors
@@ -377,73 +378,165 @@ graph TD
 
 ```mermaid
 erDiagram
-    Goals ||--o{ Plans : has
-    Plans ||--o{ Workouts : contains
-    Workouts ||--o{ DailyLogs : generates
-    Goals ||--o{ RaceEvents : targets
-    Goals ||--o{ TimeOffBlocks : includes
-    DailyLogs ||--o{ LoadTracking : calculates
+    UserProfile ||--o{ Goal : has
+    UserProfile ||--o{ TrainingPlan : has
+    UserProfile ||--o{ WorkoutLog : logs
+    UserProfile ||--o{ ActionLog : tracks
+    UserProfile ||--o{ Biomarker : tracks
+    UserProfile ||--o{ InjuryRecord : reports
+    UserProfile ||--o{ PerformanceSnapshot : snapshots
     
-    Goals {
+    Goal ||--|| TrainingPlan : generates
+    Goal ||--o{ RaceEvent : targets
+    
+    TrainingPlan ||--o{ Mesocycle : contains
+    Mesocycle ||--o{ Microcycle : contains
+    Microcycle ||--o{ PlannedWorkout : contains
+    Microcycle ||--o{ TimeOffDay : contains
+    
+    PlannedWorkout ||--o| WorkoutLog : completed_as
+    
+    RaceEvent ||--o{ PlannedWorkout : triggers_taper
+    
+    UserProfile {
         int id PK
-        string type
-        string target
-        date deadline
-        int confidence
-        json pillar_priorities
-    }
-    
-    Plans {
-        int id PK
-        int goal_id FK
-        string phase
-        int week_number
-        int mesocycle_week
-    }
-    
-    Workouts {
-        int id PK
-        date date
-        string type
-        float distance
-        int duration
-        float pace
-        int rpe
-        string status
-        text notes
-    }
-    
-    DailyLogs {
-        date date PK
-        int session_rpe
-        int duration
-        json biomarkers
-        int motivation_level
-    }
-    
-    RaceEvents {
-        int id PK
-        date date
-        string type
-        string distance
         string name
-        text notes
-        date taper_start_date
+        int age
+        float heightCm
+        float weightKg
+        string activityLevel
+        json pillarPriorities
+        float chronicLoad
+        float acuteLoad
+        float currentACWR
     }
     
-    TimeOffBlocks {
+    Goal {
         int id PK
-        date start_date
-        date end_date
+        int userId FK
+        string goalType
+        string targetDescription
+        float targetDistance
+        int targetTimeSeconds
+        date targetDate
+        string status
+        float confidenceScore
+    }
+    
+    TrainingPlan {
+        int id PK
+        int userId FK
+        int goalId FK
+        string planName
+        string periodizationModel
+        string currentPhase
+        int totalWeeks
+        int currentWeek
+        string status
+    }
+    
+    Mesocycle {
+        int id PK
+        int planId FK
+        int weekNumber
+        string focusType
+        float targetWeeklyDistance
+        float volumeAdjustmentFactor
+    }
+    
+    Microcycle {
+        int id PK
+        int mesocycleId FK
+        int weekNumber
+        date startDate
+        date endDate
+        float plannedDistance
+        float actualDistance
+        float adherenceRate
+    }
+    
+    PlannedWorkout {
+        int id PK
+        int microcycleId FK
+        date scheduledDate
+        string pillar
+        string workoutType
+        int targetDurationMinutes
+        float targetDistanceKm
+        int targetRPE
+        string status
+        bool isAdHoc
+    }
+    
+    TimeOffDay {
+        int id PK
+        int microcycleId FK
+        date date
         text notes
     }
     
-    LoadTracking {
-        date date PK
-        float acute_load
-        float chronic_load
-        float acwr
-        string injury_risk
+    WorkoutLog {
+        int id PK
+        int plannedWorkoutId FK
+        date startTime
+        int durationMinutes
+        string pillar
+        int rpe
+        float sessionLoad
+        json pillarData
+    }
+    
+    RaceEvent {
+        int id PK
+        int goalId FK
+        int userId FK
+        string eventName
+        string eventType
+        date eventDate
+        float distance
+        date taperStartDate
+    }
+    
+    Biomarker {
+        int id PK
+        int userId FK
+        string biomarkerType
+        int value
+        string reason
+        date recordedAt
+    }
+    
+    InjuryRecord {
+        int id PK
+        int userId FK
+        string injuryType
+        string location
+        int severityLevel
+        date firstReportedAt
+        date lastReportedAt
+        string status
+    }
+    
+    ActionLog {
+        int id PK
+        int userId FK
+        string actionType
+        string impact
+        string triggeredBy
+        json beforeState
+        json afterState
+        date undoExpiresAt
+        bool wasUndone
+    }
+    
+    PerformanceSnapshot {
+        int id PK
+        int userId FK
+        date snapshotDate
+        string pillar
+        float keyMetric
+        string metricType
+        string trendStatus
     }
 ```
 

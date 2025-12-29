@@ -295,10 +295,10 @@ Track important events directly on the calendar to help Ash plan training around
 
 **Ash's Smart Planning:**
 When an event is added:
-1. **Goal Race**: Automatic taper period (reduced volume 1-2 weeks before)
-2. **Tune-Up Race**: Light training 2-3 days before, recovery day after
-3. **Fun Run**: Slight intensity reduction day before
-4. **Recovery**: Easy week scheduled post-race based on event distance
+1. **Goal Race**: Automatic taper period (1-3 weeks before depending on distance: 5K = 7-10 days, 10K = 10-14 days, Half = 2 weeks, Marathon = 3 weeks)
+2. **Tune-Up Race**: Light training 2-3 days before, 2-3 easy days after
+3. **Fun Run**: Slight intensity reduction day before, 1 easy day after
+4. **Recovery**: Easy week scheduled post-race based on event distance and effort
 
 **Event Details View:**
 Tap on any event to see:
@@ -497,17 +497,21 @@ When time off is scheduled, Ash:
 - May add 1-2 days to goal timeline
 - Goal confidence may drop 5-10%
 
-**Long Breaks (1+ weeks):**
-- Training plan significantly adjusted
+**Long Breaks (1-2 weeks):**
+- Resume at 80% volume
 - Gradual ramp-up period after return
 - Goal deadline may need extension
 - Ash proactively asks: "Your marathon is in 8 weeks, but you're taking 2 weeks off. Should we push the goal to 10 weeks, or keep the deadline and adjust the target?"
 
-**Very Long Breaks (2+ weeks):**
+**Very Long Breaks (3-4 weeks):**
 - Treated as "Training Break"
-- On return, volume reduced by 20% for first week back
+- Resume at 60% volume for first week back
 - May require fitness re-assessment
 - Plan automatically adjusts timeline and goal confidence
+
+**Extended Breaks (2+ months):**
+- Restart from Week 1 of current mesocycle
+- Treat as new baseline
 
 ---
 
@@ -816,9 +820,9 @@ Users can upload screenshots showing:
 - **Fallback**: If AI can't parse, user manually enters key data
 
 **Privacy:**
-- Images stored encrypted
-- Optional: Auto-delete after data extraction
-- User can review and delete uploaded images anytime
+- Images are NOT persisted after data extraction
+- Only extracted structured data is stored
+- Temporary processing only, deleted immediately after parsing
 
 **Example Interaction:**
 ```

@@ -27,6 +27,17 @@ Ash focuses on **training prescription**, not:
 *   **Medical Diagnosis:** Persistent pain or injury requires professional evaluation
 *   **Sport-Specific Cross-Training Programs:** Ash is built for running, strength, and mobility—not cycling/swimming coaching (these are only used as low-impact alternatives during injury recovery)
 
+### **D. Goal Types**
+
+Ash supports four primary goal types that determine training plan structure:
+
+*   **Distance Milestone (`distance_milestone`):** Completing a specific distance for the first time (e.g., "Run my first 10K")
+*   **Time Performance (`time_performance`):** Achieving a specific time target (e.g., "Sub-30 minute 5K")
+*   **Event (`event`):** Training for a specific race or event with a deadline (e.g., "Austin Marathon on Feb 16")
+*   **Maintenance (`maintenance`):** Maintaining current fitness level while managing other priorities (e.g., "Keep running 3x/week during busy season")
+
+*Note: Detailed goal type logic and training plan variations will be expanded in future iterations.*
+
 ## 2. Holistic "Three-Pillar" Integration
 
 Ash treats **Running**, **Strength**, and **Mobility** as first-class citizens, prioritized by the user.

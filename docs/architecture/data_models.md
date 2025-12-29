@@ -100,14 +100,12 @@ class UserProfiles extends Table {
 {
   "running": "high",
   "strength": "medium",
-  "mobility": "low",
-  "yoga": "low",
-  "cycling": "medium"
+  "mobility": "low"
 }
 ```
 
 > [!NOTE]
-> Pillar priorities use a flexible JSON structure to allow adding new training pillars (yoga, swimming, cycling) without schema changes.
+> Pillar priorities use a flexible JSON structure to allow adding new training pillars (yoga, etc.) without schema changes. **Cycling and swimming are NOT regular pillars**—they are only used as low-impact alternatives during injury recovery (see training_philosophy.md).
 
 **ACWR (Acute:Chronic Workload Ratio) Calculation:**
 
@@ -240,7 +238,7 @@ class TrainingPlans extends Table {
   
   // Plan Structure
   TextColumn get planName => text()(); // "Marathon Base Building", "10K Speed Work"
-  TextColumn get periodizationModel => text()(); // 'pyramidal', 'polarized'
+  TextColumn get periodizationModel => text()(); // 'pyramidal', 'polarized' (auto-selected based on volume: <30km/week = pyramidal, >40km/week = polarized)
   TextColumn get currentPhase => text()(); // 'base', 'build', 'peak', 'taper', 'maintenance'
   
   // Timeline
@@ -780,13 +778,47 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 **Data Sources:**
 - `Goals`: Goal type, target, chronic patterns
 - `InjuryRecords`: Recurring injury history
+- `RaceEvents`: Historical race results, race frequency patterns
 - `UserProfiles`: Pillar priorities, baseline fitness
 - `WorkoutLogs`: Overall adherence patterns (aggregated)
 
 **Example Output:**
 ```json
 {
-  "long_term_summary": "User training for marathon on Oct 12. Started at beginner level. Increases volume ~15% weekly. Consistently skips strength but does mobility. Chronic left knee issue responds well to unilateral work."
+  "goal": {
+    "type": "event",
+    "target": "Marathon - Sub 4:00:00",
+    "deadline": "2024-10-12",
+    "weeks_elapsed": 8,
+    "weeks_remaining": 8
+  },
+  "user_baseline": {
+    "activity_level": "casual",
+    "pillar_priorities": { "running": "high", "strength": "medium", "mobility": "low" },
+    "estimated_vo2_max": 42.5
+  },
+  "adherence_patterns": {
+    "overall_completion_rate": 0.72,
+    "running_completion_rate": 0.85,
+    "strength_completion_rate": 0.45,
+    "mobility_completion_rate": 0.80,
+    "avg_weekly_volume_km": 35.2,
+    "volume_progression_rate": 0.15
+  },
+  "injury_history": [
+    {
+      "type": "knee_pain",
+      "location": "left_knee",
+      "first_reported": "2024-06-15",
+      "resolved_at": "2024-07-20",
+      "notes": "Responds well to unilateral work and mobility focus"
+    }
+  ],
+  "race_history": [
+    { "date": "2024-08-15", "distance": "5K", "time_seconds": 1335, "is_pr": true },
+    { "date": "2024-09-10", "distance": "10K", "time_seconds": 2790 },
+    { "date": "2024-10-01", "distance": "Half", "time_seconds": 6120 }
+  ]
 }
 ```
 
@@ -799,13 +831,68 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 **Data Sources:**
 - `WorkoutLogs`: Recent adherence patterns, session loads for ACWR calculation
 - `Biomarkers`: Energy/sleep/stress/motivation patterns
+- `RaceEvents`: Recent races (last 30 days) for recovery assessment
 - `TimeOffDays`: Recent time-off days
+- `TrainingPlan` / `Mesocycles`: Recent phase transitions, mesocycle progression
 - `UserProfiles`: Current ACWR (calculated from WorkoutLogs)
 
 **Example Output:**
 ```json
 {
-  "medium_term_trends": "Returned from vacation Dec 5. Missing 30% of running workouts (higher than average). Knee at 2/10 pain. ACWR trending high (1.25) - approaching injury risk."
+  "adherence_last_30_days": {
+    "completion_rate": 0.70,
+    "running_completion_rate": 0.65,
+    "missed_workouts": 9,
+    "deviation_from_average": -0.15
+  },
+  "load_management": {
+    "acute_load": 2800,
+    "chronic_load": 2240,
+    "acwr": 1.25,
+    "injury_risk": "moderate",
+    "trend": "increasing"
+  },
+  "active_injuries": [
+    {
+      "id": 42,
+      "type": "soreness",
+      "location": "left_knee",
+      "severity": 3,
+      "status": "active",
+      "first_reported": "2024-12-23",
+      "last_reported": "2024-12-28",
+      "days_since_report": 5
+    }
+  ],
+  "biomarker_trends": {
+    "energy_avg": 6.2,
+    "sleep_quality_avg": 5.8,
+    "stress_avg": 6.5,
+    "motivation_avg": 4.1,
+    "motivation_trend": "declining"
+  },
+  "recent_events": [
+    {
+      "type": "time_off",
+      "start_date": "2024-12-01",
+      "end_date": "2024-12-05",
+      "notes": "Vacation"
+    },
+    {
+      "type": "race",
+      "date": "2024-11-28",
+      "distance": "10K",
+      "time_seconds": 2805,
+      "rpe": 8,
+      "notes": "Tune-up race"
+    }
+  ],
+  "phase_transition": {
+    "from_phase": "base",
+    "to_phase": "build",
+    "transition_date": "2024-12-14",
+    "days_in_new_phase": 14
+  }
 }
 ```
 
@@ -816,6 +903,7 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 **Purpose:** High-fidelity immediate context for next 1-2 weeks of planning
 
 **Data Sources:**
+- `TrainingPlan` / `Mesocycles` / `Microcycles`: Current phase, week, mesocycle status
 - `PlannedWorkouts`: Upcoming schedule
 - `WorkoutLogs`: Recent completed workouts (detailed)
 - `RaceEvents`: Upcoming races
@@ -825,15 +913,65 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 **Example Output:**
 ```json
 {
-  "short_term_detail": [
-    { "day": -2, "activity": "Run", "status": "Completed", "rpe": 4, "notes": "Easy 5K" },
-    { "day": -1, "activity": "Strength", "status": "Skipped", "reason": "Not motivated" },
-    { "day": 0, "activity": "Tempo Run", "status": "Planned", "target_rpe": 7 },
-    { "day": 1, "activity": "Rest", "status": "Planned" },
-    { "day": 5, "activity": "Tune-Up Race", "status": "Planned", "distance": "5K" }
-  ]
+  "current_plan": {
+    "phase": "build",
+    "week": 8,
+    "total_weeks": 16,
+    "mesocycle_week": 4,
+    "is_recovery_week": true,
+    "periodization": "pyramidal"
+  },
+  "upcoming_workouts_detailed": [
+    // Next 7 days - FULL PlannedWorkout objects for direct modification
+    {
+      "day": 0,
+      "id": 123,
+      "date": "2024-12-29",
+      "pillar": "running",
+      "type": "tempo",
+      "distance_km": 8.0,
+      "target_rpe": 7,
+      "is_key_session": true,
+      "workout_structure": {
+        "warmup": { "duration_min": 15, "rpe": 3 },
+        "main": { "duration_min": 30, "rpe": 7 },
+        "cooldown": { "duration_min": 10, "rpe": 3 }
+      }
+    },
+    {
+      "day": 1,
+      "id": 124,
+      "date": "2024-12-30",
+      "pillar": "strength",
+      "type": "upper_body",
+      "target_rpe": 6,
+      "workout_structure": {
+        "exercises": ["bench_press", "rows", "shoulder_press"]
+      }
+    }
+  ],
+  "upcoming_workouts_summary": [
+    // Days 8-14 - Summary only (use get_workout_details tool if modification needed)
+    { "day": 8, "id": 130, "type": "long_run", "distance_km": 16.0, "is_key_session": true },
+    { "day": 10, "id": 132, "type": "intervals", "is_key_session": true }
+  ],
+  "completed_workouts_recent": [
+    { "day": -2, "activity": "Easy Run", "status": "Completed", "rpe": 4, "distance_km": 5.0, "notes": "Felt good" },
+    { "day": -1, "activity": "Strength", "status": "Skipped", "reason": "Low motivation (3/10)" }
+  ],
+  "active_injuries": [
+    { "location": "left_knee", "severity": 3, "status": "recovering", "days_since_report": 5 }
+  ],
+  "recent_biomarkers": {
+    "energy": 7,
+    "sleep_quality": 6,
+    "motivation": 4
+  }
 }
 ```
+
+> [!NOTE]
+> **Full Workout Details in Context**: The next 7 days include complete `PlannedWorkout` objects with all fields, enabling the AI to directly modify workouts without additional tool calls. For workouts beyond 7 days, the AI can use the `get_workout_details` tool if modification is needed.
 
 ---
 
@@ -885,21 +1023,19 @@ sequenceDiagram
     participant DB as Drift DB
     
     User->>UI: "I'm feeling tired today"
-    UI->>Repository: Send chat message
-    Repository->>DB: INSERT ChatMessage (user)
+    UI->>Repository: Send user input
     
     Repository->>Engine: Get current context
     Engine->>DB: Query recent logs, ACWR, today's workout
     Engine-->>Repository: Context JSON
     
-    Repository->>AI: Chat request (message + context)
+    Repository->>AI: Request (message + context)
     AI-->>Repository: Response + suggested actions
     
-    Repository->>DB: INSERT ChatMessage (assistant)
-    
     alt User accepts adjustment
-        Repository->>Engine: Adjust workout
+        Repository->>Engine: Execute adjustment
         Engine->>DB: UPDATE PlannedWorkout (reduce intensity)
+        Engine->>DB: INSERT ActionLog (snapshot)
         Engine->>DB: Recalculate confidence score
         Engine->>DB: UPDATE Goal (new confidence)
     end
