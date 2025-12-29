@@ -192,7 +192,8 @@ The On-Device Engine generates this JSON structure before each AI request:
 |------|---------|------------|-----------------|----------|
 | `calculate_acwr` | Calculate injury risk | None | ACWR value, risk status, recommendation | Background calculation (aggressive), displayed in context |
 | `log_session_rpe` | Record workout intensity | `workout_id`, `rpe` (1-10), `duration_minutes` | Updates weekly load totals and ACWR | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Post-workout logging |
-| `log_biomarker` | Track subjective feedback | `type` (pain/mood/energy/sleep), `value`, `location`, `note` | Flags patterns (recurring pain, low energy streaks) | [Injury Management](../ux/user_flows.md#4-injury-management--recovery) - Pain reporting |
+| `log_biomarker` | Track general health feedback | `type` (energy/sleep/stress/motivation), `value`, `reason`, `note` | Flags patterns (low energy streaks, poor sleep, declining motivation) | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Daily check-in |
+| `report_pain` | Track pain/injury | `injury_type`, `location`, `severity`, `note` | Creates/updates InjuryRecord, triggers plan adjustments | [Injury Management](../ux/user_flows.md#4-injury-management--recovery) - Pain reporting |
 
 ---
 
@@ -296,8 +297,8 @@ graph TD
 #### Tools
 
 | Tool | Purpose | Key Params | Logic | Called In |
-|------|---------|------------|-------|----------|
-| `log_motivation` | Record motivation state | `level` (1-10), `reason`, `note` | Detects patterns and triggers interventions | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Chat adjustment flow ("not motivated") |
+|------|---------|------------|-------|-----------|
+| `log_biomarker` | Track general health feedback | `type` (energy/sleep/stress/motivation), `value`, `reason`, `note` | Flags patterns (low energy streaks, poor sleep, low motivation) | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Daily check-in |
 | `detect_skip_pattern` | Analyze adherence patterns | None | Returns skip frequency, pattern type, suggested intervention | Background analysis, triggers intervention conversation |
 
 ---
@@ -338,10 +339,13 @@ graph TD
 
 #### Tools
 
+> [!NOTE]
+> **No Weather Storage**: Weather data is fetched just-in-time from weather APIs and not stored in the database. Any workout adjustments made due to weather are tracked via `ActionLogs` for audit purposes.
+
 | Tool | Purpose | Key Params | Returns/Actions | Called In |
-|------|---------|------------|-----------------|----------|
+|------|---------|------------|-----------------|-----------|
 | `check_weather` | Get weather forecast | `date`, `location` | Temperature, heat index, AQI, precipitation, recommendation | [Daily Training Loop](../ux/user_flows.md#2-daily-training-loop-the-core-experience) - Today's workout screen (weather display), Smart notifications |
-| `adjust_for_weather` | Modify workout for conditions | `workout_id`, `weather_condition` | Swaps outdoor for treadmill, reduces intensity, or changes type | Proactive weather alert notification, Chat adjustment flow |
+| `adjust_for_weather` | Modify workout for conditions | `workout_id`, `weather_condition` | Swaps outdoor for treadmill, reduces intensity, or changes type (logs to ActionLogs) | Proactive weather alert notification, Chat adjustment flow |
 
 ---
 

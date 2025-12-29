@@ -20,7 +20,7 @@ erDiagram
     User ||--o{ Goal : has
     User ||--o{ TrainingPlan : has
     User ||--o{ WorkoutLog : logs
-    User ||--o{ ChatMessage : sends
+    User ||--o{ ActionLog : tracks
     User ||--o{ Biomarker : tracks
     User ||--o{ InjuryRecord : reports
     
@@ -531,7 +531,10 @@ The `pillarData` field stores pillar-specific metrics in JSON format. Structure 
 
 ### 3.10 Biomarker
 
-Tracks subjective health metrics (pain, mood, energy, sleep quality).
+Tracks subjective health metrics (energy, sleep quality, stress, motivation).
+
+> [!NOTE]
+> **Pain is tracked separately**: All pain and injury tracking is handled by `InjuryRecords`. Biomarkers are for general health indicators that affect training readiness.
 
 ```dart
 @DataClassName('Biomarker')
@@ -540,11 +543,11 @@ class Biomarkers extends Table {
   IntColumn get userId => integer().references(UserProfiles, #id)();
   
   // Type
-  TextColumn get biomarkerType => text()(); // 'pain', 'mood', 'energy', 'sleep_quality', 'stress'
+  TextColumn get biomarkerType => text()(); // 'energy', 'sleep_quality', 'stress', 'motivation'
   
   // Value
   IntColumn get value => integer()(); // 1-10 scale
-  TextColumn get location => text().nullable()(); // For pain: 'knee', 'ankle'
+  TextColumn get reason => text().nullable()(); // For motivation: 'tired', 'stressed', 'not_feeling_it', 'excited'
   TextColumn get notes => text().nullable()();
   
   // Context
@@ -556,11 +559,31 @@ class Biomarkers extends Table {
 }
 ```
 
+**Motivation Pattern Detection:**
+
+When `biomarkerType = 'motivation'`, the Training Engine analyzes these logs to detect:
+- **Skip Patterns**: 3+ skips in 2 weeks triggers intervention
+- **Low Motivation Streaks**: 3+ consecutive days with value < 5
+- **Burnout Indicators**: Declining motivation trend over 2+ weeks
+
+**Example Query:**
+```dart
+// Get recent motivation logs
+final motivationLogs = await (select(biomarkers)
+  ..where((b) => b.biomarkerType.equals('motivation'))
+  ..orderBy([(b) => OrderingTerm.desc(b.recordedAt)])
+  ..limit(14)
+).get();
+```
+
 ---
 
 ### 3.11 Injury Record
 
-Tracks reported injuries and recovery progress.
+Tracks all pain and injuries, from minor soreness to major issues, with lifecycle management.
+
+> [!NOTE]
+> **Handles all pain tracking**: This table tracks everything from transient soreness ("knee felt tight after run") to diagnosed injuries ("shin splints"). Minor issues can be quickly resolved, while persistent injuries are tracked long-term.
 
 ```dart
 @DataClassName('InjuryRecord')
@@ -569,18 +592,22 @@ class InjuryRecords extends Table {
   IntColumn get userId => integer().references(UserProfiles, #id)();
   
   // Injury Details
-  TextColumn get injuryType => text()(); // 'knee_pain', 'shin_splints', 'it_band'
-  TextColumn get location => text()(); // 'left_knee', 'right_ankle'
+  TextColumn get injuryType => text()(); // 'soreness', 'tightness', 'knee_pain', 'shin_splints', 'it_band'
+  TextColumn get location => text()(); // 'left_knee', 'right_ankle', 'hamstring'
   IntColumn get severityLevel => integer()(); // 1-10
   
   // Timeline
   DateTimeColumn get firstReportedAt => dateTime()();
+  DateTimeColumn get lastReportedAt => dateTime()(); // Updated each time user reports
   DateTimeColumn get resolvedAt => dateTime().nullable()();
   TextColumn get status => text().withDefault(const Constant('active'))(); // 'active', 'recovering', 'resolved'
   
   // Impact
-  TextColumn get affectedMovements => text()(); // JSON: ["running", "squats"]
+  TextColumn get affectedMovements => text().nullable()(); // JSON: ["running", "squats"]
   TextColumn get recommendedAlternatives => text().nullable()(); // JSON: ["cycling", "swimming"]
+  
+  // Context
+  IntColumn get relatedWorkoutId => integer().references(WorkoutLogs, #id).nullable()(); // Workout that triggered initial report
   
   // Notes
   TextColumn get userNotes => text().nullable()();
@@ -592,70 +619,119 @@ class InjuryRecords extends Table {
 }
 ```
 
+**Lifecycle Examples:**
+
+**Minor Soreness (Quick Resolution):**
+```dart
+// Day 1: Report soreness
+InjuryRecord(
+  injuryType: 'soreness',
+  location: 'knee',
+  severityLevel: 3,
+  status: 'active'
+)
+
+// Day 3: Auto-resolved (no reports for 3 days)
+status = 'resolved'
+resolvedAt = DateTime.now()
+```
+
+**Persistent Injury (Long-term Tracking):**
+```dart
+// Week 1: Initial report
+InjuryRecord(
+  injuryType: 'shin_splints',
+  location: 'left_shin',
+  severityLevel: 6,
+  status: 'active',
+  affectedMovements: ['running']
+)
+
+// Week 2: Still present but improving
+severityLevel = 4
+status = 'recovering'
+lastReportedAt = DateTime.now()
+
+// Week 4: Resolved
+status = 'resolved'
+resolvedAt = DateTime.now()
+```
+
 ---
 
-### 3.12 Chat Message
+### 3.12 Action Log
 
-Stores conversation history with Ash.
+Tracks all AI actions with snapshot-based undo support.
+
+> [!NOTE]
+> **Time-Limited Undo**: Users can undo AI actions within a short time window (30 seconds for minor changes, 5 minutes for major changes). This prevents conflicts from later modifications while handling immediate regret scenarios.
 
 ```dart
-@DataClassName('ChatMessage')
-class ChatMessages extends Table {
+@DataClassName('ActionLog')
+class ActionLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get userId => integer().references(UserProfiles, #id)();
   
-  // Message
-  TextColumn get role => text()(); // 'user', 'assistant'
-  TextColumn get content => text()();
+  // Action Details
+  TextColumn get actionType => text()(); // 'reschedule_workout', 'adjust_intensity', 'create_injury', 'adjust_goal'
+  TextColumn get impact => text()(); // 'minor', 'major'
+  TextColumn get triggeredBy => text()(); // 'ai', 'user', 'system'
+  TextColumn get reason => text().nullable()(); // "User reported knee pain"
   
-  // Context
-  TextColumn get conversationContext => text().nullable()(); // JSON: current workout, goal, etc.
-  IntColumn get relatedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()();
+  // Snapshot (JSON)
+  TextColumn get beforeState => text()(); // JSON snapshot of affected records before change
+  TextColumn get afterState => text()(); // JSON snapshot after change
+  TextColumn get affectedRecords => text()(); // JSON: [{"table": "PlannedWorkouts", "ids": [1,2,3]}]
   
-  // AI Metadata
-  TextColumn get aiModelUsed => text().nullable()();
-  IntColumn get tokenCount => integer().nullable()();
+  // Undo Support
+  DateTimeColumn get undoExpiresAt => dateTime()(); // createdAt + (30s for minor, 5min for major)
+  BoolColumn get wasUndone => boolean().withDefault(const Constant(false))();
+  DateTimeColumn get undoneAt => dateTime().nullable()();
   
   // Metadata
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 ```
 
----
+**Undo Time Windows:**
+- **Minor actions** (adjust intensity, swap workout type): 30 seconds
+- **Major actions** (reschedule week, adjust goal, create injury): 5 minutes
 
-### 3.13 Motivation Log
-
-Tracks motivation patterns to detect burnout and trigger interventions.
+**Example Usage:**
 
 ```dart
-@DataClassName('MotivationLog')
-class MotivationLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get userId => integer().references(UserProfiles, #id)();
-  
-  // Motivation Level
-  IntColumn get motivationLevel => integer()(); // 1-10 scale
-  TextColumn get reason => text().nullable()(); // "tired", "stressed", "not_feeling_it", "excited"
-  TextColumn get notes => text().nullable()();
-  
-  // Context
-  DateTimeColumn get recordedAt => dateTime()();
-  IntColumn get relatedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()();
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+// Log action with snapshot
+final log = ActionLog(
+  actionType: 'reschedule_workouts',
+  impact: 'major',
+  triggeredBy: 'ai',
+  reason: 'User scheduled vacation',
+  beforeState: jsonEncode({
+    'workouts': [
+      {'id': 1, 'date': '2024-01-15', 'type': 'tempo'},
+      {'id': 2, 'date': '2024-01-16', 'type': 'long_run'}
+    ]
+  }),
+  afterState: jsonEncode({
+    'workouts': [] // Cleared for vacation
+  }),
+  affectedRecords: jsonEncode([
+    {'table': 'PlannedWorkouts', 'ids': [1, 2]}
+  ]),
+  undoExpiresAt: DateTime.now().add(Duration(minutes: 5))
+);
+
+// Undo within time window
+if (DateTime.now().isBefore(log.undoExpiresAt) && !log.wasUndone) {
+  await restoreFromSnapshot(log.beforeState, log.affectedRecords);
+  log.wasUndone = true;
+  log.undoneAt = DateTime.now();
 }
 ```
 
-**Pattern Detection:**
-The Training Engine analyzes motivation logs to detect:
-- **Skip Patterns**: 3+ skips in 2 weeks triggers intervention
-- **Low Motivation Streaks**: 3+ consecutive days with motivation < 5
-- **Burnout Indicators**: Declining motivation trend over 2+ weeks
-
 ---
 
-### 3.14 Performance Snapshot
+### 3.13 Performance Snapshot
 
 Stores periodic snapshots of performance metrics for plateau detection.
 
@@ -672,6 +748,8 @@ class PerformanceSnapshots extends Table {
   // Performance Metrics
   RealColumn get keyMetric => real()(); // Pace for running, weight for strength, etc.
   TextColumn get metricType => text()(); // 'avg_pace_5k', 'squat_1rm', 'flexibility_score'
+  IntColumn get sampleSize => integer().withDefault(const Constant(1))(); // Number of workouts used to calculate this metric
+  TextColumn get metricContext => text().nullable()(); // JSON: {"distance": "5K", "conditions": "flat_course", "avgHeartRate": 165}
   
   // Trend Analysis
   RealColumn get changeFromPrevious => real().nullable()(); // % change from last snapshot
@@ -688,41 +766,6 @@ class PerformanceSnapshots extends Table {
 - Triggers intervention protocols (deload, variation, volume block)
 
 ---
-
-### 3.15 Environmental Conditions
-
-Stores weather and environmental data for workout adjustments.
-
-```dart
-@DataClassName('EnvironmentalCondition')
-class EnvironmentalConditions extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get workoutId => integer().references(PlannedWorkouts, #id)();
-  
-  // Weather Data
-  RealColumn get temperatureCelsius => real().nullable()();
-  RealColumn get heatIndex => real().nullable()();
-  IntColumn get airQualityIndex => integer().nullable()();
-  TextColumn get precipitation => text().nullable()(); // 'none', 'light_rain', 'heavy_rain', 'snow'
-  RealColumn get windSpeedKph => real().nullable()();
-  
-  // Location Context
-  TextColumn get location => text().nullable()(); // "Home", "Hotel gym", "Vacation"
-  BoolColumn get outdoorAccessible => boolean().withDefault(const Constant(true))();
-  
-  // Adjustments Made
-  TextColumn get adjustmentType => text().nullable()(); // 'moved_indoors', 'reduced_intensity', 'changed_type'
-  TextColumn get adjustmentReason => text().nullable()();
-  
-  // Metadata
-  DateTimeColumn get recordedAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**Weather-Based Adjustment Thresholds:**
-- **Extreme Heat**: > 32°C (90°F) → Reduce intensity by 1 RPE
-- **Extreme Cold**: Below freezing with wind chill → Shorten duration, indoor warm-up
-- **Poor Air Quality**: AQI > 150 → Move all outdoor activity indoors
 
 ---
 
@@ -755,8 +798,7 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 
 **Data Sources:**
 - `WorkoutLogs`: Recent adherence patterns, session loads for ACWR calculation
-- `Biomarkers`: Pain/energy/sleep patterns
-- `MotivationLogs`: Motivation trends
+- `Biomarkers`: Energy/sleep/stress/motivation patterns
 - `TimeOffDays`: Recent time-off days
 - `UserProfiles`: Current ACWR (calculated from WorkoutLogs)
 
@@ -778,8 +820,7 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 - `WorkoutLogs`: Recent completed workouts (detailed)
 - `RaceEvents`: Upcoming races
 - `TimeOffDays`: Upcoming time-off days
-- `EnvironmentalConditions`: Weather forecasts
-- `Biomarkers`: Latest pain/energy reports
+- `Biomarkers`: Latest energy/sleep/stress/motivation reports
 
 **Example Output:**
 ```json

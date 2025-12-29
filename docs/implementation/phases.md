@@ -315,42 +315,16 @@ class Biomarkers extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get goalId => integer().references(Goals, #id)();
   DateTimeColumn get date => dateTime()();
-  TextColumn get type => text()(); // 'pain' | 'mood' | 'energy' | 'sleep'
+  TextColumn get type => text()(); // 'energy' | 'sleep_quality' | 'stress' | 'motivation'
   IntColumn get value => integer()(); // 1-10 scale
-  TextColumn get location => text().nullable()(); // For pain: 'knee' | 'ankle' | 'back'
+  TextColumn get reason => text().nullable()(); // For motivation: 'tired' | 'stressed' | 'bored' | 'excited'
   TextColumn get notes => text().nullable()();
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
 }
 ```
 
-**`motivation_logs`**
-```dart
-class MotivationLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get goalId => integer().references(Goals, #id)();
-  DateTimeColumn get date => dateTime()();
-  IntColumn get level => integer()(); // 1-10
-  TextColumn get reason => text().nullable()(); // 'tired' | 'stressed' | 'bored' | 'excited'
-  TextColumn get notes => text().nullable()();
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**`weather_cache`** (optional - can use API directly)
-```dart
-class WeatherCache extends Table {
-  DateTimeColumn get date => dateTime()();
-  TextColumn get location => text()();
-  RealColumn get temperature => real()();
-  RealColumn get heatIndex => real().nullable()();
-  IntColumn get aqi => integer().nullable()();
-  TextColumn get conditions => text()(); // 'clear' | 'rain' | 'snow'
-  DateTimeColumn get cachedAt => dateTime().withDefault(currentDateAndTime)();
-  
-  @override
-  Set<Column> get primaryKey => {date, location};
-}
-```
+> [!NOTE]
+> **Motivation Tracking**: Motivation is tracked as a biomarker type (`type = 'motivation'`). The `reason` field captures context like 'tired', 'stressed', 'not_feeling_it', or 'excited'. Pattern detection queries filter by type to analyze motivation trends separately from other health metrics.
 
 ### Features to Implement
 
@@ -388,8 +362,7 @@ class WeatherCache extends Table {
 - **Gemini Pro:** Deep injury assessment, plateau analysis
 
 **Tools Added:**
-- `log_biomarker` (track pain, mood, energy, sleep)
-- `log_motivation` (record motivation state)
+- `log_biomarker` (track energy, sleep, stress, motivation)
 - `detect_skip_pattern` (analyze adherence)
 - `detect_plateau` (performance analysis)
 - `trigger_plateau_protocol` (implement intervention)
