@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "ux/product_spec/training/goals.md",
+                "file": "design_progression.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "goals"
+              "title": "design_progression"
             }
           }
         ]
@@ -94,7 +94,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "ux/product_spec/training/goals.md",
+                "file": "design_progression.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +104,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for goals"
+              "title": "Backlinks for design_progression"
             }
           },
           {
@@ -113,12 +113,12 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "ux/product_spec/training/goals.md",
+                "file": "design_progression.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from goals"
+              "title": "Outgoing links from design_progression"
             }
           },
           {
@@ -156,13 +156,13 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "ux/product_spec/training/goals.md",
+                "file": "design_progression.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of goals"
+              "title": "Outline of design_progression"
             }
           }
         ]
@@ -185,14 +185,34 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "ux/product_spec/training/pillars.md",
+    "architecture/data_models/entities.md",
+    "architecture/data_models/data_lifecycle.md",
+    "architecture/data_models/validation_rules.md",
+    "architecture/data_models/_index.md",
+    "architecture/data_models/README.md",
+    "architecture/data_models",
+    "ux/product_spec/training/intensity.md",
+    "ux/product_spec/training/goals.md",
+    "ux/training_philosophy.md",
+    "ux/user_journeys/01_onboarding_goal_setup.md",
+    "ux/product_spec/training/running/training_plans.md",
+    "architecture/OLD_data_models/workouts.md",
+    "architecture/OLD_data_models/validation_report.md",
+    "architecture/OLD_data_models/user.md",
+    "architecture/OLD_data_models/system.md",
+    "architecture/OLD_data_models/health.md",
+    "architecture/OLD_data_models/goals.md",
+    "architecture/OLD_data_models/_index.md",
+    "architecture/OLD_data_models",
+    "architecture/data_models/validation_report.md",
+    "ux/user_journeys/05_goal_progress.md",
+    "ux/user_journeys/04_calendar_view.md",
     "ux/product_spec/athlete_markers/biomarkers.md",
     "ux/product_spec/cloud_sync.md",
     "ux/user_journeys/user_journey_inventory.md",
-    "ux/user_journeys/01_onboarding_goal_setup.md",
     "ux/user_journeys",
     "ux/user_journey_inventory.md",
-    "design_progression.md",
-    "architecture/data_processing/athlete_markers/biomarkers.md",
-    "architecture/data_processing/athlete_markers/injury_mgmt.md"
+    "design_progression.md"
   ]
 }

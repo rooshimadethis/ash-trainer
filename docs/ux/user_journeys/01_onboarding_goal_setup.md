@@ -6,6 +6,9 @@
 
 **Journey Type**: Core Journey (Phase 1 - Foundation)
 
+> [!NOTE]
+> **Design Change (2025-12-29)**: The "Training History" question has been removed from onboarding. Instead, the user's fitness level will be inferred from their baseline workout performance (Step 9: First Workout Prompt). This prevents misclassification of beginners who might be overtraining.
+
 ---
 
 ## Entry Points
@@ -38,45 +41,18 @@
 
 ---
 
-### Step 2: Training History Screen
-**User Sees**:
-- Question: "Let's start with the basics - how much have you been running lately?"
-- Multiple choice options:
-  - "Just getting started (or getting back into it!)"
-  - "1-2 runs per week"
-  - "3-4 runs per week"
-  - "5+ runs per week (nice!)"
-- Progress indicator (Step 1 of 5)
-
-**User Can**:
-- Select one option → Enables "Next" button
-- Tap "Next" → Goes to Step 3
-- Tap "Back" → Goes to Step 1
-
-**Data Displayed**:
-- None
-
-**Data Collected**:
-- `User.trainingHistory` (enum: beginner, casual, regular, advanced)
-
-**Edge Cases**:
-- No selection made: "Next" button disabled
-- User taps "Next" without selection: Show validation message
-
----
-
-### Step 3: Availability Screen
+### Step 2: Availability Screen
 **User Sees**:
 - Question: "When are you NOT available to train?"
 - Weekly calendar with selectable days (Mon-Sun)
 - Helper text: "Tap any days that are off-limits (work, family time, Netflix binges... we get it)"
-- Progress indicator (Step 2 of 5)
+- Progress indicator (Step 1 of 4)
 
 **User Can**:
 - Tap days to select/deselect unavailable days → Updates selection
-- Tap "Next" → Goes to Step 4 (if at least 2 days remain available)
-- Tap "Skip" → Goes to Step 4 (assumes all days available)
-- Tap "Back" → Goes to Step 2
+- Tap "Next" → Goes to Step 3 (if at least 2 days remain available)
+- Tap "Skip" → Goes to Step 3 (assumes all days available)
+- Tap "Back" → Goes to Step 1
 
 **Data Displayed**:
 - None
@@ -92,19 +68,19 @@
 
 ---
 
-### Step 4: Constraints Check Screen
+### Step 3: Constraints Check Screen
 **User Sees**:
 - Question: "Anything I should know about? (Injuries, time limits, etc.)"
 - Text input field (optional)
 - Examples: "Knee gets cranky after 5K", "Max 30 min per session", "All good!"
 - Helper text: "This helps me keep you healthy and realistic"
-- Progress indicator (Step 3 of 5)
+- Progress indicator (Step 2 of 4)
 
 **User Can**:
 - Type constraints (optional)
-- Tap "Next" → Goes to Step 5
-- Tap "Skip" → Goes to Step 5 (no constraints recorded)
-- Tap "Back" → Goes to Step 3
+- Tap "Next" → Goes to Step 4
+- Tap "Skip" → Goes to Step 4 (no constraints recorded)
+- Tap "Back" → Goes to Step 2
 
 **Data Displayed**:
 - None
@@ -118,7 +94,7 @@
 
 ---
 
-### Step 5: Goal Type Selection Screen
+### Step 4: Goal Type Selection Screen
 **User Sees**:
 - Question: "Alright, what's the dream? What are we chasing together?"
 - Four goal type cards with icons and descriptions:
@@ -126,12 +102,12 @@
   - **Time Performance**: "Get faster ⚡" (PR that 5K, crush your time)
   - **Event**: "Race day ready 🏁" (Specific race, specific date)
   - **Maintenance**: "Stay consistent 🔄" (Keep the habit alive)
-- Progress indicator (Step 4 of 5)
+- Progress indicator (Step 3 of 4)
 
 **User Can**:
 - Tap a goal type card → Highlights selection
-- Tap "Next" → Goes to Step 6 (goal-specific details)
-- Tap "Back" → Goes to Step 4
+- Tap "Next" → Goes to Step 5 (goal-specific details)
+- Tap "Back" → Goes to Step 3
 
 **Data Displayed**:
 - None
@@ -145,8 +121,8 @@
 
 ---
 
-### Step 6a: Distance Milestone Details Screen
-*(Shown only if user selected "Distance Milestone" in Step 5)*
+### Step 5a: Distance Milestone Details Screen
+*(Shown only if user selected "Distance Milestone" in Step 4)*
 
 **User Sees**:
 - Question: "What distance are we conquering?"
@@ -499,7 +475,7 @@
 ## Data Model Requirements
 
 ### User Table
-- `trainingHistory` (enum: beginner, casual, regular, advanced)
+- `trainingHistory` (deprecated - will be inferred from baseline workout performance)
 - `availableDays` (array of strings: ["monday", "tuesday", ...])
 - `constraints` (text, nullable)
 - `healthPermissionsGranted` (boolean)

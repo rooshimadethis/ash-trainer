@@ -51,25 +51,26 @@ Once features are defined, map out **how users will interact** with each feature
 
 ---
 
-## Stage 2: UI/UX Wireframes & User Journeys ⚠️
+## Stage 2: UI/UX Wireframes & User Journeys ✅
 
-**Status**: Not Started  
-**Location**: `docs/ux/user_journeys/` (to be created)
+**Status**: Phase 1 Complete  
+**Location**: [`docs/ux/user_journeys/`](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/)
 
 ### Purpose
 Define **how** users will experience each feature through visual flows and interaction patterns.
 
 ### Deliverables
-- [ ] User journey maps for core features
-  - [ ] Goal Setting journey
-  - [ ] Daily Check-in journey
-  - [ ] Workout Logging journey
-  - [ ] Calendar/Plan Review journey
-  - [ ] Onboarding journey
-- [ ] Screen inventory (list of all screens needed)
-- [ ] Wireframes or mockups (low-fidelity is fine)
-- [ ] Navigation map (how screens connect)
-- [ ] Interaction patterns (gestures, animations, transitions)
+- [x] User journey maps for core features (Phase 1)
+  - [x] Goal Setting journey ([01_onboarding_goal_setup.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/01_onboarding_goal_setup.md))
+  - [ ] Daily Check-in journey (Phase 2)
+  - [ ] Workout Logging journey (Phase 2)
+  - [x] Calendar/Plan Review journey ([04_calendar_view.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md))
+  - [x] Onboarding journey (included in 01_onboarding_goal_setup.md)
+  - [x] Goal Progress journey ([05_goal_progress.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/05_goal_progress.md))
+- [x] Screen inventory (23 screens identified from Phase 1 journeys)
+- [ ] Wireframes or mockups (deferred to implementation)
+- [x] Navigation map (entry/exit points documented in each journey)
+- [x] Interaction patterns (swipe gestures, modals, transitions documented)
 
 ### User Journey Template
 For each feature, document:
@@ -85,30 +86,30 @@ Edge Cases: [Error states, empty states, loading states]
 ```
 
 ### Validation Criteria
-- [ ] Every feature from Stage 1 has a corresponding user journey
-- [ ] All screens are accounted for
-- [ ] Navigation flows are logical and intuitive
-- [ ] Edge cases and error states are considered
+- [x] Every feature from Stage 1 has a corresponding user journey (Phase 1 features complete)
+- [x] All screens are accounted for (23 screens documented)
+- [x] Navigation flows are logical and intuitive (entry/exit points defined)
+- [x] Edge cases and error states are considered (documented in each journey)
 
 ### Next Step
 Once you know what screens exist and what they display, define the **data structures** needed to support them.
 
 ---
 
-## Stage 3: Information Architecture (Data Models) ⚠️
+## Stage 3: Information Architecture (Data Models) ✅
 
-**Status**: Partially Complete  
+**Status**: Complete  
 **Location**: [`docs/architecture/data_models/`](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/)
 
 ### Purpose
 Define **what data** the app needs to store, retrieve, and manipulate.
 
 ### Deliverables
-- [ ] Entity-Relationship Diagrams (ERD)
-- [ ] Data model definitions (tables, fields, relationships)
-- [ ] Data validation rules
-- [ ] Data lifecycle (creation, updates, deletion)
-- [ ] Screen-to-data mapping (which screens need which data)
+- [x] Entity-Relationship Diagrams (ERD) - [_index.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/_index.md)
+- [x] Data model definitions (tables, fields, relationships) - [entities.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/entities.md)
+- [x] Data validation rules - [validation_rules.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/validation_rules.md)
+- [x] Data lifecycle (creation, updates, deletion) - [data_lifecycle.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/data_lifecycle.md)
+- [x] Screen-to-data mapping (which screens need which data) - [entities.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/data_models/entities.md)
 
 ### Screen-to-Data Mapping Template
 ```
@@ -334,9 +335,9 @@ Write the actual code that brings the design to life.
 | Stage | Status | Completion | Blocker |
 |-------|--------|------------|---------|
 | 1. Product Spec | ✅ Complete | 100% | None |
-| 2. UI/UX Journeys | ❌ Not Started | 0% | Need to create user journey maps |
-| 3. Data Models | ⚠️ Partial | 60% | Need screen-to-data validation |
-| 4. System Architecture | ❌ Not Started | 0% | Blocked by Stage 2 |
+| 2. UI/UX Journeys | ✅ Phase 1 Complete | 60% | Phase 2+ journeys pending |
+| 3. Data Models | ✅ Complete | 100% | None |
+| 4. System Architecture | ❌ Not Started | 0% | Ready to start |
 | 5. API/Interface Design | ❌ Not Started | 0% | Blocked by Stage 4 |
 | 6. Implementation | ⚠️ Premature | 10% | Should pause until Stage 4 complete |
 
@@ -345,9 +346,9 @@ Write the actual code that brings the design to life.
 ## 🚨 Recommended Actions
 
 ### Immediate (This Week)
-1. **Create user journey maps** for core features (Stage 2)
-2. **Build screen inventory** listing all screens needed
-3. **Validate data models** against screen requirements (Stage 3)
+1. ✅ ~~**Create user journey maps** for core features (Stage 2)~~ - Phase 1 Complete
+2. ✅ ~~**Build screen inventory** listing all screens needed~~ - 23 screens identified
+3. **Validate data models** against screen requirements (Stage 3) - **CURRENT TASK**
 
 ### Short-term (Next Week)
 4. **Define system architecture** (Flutter pattern, layers, folder structure) (Stage 4)

@@ -26,13 +26,13 @@ Based on the [Design Progression Tracker](file:///Users/rooshi/Documents/program
 ### Phase 1: Foundation (Week 1)
 1. **Onboarding & Goal Setup** (#1) - Users need to get started
 2. **Calendar View & Plan Overview** (#4) - Primary navigation hub
-3. **Goal Progress Tracking** (#5) - Motivation and transparency
 
 ### Phase 2: Core Training Loop (Week 1-2)
-4. **Daily Check-In & Workout Adjustment** (#2) - Daily engagement
-5. **Workout Logging & Completion** (#3) - Close the training loop
+3. **Daily Check-In & Workout Adjustment** (#2) - Daily engagement
+4. **Workout Logging & Completion** (#3) - Close the training loop
 
 ### Phase 3: Enhanced Features (Week 2-3)
+5. **Goal Progress Tracking** (#5) - Motivation and transparency
 6. **Pillar Priority Configuration** (#6) - Differentiation
 7. **Injury Management & Pain Tracking** (#9) - Safety and trust
 8. **Time Off Scheduling** (#11) - Flexibility
