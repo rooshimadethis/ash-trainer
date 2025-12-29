@@ -1,0 +1,1050 @@
+# Data Models & Schema
+
+This document defines the core data structures, database schema, and relationships for the Ash Trainer app.
+
+## 1. Technology Stack
+
+**Database:** Drift (SQLite wrapper for Flutter)
+- **Why?** Type-safe, reactive streams, offline-first, excellent for complex queries
+- **Location:** Local device storage (primary), optional cloud backup
+
+**Key-Value Store:** Shared Preferences
+- **Why?** Simple flags and settings (onboarding status, theme, notification preferences)
+
+---
+
+## 2. Core Entities Overview
+
+```mermaid
+erDiagram
+    User ||--o{ Goal : has
+    User ||--o{ TrainingPlan : has
+    User ||--o{ WorkoutLog : logs
+    User ||--o{ ChatMessage : sends
+    User ||--o{ Biomarker : tracks
+    User ||--o{ InjuryRecord : reports
+    
+    Goal ||--|| TrainingPlan : generates
+    Goal ||--o{ RaceEvent : targets
+    
+    TrainingPlan ||--o{ Mesocycle : contains
+    Mesocycle ||--o{ Microcycle : contains
+    Microcycle ||--o{ PlannedWorkout : contains
+    
+    PlannedWorkout ||--o| WorkoutLog : completed_as
+    WorkoutLog ||--o{ ExerciseLog : contains
+    WorkoutLog ||--|| LoadTracking : calculates
+    
+    RaceEvent ||--o{ PlannedWorkout : triggers_taper
+```
+
+---
+
+## 3. Entity Definitions
+
+### 3.1 User Profile
+
+Stores user identity, preferences, and current fitness baseline.
+
+```dart
+@DataClassName('UserProfile')
+class UserProfiles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  
+  // Identity
+  TextColumn get name => text().withLength(min: 1, max: 100)();
+  TextColumn get email => text().nullable()();
+  
+  // Biometric Data
+  IntColumn get age => integer().nullable()();
+  RealColumn get heightCm => real().nullable()();
+  RealColumn get weightKg => real().nullable()();
+  
+  // Onboarding Data
+  TextColumn get activityLevel => text()(); // 'beginner', 'casual', 'regular', 'very_active'
+  TextColumn get primaryGoalType => text()(); // 'distance', 'performance', 'maintenance', 'event'
+  
+  // Pillar Priorities (Flexible JSON structure)
+  TextColumn get pillarPriorities => text(); // JSON: {"running": "high", "strength": "medium", "mobility": "low"}
+  
+  // Training Availability
+  IntColumn get daysPerWeek => integer().withDefault(const Constant(4))();
+  TextColumn get preferredRestDays => text().nullable()(); // JSON array: ["Sunday"]
+  
+  // Equipment Access
+  TextColumn get equipmentAccess => text()(); // JSON array: ["gym", "dumbbells", "bodyweight"]
+  
+  // Limitations
+  TextColumn get injuries => text().nullable()(); // JSON array of injury objects
+  TextColumn get movementRestrictions => text().nullable()(); // JSON array: ["no_overhead_press"]
+  
+  // Calculated Baselines (updated by Training Engine)
+  RealColumn get chronicLoad => real().withDefault(const Constant(0.0))(); // 4-week average
+  RealColumn get estimatedVO2Max => real().nullable()();
+  RealColumn get maxHeartRate => real().nullable()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Biometric Data Usage:**
+- **Age**: Max heart rate calculation (220 - age), age-graded performance
+- **Height**: Stride length estimates, body composition context
+- **Weight**: Calorie burn estimation, power-to-weight ratios
+
+**Pillar Priorities JSON Example:**
+```json
+{
+  "running": "high",
+  "strength": "medium",
+  "mobility": "low",
+  "yoga": "low",
+  "cycling": "medium"
+}
+```
+
+> [!NOTE]
+> Pillar priorities use a flexible JSON structure to allow adding new training pillars (yoga, swimming, cycling) without schema changes.
+
+**Key Relationships:**
+- One user → Many goals
+- One user → Many training plans
+- One user → Many workout logs
+
+---
+
+### 3.2 Goal
+
+Represents a user's training objective (e.g., "Run a marathon in 16 weeks").
+
+```dart
+@DataClassName('Goal')
+class Goals extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Goal Definition
+  TextColumn get goalType => text()(); // 'distance_milestone', 'time_performance', 'maintenance', 'event'
+  TextColumn get targetDescription => text()(); // "Complete first 10K", "Sub-30 5K"
+  
+  // Target Metrics
+  RealColumn get targetDistance => real().nullable()(); // in km
+  IntColumn get targetTimeSeconds => integer().nullable()(); // for time-based goals
+  
+  // Timeline
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get targetDate => dateTime().nullable()(); // null = "as soon as possible"
+  DateTimeColumn get completedAt => dateTime().nullable()();
+  
+  // Status
+  TextColumn get status => text().withDefault(const Constant('active'))(); // 'active', 'paused', 'completed', 'abandoned'
+  RealColumn get confidenceScore => real().withDefault(const Constant(100.0))(); // 0-100%
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Confidence Score Calculation:**
+Computed by the Training Engine based on:
+- Workout adherence (completed vs. planned)
+- Workout quality (hitting RPE/pace targets)
+- Consistency (training frequency)
+- Time remaining vs. progress
+- Recent performance trends
+
+---
+
+### 3.3 Race Event
+
+Tracks races and athletic events on the calendar.
+
+> [!NOTE]
+> **Goal Relationship:** A `Goal` can have multiple `RaceEvents` (e.g., tune-up races leading to a goal race). The `goalId` field links a race to its associated goal. If `goalId` is null, it's a standalone event (fun run, non-running event).
+
+```dart
+@DataClassName('RaceEvent')
+class RaceEvents extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get goalId => integer().references(Goals, #id).nullable()(); // null for non-goal races
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Event Details
+  TextColumn get eventName => text()();
+  TextColumn get eventType => text()(); // 'goal_race', 'tune_up', 'fun_run', 'non_running'
+  DateTimeColumn get eventDate => dateTime()();
+  
+  // Race Specifics
+  RealColumn get distance => real().nullable()(); // in km
+  TextColumn get raceDistance => text().nullable()(); // '5K', '10K', 'Half', 'Marathon'
+  TextColumn get location => text().nullable()();
+  TextColumn get notes => text().nullable()(); // "Hilly course, 7am start"
+  
+  // Goals
+  IntColumn get goalTimeSeconds => integer().nullable()();
+  RealColumn get goalPacePerKm => real().nullable()();
+  
+  // Taper Management
+  DateTimeColumn get taperStartDate => dateTime().nullable()(); // Auto-calculated based on race distance
+  IntColumn get taperDurationDays => integer().nullable()(); // 7-21 days depending on distance
+  
+  // Results (filled after race)
+  IntColumn get actualTimeSeconds => integer().nullable()();
+  RealColumn get actualPacePerKm => real().nullable()();
+  IntColumn get effortRPE => integer().nullable()(); // 1-10
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.4 Training Plan
+
+A high-level container for a user's training program (typically 4-16 weeks).
+
+> [!IMPORTANT]
+> **Goal Relationship:** While the schema allows multiple plans per goal (for versioning and history), the application enforces **only one active plan per goal** at any time. The `status` field distinguishes between active, paused, and completed plans.
+
+```dart
+@DataClassName('TrainingPlan')
+class TrainingPlans extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  IntColumn get goalId => integer().references(Goals, #id).nullable()();
+  
+  // Plan Structure
+  TextColumn get planName => text()(); // "Marathon Base Building", "10K Speed Work"
+  TextColumn get periodizationModel => text()(); // 'pyramidal', 'polarized'
+  TextColumn get currentPhase => text()(); // 'base', 'build', 'peak', 'taper', 'maintenance'
+  
+  // Timeline
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  IntColumn get totalWeeks => integer()();
+  IntColumn get currentWeek => integer().withDefault(const Constant(1))();
+  
+  // Status
+  TextColumn get status => text().withDefault(const Constant('active'))(); // 'active', 'paused', 'completed'
+  
+  // AI Generation Context (for regeneration)
+  TextColumn get generationPrompt => text().nullable()(); // Original AI prompt used
+  TextColumn get aiModelUsed => text().nullable()(); // 'gemini-flash-2.0'
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.5 Mesocycle
+
+A 4-week training block within a plan.
+
+```dart
+@DataClassName('Mesocycle')
+class Mesocycles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get planId => integer().references(TrainingPlans, #id)();
+  
+  // Structure
+  IntColumn get weekNumber => integer()(); // 1-4 within the mesocycle
+  TextColumn get focusType => text()(); // 'base_volume', 'progression', 'peak', 'recovery'
+  
+  // Volume Targets
+  RealColumn get targetWeeklyDistance => real()(); // in km
+  IntColumn get targetSessionCount => integer()();
+  RealColumn get volumeAdjustmentFactor => real().withDefault(const Constant(1.0))(); // 1.0 = normal, 0.7 = recovery week
+  
+  // Dates
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.6 Microcycle (Week)
+
+A single week of training within a mesocycle.
+
+```dart
+@DataClassName('Microcycle')
+class Microcycles extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get mesocycleId => integer().references(Mesocycles, #id)();
+  
+  // Structure
+  IntColumn get weekNumber => integer()(); // Global week number in plan
+  DateTimeColumn get startDate => dateTime()();
+  DateTimeColumn get endDate => dateTime()();
+  
+  // Time-Off Management
+  BoolColumn get isTimeOff => boolean().withDefault(const Constant(false))();
+  TextColumn get timeOffNotes => text().nullable()(); // "Beach vacation", "Work conference", "Finals week"
+  
+  // Weekly Metrics (calculated)
+  RealColumn get plannedDistance => real()();
+  RealColumn get actualDistance => real().withDefault(const Constant(0.0))();
+  RealColumn get adherenceRate => real().withDefault(const Constant(0.0))(); // 0-100%
+  
+  // Load Tracking
+  RealColumn get plannedLoad => real()(); // Sum of planned session loads
+  RealColumn get actualLoad => real().withDefault(const Constant(0.0))(); // Sum of logged session loads
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+> [!NOTE]
+> **Time-Off Handling:** When a user schedules time off, the microcycle for that week is marked with `isTimeOff = true`. No workouts are pre-scheduled for that week, but the microcycle structure remains intact for calendar consistency. Ad-hoc workouts can be added to time-off weeks if requested.
+
+---
+
+### 3.7 Planned Workout
+
+A single scheduled training session.
+
+```dart
+@DataClassName('PlannedWorkout')
+class PlannedWorkouts extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get microcycleId => integer().references(Microcycles, #id)();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Scheduling
+  DateTimeColumn get scheduledDate => dateTime()();
+  IntColumn get dayOfWeek => integer()(); // 1=Monday, 7=Sunday
+  BoolColumn get isKeySession => boolean().withDefault(const Constant(false))(); // High priority
+  BoolColumn get isAdHoc => boolean().withDefault(const Constant(false))(); // Ad-hoc workout (e.g., during time off)
+  
+  // Workout Type
+  TextColumn get pillar => text()(); // 'running', 'strength', 'mobility'
+  TextColumn get workoutType => text()(); // 'easy_run', 'tempo', 'intervals', 'long_run', 'full_body', 'upper_lower'
+  TextColumn get sessionName => text()(); // "Easy Aerobic Run", "Interval Session"
+  
+  // Prescription
+  IntColumn get targetDurationMinutes => integer().nullable()();
+  RealColumn get targetDistanceKm => real().nullable()();
+  IntColumn get targetRPE => integer().nullable()(); // 1-10
+  TextColumn get intensityZone => text().nullable()(); // 'easy', 'moderate', 'threshold', 'vo2max'
+  
+  // Detailed Instructions (JSON)
+  TextColumn get workoutStructure => text().nullable()(); // JSON: intervals, sets, reps
+  TextColumn get coachingNotes => text().nullable()(); // "Focus on form, keep it conversational"
+  
+  // Status
+  TextColumn get status => text().withDefault(const Constant('planned'))(); // 'planned', 'completed', 'skipped', 'rescheduled'
+  IntColumn get completedAsLogId => integer().references(WorkoutLogs, #id).nullable()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+
+> [!NOTE]
+> **userId Reference:** While `userId` can be derived through the microcycle → mesocycle → plan chain, it's kept here for:
+> 1. **Ad-hoc workouts** during time-off periods that still belong to a microcycle
+> 2. **Query performance** when filtering workouts by user without joining through the hierarchy
+> 
+> **isAdHoc Flag:** Marks workouts created on-demand during time-off periods. These don't affect adherence metrics or goal confidence.
+
+**Workout Structure JSON Example (Intervals):**
+```json
+{
+  "warmup": { "duration_min": 10, "rpe": 3 },
+  "intervals": [
+    { "duration_min": 4, "rpe": 9, "recovery_min": 2 }
+  ],
+  "repeat": 5,
+  "cooldown": { "duration_min": 10, "rpe": 3 }
+}
+```
+
+---
+
+### 3.8 Workout Log
+
+Records a completed training session with actual performance data.
+
+```dart
+@DataClassName('WorkoutLog')
+class WorkoutLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  IntColumn get plannedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()(); // null for ad-hoc
+  
+  // Timing
+  DateTimeColumn get startTime => dateTime()();
+  DateTimeColumn get endTime => dateTime()();
+  IntColumn get durationMinutes => integer()();
+  
+  // Workout Details
+  TextColumn get pillar => text()(); // 'running', 'strength', 'mobility'
+  TextColumn get workoutType => text()();
+  
+  // Performance Metrics (Running)
+  RealColumn get distanceKm => real().nullable()();
+  RealColumn get avgPacePerKm => real().nullable()(); // seconds per km
+  IntColumn get avgHeartRate => integer().nullable()();
+  IntColumn get maxHeartRate => integer().nullable()();
+  RealColumn get elevationGainMeters => real().nullable()();
+  
+  // Subjective Metrics
+  IntColumn get rpe => integer()(); // 1-10 (required)
+  RealColumn get sessionLoad => real()(); // RPE × Duration
+  
+  // Health Connect Integration
+  TextColumn get healthConnectRecordId => text().nullable()();
+  TextColumn get sourceApp => text().nullable()(); // 'suunto', 'strava', 'manual'
+  
+  // Notes
+  TextColumn get userNotes => text().nullable()();
+  TextColumn get painReported => text().nullable()(); // JSON: [{"location": "knee", "severity": 3}]
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Session Load Calculation:**
+```
+Session Load = RPE × Duration (minutes)
+Example: 7 RPE × 60 min = 420 AU
+```
+
+---
+
+### 3.9 Exercise Log (Strength Workouts)
+
+Detailed log of individual exercises within a strength session.
+
+```dart
+@DataClassName('ExerciseLog')
+class ExerciseLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get workoutLogId => integer().references(WorkoutLogs, #id)();
+  
+  // Exercise Details
+  TextColumn get exerciseName => text()(); // "Back Squat", "Bench Press"
+  TextColumn get movementPattern => text()(); // 'squat', 'hinge', 'push', 'pull'
+  
+  // Sets & Reps
+  IntColumn get setNumber => integer()();
+  IntColumn get reps => integer()();
+  RealColumn get weightKg => real().nullable()();
+  IntColumn get rir => integer().nullable()(); // Reps in reserve (0-4)
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.10 Biomarker
+
+Tracks subjective health metrics (pain, mood, energy, sleep quality).
+
+```dart
+@DataClassName('Biomarker')
+class Biomarkers extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Type
+  TextColumn get biomarkerType => text()(); // 'pain', 'mood', 'energy', 'sleep_quality', 'stress'
+  
+  // Value
+  IntColumn get value => integer()(); // 1-10 scale
+  TextColumn get location => text().nullable()(); // For pain: 'knee', 'ankle'
+  TextColumn get notes => text().nullable()();
+  
+  // Context
+  DateTimeColumn get recordedAt => dateTime()();
+  IntColumn get relatedWorkoutId => integer().references(WorkoutLogs, #id).nullable()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.11 Load Tracking
+
+Tracks training load metrics for injury prevention using ACWR (Acute:Chronic Workload Ratio).
+
+```dart
+@DataClassName('LoadTracking')
+class LoadTracking extends Table {
+  DateTimeColumn get date => dateTime()(); // Primary key - one record per day
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Load Metrics
+  RealColumn get acuteLoad => real()(); // Sum of session loads (RPE × duration) for last 7 days
+  RealColumn get chronicLoad => real()(); // Average weekly load over last 28 days
+  RealColumn get acwr => real()(); // Acute ÷ Chronic ratio
+  
+  // Risk Assessment
+  TextColumn get injuryRisk => text()(); // 'low', 'moderate', 'high'
+  TextColumn get recommendation => text().nullable()(); // "Maintain current load", "Deload recommended"
+  
+  // Metadata
+  DateTimeColumn get calculatedAt => dateTime().withDefault(currentDateAndTime)();
+  
+  @override
+  Set<Column> get primaryKey => {date, userId};
+}
+```
+
+**ACWR Zones:**
+- **< 0.8**: Undertraining - can increase volume
+- **0.8 - 1.3**: Safe Zone - maintain or progress gradually
+- **> 1.3**: High Risk - deload immediately
+
+**Calculation Frequency:** Recalculated aggressively by Training Engine after every workout log and on app startup.
+
+---
+
+### 3.12 Injury Record
+
+Tracks reported injuries and recovery progress.
+
+```dart
+@DataClassName('InjuryRecord')
+class InjuryRecords extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Injury Details
+  TextColumn get injuryType => text()(); // 'knee_pain', 'shin_splints', 'it_band'
+  TextColumn get location => text()(); // 'left_knee', 'right_ankle'
+  IntColumn get severityLevel => integer()(); // 1-10
+  
+  // Timeline
+  DateTimeColumn get firstReportedAt => dateTime()();
+  DateTimeColumn get resolvedAt => dateTime().nullable()();
+  TextColumn get status => text().withDefault(const Constant('active'))(); // 'active', 'recovering', 'resolved'
+  
+  // Impact
+  TextColumn get affectedMovements => text()(); // JSON: ["running", "squats"]
+  TextColumn get recommendedAlternatives => text().nullable()(); // JSON: ["cycling", "swimming"]
+  
+  // Notes
+  TextColumn get userNotes => text().nullable()();
+  TextColumn get medicalAdvice => text().nullable()(); // From doctor/PT
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.13 Chat Message
+
+Stores conversation history with Ash.
+
+```dart
+@DataClassName('ChatMessage')
+class ChatMessages extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Message
+  TextColumn get role => text()(); // 'user', 'assistant'
+  TextColumn get content => text()();
+  
+  // Context
+  TextColumn get conversationContext => text().nullable()(); // JSON: current workout, goal, etc.
+  IntColumn get relatedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()();
+  
+  // AI Metadata
+  TextColumn get aiModelUsed => text().nullable()();
+  IntColumn get tokenCount => integer().nullable()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+---
+
+### 3.14 Motivation Log
+
+Tracks motivation patterns to detect burnout and trigger interventions.
+
+```dart
+@DataClassName('MotivationLog')
+class MotivationLogs extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Motivation Level
+  IntColumn get motivationLevel => integer()(); // 1-10 scale
+  TextColumn get reason => text().nullable()(); // "tired", "stressed", "not_feeling_it", "excited"
+  TextColumn get notes => text().nullable()();
+  
+  // Context
+  DateTimeColumn get recordedAt => dateTime()();
+  IntColumn get relatedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()();
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Pattern Detection:**
+The Training Engine analyzes motivation logs to detect:
+- **Skip Patterns**: 3+ skips in 2 weeks triggers intervention
+- **Low Motivation Streaks**: 3+ consecutive days with motivation < 5
+- **Burnout Indicators**: Declining motivation trend over 2+ weeks
+
+---
+
+### 3.15 Performance Snapshot
+
+Stores periodic snapshots of performance metrics for plateau detection.
+
+```dart
+@DataClassName('PerformanceSnapshot')
+class PerformanceSnapshots extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get userId => integer().references(UserProfiles, #id)();
+  
+  // Snapshot Details
+  DateTimeColumn get snapshotDate => dateTime()();
+  TextColumn get pillar => text()(); // 'running', 'strength', 'mobility'
+  
+  // Performance Metrics
+  RealColumn get keyMetric => real()(); // Pace for running, weight for strength, etc.
+  TextColumn get metricType => text()(); // 'avg_pace_5k', 'squat_1rm', 'flexibility_score'
+  
+  // Trend Analysis
+  RealColumn get changeFromPrevious => real().nullable()(); // % change from last snapshot
+  TextColumn get trendStatus => text()(); // 'improving', 'plateau', 'declining'
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Plateau Detection Logic:**
+- Snapshots taken every 2-3 weeks
+- Plateau = < 2% improvement over 3 consecutive snapshots
+- Triggers intervention protocols (deload, variation, volume block)
+
+---
+
+### 3.16 Environmental Conditions
+
+Stores weather and environmental data for workout adjustments.
+
+```dart
+@DataClassName('EnvironmentalCondition')
+class EnvironmentalConditions extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get workoutId => integer().references(PlannedWorkouts, #id)();
+  
+  // Weather Data
+  RealColumn get temperatureCelsius => real().nullable()();
+  RealColumn get heatIndex => real().nullable()();
+  IntColumn get airQualityIndex => integer().nullable()();
+  TextColumn get precipitation => text().nullable()(); // 'none', 'light_rain', 'heavy_rain', 'snow'
+  RealColumn get windSpeedKph => real().nullable()();
+  
+  // Location Context
+  TextColumn get location => text().nullable()(); // "Home", "Hotel gym", "Vacation"
+  BoolColumn get outdoorAccessible => boolean().withDefault(const Constant(true))();
+  
+  // Adjustments Made
+  TextColumn get adjustmentType => text().nullable()(); // 'moved_indoors', 'reduced_intensity', 'changed_type'
+  TextColumn get adjustmentReason => text().nullable()();
+  
+  // Metadata
+  DateTimeColumn get recordedAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+**Weather-Based Adjustment Thresholds:**
+- **Extreme Heat**: > 32°C (90°F) → Reduce intensity by 1 RPE
+- **Extreme Cold**: Below freezing with wind chill → Shorten duration, indoor warm-up
+- **Poor Air Quality**: AQI > 150 → Move all outdoor activity indoors
+
+---
+
+## 4. Context Architecture: Three-Tier Memory System
+
+The Training Engine synthesizes data from all tables into a three-tier context structure for AI interactions:
+
+### 4.1 Long-Term Context (> 1 month ago)
+
+**Purpose:** High-level journey summary for big picture consistency
+
+**Data Sources:**
+- `Goals`: Goal type, target, chronic patterns
+- `InjuryRecords`: Recurring injury history
+- `UserProfiles`: Pillar priorities, baseline fitness
+- `WorkoutLogs`: Overall adherence patterns (aggregated)
+
+**Example Output:**
+```json
+{
+  "long_term_summary": "User training for marathon on Oct 12. Started at beginner level. Increases volume ~15% weekly. Consistently skips strength but does mobility. Chronic left knee issue responds well to unilateral work."
+}
+```
+
+---
+
+### 4.2 Medium-Term Context (7-30 days ago)
+
+**Purpose:** Recent trends and deviations to contextualize current performance
+
+**Data Sources:**
+- `WorkoutLogs`: Recent adherence patterns
+- `LoadTracking`: ACWR trends
+- `Biomarkers`: Pain/energy/sleep patterns
+- `MotivationLogs`: Motivation trends
+- `Microcycles`: Recent time-off weeks (isTimeOff flag)
+
+**Example Output:**
+```json
+{
+  "medium_term_trends": "Returned from vacation Dec 5. Missing 30% of running workouts (higher than average). Knee at 2/10 pain. ACWR trending high (1.25) - approaching injury risk."
+}
+```
+
+---
+
+### 4.3 Short-Term Context (Last 7 + Next 7 days)
+
+**Purpose:** High-fidelity immediate context for next 1-2 weeks of planning
+
+**Data Sources:**
+- `PlannedWorkouts`: Upcoming schedule
+- `WorkoutLogs`: Recent completed workouts (detailed)
+- `RaceEvents`: Upcoming races
+- `Microcycles`: Upcoming time-off weeks (isTimeOff flag)
+- `EnvironmentalConditions`: Weather forecasts
+- `Biomarkers`: Latest pain/energy reports
+
+**Example Output:**
+```json
+{
+  "short_term_detail": [
+    { "day": -2, "activity": "Run", "status": "Completed", "rpe": 4, "notes": "Easy 5K" },
+    { "day": -1, "activity": "Strength", "status": "Skipped", "reason": "Not motivated" },
+    { "day": 0, "activity": "Tempo Run", "status": "Planned", "target_rpe": 7 },
+    { "day": 1, "activity": "Rest", "status": "Planned" },
+    { "day": 5, "activity": "Tune-Up Race", "status": "Planned", "distance": "5K" }
+  ]
+}
+```
+
+---
+
+## 5. Data Flow Patterns
+
+### 5.1 Onboarding → First Plan Generation
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI
+    participant Repository
+    participant Engine as Training Engine
+    participant AI as AI Service
+    participant DB as Drift DB
+    
+    User->>UI: Complete onboarding
+    UI->>Repository: Save UserProfile
+    Repository->>DB: INSERT UserProfile
+    
+    UI->>Repository: Request initial plan
+    Repository->>Engine: Get user baseline
+    Engine->>DB: Query UserProfile
+    Engine-->>Repository: User context JSON
+    
+    Repository->>AI: Generate plan (context + philosophy)
+    AI-->>Repository: Plan structure (JSON)
+    
+    Repository->>DB: INSERT TrainingPlan
+    Repository->>DB: INSERT Mesocycles (4 weeks)
+    Repository->>DB: INSERT Microcycles (4 weeks)
+    Repository->>DB: INSERT PlannedWorkouts (28 days)
+    
+    Repository-->>UI: Plan ready
+    UI->>User: Show Week 1
+```
+
+---
+
+### 5.2 Daily Check-In → Workout Adjustment
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI
+    participant Repository
+    participant Engine as Training Engine
+    participant AI as AI Service
+    participant DB as Drift DB
+    
+    User->>UI: "I'm feeling tired today"
+    UI->>Repository: Send chat message
+    Repository->>DB: INSERT ChatMessage (user)
+    
+    Repository->>Engine: Get current context
+    Engine->>DB: Query recent logs, ACWR, today's workout
+    Engine-->>Repository: Context JSON
+    
+    Repository->>AI: Chat request (message + context)
+    AI-->>Repository: Response + suggested actions
+    
+    Repository->>DB: INSERT ChatMessage (assistant)
+    
+    alt User accepts adjustment
+        Repository->>Engine: Adjust workout
+        Engine->>DB: UPDATE PlannedWorkout (reduce intensity)
+        Engine->>DB: Recalculate confidence score
+        Engine->>DB: UPDATE Goal (new confidence)
+    end
+    
+    Repository-->>UI: Updated plan + confidence
+    UI->>User: Show adjusted workout
+```
+
+---
+
+### 5.3 Post-Workout Logging → Load Calculation
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant UI
+    participant Repository
+    participant Engine as Training Engine
+    participant DB as Drift DB
+    
+    User->>UI: Complete workout + rate RPE
+    UI->>Repository: Log workout
+    
+    Repository->>DB: INSERT WorkoutLog
+    Repository->>DB: UPDATE PlannedWorkout (status = completed)
+    
+    Repository->>Engine: Recalculate metrics
+    Engine->>DB: Query last 7 days (Acute Load)
+    Engine->>DB: Query last 28 days (Chronic Load)
+    Engine-->>Repository: ACWR = 1.15 (safe zone)
+    
+    Engine->>DB: UPDATE UserProfile (chronicLoad)
+    Engine->>DB: UPDATE Goal (confidenceScore)
+    
+    Repository-->>UI: Updated stats
+    UI->>User: "Great work! Confidence: 92%"
+```
+
+---
+
+## 6. Calculated Fields & Formulas
+
+### 6.1 ACWR (Acute:Chronic Workload Ratio)
+
+```dart
+double calculateACWR(List<WorkoutLog> logs) {
+  final now = DateTime.now();
+  
+  // Acute Load: Last 7 days
+  final acuteLoad = logs
+      .where((log) => log.startTime.isAfter(now.subtract(Duration(days: 7))))
+      .fold(0.0, (sum, log) => sum + log.sessionLoad);
+  
+  // Chronic Load: Last 28 days
+  final chronicLoad = logs
+      .where((log) => log.startTime.isAfter(now.subtract(Duration(days: 28))))
+      .fold(0.0, (sum, log) => sum + log.sessionLoad) / 4.0; // Average per week
+  
+  if (chronicLoad == 0) return 1.0;
+  return acuteLoad / chronicLoad;
+}
+```
+
+**Safe Zone:** 0.8 - 1.3
+- **> 1.3:** High injury risk → Suggest deload
+- **< 0.8:** Undertraining → Can increase volume
+
+---
+
+### 6.2 Goal Confidence Score
+
+```dart
+double calculateGoalConfidence({
+  required Goal goal,
+  required List<PlannedWorkout> plannedWorkouts,
+  required List<WorkoutLog> completedLogs,
+  required double acwr,
+}) {
+  double score = 0.0;
+  
+  // 1. Adherence (40 points)
+  final adherenceRate = completedLogs.length / plannedWorkouts.length;
+  score += adherenceRate * 40;
+  
+  // 2. Workout Quality (20 points)
+  final qualityScore = completedLogs
+      .where((log) => log.rpe >= (log.plannedWorkout?.targetRPE ?? 5) - 1)
+      .length / completedLogs.length;
+  score += qualityScore * 20;
+  
+  // 3. Consistency (15 points)
+  final streakDays = calculateCurrentStreak(completedLogs);
+  score += min(streakDays / 7, 1.0) * 15;
+  
+  // 4. Recovery (10 points)
+  if (acwr > 1.3) score -= 10; // Overtraining penalty
+  else if (acwr >= 0.8 && acwr <= 1.3) score += 10; // Safe zone bonus
+  
+  // 5. Time Remaining (10 points)
+  final daysRemaining = goal.targetDate?.difference(DateTime.now()).inDays ?? 0;
+  final daysElapsed = DateTime.now().difference(goal.startDate).inDays;
+  final progressRate = daysElapsed / (daysElapsed + daysRemaining);
+  score += (progressRate * 10).clamp(0, 10);
+  
+  // 6. Recent Performance (5 points)
+  final recentTrend = calculatePerformanceTrend(completedLogs.take(5).toList());
+  score += recentTrend * 5;
+  
+  return score.clamp(0, 100);
+}
+```
+
+---
+
+## 7. Data Sync Strategy
+
+### 7.1 Health Connect Integration
+
+**Read Operations:**
+- Pull workout data on app startup (last 7 days)
+- Manual refresh via swipe-down gesture
+- Background sync (daily at 6:00 AM)
+
+**Write Operations:**
+- Push planned workouts to Health Connect (for other apps to read)
+- Mark workouts as completed in Health Connect
+
+**Data Mapping:**
+```dart
+// Health Connect → Ash
+ExerciseSessionRecord → WorkoutLog {
+  exerciseType: RUNNING → pillar: 'running'
+  totalDistance → distanceKm
+  totalEnergyBurned → (not used, we calculate from RPE)
+  heartRateSamples → avgHeartRate, maxHeartRate
+}
+```
+
+---
+
+### 7.2 Cloud Backup (Optional)
+
+**Strategy:** Export to JSON, encrypt, upload to user's cloud storage (Google Drive, iCloud)
+
+**Frequency:** Weekly automatic backup + manual export option
+
+**Data Included:**
+- User profile
+- All goals and plans
+- Workout logs (last 6 months)
+- Chat history (last 3 months)
+
+---
+
+## 8. Migration Strategy
+
+As the app evolves, we'll need to handle schema changes.
+
+**Drift Migrations:**
+```dart
+@DriftDatabase(tables: [UserProfiles, Goals, TrainingPlans, ...])
+class AppDatabase extends _$AppDatabase {
+  AppDatabase() : super(_openConnection());
+  
+  @override
+  int get schemaVersion => 2;
+  
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+    onCreate: (Migrator m) async {
+      await m.createAll();
+    },
+    onUpgrade: (Migrator m, int from, int to) async {
+      if (from == 1) {
+        // Add new columns for v2
+        await m.addColumn(workoutLogs, workoutLogs.healthConnectRecordId);
+        await m.addColumn(userProfiles, userProfiles.estimatedVO2Max);
+      }
+    },
+  );
+}
+```
+
+---
+
+## 9. Performance Considerations
+
+### 9.1 Indexing
+
+```dart
+// Add indexes for common queries
+@TableIndex(name: 'workout_logs_user_date', columns: {#userId, #startTime})
+@TableIndex(name: 'planned_workouts_date', columns: {#scheduledDate})
+@TableIndex(name: 'chat_messages_user_created', columns: {#userId, #createdAt})
+```
+
+### 9.2 Query Optimization
+
+**Bad:**
+```dart
+// Loads entire table into memory
+final allLogs = await select(workoutLogs).get();
+final recentLogs = allLogs.where((log) => log.startTime.isAfter(cutoff));
+```
+
+**Good:**
+```dart
+// Filters at database level
+final recentLogs = await (select(workoutLogs)
+  ..where((log) => log.startTime.isAfterValue(cutoff)))
+  .get();
+```
+
+---
+
+## 10. Next Steps
+
+1. **Implement Drift Tables:** Create `lib/data/database/tables/` directory with table definitions
+2. **Generate Database Class:** Run `flutter pub run build_runner build`
+3. **Create Repository Layer:** `lib/data/repositories/training_repository.dart`
+4. **Build Training Engine:** `lib/core/training_engine/training_engine.dart`
+5. **Test with Mock Data:** Create seed data for development
+
+---
+
+## Related Documents
+
+- [Data Processing Architecture](data_processing.md) - Hybrid local/cloud strategy
+- [User Flows](../ux/user_flows.md) - How data flows through the app
+- [Training Philosophy](../ai/training_philosophy.md) - Business logic for calculations

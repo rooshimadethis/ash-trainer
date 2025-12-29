@@ -327,20 +327,20 @@ EXAMPLE: Goal Race Entry
 └────────────────────────────────┘
 ```
 
-#### Vacation & Time-Off Visualization
+#### Time-Off Visualization
 
 Scheduled time off is clearly displayed on the calendar with distinct visual treatment.
 
 **Visual Styling:**
 - **Blocked dates**: Diagonal stripe pattern or subtle texture overlay
 - **Color**: Muted gray or vacation-themed color (beach teal 🏖️)
-- **Label**: Shows vacation type ("Vacation", "Work Travel", "Rest Week")
-- **Icons**: 🏖️ 🧳 📴 depending on type
+- **Label**: "Time Off" with optional user note (e.g., "Beach Vacation", "Work Conference")
+- **Icon**: 🏖️ or 📴
 
 **Calendar Display:**
 
 ```
-MONTHLY VIEW WITH VACATION
+MONTHLY VIEW WITH TIME OFF
 ┌──────────────────────────────────────────┐
 │         February 2025                    │
 │  S   M   T   W   T   F   S              │
@@ -349,37 +349,30 @@ MONTHLY VIEW WITH VACATION
 │  9  10  11  12  13  14  15              │
 │  🏖️ 🏖️ 🏖️ 🏖️  ●   ○   🏆              │
 │                                          │
-│ Legend: 🏖️ = Vacation, 🏆 = Race Day    │
+│ Legend: 🏖️ = Time Off, 🏆 = Race Day    │
 └──────────────────────────────────────────┘
 
-WEEKLY VIEW WITH VACATION PERIOD
+WEEKLY VIEW WITH TIME OFF PERIOD
 ┌─────────────────────────────────────────────────────────┐
-│  Feb 6-12: Vacation Mode 🏖️                            │
+│  Feb 6-12: Time Off 🏖️                                 │
 │  ┌──────────────────────────────────────────────────┐   │
 │  │ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░ │   │
-│  │ 🏖️ Beach Vacation - Complete Rest               │   │
+│  │ 🏖️ Beach Vacation                                │   │
 │  │ "No workouts scheduled. Enjoy your break!"      │   │
+│  │ "Open the app anytime to request a workout"     │   │
 │  └──────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Vacation Modes on Calendar:**
-
-| Mode | Calendar Display | Badge Style |
-|------|------------------|-------------|
-| **Complete Rest** | Solid blocked pattern | 🏖️ "Rest" |
-| **Maintenance** | Lighter pattern with optional workout dots | 🧘 "Light" |
-| **Flexible** | Dotted outline (not fully blocked) | ⏸️ "Flex" |
-
 **Interaction with Blocked Dates:**
-- **Tap blocked date**: Shows vacation details, option to end early or extend
+- **Tap blocked date**: Shows time-off details, option to request ad-hoc workout for that day, option to end early or extend
 - **Tap return date**: Shows "Welcome Back" workout (always easy/recovery)
-- **Conflict warning**: If adding event during vacation, Ash asks for confirmation
+- **Conflict warning**: If adding event during time off, Ash asks for confirmation
 
 **Integration with Event Tracking:**
 - Block out travel days around races automatically
 - Suggest rest days after goal races
-- Warn if vacation conflicts with taper period
+- Warn if time off conflicts with taper period
 
 **Goal Countdown:**
 - Show days until goal race/deadline
@@ -394,10 +387,11 @@ WEEKLY VIEW WITH VACATION PERIOD
 - Yellow/orange weeks = falling behind
 - Tap to see confidence breakdown
 
-**Vacation Mode:**
+**Time Off:**
 - Blocked-out dates shown with special pattern/color
-- "🏖️ Vacation" label
-- No workouts scheduled during this time
+- "🏖️ Time Off" label
+- No workouts pre-scheduled during this time
+- Ad-hoc workouts available on request
 
 **Injury Prevention:**
 - Warning indicators if training load is too high
@@ -405,6 +399,7 @@ WEEKLY VIEW WITH VACATION PERIOD
 - Recovery weeks visually distinct
 
 ---
+
 
 ### 5. Injury Prevention & Recovery
 
@@ -448,7 +443,7 @@ Ash provides **general hydration and fueling tips**, especially for beginners wh
 
 ---
 
-### 7. Schedule Vacation / Time Off
+### 7. Schedule Time Off
 
 #### Proactive Planning
 Users can schedule time off in advance to prevent interruptions during busy periods or actual vacations.
@@ -470,19 +465,22 @@ Users can schedule time off in advance to prevent interruptions during busy peri
 **Ash's Response:**
 When time off is scheduled, Ash:
 1. **Acknowledges**: "Got it! I've blocked out June 15-22 for your vacation 🏖️"
-2. **Adjusts Training Plan**: Redistributes workouts around the blocked period
+2. **Clears Schedule**: No workouts pre-scheduled during this period
 3. **Updates Goal Confidence**: Recalculates based on new timeline
 4. **Turns Off Notifications**: No training reminders during this period
-5. **Ad-Hoc Exercise Access**: If you open the app during vacation, you can request optional exercises ("Want a quick hotel room workout?")
+5. **Ad-Hoc Exercise Access**: If you open the app during time off, you can request optional exercises for that day
 
 **During Time Off:**
-- **No Training Notifications**: Ash stays completely quiet during vacation
-- **Optional Workouts**: Open the app anytime to request an ad-hoc exercise ("Give me a 20-min hotel room strength workout")
-- **No Pressure**: Workouts during vacation don't affect goal confidence or adherence metrics
+- **No Pre-Scheduled Workouts**: Calendar is completely empty during blocked period
+- **No Training Notifications**: Ash stays completely quiet
+- **Ad-Hoc Workouts Available**: Open the app anytime to request an exercise for that day
+  - Example: "Give me a 20-min hotel room strength workout"
+  - Example: "I want to go for an easy run today"
+- **No Pressure**: Ad-hoc workouts during time off don't affect goal confidence or adherence metrics
 - **Early Return**: "Back early? Tap here to resume your regular training plan"
 
 **Return from Time Off:**
-- **Welcome Back**: "Welcome back! Hope you had a great vacation 🎉"
+- **Welcome Back**: "Welcome back! Hope you had a great time 🎉"
 - **Gentle Restart**: First workout back is always easy/recovery pace
 - **Plan Adjustment**: Training plan automatically adjusted based on time off duration
 - **Flexibility**: "Feeling rusty? We can ease back in slower if needed."
@@ -505,21 +503,14 @@ When time off is scheduled, Ash:
 - Goal deadline may need extension
 - Ash proactively asks: "Your marathon is in 8 weeks, but you're taking 2 weeks off. Should we push the goal to 10 weeks, or keep the deadline and adjust the target?"
 
-#### Vacation Duration Guidelines
-
-**Short Breaks (<1 week):**
-- Minimal impact on training plan
-- "Maintenance Mode": Keep the long run if possible, otherwise easy runs for fun
-- No stress, no notifications
-- If you open the app, request ad-hoc workouts anytime
-
-**Long Breaks (>2 weeks):**
+**Very Long Breaks (2+ weeks):**
 - Treated as "Training Break"
 - On return, volume reduced by 20% for first week back
 - May require fitness re-assessment
 - Plan automatically adjusts timeline and goal confidence
 
 ---
+
 
 ## 🔔 Notification Strategy
 
