@@ -31,15 +31,13 @@ Ash goes beyond simple workout prescriptions by tracking comprehensive data acro
 ## 📂 Feature Documentation Map
 
 ### 🏃 Training & Planning (`training/`)
-*   **[Goal Types](training/goal_types.md)**: Logic for Distance, Time, Event, and Maintenance goals.
+*   **[Goals & Progress](training/goals.md)**: Goal types, confidence tracking, and progress metrics.
 *   **[Pillars](training/pillars.md)**: Integrating Running, Strength, and Mobility.
+*   **[Running Plans](training/running/training_plans.md)**: Periodization strategies for each goal type.
 *   **[Strength Training](training/strength/strength.md)**: Runner-specific strength programming and tracking.
 *   **[Intensity & Zones](training/intensity.md)**: RPE definitions and Autoregulation.
 *   **[Calendar](training/calendar.md)**: Visual planning and week views.
 *   **[Coaching](training/coaching.md)**: Daily check-ins and notification strategy.
-
-### 📈 Progress & Integrity (`progress/`)
-*   **[Goal Confidence](training/goal_confidence.md)**: The 0-100% success likelihood metric.
 
 ### 🧬 Athlete Markers (`athlete_markers/`)
 *   **[Biomarkers & Recovery](athlete_markers/biomarkers.md)**: Automated health data collection and burnout tracking.
