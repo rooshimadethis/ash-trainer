@@ -1,5 +1,9 @@
 # Pillar Coordination (Running, Strength, Mobility)
 
+> **Implements**: [Pillars](../../ux/product_spec/training/pillars.md)  
+> **Data Models**: [Goals](../data_models/_index.md), [Workouts](../data_models/_index.md)  
+> **Used By**: All workout scheduling and adjustment features
+
 **Purpose**: Intelligently schedule workouts across all three pillars while respecting recovery principles.
 
 ## Core Principles
@@ -31,7 +35,7 @@ Different goal types emphasize pillars differently:
 ## Related Tools
 
 | Tool | Purpose | Key Params | Validation Logic | Called In |
-|------|---------|------------|------------------|----------|
+|------|---------|------------|------------------|-----------|
 | `reschedule_workout` | Move workout to new date | `workout_id`, `new_date`, `reason` | Checks 48-hour rule, cross-pillar conflicts, vacation blocks, race taper periods. **Strictness varies by goal type** (strict for Event, flexible for Maintenance) | Daily Training Loop - Reschedule action |
 | `adjust_intensity` | Scale workout difficulty | `workout_id`, `factor` (e.g., 0.8) | Ensures adjustments respect RPE targets and recovery principles | Daily Training Loop - Chat adjustment flow (fatigue) |
 | `swap_workout` | Replace workout type | `workout_id`, `new_type` | Validates pillar coordination (no hard leg day before long run) | Injury Management - Swap run for strength |
@@ -40,6 +44,5 @@ Different goal types emphasize pillars differently:
 
 | Entity | Schema Definition |
 |--------|-------------------|
-| Goal Type | [goals.md](../data_models/goals.md) |
-| Workouts | [workouts.md](../data_models/workouts.md) |
-
+| Goal Type | [goals.md](../data_models/_index.md) |
+| Workouts | [workouts.md](../data_models/_index.md) |

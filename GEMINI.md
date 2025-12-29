@@ -33,7 +33,8 @@ To ensure context is easy to follow for both humans and AI, we enforce a strict 
     *   **Links To**: `Data Processing` docs for implementation details.
 2.  **Data Processing** (`docs/architecture/data_processing/*.md`)
     *   **Content**: The "How" (Algorithms, Business Logic, Queries).
-    *   **Links To**: `Data Models` for schema definitions.
+    *   **Structure**: Mirrors product_spec with feature-aligned files (`training/`, `athlete_markers/`, `lifecycle/`) plus `cross_cutting/` for shared algorithms.
+    *   **Links To**: `Data Models` for schema definitions, and sideways to `cross_cutting` for shared logic.
 3.  **Data Models** (`docs/architecture/data_models/*.md`)
     *   **Content**: The "Truth" (Database Schemas, Field Definitions).
     *   **Links To**: None (Leaf nodes).

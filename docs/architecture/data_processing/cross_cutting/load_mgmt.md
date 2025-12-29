@@ -1,5 +1,9 @@
 # Load Management & Injury Prevention
 
+> **Implements**: [Biomarkers](../../ux/product_spec/athlete_markers/biomarkers.md), [Injury Management](../../ux/product_spec/athlete_markers/injury_mgmt.md)  
+> **Data Models**: [Workouts](../data_models/_index.md), [Health](../data_models/_index.md)  
+> **Used By**: All training features for injury risk assessment
+
 **Purpose**: Track training load and prevent overtraining injuries using ACWR (Acute:Chronic Workload Ratio).
 
 ## ACWR Calculation
@@ -39,7 +43,7 @@ ACWR thresholds vary based on goal type to allow appropriate training stimulus:
 ## Related Tools
 
 | Tool | Purpose | Key Params | Returns/Actions | Called In |
-|------|---------|------------|-----------------|----------|
+|------|---------|------------|-----------------|-----------|
 | `calculate_acwr` | Calculate injury risk | None | ACWR value, risk status, recommendation | Background calculation (aggressive), displayed in context |
 | `log_session_rpe` | Record workout intensity | `workout_id`, `rpe` (1-10), `duration_minutes` | Updates weekly load totals and ACWR | Daily Training Loop - Post-workout logging |
 | `log_biomarker` | Track general health feedback | `type` (energy/sleep/stress/motivation), `value`, `reason`, `note` | Flags patterns (low energy streaks, poor sleep, declining motivation) | Daily Training Loop - Daily check-in |
@@ -49,6 +53,5 @@ ACWR thresholds vary based on goal type to allow appropriate training stimulus:
 
 | Entity | Schema Definition |
 |--------|-------------------|
-| Workouts | [workouts.md](../data_models/workouts.md) |
-| Injuries | [health.md](../data_models/health.md) |
-
+| Workouts | [workouts.md](../data_models/_index.md) |
+| Injuries | [health.md](../data_models/_index.md) |

@@ -1,5 +1,8 @@
 # Context Engine
 
+> **Used By**: [Goals](../../ux/product_spec/training/goals.md), [Coaching](../../ux/product_spec/training/coaching.md), [Biomarkers](../../ux/product_spec/athlete_markers/biomarkers.md)  
+> **Data Models**: [All Models](../data_models/_index.md)
+
 ## The "Coach's Memory"
 
 The Training Engine synthesizes data from all tables into a three-tier context structure for AI interactions. This tiered approach prevents context window saturation while maintaining long-term coherence.
@@ -233,4 +236,3 @@ graph LR
 | Source | Description |
 |--------|-------------|
 | **All Models** | [Data Models Index](../data_models/_index.md) |
-

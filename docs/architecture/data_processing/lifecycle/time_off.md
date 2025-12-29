@@ -1,5 +1,9 @@
 # Time-Off Management
 
+> **Implements**: [Time Off](../../ux/product_spec/lifecycle/time_off.md)  
+> **Data Models**: [Goals](../data_models/_index.md)  
+> **Dependencies**: [Context Engine](../cross_cutting/context_engine.md)
+
 **Purpose**: Handle planned breaks and safe return to training after time off.
 
 ## Time-Off Behavior
@@ -32,7 +36,7 @@
 ## Related Tools
 
 | Tool | Purpose | Key Params | Logic | Called In |
-|------|---------|------------|-------|----------|
+|------|---------|------------|-------|-----------|
 | `schedule_time_off` | Block out dates | `start_date`, `end_date`, `notes` | Clears schedule, suppresses notifications, updates goal confidence | Vacation/Time-Off Scheduling - Add time off flow |
 | `request_adhoc_workout` | Request workout during time off | `date`, `workout_type` (optional), `duration` (optional) | Generates single workout for that day, doesn't affect adherence metrics | Time-off period - user opens app and requests workout |
 | `return_from_break` | Safe return protocol | `break_type`, `duration_days`, `severity` | Adjusts training plan based on break type and duration | Vacation/Time-Off Scheduling - First workout after break |
@@ -41,5 +45,4 @@
 
 | Entity | Schema Definition |
 |--------|-------------------|
-| Time-Off | [goals.md](../data_models/goals.md) |
-
+| Time-Off | [goals.md](../data_models/_index.md) |

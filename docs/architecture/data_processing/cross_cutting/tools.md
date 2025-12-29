@@ -1,11 +1,14 @@
 # Tool Registry
 
+> **Purpose**: MCP-style tool definitions for AI interactions with the Training Engine  
+> **Related**: [Context Engine](context_engine.md) provides the data these tools operate on
+
 Comprehensive list of all AI tools (MCP definitions) used by the Ash Training Engine.
 
 ## Context & State Tools
 
 | Tool | Purpose | Key Returns | Called In |
-|------|---------|-------------|----------|
+|------|---------|-------------|-----------|
 | `get_training_context` | Get current snapshot | Current goal, phase, adherence %, pillar priorities, ACWR, upcoming constraints, motivation patterns, weather conditions | All AI interactions (pre-request context loading) |
 | `get_workout_details` | Fetch full workout object | Complete PlannedWorkout with all fields (structure, RPE, distance, notes, etc.) | When AI needs to modify workouts beyond 7-day detailed window |
 

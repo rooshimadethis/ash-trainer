@@ -47,6 +47,9 @@ Ash goes beyond simple workout prescriptions by tracking comprehensive data acro
 *   **[Onboarding](lifecycle/onboarding_flow.md)**: Initial profile creation.
 *   **[Time Off](lifecycle/time_off.md)**: Vacation and return-to-training protocols.
 
+### ☁️ Infrastructure
+*   **[Cloud Sync & Data Backup](cloud_sync.md)**: Account management, multi-device sync, and data export.
+
 ---
 
 ## 🛠️ Technical Considerations
