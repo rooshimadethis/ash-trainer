@@ -187,13 +187,13 @@ class LoadTracking extends Table {
 - Alert when confidence drops below 80%
 
 #### 2. Pillar Coordination
-- [Architecture Reference](../architecture/data_processing.md#2-pillar-coordination-running-strength-mobility)
+- [Architecture Reference](../architecture/data_processing/pillar_logic.md)
 - 48-hour rule enforcement
 - Cross-pillar conflict detection
 - Recovery week adjustments
 
 #### 3. Load Management (ACWR)
-- [Architecture Reference](../architecture/data_processing.md#3-load-management--injury-prevention)
+- [Architecture Reference](../architecture/data_processing/load_mgmt.md)
 - Background calculation (runs on app open)
 - Injury risk alerts
 - Deload recommendations
@@ -272,7 +272,7 @@ class TimeOffBlocks extends Table {
 - Return-from-break protocols
 
 #### 3. Taper Protocols
-- [Architecture Reference](../architecture/data_processing.md#4-race--event-management)
+- [Architecture Reference](../architecture/data_processing/events_taper.md)
 - Distance-specific volume reductions
 - Maintain intensity with short sessions
 - Recovery week scheduling
@@ -336,20 +336,20 @@ class Biomarkers extends Table {
 - Return-to-training protocol
 
 #### 2. Motivation Tracking
-- [Architecture Reference](../architecture/data_processing.md#6-motivation--mental-health)
+- [Architecture Reference](../architecture/data_processing/secondary_markers.md#1-motivation--mental-health)
 - Log motivation state
 - Detect skip patterns (3+ in 2 weeks)
 - Intervention conversations
 - Offer plan adjustments
 
 #### 3. Plateau Detection
-- [Architecture Reference](../architecture/data_processing.md#7-plateau-detection--intervention)
+- [Architecture Reference](../architecture/data_processing/secondary_markers.md#2-plateau-detection)
 - Analyze recent performance trends
 - Trigger deload/variation/volume protocols
 - Proactive Ash conversation
 
 #### 4. Weather-Based Adjustments
-- [Architecture Reference](../architecture/data_processing.md#8-environmental-adaptations)
+- [Architecture Reference](../architecture/data_processing/secondary_markers.md#3-environmental-adaptations)
 - Check weather forecast
 - Adjust for extreme heat/cold/AQI
 - Suggest indoor alternatives
