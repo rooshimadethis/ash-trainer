@@ -140,29 +140,24 @@ Once data models are validated, define **how the app is structured** to manage t
 
 ---
 
-## Stage 4: System Architecture (Components & Layers) ❌
+## Stage 4: System Architecture (Components & Layers) ✅
 
-**Status**: Not Started  
-**Location**: `docs/architecture/system_architecture.md` (to be created)
+**Status**: Complete  
+**Location**: [`docs/architecture/`](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/)
 
 ### Purpose
 Define **how** the app is organized into layers, components, and services.
 
 ### Deliverables
-- [ ] Architecture pattern selection (BLoC, Riverpod, Provider, etc.)
-- [ ] Layer definitions and responsibilities
-  - [ ] UI Layer (Screens, Widgets)
-  - [ ] Business Logic Layer (State Management)
-  - [ ] Domain Layer (Models, Entities)
-  - [ ] Data Layer (Repositories)
-  - [ ] Service Layer (API, DB, AI)
-- [ ] Folder structure and organization
-- [ ] Dependency rules (which layers can depend on which)
-- [ ] Component hierarchy per feature
-- [ ] Service boundaries and responsibilities
-- [ ] Data flow diagrams (how data moves through layers)
-- [ ] Local vs Cloud strategy (what lives where)
-- [ ] Offline support strategy
+- [x] Architecture pattern selection (Riverpod + Clean Architecture) - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md)
+- [x] Layer definitions and responsibilities - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#layer-responsibilities)
+- [x] Folder structure and organization - [folder_structure.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/folder_structure.md)
+- [x] Dependency rules (which layers can depend on which) - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#dependency-rules)
+- [x] Component hierarchy per feature - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md)
+- [x] Service boundaries and responsibilities - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#service-boundaries)
+- [x] Data flow diagrams (how data moves through layers) - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#data-flow-patterns)
+- [x] Local vs Cloud strategy (what lives where) - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#offline-first-strategy)
+- [x] Offline support strategy - [system_architecture.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/system_architecture.md#offline-first-strategy)
 
 ### Flutter Layer Template
 ```
@@ -337,7 +332,7 @@ Write the actual code that brings the design to life.
 | 1. Product Spec | ✅ Complete | 100% | None |
 | 2. UI/UX Journeys | ✅ Phase 1 Complete | 60% | Phase 2+ journeys pending |
 | 3. Data Models | ✅ Complete | 100% | None |
-| 4. System Architecture | ❌ Not Started | 0% | Ready to start |
+| 4. System Architecture | ✅ Complete | 100% | None |
 | 5. API/Interface Design | ❌ Not Started | 0% | Blocked by Stage 4 |
 | 6. Implementation | ⚠️ Premature | 10% | Should pause until Stage 4 complete |
 
