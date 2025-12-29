@@ -5,6 +5,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
+import 'availability_screen.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
@@ -93,24 +94,6 @@ class WelcomeScreen extends ConsumerWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-// Temporary Placeholder for Navigation
-class AvailabilityScreen extends StatelessWidget {
-  const AvailabilityScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return AshScaffold(
-      appBar: AppBar(
-        title: const Text('Availability'),
-        backgroundColor: Colors.transparent,
-      ),
-      body: const Center(
-          child: Text('Step 2: Availability Screen',
-              style: TextStyle(color: Colors.white))),
     );
   }
 }

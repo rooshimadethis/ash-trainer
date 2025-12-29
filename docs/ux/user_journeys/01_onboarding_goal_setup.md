@@ -153,6 +153,7 @@
 **Edge Cases**:
 - Custom distance: Validate reasonable range (1-200km)
 - No target date: Treated as "no deadline"
+- Date picker initial date: Defaults to distance-based estimate (8w for 5K, 12w for 10K, 16w for Half, 20w for Full)
 
 ---
 
@@ -200,7 +201,7 @@
 
 **User Can**:
 - Enter event name
-- Select race date → Opens date picker
+- Select race date → Opens date picker (defaults to distance-based estimate; 16w if none selected)
 - Select distance
 - Enter target time (optional)
 - Tap "Next" → Goes to Step 7
@@ -250,6 +251,7 @@
 **Edge Cases**:
 - Frequency < 2: Show tip "Consider at least 2 runs per week to maintain fitness"
 - No end date: Treated as "ongoing maintenance"
+- Date picker initial date: Defaults to 8 weeks in the future
 
 ---
 

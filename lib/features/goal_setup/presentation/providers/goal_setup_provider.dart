@@ -6,7 +6,7 @@ import '../../../../data/providers/repository_providers.dart';
 // State for the Goal Setup flow
 class GoalSetupState {
   final int currentStep;
-  final List<String> availableDays;
+  final List<String> unavailableDays;
   final String? constraints;
   final GoalType? selectedGoalType;
   // Goal details
@@ -26,7 +26,7 @@ class GoalSetupState {
 
   const GoalSetupState({
     this.currentStep = 1,
-    this.availableDays = const [],
+    this.unavailableDays = const [],
     this.constraints,
     this.selectedGoalType,
     this.targetDistance,
@@ -45,7 +45,7 @@ class GoalSetupState {
 
   GoalSetupState copyWith({
     int? currentStep,
-    List<String>? availableDays,
+    List<String>? unavailableDays,
     String? constraints,
     GoalType? selectedGoalType,
     double? targetDistance,
@@ -63,7 +63,7 @@ class GoalSetupState {
   }) {
     return GoalSetupState(
       currentStep: currentStep ?? this.currentStep,
-      availableDays: availableDays ?? this.availableDays,
+      unavailableDays: unavailableDays ?? this.unavailableDays,
       constraints: constraints ?? this.constraints,
       selectedGoalType: selectedGoalType ?? this.selectedGoalType,
       targetDistance: targetDistance ?? this.targetDistance,
@@ -98,8 +98,8 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
     }
   }
 
-  void setAvailableDays(List<String> days) {
-    state = state.copyWith(availableDays: days);
+  void setUnavailableDays(List<String> days) {
+    state = state.copyWith(unavailableDays: days);
   }
 
   void setConstraints(String? constraints) {
@@ -153,9 +153,21 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
       final goalRepo = ref.read(goalRepositoryProvider);
 
       // 1. Create User
+      final allDays = [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday'
+      ];
+      final availableDays =
+          allDays.where((day) => !state.unavailableDays.contains(day)).toList();
+
       final newUser = User(
         id: '', // DB will assign ID
-        availableDays: state.availableDays,
+        availableDays: availableDays,
         constraints: state.constraints,
         healthPermissionsGranted: state.healthPermissionsGranted,
         createdAt: DateTime.now(),

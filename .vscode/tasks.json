@@ -12,7 +12,7 @@
         {
             "label": "Launch Pixel 9",
             "type": "shell",
-            "command": "pgrep -f Pixel_9 > /dev/null || (flutter emulators --launch Pixel_9 > /dev/null 2>&1 &)",
+            "command": "pgrep -f Pixel_9 > /dev/null || (flutter emulators --launch Pixel_9 > /dev/null 2>&1 & sleep 2)",
             "presentation": {
                 "reveal": "silent"
             }
@@ -20,7 +20,7 @@
         {
             "label": "Launch Pixel 9 Pro Fold",
             "type": "shell",
-            "command": "pgrep -f Pixel_9_Pro_Fold > /dev/null || (flutter emulators --launch Pixel_9_Pro_Fold > /dev/null 2>&1 &)",
+            "command": "pgrep -f Pixel_9_Pro_Fold > /dev/null || (flutter emulators --launch Pixel_9_Pro_Fold > /dev/null 2>&1 & sleep 2)",
             "presentation": {
                 "reveal": "silent"
             }
@@ -28,7 +28,7 @@
         {
             "label": "Launch Pixel 9 Pro Fold (2)",
             "type": "shell",
-            "command": "pgrep -f Pixel_9_Pro_Fold_2 > /dev/null || (flutter emulators --launch Pixel_9_Pro_Fold_2 > /dev/null 2>&1 &)",
+            "command": "pgrep -f Pixel_9_Pro_Fold_2 > /dev/null || (flutter emulators --launch Pixel_9_Pro_Fold_2 > /dev/null 2>&1 & sleep 2)",
             "presentation": {
                 "reveal": "silent"
             }

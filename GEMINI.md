@@ -42,6 +42,51 @@ To ensure context is easy to follow for both humans and AI, we enforce a strict 
 ### 3. Cross-Linking
 We use relative Markdown links to keep the graph connected while maintaining the flow.
 
+## 🛠️ Engineering & Implementation Guidelines
+
+Follow these standards to maintain architectural integrity and code quality.
+
+### 1. Architecture: Riverpod + Clean Architecture
+We use a **5-layer Clean Architecture** approach to ensure separation of concerns and testability:
+*   **Presentation**: Widgets and Riverpod Providers/Notifiers. Handles UI and user interaction.
+*   **Application**: Use Cases. Orchestrates business logic across repositories and services.
+*   **Domain**: Basic Entities, Repository Interfaces, and Service Interfaces. The "pure" core of the app.
+*   **Data**: Repository Implementations, DAOs, and DTOs. Handles data persistence (Drift).
+*   **Infrastructure**: Service Implementations (e.g., AI Service, Health Service). Handles external integrations.
+
+### 2. State Management (Riverpod)
+*   **Providers**: Default to `Provider` for dependencies (Repos, Services).
+*   **Notifiers**: Use `StateNotifierProvider` or `AsyncNotifier` (Riverpod 2.0+) for complex screen state.
+*   **Logic Location**: Keep business logic in **Use Cases** (Application layer), not in Providers/Notifiers.
+
+### 3. Data Patterns
+*   **Offline-First**: Drift (SQLite) is the source of truth.
+*   **DTO Mapping**: Always use DTOs to map database tables to Domain Entities. Use `toEntity()` and `fromEntity()` extensions.
+*   **Immutability**: Domain Entities should be immutable (using `final` fields and `copyWith`).
+
+### 4. Folder Structure
+Follow the **Feature-First + Layered** structure:
+```text
+lib/
+├── core/               # App-wide utilities, themes, error handling
+├── features/           # Feature-specific logic (e.g., goal_setup, calendar)
+│   └── shared/         # Common widgets, entities used across multiple features
+└── data/               # Persistent storage logic (Drift database, DAOs)
+```
+Each feature folder should contain: `presentation/`, `application/`, `domain/`.
+
+### 5. Error Handling
+*   Return **Failures** from Repositories (Domain layer types like `DatabaseFailure`).
+*   Throw **Exceptions** only for unexpected system errors.
+*   Use `AsyncValue` in the UI to handle loading/error states gracefully.
+
+### 6. Code Standards
+*   **Purity**: Keep Domain functions pure where possible.
+*   **Documentation**: Summarize large modules in their respective `README.md`.
+*   **Analysis**: Always run `flutter analyze` after changes (see `flutter-rules.md`).
+
+---
+
 ## 🛠️ Editor Recommendations
 For the best experience browsing this documentation:
 * **VS Code**: Use the *Markdown Preview* and *Wiki Link* extensions.
