@@ -221,22 +221,20 @@ Once the system architecture is defined, create **contracts** between layers.
 
 ---
 
-## Stage 5: API/Interface Design ❌
+## Stage 5: API/Interface Design ✅
 
-**Status**: Not Started  
-**Location**: `docs/architecture/interfaces.md` (to be created)
+**Status**: Complete  
+**Location**: [`docs/architecture/`](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/)
 
 ### Purpose
 Define **contracts** between layers and external services.
 
 ### Deliverables
-- [ ] Repository interfaces (abstract data access)
-- [ ] Service interfaces (external integrations)
-- [ ] State management contracts (providers, notifiers)
-- [ ] API endpoint definitions (if building backend)
-- [ ] Data transfer objects (DTOs)
-- [ ] Error handling contracts
-- [ ] Event/message contracts (if using event bus)
+- [x] Repository interfaces (abstract data access) - [interfaces.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/interfaces.md)
+- [x] Service interfaces (external integrations) - [interfaces.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/interfaces.md#service-interfaces-infrastructure-layer)
+- [x] State management contracts (providers, notifiers) - [interfaces.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/interfaces.md#provider-organization)
+- [x] Data transfer objects (DTOs) - [interfaces.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/interfaces.md#data-transfer-objects-dtos)
+- [x] Error handling contracts - [error_handling.md](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/architecture/error_handling.md)
 
 ### Repository Interface Template
 ```dart
@@ -333,7 +331,7 @@ Write the actual code that brings the design to life.
 | 2. UI/UX Journeys | ✅ Phase 1 Complete | 60% | Phase 2+ journeys pending |
 | 3. Data Models | ✅ Complete | 100% | None |
 | 4. System Architecture | ✅ Complete | 100% | None |
-| 5. API/Interface Design | ❌ Not Started | 0% | Blocked by Stage 4 |
+| 5. API/Interface Design | ✅ Complete | 100% | None |
 | 6. Implementation | ⚠️ Premature | 10% | Should pause until Stage 4 complete |
 
 ---

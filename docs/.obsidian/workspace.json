@@ -185,6 +185,8 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "architecture/error_handling.md",
+    "architecture/interfaces.md",
     "architecture/OLD_data_processing/training/running/training_plans.md",
     "architecture/OLD_data_processing/training/running",
     "architecture/OLD_data_processing/training/pillars.md",
@@ -215,9 +217,7 @@
     "architecture/data_models/data_lifecycle.md",
     "architecture/data_models/validation_rules.md",
     "architecture/data_models/_index.md",
-    "architecture/data_models/README.md",
     "architecture/data_models",
-    "ux/product_spec/training/intensity.md",
     "architecture/OLD_data_models",
     "ux/user_journeys"
   ]
