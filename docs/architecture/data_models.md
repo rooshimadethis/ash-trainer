@@ -30,10 +30,9 @@ erDiagram
     TrainingPlan ||--o{ Mesocycle : contains
     Mesocycle ||--o{ Microcycle : contains
     Microcycle ||--o{ PlannedWorkout : contains
+    Microcycle ||--o{ TimeOffDay : contains
     
     PlannedWorkout ||--o| WorkoutLog : completed_as
-    WorkoutLog ||--o{ ExerciseLog : contains
-    WorkoutLog ||--|| LoadTracking : calculates
     
     RaceEvent ||--o{ PlannedWorkout : triggers_taper
 ```
@@ -79,7 +78,9 @@ class UserProfiles extends Table {
   TextColumn get movementRestrictions => text().nullable()(); // JSON array: ["no_overhead_press"]
   
   // Calculated Baselines (updated by Training Engine)
-  RealColumn get chronicLoad => real().withDefault(const Constant(0.0))(); // 4-week average
+  RealColumn get chronicLoad => real().withDefault(const Constant(0.0))(); // 4-week average load
+  RealColumn get acuteLoad => real().withDefault(const Constant(0.0))(); // 7-day load
+  RealColumn get currentACWR => real().withDefault(const Constant(0.0))(); // Acute:Chronic ratio
   RealColumn get estimatedVO2Max => real().nullable()();
   RealColumn get maxHeartRate => real().nullable()();
   
@@ -107,6 +108,26 @@ class UserProfiles extends Table {
 
 > [!NOTE]
 > Pillar priorities use a flexible JSON structure to allow adding new training pillars (yoga, swimming, cycling) without schema changes.
+
+**ACWR (Acute:Chronic Workload Ratio) Calculation:**
+
+The Training Engine recalculates ACWR after every workout log:
+
+```dart
+// Acute Load: Sum of session loads from last 7 days
+acuteLoad = workoutLogs.where(date >= today - 7 days).sum(sessionLoad)
+
+// Chronic Load: Average weekly load over last 28 days
+chronicLoad = workoutLogs.where(date >= today - 28 days).sum(sessionLoad) / 4
+
+// ACWR: Acute ÷ Chronic ratio
+currentACWR = acuteLoad / chronicLoad
+```
+
+**ACWR Zones:**
+- **< 0.8**: Undertraining - can increase volume
+- **0.8 - 1.3**: Safe Zone - maintain or progress gradually
+- **> 1.3**: High Risk - deload immediately
 
 **Key Relationships:**
 - One user → Many goals
@@ -288,10 +309,6 @@ class Microcycles extends Table {
   DateTimeColumn get startDate => dateTime()();
   DateTimeColumn get endDate => dateTime()();
   
-  // Time-Off Management
-  BoolColumn get isTimeOff => boolean().withDefault(const Constant(false))();
-  TextColumn get timeOffNotes => text().nullable()(); // "Beach vacation", "Work conference", "Finals week"
-  
   // Weekly Metrics (calculated)
   RealColumn get plannedDistance => real()();
   RealColumn get actualDistance => real().withDefault(const Constant(0.0))();
@@ -306,9 +323,6 @@ class Microcycles extends Table {
 }
 ```
 
-> [!NOTE]
-> **Time-Off Handling:** When a user schedules time off, the microcycle for that week is marked with `isTimeOff = true`. No workouts are pre-scheduled for that week, but the microcycle structure remains intact for calendar consistency. Ad-hoc workouts can be added to time-off weeks if requested.
-
 ---
 
 ### 3.7 Planned Workout
@@ -320,7 +334,6 @@ A single scheduled training session.
 class PlannedWorkouts extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get microcycleId => integer().references(Microcycles, #id)();
-  IntColumn get userId => integer().references(UserProfiles, #id)();
   
   // Scheduling
   DateTimeColumn get scheduledDate => dateTime()();
@@ -353,11 +366,7 @@ class PlannedWorkouts extends Table {
 }
 
 > [!NOTE]
-> **userId Reference:** While `userId` can be derived through the microcycle → mesocycle → plan chain, it's kept here for:
-> 1. **Ad-hoc workouts** during time-off periods that still belong to a microcycle
-> 2. **Query performance** when filtering workouts by user without joining through the hierarchy
-> 
-> **isAdHoc Flag:** Marks workouts created on-demand during time-off periods. These don't affect adherence metrics or goal confidence.
+> **isAdHoc Flag:** Marks workouts created on-demand during time-off periods. These are still added to the current microcycle but don't affect adherence metrics or goal confidence.
 
 **Workout Structure JSON Example (Intervals):**
 ```json
@@ -373,7 +382,41 @@ class PlannedWorkouts extends Table {
 
 ---
 
-### 3.8 Workout Log
+### 3.8 Time-Off Day
+
+Tracks individual days when the user has scheduled time off. Supports partial weeks and cross-week time-off periods.
+
+```dart
+@DataClassName('TimeOffDay')
+class TimeOffDays extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  IntColumn get microcycleId => integer().references(Microcycles, #id)();
+  
+  // Time-Off Period
+  DateTimeColumn get date => dateTime()(); // Specific date that's time off
+  TextColumn get notes => text().nullable()(); // "Beach vacation", "Work conference", "Finals week"
+  
+  // Metadata
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+}
+```
+
+> [!NOTE]
+> **Granular Time-Off Tracking:** This table allows for flexible time-off scheduling:
+> - **Partial Weeks**: "Thursday-Sunday long weekend" = 4 TimeOffDay records
+> - **Full Weeks**: "1-week vacation" = 7 TimeOffDay records
+> - **Cross-Week Periods**: "10-day trip" spans 2 microcycles naturally
+> - **Ad-Hoc Workouts**: User can still create PlannedWorkout (with isAdHoc=true) on time-off days
+> 
+> **Application Logic:**
+> - When scheduling time off, create TimeOffDay records for each date
+> - Delete any existing PlannedWorkouts for those dates
+> - Calendar shows "Time Off" badge instead of empty day
+> - Goal confidence calculations skip time-off days (no penalty)
+
+---
+
+### 3.9 Workout Log
 
 Records a completed training session with actual performance data.
 
@@ -381,8 +424,7 @@ Records a completed training session with actual performance data.
 @DataClassName('WorkoutLog')
 class WorkoutLogs extends Table {
   IntColumn get id => integer().autoIncrement()();
-  IntColumn get userId => integer().references(UserProfiles, #id)();
-  IntColumn get plannedWorkoutId => integer().references(PlannedWorkouts, #id).nullable()(); // null for ad-hoc
+  IntColumn get plannedWorkoutId => integer().references(PlannedWorkouts, #id)();
   
   // Timing
   DateTimeColumn get startTime => dateTime()();
@@ -390,19 +432,15 @@ class WorkoutLogs extends Table {
   IntColumn get durationMinutes => integer()();
   
   // Workout Details
-  TextColumn get pillar => text()(); // 'running', 'strength', 'mobility'
+  TextColumn get pillar => text()(); // 'running', 'strength', 'mobility', 'yoga', etc.
   TextColumn get workoutType => text()();
   
-  // Performance Metrics (Running)
-  RealColumn get distanceKm => real().nullable()();
-  RealColumn get avgPacePerKm => real().nullable()(); // seconds per km
-  IntColumn get avgHeartRate => integer().nullable()();
-  IntColumn get maxHeartRate => integer().nullable()();
-  RealColumn get elevationGainMeters => real().nullable()();
-  
-  // Subjective Metrics
+  // Subjective Metrics (Universal)
   IntColumn get rpe => integer()(); // 1-10 (required)
   RealColumn get sessionLoad => real()(); // RPE × Duration
+  
+  // Pillar-Specific Data (JSON)
+  TextColumn get pillarData => text()(); // JSON: structure varies by pillar type
   
   // Health Connect Integration
   TextColumn get healthConnectRecordId => text().nullable()();
@@ -423,32 +461,71 @@ Session Load = RPE × Duration (minutes)
 Example: 7 RPE × 60 min = 420 AU
 ```
 
----
+**Pillar Data JSON Structure:**
 
-### 3.9 Exercise Log (Strength Workouts)
+The `pillarData` field stores pillar-specific metrics in JSON format. Structure varies by workout type:
 
-Detailed log of individual exercises within a strength session.
-
-```dart
-@DataClassName('ExerciseLog')
-class ExerciseLogs extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get workoutLogId => integer().references(WorkoutLogs, #id)();
-  
-  // Exercise Details
-  TextColumn get exerciseName => text()(); // "Back Squat", "Bench Press"
-  TextColumn get movementPattern => text()(); // 'squat', 'hinge', 'push', 'pull'
-  
-  // Sets & Reps
-  IntColumn get setNumber => integer()();
-  IntColumn get reps => integer()();
-  RealColumn get weightKg => real().nullable()();
-  IntColumn get rir => integer().nullable()(); // Reps in reserve (0-4)
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+**Running:**
+```json
+{
+  "distanceKm": 5.2,
+  "avgPacePerKm": 330,
+  "avgHeartRate": 145,
+  "maxHeartRate": 165,
+  "elevationGainMeters": 120,
+  "splits": [
+    {"km": 1, "pacePerKm": 325},
+    {"km": 2, "pacePerKm": 335}
+  ]
 }
 ```
+
+**Strength:**
+```json
+{
+  "exercises": [
+    {
+      "name": "Back Squat",
+      "movementPattern": "squat",
+      "sets": [
+        {"reps": 10, "weightKg": 60, "rir": 2},
+        {"reps": 8, "weightKg": 65, "rir": 1}
+      ]
+    },
+    {
+      "name": "Bench Press",
+      "movementPattern": "push",
+      "sets": [
+        {"reps": 8, "weightKg": 50, "rir": 2}
+      ]
+    }
+  ]
+}
+```
+
+**Mobility/Yoga:**
+```json
+{
+  "poses": ["Downward Dog", "Warrior II", "Child's Pose", "Pigeon"],
+  "focusAreas": ["hips", "shoulders", "hamstrings"],
+  "breathwork": true,
+  "meditationMinutes": 5
+}
+```
+
+**Cycling (Future):**
+```json
+{
+  "distanceKm": 25.0,
+  "avgPowerWatts": 180,
+  "avgCadence": 85,
+  "avgHeartRate": 140,
+  "elevationGainMeters": 300
+}
+```
+
+> [!NOTE]
+> **Flexibility**: The JSON structure allows adding new pillars (swimming, hiking, etc.) without schema migrations. Dart models can deserialize `pillarData` into type-safe classes based on the `pillar` field.
 
 ---
 
@@ -481,43 +558,7 @@ class Biomarkers extends Table {
 
 ---
 
-### 3.11 Load Tracking
-
-Tracks training load metrics for injury prevention using ACWR (Acute:Chronic Workload Ratio).
-
-```dart
-@DataClassName('LoadTracking')
-class LoadTracking extends Table {
-  DateTimeColumn get date => dateTime()(); // Primary key - one record per day
-  IntColumn get userId => integer().references(UserProfiles, #id)();
-  
-  // Load Metrics
-  RealColumn get acuteLoad => real()(); // Sum of session loads (RPE × duration) for last 7 days
-  RealColumn get chronicLoad => real()(); // Average weekly load over last 28 days
-  RealColumn get acwr => real()(); // Acute ÷ Chronic ratio
-  
-  // Risk Assessment
-  TextColumn get injuryRisk => text()(); // 'low', 'moderate', 'high'
-  TextColumn get recommendation => text().nullable()(); // "Maintain current load", "Deload recommended"
-  
-  // Metadata
-  DateTimeColumn get calculatedAt => dateTime().withDefault(currentDateAndTime)();
-  
-  @override
-  Set<Column> get primaryKey => {date, userId};
-}
-```
-
-**ACWR Zones:**
-- **< 0.8**: Undertraining - can increase volume
-- **0.8 - 1.3**: Safe Zone - maintain or progress gradually
-- **> 1.3**: High Risk - deload immediately
-
-**Calculation Frequency:** Recalculated aggressively by Training Engine after every workout log and on app startup.
-
----
-
-### 3.12 Injury Record
+### 3.11 Injury Record
 
 Tracks reported injuries and recovery progress.
 
@@ -553,7 +594,7 @@ class InjuryRecords extends Table {
 
 ---
 
-### 3.13 Chat Message
+### 3.12 Chat Message
 
 Stores conversation history with Ash.
 
@@ -582,7 +623,7 @@ class ChatMessages extends Table {
 
 ---
 
-### 3.14 Motivation Log
+### 3.13 Motivation Log
 
 Tracks motivation patterns to detect burnout and trigger interventions.
 
@@ -614,7 +655,7 @@ The Training Engine analyzes motivation logs to detect:
 
 ---
 
-### 3.15 Performance Snapshot
+### 3.14 Performance Snapshot
 
 Stores periodic snapshots of performance metrics for plateau detection.
 
@@ -648,7 +689,7 @@ class PerformanceSnapshots extends Table {
 
 ---
 
-### 3.16 Environmental Conditions
+### 3.15 Environmental Conditions
 
 Stores weather and environmental data for workout adjustments.
 
@@ -713,11 +754,11 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 **Purpose:** Recent trends and deviations to contextualize current performance
 
 **Data Sources:**
-- `WorkoutLogs`: Recent adherence patterns
-- `LoadTracking`: ACWR trends
+- `WorkoutLogs`: Recent adherence patterns, session loads for ACWR calculation
 - `Biomarkers`: Pain/energy/sleep patterns
 - `MotivationLogs`: Motivation trends
-- `Microcycles`: Recent time-off weeks (isTimeOff flag)
+- `TimeOffDays`: Recent time-off days
+- `UserProfiles`: Current ACWR (calculated from WorkoutLogs)
 
 **Example Output:**
 ```json
@@ -736,7 +777,7 @@ The Training Engine synthesizes data from all tables into a three-tier context s
 - `PlannedWorkouts`: Upcoming schedule
 - `WorkoutLogs`: Recent completed workouts (detailed)
 - `RaceEvents`: Upcoming races
-- `Microcycles`: Upcoming time-off weeks (isTimeOff flag)
+- `TimeOffDays`: Upcoming time-off days
 - `EnvironmentalConditions`: Weather forecasts
 - `Biomarkers`: Latest pain/energy reports
 
