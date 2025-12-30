@@ -1,5 +1,5 @@
 import 'package:ash_trainer/features/goal_setup/presentation/providers/goal_setup_provider.dart';
-import 'package:ash_trainer/features/goal_setup/presentation/screens/welcome_screen.dart';
+import 'package:ash_trainer/features/onboarding/presentation/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

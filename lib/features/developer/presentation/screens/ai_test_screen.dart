@@ -24,14 +24,22 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
   String _rawResponse = '';
   bool _isLoading = false;
 
-  // Form Fields
+  // Form Fields - User
   int _age = 30;
   String _gender = 'male';
-  String _experienceLevel = 'intermediate';
-  double _weeklyMileage = 20.0;
+  int _trainingFrequency = 4;
+  double _weeklyVolume = 20.0;
+  String _runningPriority = 'high';
+  String _strengthPriority = 'medium';
+  String _mobilityPriority = 'low';
+
+  // Form Fields - Goal
   String _goalType = 'distance'; // distance, time, consistency
   String _goalTarget = 'Marathon';
   int _goalWeeks = 16;
+  bool _isFirstTime = false;
+  int? _currentBestTime; // in seconds
+  String? _eventName;
 
   List<String> _availableDays = ['mon', 'wed', 'fri', 'sat'];
   String _trainingPhilosophy = 'Standard Periodization';
@@ -76,24 +84,28 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
       final contextData = await builder.execute(goalId: selectedGoal.id);
 
       setState(() {
-        // Populate Form
+        // Populate Form - User fields
         _age = contextData.user.age;
         _gender = contextData.user.gender;
-        _experienceLevel = contextData.user.experienceLevel;
-        _weeklyMileage = contextData.user.weeklyMileageBase ?? 20.0;
+        _trainingFrequency = contextData.user.weeklyTrainingFrequency ?? 4;
+        _weeklyVolume = contextData.user.weeklyVolume ?? 20.0;
         _availableDays = contextData.user.availableDays;
 
+        // Populate Form - Goal fields
         _goalType = contextData.goal.type;
         _goalTarget = contextData.goal.target;
         _confidence = contextData.goal.confidence;
+        _isFirstTime = contextData.goal.isFirstTime ?? false;
+        _currentBestTime = contextData.goal.currentBestTime;
+        _eventName = contextData.goal.eventName;
+        _runningPriority = contextData.goal.runningPriority ?? 'high';
+        _strengthPriority = contextData.goal.strengthPriority ?? 'medium';
+        _mobilityPriority = contextData.goal.mobilityPriority ?? 'low';
         _trainingPhilosophy =
             contextData.trainingPhilosophy; // Load real philosophy
 
         // Calculate approx weeks from deadline
-        final days =
-            contextData.goal.deadline.difference(DateTime.now()).inDays;
-        _goalWeeks = (days / 7).round();
-        if (_goalWeeks < 1) _goalWeeks = 1;
+        _goalWeeks = (contextData.goal.daysUntilGoal ?? 112) ~/ 7;
 
         _output = 'Loaded context for Goal: ${selectedGoal.id}';
       });
@@ -114,22 +126,37 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
     try {
       final service = ref.read(aiServiceProvider);
 
+      // Calculate timeline
+      final deadline = DateTime.now().add(Duration(days: _goalWeeks * 7));
+      final daysUntilGoal = deadline.difference(DateTime.now()).inDays;
+
       final context = PlanGenerationContext(
         user: UserContext(
           age: _age,
           gender: _gender,
-          experienceLevel: _experienceLevel,
           availableDays: _availableDays,
           timeConstraints: {},
           injuryHistory: [],
-          weeklyMileageBase: _weeklyMileage,
+          // Current training metrics
+          weeklyTrainingFrequency: _trainingFrequency,
+          weeklyVolume: _weeklyVolume,
         ),
         goal: GoalContext(
           type: _goalType,
           target: _goalTarget,
-          deadline: DateTime.now().add(Duration(days: _goalWeeks * 7)),
-          confidence: 0.8,
+          deadline: deadline,
+          confidence: _confidence,
           specialInstructions: [],
+          isFirstTime: _isFirstTime,
+          // Timeline calculations
+          daysUntilGoal: daysUntilGoal,
+          // Goal-specific parameters
+          currentBestTime: _currentBestTime,
+          eventName: _eventName,
+          // Pillar priorities
+          runningPriority: _runningPriority,
+          strengthPriority: _strengthPriority,
+          mobilityPriority: _mobilityPriority,
         ),
         trainingHistory: [], // TODO: We could populate this from real data too if we updated the context builder to expose it more easily, or keep it empty for "Manual" test
         trainingPhilosophy: _trainingPhilosophy,
@@ -235,26 +262,56 @@ $contextJson
                       initialValue: 'male',
                       onSaved: (v) => _gender = v!,
                     ),
-                    DropdownButtonFormField<String>(
-                      initialValue: _experienceLevel,
-                      decoration:
-                          const InputDecoration(labelText: 'Experience'),
-                      items: const [
-                        DropdownMenuItem(
-                            value: 'beginner', child: Text('Beginner')),
-                        DropdownMenuItem(
-                            value: 'intermediate', child: Text('Intermediate')),
-                        DropdownMenuItem(
-                            value: 'advanced', child: Text('Advanced')),
-                      ],
-                      onChanged: (v) => setState(() => _experienceLevel = v!),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Training Frequency (days/week)'),
+                      initialValue: '4',
+                      keyboardType: TextInputType.number,
+                      onSaved: (v) => _trainingFrequency = int.parse(v!),
                     ),
                     TextFormField(
                       decoration: const InputDecoration(
-                          labelText: 'Weekly Mileage (km)'),
+                          labelText: 'Weekly Volume (km)'),
                       initialValue: '20',
                       keyboardType: TextInputType.number,
-                      onSaved: (v) => _weeklyMileage = double.parse(v!),
+                      onSaved: (v) => _weeklyVolume = double.parse(v!),
+                    ),
+                    const SizedBox(height: 16),
+                    const Text('Pillar Priorities',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    DropdownButtonFormField<String>(
+                      initialValue: _runningPriority,
+                      decoration: const InputDecoration(labelText: 'Running'),
+                      items: const [
+                        DropdownMenuItem(value: 'high', child: Text('High')),
+                        DropdownMenuItem(
+                            value: 'medium', child: Text('Medium')),
+                        DropdownMenuItem(value: 'low', child: Text('Low')),
+                      ],
+                      onChanged: (v) => setState(() => _runningPriority = v!),
+                    ),
+                    DropdownButtonFormField<String>(
+                      initialValue: _strengthPriority,
+                      decoration: const InputDecoration(labelText: 'Strength'),
+                      items: const [
+                        DropdownMenuItem(value: 'high', child: Text('High')),
+                        DropdownMenuItem(
+                            value: 'medium', child: Text('Medium')),
+                        DropdownMenuItem(value: 'low', child: Text('Low')),
+                      ],
+                      onChanged: (v) => setState(() => _strengthPriority = v!),
+                    ),
+                    DropdownButtonFormField<String>(
+                      initialValue: _mobilityPriority,
+                      decoration: const InputDecoration(labelText: 'Mobility'),
+                      items: const [
+                        DropdownMenuItem(value: 'high', child: Text('High')),
+                        DropdownMenuItem(
+                            value: 'medium', child: Text('Medium')),
+                        DropdownMenuItem(value: 'low', child: Text('Low')),
+                      ],
+                      onChanged: (v) => setState(() => _mobilityPriority = v!),
                     ),
                     const SizedBox(height: 24),
                     const Text('Goal',
@@ -286,6 +343,26 @@ $contextJson
                       initialValue: '16',
                       keyboardType: TextInputType.number,
                       onSaved: (v) => _goalWeeks = int.parse(v!),
+                    ),
+                    CheckboxListTile(
+                      title: const Text('First time attempting this distance?'),
+                      value: _isFirstTime,
+                      onChanged: (v) =>
+                          setState(() => _isFirstTime = v ?? false),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Current Best Time (seconds, optional)'),
+                      initialValue: _currentBestTime?.toString() ?? '',
+                      keyboardType: TextInputType.number,
+                      onSaved: (v) =>
+                          _currentBestTime = v!.isEmpty ? null : int.parse(v),
+                    ),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Event Name (optional)'),
+                      initialValue: _eventName ?? '',
+                      onSaved: (v) => _eventName = v!.isEmpty ? null : v,
                     ),
                     const SizedBox(height: 16),
                     TextFormField(

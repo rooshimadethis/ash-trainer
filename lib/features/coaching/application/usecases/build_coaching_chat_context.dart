@@ -68,10 +68,11 @@ class BuildCoachingChatContext {
       user: UserContext(
         age: user.age ?? 30,
         gender: user.gender ?? 'unknown',
-        experienceLevel: 'Intermediate',
         availableDays: user.availableDays,
         timeConstraints: {},
         injuryHistory: [],
+        // Note: For coaching chat, we don't have current metrics readily available
+        // These would need to be calculated from workout history if needed
       ),
       goal: GoalContext(
         type: goal.type.name,

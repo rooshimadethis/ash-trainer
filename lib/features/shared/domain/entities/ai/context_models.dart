@@ -22,11 +22,12 @@ class UserContext with _$UserContext {
   const factory UserContext({
     required int age,
     required String gender,
-    required String experienceLevel,
     required List<String> availableDays,
     required Map<String, int> timeConstraints,
     required List<String> injuryHistory,
-    double? weeklyMileageBase,
+    // Current training metrics (from form on first plan, calculated from history on subsequent plans)
+    int? weeklyTrainingFrequency, // sessions per week
+    double? weeklyVolume, // km per week
   }) = _UserContext;
 
   factory UserContext.fromJson(Map<String, dynamic> json) =>
@@ -43,6 +44,15 @@ class GoalContext with _$GoalContext {
     required List<String> specialInstructions,
     String? currentPace,
     bool? isFirstTime,
+    // Timeline calculations
+    int? daysUntilGoal,
+    // Goal-specific parameters
+    int? currentBestTime, // For time performance goals (seconds)
+    String? eventName, // For event goals
+    // Pillar priorities (goal-specific training focus)
+    String? runningPriority,
+    String? strengthPriority,
+    String? mobilityPriority,
   }) = _GoalContext;
 
   factory GoalContext.fromJson(Map<String, dynamic> json) =>

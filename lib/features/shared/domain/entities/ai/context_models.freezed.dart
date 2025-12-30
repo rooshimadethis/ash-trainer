@@ -283,11 +283,13 @@ UserContext _$UserContextFromJson(Map<String, dynamic> json) {
 mixin _$UserContext {
   int get age => throw _privateConstructorUsedError;
   String get gender => throw _privateConstructorUsedError;
-  String get experienceLevel => throw _privateConstructorUsedError;
   List<String> get availableDays => throw _privateConstructorUsedError;
   Map<String, int> get timeConstraints => throw _privateConstructorUsedError;
-  List<String> get injuryHistory => throw _privateConstructorUsedError;
-  double? get weeklyMileageBase => throw _privateConstructorUsedError;
+  List<String> get injuryHistory =>
+      throw _privateConstructorUsedError; // Current training metrics (from form on first plan, calculated from history on subsequent plans)
+  int? get weeklyTrainingFrequency =>
+      throw _privateConstructorUsedError; // sessions per week
+  double? get weeklyVolume => throw _privateConstructorUsedError;
 
   /// Serializes this UserContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -308,11 +310,11 @@ abstract class $UserContextCopyWith<$Res> {
   $Res call(
       {int age,
       String gender,
-      String experienceLevel,
       List<String> availableDays,
       Map<String, int> timeConstraints,
       List<String> injuryHistory,
-      double? weeklyMileageBase});
+      int? weeklyTrainingFrequency,
+      double? weeklyVolume});
 }
 
 /// @nodoc
@@ -332,11 +334,11 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
   $Res call({
     Object? age = null,
     Object? gender = null,
-    Object? experienceLevel = null,
     Object? availableDays = null,
     Object? timeConstraints = null,
     Object? injuryHistory = null,
-    Object? weeklyMileageBase = freezed,
+    Object? weeklyTrainingFrequency = freezed,
+    Object? weeklyVolume = freezed,
   }) {
     return _then(_value.copyWith(
       age: null == age
@@ -346,10 +348,6 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
       gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
               as String,
       availableDays: null == availableDays
           ? _value.availableDays
@@ -363,9 +361,13 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
           ? _value.injuryHistory
           : injuryHistory // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      weeklyMileageBase: freezed == weeklyMileageBase
-          ? _value.weeklyMileageBase
-          : weeklyMileageBase // ignore: cast_nullable_to_non_nullable
+      weeklyTrainingFrequency: freezed == weeklyTrainingFrequency
+          ? _value.weeklyTrainingFrequency
+          : weeklyTrainingFrequency // ignore: cast_nullable_to_non_nullable
+              as int?,
+      weeklyVolume: freezed == weeklyVolume
+          ? _value.weeklyVolume
+          : weeklyVolume // ignore: cast_nullable_to_non_nullable
               as double?,
     ) as $Val);
   }
@@ -382,11 +384,11 @@ abstract class _$$UserContextImplCopyWith<$Res>
   $Res call(
       {int age,
       String gender,
-      String experienceLevel,
       List<String> availableDays,
       Map<String, int> timeConstraints,
       List<String> injuryHistory,
-      double? weeklyMileageBase});
+      int? weeklyTrainingFrequency,
+      double? weeklyVolume});
 }
 
 /// @nodoc
@@ -404,11 +406,11 @@ class __$$UserContextImplCopyWithImpl<$Res>
   $Res call({
     Object? age = null,
     Object? gender = null,
-    Object? experienceLevel = null,
     Object? availableDays = null,
     Object? timeConstraints = null,
     Object? injuryHistory = null,
-    Object? weeklyMileageBase = freezed,
+    Object? weeklyTrainingFrequency = freezed,
+    Object? weeklyVolume = freezed,
   }) {
     return _then(_$UserContextImpl(
       age: null == age
@@ -418,10 +420,6 @@ class __$$UserContextImplCopyWithImpl<$Res>
       gender: null == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
               as String,
       availableDays: null == availableDays
           ? _value._availableDays
@@ -435,9 +433,13 @@ class __$$UserContextImplCopyWithImpl<$Res>
           ? _value._injuryHistory
           : injuryHistory // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      weeklyMileageBase: freezed == weeklyMileageBase
-          ? _value.weeklyMileageBase
-          : weeklyMileageBase // ignore: cast_nullable_to_non_nullable
+      weeklyTrainingFrequency: freezed == weeklyTrainingFrequency
+          ? _value.weeklyTrainingFrequency
+          : weeklyTrainingFrequency // ignore: cast_nullable_to_non_nullable
+              as int?,
+      weeklyVolume: freezed == weeklyVolume
+          ? _value.weeklyVolume
+          : weeklyVolume // ignore: cast_nullable_to_non_nullable
               as double?,
     ));
   }
@@ -449,11 +451,11 @@ class _$UserContextImpl implements _UserContext {
   const _$UserContextImpl(
       {required this.age,
       required this.gender,
-      required this.experienceLevel,
       required final List<String> availableDays,
       required final Map<String, int> timeConstraints,
       required final List<String> injuryHistory,
-      this.weeklyMileageBase})
+      this.weeklyTrainingFrequency,
+      this.weeklyVolume})
       : _availableDays = availableDays,
         _timeConstraints = timeConstraints,
         _injuryHistory = injuryHistory;
@@ -465,8 +467,6 @@ class _$UserContextImpl implements _UserContext {
   final int age;
   @override
   final String gender;
-  @override
-  final String experienceLevel;
   final List<String> _availableDays;
   @override
   List<String> get availableDays {
@@ -491,12 +491,16 @@ class _$UserContextImpl implements _UserContext {
     return EqualUnmodifiableListView(_injuryHistory);
   }
 
+// Current training metrics (from form on first plan, calculated from history on subsequent plans)
   @override
-  final double? weeklyMileageBase;
+  final int? weeklyTrainingFrequency;
+// sessions per week
+  @override
+  final double? weeklyVolume;
 
   @override
   String toString() {
-    return 'UserContext(age: $age, gender: $gender, experienceLevel: $experienceLevel, availableDays: $availableDays, timeConstraints: $timeConstraints, injuryHistory: $injuryHistory, weeklyMileageBase: $weeklyMileageBase)';
+    return 'UserContext(age: $age, gender: $gender, availableDays: $availableDays, timeConstraints: $timeConstraints, injuryHistory: $injuryHistory, weeklyTrainingFrequency: $weeklyTrainingFrequency, weeklyVolume: $weeklyVolume)';
   }
 
   @override
@@ -506,16 +510,17 @@ class _$UserContextImpl implements _UserContext {
             other is _$UserContextImpl &&
             (identical(other.age, age) || other.age == age) &&
             (identical(other.gender, gender) || other.gender == gender) &&
-            (identical(other.experienceLevel, experienceLevel) ||
-                other.experienceLevel == experienceLevel) &&
             const DeepCollectionEquality()
                 .equals(other._availableDays, _availableDays) &&
             const DeepCollectionEquality()
                 .equals(other._timeConstraints, _timeConstraints) &&
             const DeepCollectionEquality()
                 .equals(other._injuryHistory, _injuryHistory) &&
-            (identical(other.weeklyMileageBase, weeklyMileageBase) ||
-                other.weeklyMileageBase == weeklyMileageBase));
+            (identical(
+                    other.weeklyTrainingFrequency, weeklyTrainingFrequency) ||
+                other.weeklyTrainingFrequency == weeklyTrainingFrequency) &&
+            (identical(other.weeklyVolume, weeklyVolume) ||
+                other.weeklyVolume == weeklyVolume));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -524,11 +529,11 @@ class _$UserContextImpl implements _UserContext {
       runtimeType,
       age,
       gender,
-      experienceLevel,
       const DeepCollectionEquality().hash(_availableDays),
       const DeepCollectionEquality().hash(_timeConstraints),
       const DeepCollectionEquality().hash(_injuryHistory),
-      weeklyMileageBase);
+      weeklyTrainingFrequency,
+      weeklyVolume);
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -550,11 +555,11 @@ abstract class _UserContext implements UserContext {
   const factory _UserContext(
       {required final int age,
       required final String gender,
-      required final String experienceLevel,
       required final List<String> availableDays,
       required final Map<String, int> timeConstraints,
       required final List<String> injuryHistory,
-      final double? weeklyMileageBase}) = _$UserContextImpl;
+      final int? weeklyTrainingFrequency,
+      final double? weeklyVolume}) = _$UserContextImpl;
 
   factory _UserContext.fromJson(Map<String, dynamic> json) =
       _$UserContextImpl.fromJson;
@@ -564,15 +569,16 @@ abstract class _UserContext implements UserContext {
   @override
   String get gender;
   @override
-  String get experienceLevel;
-  @override
   List<String> get availableDays;
   @override
   Map<String, int> get timeConstraints;
   @override
-  List<String> get injuryHistory;
+  List<String>
+      get injuryHistory; // Current training metrics (from form on first plan, calculated from history on subsequent plans)
   @override
-  double? get weeklyMileageBase;
+  int? get weeklyTrainingFrequency; // sessions per week
+  @override
+  double? get weeklyVolume;
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -594,7 +600,18 @@ mixin _$GoalContext {
   double get confidence => throw _privateConstructorUsedError;
   List<String> get specialInstructions => throw _privateConstructorUsedError;
   String? get currentPace => throw _privateConstructorUsedError;
-  bool? get isFirstTime => throw _privateConstructorUsedError;
+  bool? get isFirstTime =>
+      throw _privateConstructorUsedError; // Timeline calculations
+  int? get daysUntilGoal =>
+      throw _privateConstructorUsedError; // Goal-specific parameters
+  int? get currentBestTime =>
+      throw _privateConstructorUsedError; // For time performance goals (seconds)
+  String? get eventName =>
+      throw _privateConstructorUsedError; // For event goals
+// Pillar priorities (goal-specific training focus)
+  String? get runningPriority => throw _privateConstructorUsedError;
+  String? get strengthPriority => throw _privateConstructorUsedError;
+  String? get mobilityPriority => throw _privateConstructorUsedError;
 
   /// Serializes this GoalContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -619,7 +636,13 @@ abstract class $GoalContextCopyWith<$Res> {
       double confidence,
       List<String> specialInstructions,
       String? currentPace,
-      bool? isFirstTime});
+      bool? isFirstTime,
+      int? daysUntilGoal,
+      int? currentBestTime,
+      String? eventName,
+      String? runningPriority,
+      String? strengthPriority,
+      String? mobilityPriority});
 }
 
 /// @nodoc
@@ -644,6 +667,12 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
     Object? specialInstructions = null,
     Object? currentPace = freezed,
     Object? isFirstTime = freezed,
+    Object? daysUntilGoal = freezed,
+    Object? currentBestTime = freezed,
+    Object? eventName = freezed,
+    Object? runningPriority = freezed,
+    Object? strengthPriority = freezed,
+    Object? mobilityPriority = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -674,6 +703,30 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool?,
+      daysUntilGoal: freezed == daysUntilGoal
+          ? _value.daysUntilGoal
+          : daysUntilGoal // ignore: cast_nullable_to_non_nullable
+              as int?,
+      currentBestTime: freezed == currentBestTime
+          ? _value.currentBestTime
+          : currentBestTime // ignore: cast_nullable_to_non_nullable
+              as int?,
+      eventName: freezed == eventName
+          ? _value.eventName
+          : eventName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      runningPriority: freezed == runningPriority
+          ? _value.runningPriority
+          : runningPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      strengthPriority: freezed == strengthPriority
+          ? _value.strengthPriority
+          : strengthPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobilityPriority: freezed == mobilityPriority
+          ? _value.mobilityPriority
+          : mobilityPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -693,7 +746,13 @@ abstract class _$$GoalContextImplCopyWith<$Res>
       double confidence,
       List<String> specialInstructions,
       String? currentPace,
-      bool? isFirstTime});
+      bool? isFirstTime,
+      int? daysUntilGoal,
+      int? currentBestTime,
+      String? eventName,
+      String? runningPriority,
+      String? strengthPriority,
+      String? mobilityPriority});
 }
 
 /// @nodoc
@@ -716,6 +775,12 @@ class __$$GoalContextImplCopyWithImpl<$Res>
     Object? specialInstructions = null,
     Object? currentPace = freezed,
     Object? isFirstTime = freezed,
+    Object? daysUntilGoal = freezed,
+    Object? currentBestTime = freezed,
+    Object? eventName = freezed,
+    Object? runningPriority = freezed,
+    Object? strengthPriority = freezed,
+    Object? mobilityPriority = freezed,
   }) {
     return _then(_$GoalContextImpl(
       type: null == type
@@ -746,6 +811,30 @@ class __$$GoalContextImplCopyWithImpl<$Res>
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool?,
+      daysUntilGoal: freezed == daysUntilGoal
+          ? _value.daysUntilGoal
+          : daysUntilGoal // ignore: cast_nullable_to_non_nullable
+              as int?,
+      currentBestTime: freezed == currentBestTime
+          ? _value.currentBestTime
+          : currentBestTime // ignore: cast_nullable_to_non_nullable
+              as int?,
+      eventName: freezed == eventName
+          ? _value.eventName
+          : eventName // ignore: cast_nullable_to_non_nullable
+              as String?,
+      runningPriority: freezed == runningPriority
+          ? _value.runningPriority
+          : runningPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      strengthPriority: freezed == strengthPriority
+          ? _value.strengthPriority
+          : strengthPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobilityPriority: freezed == mobilityPriority
+          ? _value.mobilityPriority
+          : mobilityPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -760,7 +849,13 @@ class _$GoalContextImpl implements _GoalContext {
       required this.confidence,
       required final List<String> specialInstructions,
       this.currentPace,
-      this.isFirstTime})
+      this.isFirstTime,
+      this.daysUntilGoal,
+      this.currentBestTime,
+      this.eventName,
+      this.runningPriority,
+      this.strengthPriority,
+      this.mobilityPriority})
       : _specialInstructions = specialInstructions;
 
   factory _$GoalContextImpl.fromJson(Map<String, dynamic> json) =>
@@ -787,10 +882,27 @@ class _$GoalContextImpl implements _GoalContext {
   final String? currentPace;
   @override
   final bool? isFirstTime;
+// Timeline calculations
+  @override
+  final int? daysUntilGoal;
+// Goal-specific parameters
+  @override
+  final int? currentBestTime;
+// For time performance goals (seconds)
+  @override
+  final String? eventName;
+// For event goals
+// Pillar priorities (goal-specific training focus)
+  @override
+  final String? runningPriority;
+  @override
+  final String? strengthPriority;
+  @override
+  final String? mobilityPriority;
 
   @override
   String toString() {
-    return 'GoalContext(type: $type, target: $target, deadline: $deadline, confidence: $confidence, specialInstructions: $specialInstructions, currentPace: $currentPace, isFirstTime: $isFirstTime)';
+    return 'GoalContext(type: $type, target: $target, deadline: $deadline, confidence: $confidence, specialInstructions: $specialInstructions, currentPace: $currentPace, isFirstTime: $isFirstTime, daysUntilGoal: $daysUntilGoal, currentBestTime: $currentBestTime, eventName: $eventName, runningPriority: $runningPriority, strengthPriority: $strengthPriority, mobilityPriority: $mobilityPriority)';
   }
 
   @override
@@ -809,7 +921,19 @@ class _$GoalContextImpl implements _GoalContext {
             (identical(other.currentPace, currentPace) ||
                 other.currentPace == currentPace) &&
             (identical(other.isFirstTime, isFirstTime) ||
-                other.isFirstTime == isFirstTime));
+                other.isFirstTime == isFirstTime) &&
+            (identical(other.daysUntilGoal, daysUntilGoal) ||
+                other.daysUntilGoal == daysUntilGoal) &&
+            (identical(other.currentBestTime, currentBestTime) ||
+                other.currentBestTime == currentBestTime) &&
+            (identical(other.eventName, eventName) ||
+                other.eventName == eventName) &&
+            (identical(other.runningPriority, runningPriority) ||
+                other.runningPriority == runningPriority) &&
+            (identical(other.strengthPriority, strengthPriority) ||
+                other.strengthPriority == strengthPriority) &&
+            (identical(other.mobilityPriority, mobilityPriority) ||
+                other.mobilityPriority == mobilityPriority));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -822,7 +946,13 @@ class _$GoalContextImpl implements _GoalContext {
       confidence,
       const DeepCollectionEquality().hash(_specialInstructions),
       currentPace,
-      isFirstTime);
+      isFirstTime,
+      daysUntilGoal,
+      currentBestTime,
+      eventName,
+      runningPriority,
+      strengthPriority,
+      mobilityPriority);
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -848,7 +978,13 @@ abstract class _GoalContext implements GoalContext {
       required final double confidence,
       required final List<String> specialInstructions,
       final String? currentPace,
-      final bool? isFirstTime}) = _$GoalContextImpl;
+      final bool? isFirstTime,
+      final int? daysUntilGoal,
+      final int? currentBestTime,
+      final String? eventName,
+      final String? runningPriority,
+      final String? strengthPriority,
+      final String? mobilityPriority}) = _$GoalContextImpl;
 
   factory _GoalContext.fromJson(Map<String, dynamic> json) =
       _$GoalContextImpl.fromJson;
@@ -866,7 +1002,20 @@ abstract class _GoalContext implements GoalContext {
   @override
   String? get currentPace;
   @override
-  bool? get isFirstTime;
+  bool? get isFirstTime; // Timeline calculations
+  @override
+  int? get daysUntilGoal; // Goal-specific parameters
+  @override
+  int? get currentBestTime; // For time performance goals (seconds)
+  @override
+  String? get eventName; // For event goals
+// Pillar priorities (goal-specific training focus)
+  @override
+  String? get runningPriority;
+  @override
+  String? get strengthPriority;
+  @override
+  String? get mobilityPriority;
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.

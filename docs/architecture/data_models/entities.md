@@ -28,6 +28,7 @@ class Users extends Table {
   TextColumn get preferredWeightUnit => text().withDefault(const Constant('kg'))(); // UI display preference: 'kg' or 'lb'
   RealColumn get height => real().nullable()(); // Always stored in CM
   TextColumn get preferredHeightUnit => text().withDefault(const Constant('cm'))(); // UI display preference: 'cm' or 'in'
+  TextColumn get preferredDistanceUnit => text().withDefault(const Constant('km'))(); // UI display preference: 'km' or 'mi'
   
   // Onboarding data (Journey #1)
   TextColumn get trainingHistory => text()(); // 'beginner' | 'casual' | 'regular' | 'advanced'
@@ -53,9 +54,10 @@ class Users extends Table {
 - `availableDays` stored as JSON array for flexibility
 - `trainingHistory` field is deprecated - fitness level will be inferred from baseline workout (see Journey #1 feedback)
 - **Weight/Height Storage**: Always stored in metric units (KG/CM) for consistency in calculations
-- **Preferred Units**: `preferredWeightUnit` and `preferredHeightUnit` are UI display preferences only
+- **Preferred Units**: `preferredWeightUnit`, `preferredHeightUnit`, and `preferredDistanceUnit` are UI display preferences only
   - Weight: 'kg' or 'lb' (Health Connect uses KG, HealthKit supports both)
   - Height: 'cm' or 'in' (Health Connect uses CM, HealthKit supports both)
+  - Distance: 'km' or 'mi' (used for weekly volume input in Training Context)
 - When syncing from HealthKit, values are converted to KG/CM for storage
 
 **Constraints**:
@@ -98,6 +100,14 @@ class Goals extends Table {
   IntColumn get maintenanceDuration => integer().nullable()(); // minutes per run
   DateTimeColumn get endDate => dateTime().nullable()();
   
+  // Training Context (from onboarding Step 4)
+  IntColumn get initialTrainingFrequency => integer().nullable()(); // days per week
+  RealColumn get initialWeeklyVolume => real().nullable()(); // in km
+  BoolColumn get isFirstTime => boolean().nullable()(); // For distance milestone goals
+  TextColumn get runningPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  TextColumn get strengthPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  TextColumn get mobilityPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  
   // Confidence tracking (Journey #5)
   RealColumn get confidence => real().withDefault(const Constant(85.0))(); // 0-100
   RealColumn get adherenceScore => real().withDefault(const Constant(8.0))(); // 0-10
@@ -121,6 +131,8 @@ class Goals extends Table {
 - Only one goal can have `isActive = true` at a time (enforced in application layer)
 - `confidence` range: 0-100
 - Score fields range: 0-10
+- Pillar priorities must be one of: `Low`, `Medium`, `High` (nullable)
+- Only one pillar should be set to `High` at a time (enforced in UI)
 
 ---
 
@@ -442,4 +454,4 @@ class GoalConfidenceHistory extends Table {
 
 ---
 
-**Last Updated**: 2025-12-29
+**Last Updated**: 2025-12-30 (Added Training Context fields)

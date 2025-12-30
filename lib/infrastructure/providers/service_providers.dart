@@ -6,7 +6,12 @@ import '../services/ai_service.dart';
 import '../services/ai_service_impl.dart';
 
 final driftDatabaseProvider = Provider<AppDatabase>((ref) {
-  return AppDatabase();
+  final db = AppDatabase();
+  // Keep the database alive for the entire app lifecycle
+  ref.onDispose(() {
+    db.close();
+  });
+  return db;
 });
 
 final aiServiceProvider = Provider<AIService>((ref) {

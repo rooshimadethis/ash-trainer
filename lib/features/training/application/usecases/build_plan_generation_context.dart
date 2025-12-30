@@ -42,30 +42,59 @@ class BuildPlanGenerationContext {
       );
     }).toList();
 
+    // Calculate current training metrics from last 7 days
+    final last7Days = DateTime.now().subtract(const Duration(days: 7));
+    final recentWorkouts = trainingHistory
+        .where((w) => w.date.isAfter(last7Days) && w.completed)
+        .toList();
+
+    final currentFrequency = recentWorkouts.isEmpty
+        ? goal.initialTrainingFrequency
+        : recentWorkouts.length;
+
+    final currentVolume = recentWorkouts.isEmpty
+        ? goal.initialWeeklyVolume
+        : recentWorkouts
+            .map((w) => w.distance ?? 0.0)
+            .fold(0.0, (sum, distance) => sum + distance);
+
     // Construct UserContext
-    // Logic for experienceLevel is placeholder for now
     final userContext = UserContext(
       age: user.age ?? 30,
       gender: user.gender ?? 'unknown',
-      experienceLevel: 'Intermediate', // Inference logic to be added
       availableDays: user.availableDays,
       timeConstraints: {}, // Not yet in User entity
       injuryHistory: [], // Not yet available
-      weeklyMileageBase: 20.0, // Inference logic needed
+      // Current training metrics (from form on first plan, calculated from history on subsequent)
+      weeklyTrainingFrequency: currentFrequency,
+      weeklyVolume: currentVolume,
     );
+
+    // Calculate timeline
+    final deadline = goal.targetDate ??
+        goal.eventDate ??
+        goal.endDate ??
+        DateTime.now().add(const Duration(days: 90));
+    final daysUntilGoal = deadline.difference(DateTime.now()).inDays;
 
     // Construct GoalContext
     final goalContext = GoalContext(
       type: goal.type.name,
       target: _formatGoalTarget(goal),
-      deadline: goal.targetDate ??
-          goal.eventDate ??
-          goal.endDate ??
-          DateTime.now().add(const Duration(days: 90)),
+      deadline: deadline,
       confidence: goal.confidence,
       specialInstructions: [], // Can populate based on user prefs or logic
       currentPace: _formatPace(goal.currentBestTime),
       isFirstTime: goal.isFirstTime,
+      // Timeline calculations
+      daysUntilGoal: daysUntilGoal,
+      // Goal-specific parameters
+      currentBestTime: goal.currentBestTime,
+      eventName: goal.eventName,
+      // Pillar priorities (goal-specific training focus)
+      runningPriority: goal.runningPriority,
+      strengthPriority: goal.strengthPriority,
+      mobilityPriority: goal.mobilityPriority,
     );
 
     return PlanGenerationContext(

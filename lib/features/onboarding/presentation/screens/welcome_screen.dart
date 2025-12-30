@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
-import '../../../../core/theme/text_styles.dart';
-import '../../../shared/presentation/widgets/ash_button.dart';
-import '../../../shared/presentation/widgets/ash_scaffold.dart';
-import '../providers/goal_setup_provider.dart';
-import 'goal_type_selection_screen.dart';
+import 'package:ash_trainer/core/theme/colors.dart';
+import 'package:ash_trainer/core/theme/text_styles.dart';
+import 'package:ash_trainer/features/shared/presentation/widgets/ash_button.dart';
+import 'package:ash_trainer/features/shared/presentation/widgets/ash_scaffold.dart';
+import 'package:ash_trainer/features/goal_setup/presentation/providers/goal_setup_provider.dart';
+import 'package:ash_trainer/features/goal_setup/presentation/screens/goal_type_selection_screen.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});

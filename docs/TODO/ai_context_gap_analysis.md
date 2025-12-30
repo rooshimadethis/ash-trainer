@@ -30,7 +30,7 @@ UserContext(
 
 ### Missing Critical Fields
 
-#### A. Volume & Experience Indicators (WIP)
+#### A. Volume & Experience Indicators (✅ IMPLEMENTED)
 > [!IMPORTANT]
 > The AI needs to determine **Pyramidal vs. Polarized** intensity distribution based on volume/experience.
 
@@ -50,15 +50,20 @@ UserContext(
 **Current Implementation**: Hardcoded "Intermediate" with no volume calculation.
 
 **Decision**: 
+- **Status**: ✅ **IMPLEMENTED** (2025-12-30)
+- **Location**: Step 4 of onboarding flow - Training Context screen
 - **New Users**: Ask 2 key questions during onboarding:
   1. "How many days per week do you currently run/train?" (trainingFrequency)
-  2. "What's your typical weekly running distance?" (currentWeeklyVolume)
+  2. "What's your typical weekly running distance?" (currentWeeklyVolume with km/mi toggle)
 - **Existing Users**: Calculate from database (last 4 weeks of workout data)
-- **Action**: Add these questions to onboarding flow before goal type selection
+- **Storage**: 
+  - `Goal.initialTrainingFrequency` (number)
+  - `Goal.initialWeeklyVolume` (number, stored in km)
+  - `User.preferredDistanceUnit` (enum: km, mi)
 
 ---
 
-#### B. Pillar Priorities (WIP)
+#### B. Pillar Priorities (✅ IMPLEMENTED)
 > [!WARNING]
 > Without pillar priorities, the AI cannot coordinate Running/Strength/Mobility scheduling.
 
@@ -77,9 +82,15 @@ Constraint: Hard Leg Day should NOT be the day before a Long Run
 **Current Implementation**: Not captured at all.
 
 **Decision**: 
-- **Action**: Add Pillar Priorities screen to onboarding flow BEFORE age/gender details page
-- **UI**: Allow users to set High/Med/Low priority for Running, Strength, and Mobility
-- **Storage**: Add fields to User entity and database table
+- **Status**: ✅ **IMPLEMENTED** (2025-12-30)
+- **Location**: Step 4 of onboarding flow - Training Context screen
+- **UI**: Users set High/Med/Low priority for Running, Strength, and Mobility
+  - Constraint: Only one pillar can be set to "High" at a time
+  - UI automatically downgrades previous "High" when a new one is selected
+- **Storage**: 
+  - `Goal.runningPriority` (text: "Low", "Medium", "High")
+  - `Goal.strengthPriority` (text: "Low", "Medium", "High")
+  - `Goal.mobilityPriority` (text: "Low", "Medium", "High")
 
 ---
 
@@ -149,16 +160,15 @@ GoalContext(
 
 #### A. Goal-Specific Parameters
 **For Distance Milestone Goals**:
-- `isFirstTime` (bool) - First time attempting this distance? ✅ **ADD TO GOAL SETUP FLOW**
+- `isFirstTime` (bool) - First time attempting this distance? ✅ **IMPLEMENTED** (2025-12-30)
 - ~~`preferredWorkoutStyle`~~ - DEFERRED (not implementing now)
 
 **For Time Performance Goals**:
-- `currentBestTime` (for the target distance) (will do)
+- `currentBestTime` (for the target distance) ✅ **IMPLEMENTED** (2025-12-30)
 - `targetPacePerKm` (calculated from target time) (won't do)
 - `volumeThreshold` (to determine Pyramidal vs. Polarized) (won't do)
 
-**For Event Goals**:
-- `eventName` (e.g., "Austin Marathon")
+- `eventName` (e.g., "Austin Marathon") ✅ **IMPLEMENTED** (2025-12-30)
 - `eventDate` (won't do, this is the deadline)
 - `raceDistance` (km)
 
@@ -602,23 +612,24 @@ Based on user feedback, here are the prioritized action items:
 
 ### Immediate Actions (This Sprint)
 
-1. **Add Volume/Experience Questions to Onboarding**
-   - Add 2 questions before goal type selection:
+1. **Add Volume/Experience Questions to Onboarding** ✅ **IMPLEMENTED** (2025-12-30)
+   - Added at Step 4 (Training Context screen) after Goal Details:
      - "How many days per week do you currently run/train?"
-     - "What's your typical weekly running distance?"
-   - Store in User entity
-   - Use for intensity distribution decision (Pyramidal vs. Polarized)
+     - "What's your typical weekly running distance?" (with km/mi toggle)
+   - Stored in Goal entity (`initialTrainingFrequency`, `initialWeeklyVolume`)
+   - Used for intensity distribution decision (Pyramidal vs. Polarized)
 
-2. **Add Pillar Priorities Screen to Onboarding**
-   - Insert BEFORE age/gender details page
-   - UI: 3 dropdowns (Running, Strength, Mobility) with High/Med/Low options
-   - Add fields to User entity and database table
-   - Pass to AI for workout scheduling coordination
+2. **Add Pillar Priorities Screen to Onboarding** ✅ **IMPLEMENTED** (2025-12-30)
+   - Inserted at Step 4 (Training Context screen) after Goal Details
+   - UI: 3 priority selectors (Running, Strength, Mobility) with Low/Med/High options
+   - Constraint: Only one "High" priority allowed at a time
+   - Added fields to Goal entity and database table
+   - Passed to AI for workout scheduling coordination
 
-3. **Add `isFirstTime` to Distance Milestone Goal Setup**
-   - Add checkbox: "Is this your first time attempting this distance?"
-   - Store in Goal entity
-   - Pass to AI for appropriate plan difficulty calibration
+3. **Add `isFirstTime` to Distance Milestone Goal Setup** ✅ **IMPLEMENTED** (2025-12-30)
+   - Added checkbox: "Is this your first time attempting this distance?"
+   - Stored in Goal entity
+   - Passed to AI for appropriate plan difficulty calibration
 
 ### Short-Term Actions (Next Sprint)
 

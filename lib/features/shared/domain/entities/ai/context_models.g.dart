@@ -30,7 +30,6 @@ _$UserContextImpl _$$UserContextImplFromJson(Map<String, dynamic> json) =>
     _$UserContextImpl(
       age: (json['age'] as num).toInt(),
       gender: json['gender'] as String,
-      experienceLevel: json['experienceLevel'] as String,
       availableDays: (json['availableDays'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
@@ -38,18 +37,20 @@ _$UserContextImpl _$$UserContextImplFromJson(Map<String, dynamic> json) =>
       injuryHistory: (json['injuryHistory'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      weeklyMileageBase: (json['weeklyMileageBase'] as num?)?.toDouble(),
+      weeklyTrainingFrequency:
+          (json['weeklyTrainingFrequency'] as num?)?.toInt(),
+      weeklyVolume: (json['weeklyVolume'] as num?)?.toDouble(),
     );
 
 Map<String, dynamic> _$$UserContextImplToJson(_$UserContextImpl instance) =>
     <String, dynamic>{
       'age': instance.age,
       'gender': instance.gender,
-      'experienceLevel': instance.experienceLevel,
       'availableDays': instance.availableDays,
       'timeConstraints': instance.timeConstraints,
       'injuryHistory': instance.injuryHistory,
-      'weeklyMileageBase': instance.weeklyMileageBase,
+      'weeklyTrainingFrequency': instance.weeklyTrainingFrequency,
+      'weeklyVolume': instance.weeklyVolume,
     };
 
 _$GoalContextImpl _$$GoalContextImplFromJson(Map<String, dynamic> json) =>
@@ -63,6 +64,12 @@ _$GoalContextImpl _$$GoalContextImplFromJson(Map<String, dynamic> json) =>
           .toList(),
       currentPace: json['currentPace'] as String?,
       isFirstTime: json['isFirstTime'] as bool?,
+      daysUntilGoal: (json['daysUntilGoal'] as num?)?.toInt(),
+      currentBestTime: (json['currentBestTime'] as num?)?.toInt(),
+      eventName: json['eventName'] as String?,
+      runningPriority: json['runningPriority'] as String?,
+      strengthPriority: json['strengthPriority'] as String?,
+      mobilityPriority: json['mobilityPriority'] as String?,
     );
 
 Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
@@ -74,6 +81,12 @@ Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
       'specialInstructions': instance.specialInstructions,
       'currentPace': instance.currentPace,
       'isFirstTime': instance.isFirstTime,
+      'daysUntilGoal': instance.daysUntilGoal,
+      'currentBestTime': instance.currentBestTime,
+      'eventName': instance.eventName,
+      'runningPriority': instance.runningPriority,
+      'strengthPriority': instance.strengthPriority,
+      'mobilityPriority': instance.mobilityPriority,
     };
 
 _$WorkoutSummaryImpl _$$WorkoutSummaryImplFromJson(Map<String, dynamic> json) =>

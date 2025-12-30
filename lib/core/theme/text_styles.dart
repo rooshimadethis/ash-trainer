@@ -27,6 +27,12 @@ class AppTextStyles {
         color: AppColors.white,
       );
 
+  static TextStyle get h4 => display.copyWith(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        color: AppColors.white,
+      );
+
   static TextStyle get buttonText => display.copyWith(
         fontSize: 18,
         fontWeight: FontWeight.bold,
@@ -48,5 +54,11 @@ class AppTextStyles {
         fontWeight: FontWeight.w600,
         color: AppColors.accentOrange,
         letterSpacing: 1.2,
+      );
+
+  static TextStyle get labelSmall => display.copyWith(
+        fontSize: 10,
+        fontWeight: FontWeight.w500,
+        color: AppColors.textSecondary,
       );
 }

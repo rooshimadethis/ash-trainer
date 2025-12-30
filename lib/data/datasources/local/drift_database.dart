@@ -42,18 +42,44 @@ part 'drift_database.g.dart';
   TrainingPlanDao
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase() : super(_openConnection());
+  static int _instanceCount = 0;
+  final int _instanceId;
+
+  AppDatabase()
+      : _instanceId = ++_instanceCount,
+        super(_openConnection()) {
+    // ignore: avoid_print
+    print('🔵 Database instance #$_instanceId created');
+  }
 
   @override
   int get schemaVersion => 1;
+
+  @override
+  Future<void> close() {
+    // ignore: avoid_print
+    print('🔴 Database instance #$_instanceId closing');
+    return super.close();
+  }
 }
 
 LazyDatabase _openConnection() {
   return LazyDatabase(() async {
     final dbFolder = await getApplicationDocumentsDirectory();
     final file = File(p.join(dbFolder.path, 'db.sqlite'));
+
+    final exists = await file.exists();
     // ignore: avoid_print
     print('💾 Database path: ${file.path}');
+    // ignore: avoid_print
+    print('💾 Database file exists: $exists');
+
+    if (exists) {
+      final size = await file.length();
+      // ignore: avoid_print
+      print('💾 Database file size: $size bytes');
+    }
+
     return NativeDatabase.createInBackground(file);
   });
 }
