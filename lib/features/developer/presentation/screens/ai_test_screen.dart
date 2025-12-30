@@ -4,7 +4,11 @@ import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../infrastructure/services/ai_service.dart';
 import '../../../shared/domain/entities/ai/context_models.dart';
 import '../../../../core/constants/ai_schemas.dart';
+import '../../../../core/constants/prompts.dart';
 import 'dart:convert';
+import '../../../../data/providers/repository_providers.dart';
+import '../../../../features/shared/domain/entities/goal.dart';
+import '../../../training/application/usecases/build_plan_generation_context.dart';
 
 class AITestScreen extends ConsumerStatefulWidget {
   const AITestScreen({super.key});
@@ -28,7 +32,75 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
   String _goalType = 'distance'; // distance, time, consistency
   String _goalTarget = 'Marathon';
   int _goalWeeks = 16;
-  final List<String> _availableDays = ['mon', 'wed', 'fri', 'sat'];
+
+  List<String> _availableDays = ['mon', 'wed', 'fri', 'sat'];
+  String _trainingPhilosophy = 'Standard Periodization';
+  double _confidence = 0.8;
+
+  Future<void> _loadFromRealData() async {
+    try {
+      final goalRepo = ref.read(goalRepositoryProvider);
+      final goals = await goalRepo.getGoals();
+
+      if (goals.isEmpty) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('No active goals found in DB')));
+        return;
+      }
+
+      if (!mounted) return;
+      final selectedGoal = await showDialog<Goal>(
+        context: context,
+        builder: (ctx) => SimpleDialog(
+          title: const Text('Select a Goal'),
+          children: goals
+              .map((g) => SimpleDialogOption(
+                    onPressed: () => Navigator.pop(ctx, g),
+                    child: Text('${g.type.name} - ${g.id}'),
+                  ))
+              .toList(),
+        ),
+      );
+
+      if (selectedGoal == null) return;
+
+      setState(() => _output = 'Loading context...');
+
+      final builder = BuildPlanGenerationContext(
+        ref.read(userRepositoryProvider),
+        ref.read(goalRepositoryProvider),
+        ref.read(workoutRepositoryProvider),
+      );
+
+      final contextData = await builder.execute(goalId: selectedGoal.id);
+
+      setState(() {
+        // Populate Form
+        _age = contextData.user.age;
+        _gender = contextData.user.gender;
+        _experienceLevel = contextData.user.experienceLevel;
+        _weeklyMileage = contextData.user.weeklyMileageBase ?? 20.0;
+        _availableDays = contextData.user.availableDays;
+
+        _goalType = contextData.goal.type;
+        _goalTarget = contextData.goal.target;
+        _confidence = contextData.goal.confidence;
+        _trainingPhilosophy =
+            contextData.trainingPhilosophy; // Load real philosophy
+
+        // Calculate approx weeks from deadline
+        final days =
+            contextData.goal.deadline.difference(DateTime.now()).inDays;
+        _goalWeeks = (days / 7).round();
+        if (_goalWeeks < 1) _goalWeeks = 1;
+
+        _output = 'Loaded context for Goal: ${selectedGoal.id}';
+      });
+    } catch (e) {
+      setState(() => _output = 'Error loading data: $e');
+    }
+  }
 
   Future<void> _generatePlan() async {
     if (!_formKey.currentState!.validate()) return;
@@ -59,20 +131,33 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
           confidence: 0.8,
           specialInstructions: [],
         ),
-        trainingHistory: [],
-        trainingPhilosophy: 'Standard Periodization',
+        trainingHistory: [], // TODO: We could populate this from real data too if we updated the context builder to expose it more easily, or keep it empty for "Manual" test
+        trainingPhilosophy: _trainingPhilosophy,
       );
 
+      const systemPrompt = AIPrompts.ashPersona;
+      const taskPrompt = AIPrompts.generatePlanTask;
+
+      final contextJson =
+          const JsonEncoder.withIndent('  ').convert(context.toJson());
+
       setState(() {
-        _inputJson =
-            const JsonEncoder.withIndent('  ').convert(context.toJson());
+        _inputJson = '''
+=== SYSTEM PROMPT ===
+$systemPrompt
+
+=== TASK PROMPT ===
+$taskPrompt
+
+=== CONTEXT JSON ===
+$contextJson
+''';
       });
 
       final result = await service.generatePlan(
         context: context,
-        systemPrompt: 'You are an expert running coach.',
-        taskPrompt:
-            'Generate a $_goalWeeks week training plan for a $_experienceLevel runner training for $_goalTarget.',
+        systemPrompt: systemPrompt,
+        taskPrompt: taskPrompt,
         responseSchema: AISchemas.trainingPlan,
       );
 
@@ -133,6 +218,11 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                     const Text('User Profile',
                         style: TextStyle(
                             fontSize: 18, fontWeight: FontWeight.bold)),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.cloud_download),
+                      label: const Text('Load from DB'),
+                      onPressed: _isLoading ? null : _loadFromRealData,
+                    ),
                     const SizedBox(height: 8),
                     TextFormField(
                       decoration: const InputDecoration(labelText: 'Age'),
@@ -196,6 +286,24 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                       initialValue: '16',
                       keyboardType: TextInputType.number,
                       onSaved: (v) => _goalWeeks = int.parse(v!),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Training Philosophy'),
+                      initialValue: _trainingPhilosophy,
+                      maxLines: 2,
+                      onSaved: (v) => _trainingPhilosophy = v!,
+                    ),
+                    const SizedBox(height: 16),
+                    Text('Confidence: $_confidence'),
+                    Slider(
+                      value: _confidence,
+                      min: 0.1,
+                      max: 1.0,
+                      divisions: 9,
+                      label: _confidence.toString(),
+                      onChanged: (v) => setState(() => _confidence = v),
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
