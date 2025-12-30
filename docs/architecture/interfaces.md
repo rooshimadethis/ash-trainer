@@ -143,6 +143,78 @@ abstract class WorkoutRepository {
 
 ---
 
+### Conversation Repository
+
+**Location**: `features/shared/domain/repositories/conversation_repository.dart`
+
+```dart
+abstract class ConversationRepository {
+  /// Creates a new conversation session
+  Future<Conversation> createConversation(String userId);
+  
+  /// Gets a conversation by ID
+  Future<Conversation?> getConversation(String id);
+  
+  /// Gets the current active conversation for user
+  Future<Conversation?> getActiveConversation(String userId);
+  
+  /// Ends a conversation session
+  Future<void> endConversation(String id);
+  
+  /// Saves a message to a conversation
+  Future<ConversationMessage> saveMessage({
+    required String conversationId,
+    required String role,
+    required String content,
+    FunctionCall? functionCall,
+  });
+  
+  /// Gets recent messages from a conversation
+  Future<List<ConversationMessage>> getRecentMessages({
+    required String conversationId,
+    required int limit,
+  });
+  
+  /// Deletes old conversations (cleanup)
+  Future<void> deleteOldConversations({
+    required DateTime before,
+  });
+}
+```
+
+---
+
+### Context Repository
+
+**Location**: `features/shared/domain/repositories/context_repository.dart`
+
+```dart
+abstract class ContextRepository {
+  /// Gets long-term context for current user/goal
+  Future<LongTermContext?> getLongTermContext();
+  
+  /// Saves/updates long-term context
+  Future<void> saveLongTermContext(LongTermContext context);
+  
+  /// Gets medium-term context for current user
+  Future<MediumTermContext?> getMediumTermContext();
+  
+  /// Saves/updates medium-term context
+  Future<void> saveMediumTermContext(MediumTermContext context);
+  
+  /// Invalidates long-term context (forces regeneration)
+  Future<void> invalidateLongTermContext();
+  
+  /// Checks if long-term context needs regeneration
+  Future<bool> needsLongTermRegeneration();
+  
+  /// Checks if medium-term context needs regeneration
+  Future<bool> needsMediumTermRegeneration();
+}
+```
+
+---
+
 ## Service Interfaces (Infrastructure Layer)
 
 ### AI Service
@@ -163,29 +235,90 @@ class TrainingPlan {
   });
 }
 
-/// AI service for plan generation
+
+/// AI service for plan generation, coaching, and adjustments
 abstract class AIService {
-  /// Generates a training plan
-  Future<TrainingPlan> generatePlan({
-    required Goal goal,
-    required User user,
+  /// Generate a complete training plan
+  /// Uses PlanGenerationContext built by BuildPlanGenerationContext use case
+  Future<AIResponse<TrainingPlan>> generatePlan({
+    required PlanGenerationContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+    required Map<String, dynamic> responseSchema,
   });
   
-  /// Adjusts a workout based on feedback
-  Future<Workout> adjustWorkout({
-    required Workout planned,
+  /// Adjust a single workout based on user feedback
+  /// Uses context built by BuildWorkoutAdjustmentContext use case
+  Future<AIResponse<Workout>> adjustWorkout({
+    required Workout plannedWorkout,
     required String userFeedback,
-    required int? actualRPE,
+    required ShortTermContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+    required Map<String, dynamic> responseSchema,
   });
   
-  /// Generates confidence explanation
-  Future<String> explainConfidenceChange({
-    required double previousConfidence,
-    required double currentConfidence,
-    required Map<String, double> factorScores,
+  /// Reschedule workouts within/across micro/mesocycles
+  /// Uses context built by BuildRescheduleContext use case
+  Future<AIResponse<List<Workout>>> rescheduleWorkouts({
+    required List<String> workoutIds,
+    required String reason,
+    required ShortTermContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+    required Map<String, dynamic> responseSchema,
+  });
+  
+  /// Daily coaching chat (non-streaming)
+  /// Uses CoachingChatContext built by BuildCoachingChatContext use case
+  Future<AIResponse<String>> chat({
+    required String userMessage,
+    required CoachingChatContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+  });
+  
+  /// Daily coaching chat (streaming)
+  /// Uses CoachingChatContext built by BuildCoachingChatContext use case
+  Stream<AIResponse<String>> chatStream({
+    required String userMessage,
+    required CoachingChatContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+  });
+  
+  /// Chat with function calling support (non-streaming)
+  /// AI can decide to call functions or respond with text
+  Future<AIResponse<String>> chatWithTools({
+    required String userMessage,
+    required CoachingChatContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+    required List<FunctionDeclaration> tools,
+  });
+  
+  /// Chat with function calling support (streaming)
+  /// AI can decide to call functions or respond with text
+  Stream<AIResponse<String>> chatStreamWithTools({
+    required String userMessage,
+    required CoachingChatContext context,
+    required String systemPrompt,
+    required String taskPrompt,
+    required List<FunctionDeclaration> tools,
   });
 }
 ```
+
+**Key Changes from Architecture Doc**:
+- Uses concrete types (`PlanGenerationContext`, `CoachingChatContext`, etc.) instead of `Map<String, dynamic>`
+- All methods return `AIResponse<T>` for consistent response handling
+- Removed `explainConfidenceChange` (moved to local logic)
+- Added both streaming and non-streaming variants for chat
+- Added `chatWithTools` methods for function calling
+
+**Related Types**:
+- See [AI Entities](../data_models/ai_entities.md) for all context class definitions
+- See [AI Integration Architecture](ai_integration.md) for usage patterns
 
 ---
 

@@ -312,10 +312,15 @@ See [Data Flow Patterns](data_flow_patterns.md) for detailed examples.
 
 **Responsibilities**:
 - Generate training plans
-- Adjust workouts based on feedback
-- Calculate confidence explanations
+- Adjust and reschedule workouts
+- Provide coaching chat (with function calling support)
+- Manage AI context (long-term, medium-term, short-term)
 
-**Interface**: See [AI Service](../services/ai_service.md)
+**Interface**: See [AI Integration Architecture](ai_integration.md) and [AIService Interface](interfaces.md#ai-service)
+
+**Related Repositories**:
+- `ConversationRepository` - Manages chat sessions and messages
+- `ContextRepository` - Manages AI context storage and regeneration
 
 ---
 
