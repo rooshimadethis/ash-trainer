@@ -51,11 +51,11 @@ Ash supports four primary goal types that determine training plan structure. Eac
 *   Easy aerobic runs (build frequency and consistency)
 *   Minimal speed work (light strides for variety, not performance)
 
-**Mesocycle Structure:**
+**Phase Structure:**
 *   **Base Phase:** 6-8 weeks of pure aerobic building
 *   **Distance Familiarization:** Practice runs at 80-90% of goal distance (no traditional peak phase)
 *   **Minimal Taper:** 7-10 days, 20-30% volume reduction
-*   **Recovery Weeks:** Every 3-4 weeks, reduce volume by 30%
+*   **Recovery Phases:** Every 3-4 weeks, trigger a 1-week recovery intent.
 
 **Success Metrics:**
 *   Completing weekly long run without excessive fatigue
@@ -89,11 +89,11 @@ Ash supports four primary goal types that determine training plan structure. Eac
 *   **Hill repeats:** Build power and running economy
 *   **Time trials:** Monthly benchmark tests
 
-**Mesocycle Structure:**
+**Phase Structure:**
 *   **Base Phase (4-6 weeks):** Build aerobic foundation
 *   **Build Phase (4-6 weeks):** Introduce race-specific intensity
 *   **Peak Phase (2-3 weeks):** Highest volume + intensity, sharpening workouts
-*   **Taper (1-2 weeks):** Reduce volume 40-50%, maintain intensity with short, sharp efforts
+*   **Taper Phase (1-2 weeks):** Reduce volume 40-50%, maintain intensity with short, sharp efforts
 
 **Success Metrics:**
 *   Pace improvements in time trials
@@ -183,8 +183,8 @@ Ash supports four primary goal types that determine training plan structure. Eac
 *   **Cross-training:** Cycling, swimming, or other low-impact cardio
 *   **Strength training:** 1-2 sessions per week, compound movements
 
-**Mesocycle Structure:**
-*   **No traditional periodization** - Flat, consistent week-to-week
+**Phase Structure:**
+*   **No traditional phases** - Consistent "Maintenance" intent throughout.
 *   **Volume:** 50-66% of previous training volume
 *   **Frequency:** Maintain running frequency (e.g., if you ran 4x/week, keep 4x/week but shorten duration)
 *   **Duration:** Can be sustained for 2-8 weeks without significant fitness loss
@@ -300,10 +300,10 @@ Ash tracks training stress to prevent overtraining and optimize adaptation.
     *   **> 1.3:** High injury risk, suggest deload or easier week
     *   **< 0.8:** Undertraining, can safely increase volume
 
-### **Adaptive Deload Triggers**
+### **Adaptive Recovery Triggers**
 If ACWR exceeds 1.3 or user reports multiple consecutive poor sessions, Ash automatically suggests:
-*   Early recovery week (move Week 4 up)
-*   Reduce volume by 20-30% for next week
+*   Early Recovery Phase (immediate shift to recovery intent)
+*   Reduce volume by 20-30% for the next 7 days
 *   Maintain intensity but shorten duration
 
 ---
@@ -332,11 +332,16 @@ All sessions are prescribed using **Rate of Perceived Exertion (RPE)** on a 1-10
 
 ---
 
-## 5. Plan Structure (The "Deliverables")
+## 5. Plan Structure (Phases & Blocks)
 
-Ash will generate plans in **4-Week Mesocycles**.
+Ash generates plans as a sequence of **Phases**, which are further broken down into **Hydrated Blocks**.
 
-### **Weekly Microcycle Logic**
+### **Phase Skeleton**
+Every plan starts with a "Skeleton"—a long-term timeline of phases leading to the goal.
+*   **Dynamic Skeleton**: If life happens, the AI can steal days from a "Base" phase to preserve a "Taper" phase.
+
+### **Training Blocks (The "Liquid" Microcycle)**
+A **block** is a logical cluster of workouts (typically 3-10 days) within a phase.
 
 A **microcycle** is a single week of training within a mesocycle. It balances stress and recovery across all three pillars (Running, Strength, Mobility).
 
@@ -427,11 +432,11 @@ If user adds a race with minimal lead time:
 *   Suggest treating as "training race" (lower expectations, useful experience)
 *   Offer post-race analysis to inform future training
 
-### **Monthly Mesocycle Logic (3 Steps Forward, 1 Back)**
-1.  **Week 1:** Base Volume
-2.  **Week 2:** Progression (+10% volume or added intensity)
-3.  **Week 3:** Peak Volume (Hardest week)
-4.  **Week 4:** **Recovery / Cutback Week** (Volume reduced by 20-30%, intensity maintained but duration shortened).
+### **Phase-Based Periodization Logic**
+1.  **Intro Block:** Onramp, establishing volume.
+2.  **Progression Block:** Increasing load (+10-15%).
+3.  **Peak Block:** Reaching the limit of the current phase.
+4.  **Recovery Block:** 20-30% volume reduction to allow adaptation.
 
 ---
 
@@ -439,14 +444,12 @@ If user adds a race with minimal lead time:
 
 The "Ash Planning Prompts" must handle these scenarios rigorously.
 
-### **A. Missed Workouts**
-*   **Rule:** "One missed workout is gone."
+### **A. Missed Workouts & The "Sliding" Rule**
+*   **Rule:** "Minor interruptions slide; major interruptions repair."
 *   **Logic:**
-    *   Never cram a missed session into a rest day.
-    *   If a *Key Session* (Long Run, Interval) is missed:
-        *   If user is fresh: Swap it with the next Easy Run.
-        *   If user is fatigued: Skip it entirely.
-    *   **NEVER** do two hard days back-to-back to "catch up."
+    *   **The 48-Hour Slide (App Execution)**: If a user misses 1-2 sessions, the app automatically "slides" the remaining block workouts forward within the same Phase.
+    *   **The Phase Boundary Rule**: If a sliding workout hits the date boundary of the next Phase (e.g., sliding a Peak workout into the Taper), the **Strategic Repair** is triggered.
+    *   **The AI Strategic Repair**: For disruptions > 3 days, the AI re-evaluates the entire Phase Skeleton. It may shorten future phases or change workout types (e.g., swapping intensity for a recovery ramp) to protect the goal.
 
 ### **B. Injury & Pain Management (Adaptive)**
 *   **Diagnosis Protocol:**
@@ -505,6 +508,12 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
 *   Multiple skipped sessions without explanation
 *   Declining session RPE engagement (not rating workouts)
 
+#### **The Honesty Protocol**
+If a user's consistency drops significantly (e.g., > 40% sessions missed in a High-Priority phase), Ash initiates the **Honesty Protocol**:
+1.  **Flag the Risk**: "Hey, we've missed a few key sessions. At this rate, hitting our original sub-4:00 goal might not be safe for your legs."
+2.  **Offer a Safe Pivot**: "I can adjust our target to a 'Strong Finish' goal, which reduces the intensity but ensures we get you to the finish line healthy. What do you think?"
+3.  **Rescale the Skeleton**: The AI re-generates the remaining Phases with the new, safer intent.
+
 #### **Conversation Flow**
 1.  **Acknowledge without judgment:**
     > "Totally okay to feel that way. Can I ask—what's going on?"
@@ -541,31 +550,21 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
 *   **Distinguish Fatigue from Motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
 *   **Celebrate Small Wins:** "A 10-minute walk still counts. You moved today."
 
-## 7. Return-to-Training Protocols
+## 7. Return-to-Training (The "Safe-Return" Coefficients)
 
-When users take breaks (planned or unplanned), Ash asks about the reason and severity to adjust the return.
+When users return after a break, Ash applies the following volume coefficients to the first block back. These serve as safety ceilings for the AI.
 
-### **After Illness**
-*   **Mild (cold, minor bug):**
-    *   Resume at 50% volume
-    *   Progress 10-20% per week until back to baseline
-*   **Moderate (fever, chest infection):**
-    *   Wait until symptom-free for 3-5 days
-    *   Resume at 30% volume
-    *   Progress 15% per week
+| Duration of Break | First Block Volume | Progression Logic |
+|-------------------|-------------------|-------------------|
+| **<3 days** | 100% | Resume as planned (Minor Slide). |
+| **1 week** | 75-80% | 3-day recovery ramp before resuming intensity. |
+| **2 weeks** | 50-60% | 1 full week of "Base" building volume. |
+| **4+ weeks** | 40-50% | Scrutinize goal (Honesty Protocol). Rebuild from previous phase. |
+| **2+ months** | 25-30% | Restart from Week 1 of Base Phase. |
 
-### **After Injury**
-*   **Minor (1-2 weeks off):**
-    *   Resume at 60% volume for affected activities
-    *   Maintain other pillars if unaffected
-*   **Major (4+ weeks off):**
-    *   Treat as beginner for that movement pattern
-    *   Rebuild base conservatively
-
-### **After Life Break (vacation, burnout, busy period)**
-*   **1-2 weeks:** Resume at 80% volume
-*   **3-4 weeks:** Resume at 60% volume
-*   **2+ months:** Restart from Week 1 of current mesocycle
+### **Special Case: Illness & Injury**
+*   **Post-Illness**: Wait for 48h symptom-free. Resume at the "1 week" coefficient regardless of actual duration.
+*   **Post-Injury**: Requires a "Test Run" (20 min RPE 3). If pain-free, resume at 50% volume for 7 days.
 
 ### **Maintenance Mode**
 For planned busy periods (2-8 weeks), Ash offers a "Maintenance Mode":

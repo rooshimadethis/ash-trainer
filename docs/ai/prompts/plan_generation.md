@@ -4,6 +4,11 @@
 
 **Last Updated**: 2025-12-29
 
+**To look into**:
+- Do we want to send it the cycle structure and it fills in the gaps?
+  - Makes it easier to generate plans, but less flexible
+
+**Model**: Gemini 3 Flash Preview
 ---
 
 ## System Prompt
@@ -184,8 +189,9 @@ Week 8: 3x 30min easy + 1x 50min long
       "type": "array",
       "items": {
         "type": "object",
-        "properties": {
+          "properties": {
           "weekNumber": {"type": "integer"},
+          "mesocycleId": {"type": "string", "description": "ID of parent Mesocycle"},
           "startDate": {"type": "string", "format": "date"},
           "focus": {"type": "string"},
           "totalMileage": {"type": "number"},
@@ -199,6 +205,8 @@ Week 8: 3x 30min easy + 1x 50min long
         "type": "object",
         "properties": {
           "date": {"type": "string", "format": "date"},
+          "mesocycleId": {"type": "string"},
+          "microcycleId": {"type": "string"},
           "type": {"type": "string", "enum": ["easy", "long", "tempo", "intervals", "hills", "recovery"]},
           "duration": {"type": "integer"},
           "distance": {"type": "number"},
