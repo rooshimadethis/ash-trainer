@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
+import '../../../../infrastructure/services/ai_service.dart';
 import '../../../shared/domain/entities/ai/context_models.dart';
 import 'dart:convert';
 
@@ -14,6 +15,8 @@ class AITestScreen extends ConsumerStatefulWidget {
 class _AITestScreenState extends ConsumerState<AITestScreen> {
   final _formKey = GlobalKey<FormState>();
   String _output = '';
+  String _inputJson = '';
+  String _rawResponse = '';
   bool _isLoading = false;
 
   // Form Fields
@@ -59,6 +62,11 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
         trainingPhilosophy: 'Standard Periodization',
       );
 
+      setState(() {
+        _inputJson =
+            const JsonEncoder.withIndent('  ').convert(context.toJson());
+      });
+
       final result = await service.generatePlan(
         context: context,
         systemPrompt: 'You are an expert running coach.',
@@ -67,14 +75,37 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
         responseSchema: _getSchema(),
       );
 
+      final prettyOutput =
+          'Tokens: ${result.tokensUsed}\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic).toJson())}';
+
       setState(() {
-        _output =
-            'Tokens: ${result.tokensUsed}\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic).toJson())}';
+        _rawResponse = result.text ?? 'No raw text';
+        _output = prettyOutput;
       });
+
+      debugPrint('--- AI INPUT JSON ---');
+      debugPrint(_inputJson);
+      debugPrint('--- AI RAW RESPONSE ---');
+      debugPrint(_rawResponse);
+      debugPrint('--- AI PARSED OUTPUT ---');
+      debugPrint(_output);
     } catch (e, st) {
-      setState(() {
-        _output = 'Error: $e\n$st';
-      });
+      if (e is AIProcessingException) {
+        setState(() {
+          _rawResponse = e.rawResponse ?? 'No raw text available';
+          _output = 'Parsing Error: ${e.message}';
+        });
+        debugPrint('--- AI RAW RESPONSE (From Exception) ---');
+        debugPrint(_rawResponse);
+      } else {
+        setState(() {
+          _output = 'Error: $e\n$st';
+          _rawResponse = '';
+        });
+      }
+      debugPrint('--- AI ERROR ---');
+      debugPrint(e.toString());
+      debugPrint(st.toString());
     } finally {
       setState(() {
         _isLoading = false;
@@ -118,8 +149,8 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
             "type": "object",
             "properties": {
               "id": {"type": "string"},
-              "userId": {"type": "integer"},
-              "goalId": {"type": "integer"},
+              "userId": {"type": "string"},
+              "goalId": {"type": "string"},
               "scheduledDate": {"type": "string"},
               "type": {"type": "string"},
               "name": {"type": "string"},
@@ -239,29 +270,68 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
             ),
           ),
           const VerticalDivider(width: 1),
-          // Right Side: Output
+          // Right Side: Tabs
           Expanded(
             flex: 2,
-            child: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text('Model Output',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                ),
-                Expanded(
-                  child: Container(
-                    color: Colors.black12,
-                    width: double.infinity,
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.all(16),
-                      child: SelectableText(_output,
-                          style: const TextStyle(fontFamily: 'monospace')),
+            child: DefaultTabController(
+              length: 3,
+              child: Column(
+                children: [
+                  const TabBar(
+                    tabs: [
+                      Tab(text: 'Input'),
+                      Tab(text: 'Raw Response'),
+                      Tab(text: 'Parsed Output'),
+                    ],
+                  ),
+                  Expanded(
+                    child: TabBarView(
+                      children: [
+                        // Input Tab
+                        Container(
+                          color: Colors.black12,
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: SelectableText(
+                              _inputJson.isEmpty
+                                  ? 'No request generated yet'
+                                  : _inputJson,
+                              style: const TextStyle(fontFamily: 'monospace'),
+                            ),
+                          ),
+                        ),
+                        // Raw Response Tab
+                        Container(
+                          color: Colors.black12,
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: SelectableText(
+                              _rawResponse.isEmpty
+                                  ? 'No response yet'
+                                  : _rawResponse,
+                              style: const TextStyle(fontFamily: 'monospace'),
+                            ),
+                          ),
+                        ),
+                        // Output Tab
+                        Container(
+                          color: Colors.black12,
+                          width: double.infinity,
+                          child: SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: SelectableText(
+                              _output.isEmpty ? 'No response yet' : _output,
+                              style: const TextStyle(fontFamily: 'monospace'),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

@@ -74,3 +74,13 @@ abstract class AIService {
     required List<FunctionDeclaration> tools,
   });
 }
+
+class AIProcessingException implements Exception {
+  final String message;
+  final String? rawResponse;
+
+  AIProcessingException(this.message, {this.rawResponse});
+
+  @override
+  String toString() => 'AIProcessingException: $message';
+}

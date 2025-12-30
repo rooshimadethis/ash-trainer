@@ -55,23 +55,34 @@ class AIServiceImpl implements AIService {
       throw Exception('Empty response from AI');
     }
 
-    final json = _parseJson(response.text!); // Now returns dynamic
+    // DEBUG: Print raw response to console before parsing
+    // ignore: avoid_print
+    print('--- RAW AI RESPONSE (Pre-Parsing) ---');
+    // ignore: avoid_print
+    print(response.text);
 
-    // Safety check for Plan: should be a Map
-    if (json is! Map<String, dynamic>) {
-      throw Exception(
-          'Expected JSON object for Training Plan, got ${json.runtimeType}');
+    dynamic json;
+    try {
+      json = _parseJson(response.text!); // Now returns dynamic
+
+      // Safety check for Plan: should be a Map
+      if (json is! Map<String, dynamic>) {
+        throw Exception(
+            'Expected JSON object for Training Plan, got ${json.runtimeType}');
+      }
+
+      final plan = TrainingPlan.fromJson(json);
+
+      return AIResponse(
+        data: plan,
+        text: response.text,
+        functionCall: null,
+        tokensUsed: response.usageMetadata?.totalTokenCount ?? 0,
+        timestamp: DateTime.now(),
+      );
+    } catch (e) {
+      throw AIProcessingException(e.toString(), rawResponse: response.text);
     }
-
-    final plan = TrainingPlan.fromJson(json);
-
-    return AIResponse(
-      data: plan,
-      text: null,
-      functionCall: null,
-      tokensUsed: response.usageMetadata?.totalTokenCount ?? 0,
-      timestamp: DateTime.now(),
-    );
   }
 
   // --- Workout Adjustment ---
