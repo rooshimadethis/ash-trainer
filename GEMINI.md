@@ -78,7 +78,4 @@ Each feature folder should contain: `presentation/`, `application/`, `domain/`.
 
 ---
 
-## 🛠️ Editor Recommendations
-For the best experience browsing this documentation:
-* **VS Code**: Use the *Markdown Preview* and *Wiki Link* extensions.
-* **Obsidian / Logseq**: Open the repository root as a "Vault" or "Graph" to visualize connections between these files.
+Currently we are testing and have no users, there is no need to version or migrate schemas.

@@ -185,6 +185,13 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "ux/product_spec/lifecycle/time_constraints.md",
+    "TODO/ai_context_gap_analysis.md",
+    "TODO/ai_context_gap_analysis.md.resolved",
+    "TODO",
+    "implementation/completed/db_restructure_adaptive_planning.md",
+    "implementation/completed/adaptive_training_strategy.md",
+    "implementation/completed",
     "implementation/db_restructure_adaptive_planning.md",
     "implementation/adaptive_training_strategy.md",
     "implementation",
@@ -210,16 +217,9 @@
     "architecture/OLD_data_processing/lifecycle/onboarding.md",
     "architecture/OLD_data_processing/cross_cutting/tools.md",
     "architecture/OLD_data_processing/cross_cutting/pillar_coordination.md",
-    "architecture/OLD_data_processing/cross_cutting/load_mgmt.md",
-    "architecture/OLD_data_processing/cross_cutting/function_registry.md",
-    "architecture/OLD_data_processing/cross_cutting/context_engine.md",
-    "architecture/OLD_data_processing/athlete_markers/injury_mgmt.md",
     "architecture/OLD_data_processing/training",
     "architecture/OLD_data_processing/lifecycle",
     "architecture/OLD_data_processing/cross_cutting",
-    "architecture/OLD_data_processing/athlete_markers",
-    "architecture/OLD_data_processing",
-    "architecture/data_models",
-    "architecture/OLD_data_models"
+    "architecture/OLD_data_processing/athlete_markers"
   ]
 }

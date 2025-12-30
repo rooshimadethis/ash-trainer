@@ -65,6 +65,7 @@ class BuildPlanGenerationContext {
       confidence: goal.confidence,
       specialInstructions: [], // Can populate based on user prefs or logic
       currentPace: _formatPace(goal.currentBestTime),
+      isFirstTime: goal.isFirstTime,
     );
 
     return PlanGenerationContext(

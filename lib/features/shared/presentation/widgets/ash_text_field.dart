@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 
@@ -9,6 +10,8 @@ class AshTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final ValueChanged<String>? onChanged;
   final int maxLines;
+  final List<TextInputFormatter>? inputFormatters;
+  final Widget? suffix;
 
   const AshTextField({
     super.key,
@@ -18,6 +21,8 @@ class AshTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.onChanged,
     this.maxLines = 1,
+    this.inputFormatters,
+    this.suffix,
   });
 
   @override
@@ -37,6 +42,7 @@ class AshTextField extends StatelessWidget {
           keyboardType: keyboardType,
           onChanged: onChanged,
           maxLines: maxLines,
+          inputFormatters: inputFormatters,
           style: AppTextStyles.bodyLarge.copyWith(color: AppColors.white),
           decoration: InputDecoration(
             hintText: placeholder,
@@ -44,6 +50,7 @@ class AshTextField extends StatelessWidget {
                 color: AppColors.textSecondary.withValues(alpha: 0.5)),
             filled: true,
             fillColor: AppColors.surfaceHighlight,
+            suffixIcon: suffix, // Using suffixIcon for the widget
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none,

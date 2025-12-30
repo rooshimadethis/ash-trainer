@@ -9,7 +9,7 @@ import '../../../shared/presentation/widgets/ash_text_field.dart';
 import '../providers/goal_setup_provider.dart';
 import '../widgets/onboarding_navigation.dart';
 import '../widgets/onboarding_progress.dart';
-import 'personal_details_screen.dart';
+import 'training_context_screen.dart';
 
 class GoalDetailsScreen extends ConsumerStatefulWidget {
   const GoalDetailsScreen({super.key});
@@ -32,6 +32,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
   DateTime? _selectedDate;
   int? _maintenanceFreq;
   int? _maintenanceDuration;
+  bool _isFirstTime = false;
 
   @override
   void initState() {
@@ -60,6 +61,8 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
     if (state.currentBestTime != null) {
       _currentBestTimeController.text = _formatDuration(state.currentBestTime!);
     }
+
+    _isFirstTime = state.isFirstTime ?? false;
 
     _maintenanceFreq = state.maintenanceFrequency;
     _maintenanceDuration = state.maintenanceDuration;
@@ -111,7 +114,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
                 ref.read(goalSetupProvider.notifier).nextStep();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const PersonalDetailsScreen(),
+                    builder: (_) => const TrainingContextScreen(),
                   ),
                 );
               },
@@ -185,7 +188,31 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
         const SizedBox(height: 8),
         _buildDatePicker(GoalType.distanceMilestone,
             distance: _selectedDistance),
+        const SizedBox(height: 24),
+        _buildFirstTimeCheckbox(),
       ],
+    );
+  }
+
+  Widget _buildFirstTimeCheckbox() {
+    return InkWell(
+      onTap: () => setState(() => _isFirstTime = !_isFirstTime),
+      child: Row(
+        children: [
+          Checkbox(
+            value: _isFirstTime,
+            onChanged: (val) => setState(() => _isFirstTime = val ?? false),
+            activeColor: AppColors.primary,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'First time attempting this distance?',
+              style: AppTextStyles.body,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -236,6 +263,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
         _buildLabel('Race Date'),
         _buildDatePicker(GoalType.event, distance: _selectedDistance),
         const SizedBox(height: 16),
+        _buildLabel('Race Distance'),
         _buildDistanceDropdown(),
         if (_selectedDistance == -1.0) ...[
           const SizedBox(height: 16),
@@ -390,6 +418,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
               ? double.tryParse(_customDistanceController.text)
               : _selectedDistance,
           date: _selectedDate,
+          isFirstTime: _isFirstTime,
         );
         break;
       case GoalType.timePerformance:

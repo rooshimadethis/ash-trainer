@@ -14,6 +14,7 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       preferredWeightUnit: json['preferredWeightUnit'] as String? ?? 'kg',
       height: (json['height'] as num?)?.toDouble(),
       preferredHeightUnit: json['preferredHeightUnit'] as String? ?? 'cm',
+      preferredDistanceUnit: json['preferredDistanceUnit'] as String? ?? 'km',
       availableDays: (json['availableDays'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -34,6 +35,7 @@ Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
       'preferredWeightUnit': instance.preferredWeightUnit,
       'height': instance.height,
       'preferredHeightUnit': instance.preferredHeightUnit,
+      'preferredDistanceUnit': instance.preferredDistanceUnit,
       'availableDays': instance.availableDays,
       'constraints': instance.constraints,
       'healthPermissionsGranted': instance.healthPermissionsGranted,

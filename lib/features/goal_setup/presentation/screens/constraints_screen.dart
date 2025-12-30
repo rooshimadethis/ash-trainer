@@ -46,7 +46,7 @@ class _ConstraintsScreenState extends ConsumerState<ConstraintsScreen> {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 5,
+                  currentStep: 6,
                   label: 'Constraints',
                 ),
                 const SizedBox(height: 24),

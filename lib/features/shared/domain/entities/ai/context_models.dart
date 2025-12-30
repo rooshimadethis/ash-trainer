@@ -42,6 +42,7 @@ class GoalContext with _$GoalContext {
     required double confidence,
     required List<String> specialInstructions,
     String? currentPace,
+    bool? isFirstTime,
   }) = _GoalContext;
 
   factory GoalContext.fromJson(Map<String, dynamic> json) =>

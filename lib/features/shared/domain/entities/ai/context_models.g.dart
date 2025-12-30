@@ -62,6 +62,7 @@ _$GoalContextImpl _$$GoalContextImplFromJson(Map<String, dynamic> json) =>
           .map((e) => e as String)
           .toList(),
       currentPace: json['currentPace'] as String?,
+      isFirstTime: json['isFirstTime'] as bool?,
     );
 
 Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
@@ -72,6 +73,7 @@ Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
       'confidence': instance.confidence,
       'specialInstructions': instance.specialInstructions,
       'currentPace': instance.currentPace,
+      'isFirstTime': instance.isFirstTime,
     };
 
 _$WorkoutSummaryImpl _$$WorkoutSummaryImplFromJson(Map<String, dynamic> json) =>

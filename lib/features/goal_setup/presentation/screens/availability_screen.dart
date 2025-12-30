@@ -39,7 +39,7 @@ class AvailabilityScreen extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 4,
+                  currentStep: 5,
                   label: 'Availability',
                 ),
                 const SizedBox(height: 24),

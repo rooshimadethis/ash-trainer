@@ -11,6 +11,8 @@ import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.
     as _i6;
 import 'package:ash_trainer/features/shared/domain/repositories/user_repository.dart'
     as _i4;
+import 'package:ash_trainer/features/training/application/usecases/generate_training_plan.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -219,6 +221,36 @@ class MockGoalRepository extends _i1.Mock implements _i6.GoalRepository {
         Invocation.method(
           #deleteGoal,
           [goalId],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+}
+
+/// A class which mocks [GenerateTrainingPlan].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGenerateTrainingPlan extends _i1.Mock
+    implements _i7.GenerateTrainingPlan {
+  MockGenerateTrainingPlan() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<void> execute({
+    required String? goalId,
+    required String? userId,
+    DateTime? startDate,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #goalId: goalId,
+            #userId: userId,
+            #startDate: startDate,
+          },
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),

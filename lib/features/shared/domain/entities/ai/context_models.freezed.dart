@@ -594,6 +594,7 @@ mixin _$GoalContext {
   double get confidence => throw _privateConstructorUsedError;
   List<String> get specialInstructions => throw _privateConstructorUsedError;
   String? get currentPace => throw _privateConstructorUsedError;
+  bool? get isFirstTime => throw _privateConstructorUsedError;
 
   /// Serializes this GoalContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -617,7 +618,8 @@ abstract class $GoalContextCopyWith<$Res> {
       DateTime deadline,
       double confidence,
       List<String> specialInstructions,
-      String? currentPace});
+      String? currentPace,
+      bool? isFirstTime});
 }
 
 /// @nodoc
@@ -641,6 +643,7 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
     Object? confidence = null,
     Object? specialInstructions = null,
     Object? currentPace = freezed,
+    Object? isFirstTime = freezed,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -667,6 +670,10 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
           ? _value.currentPace
           : currentPace // ignore: cast_nullable_to_non_nullable
               as String?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ) as $Val);
   }
 }
@@ -685,7 +692,8 @@ abstract class _$$GoalContextImplCopyWith<$Res>
       DateTime deadline,
       double confidence,
       List<String> specialInstructions,
-      String? currentPace});
+      String? currentPace,
+      bool? isFirstTime});
 }
 
 /// @nodoc
@@ -707,6 +715,7 @@ class __$$GoalContextImplCopyWithImpl<$Res>
     Object? confidence = null,
     Object? specialInstructions = null,
     Object? currentPace = freezed,
+    Object? isFirstTime = freezed,
   }) {
     return _then(_$GoalContextImpl(
       type: null == type
@@ -733,6 +742,10 @@ class __$$GoalContextImplCopyWithImpl<$Res>
           ? _value.currentPace
           : currentPace // ignore: cast_nullable_to_non_nullable
               as String?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
     ));
   }
 }
@@ -746,7 +759,8 @@ class _$GoalContextImpl implements _GoalContext {
       required this.deadline,
       required this.confidence,
       required final List<String> specialInstructions,
-      this.currentPace})
+      this.currentPace,
+      this.isFirstTime})
       : _specialInstructions = specialInstructions;
 
   factory _$GoalContextImpl.fromJson(Map<String, dynamic> json) =>
@@ -771,10 +785,12 @@ class _$GoalContextImpl implements _GoalContext {
 
   @override
   final String? currentPace;
+  @override
+  final bool? isFirstTime;
 
   @override
   String toString() {
-    return 'GoalContext(type: $type, target: $target, deadline: $deadline, confidence: $confidence, specialInstructions: $specialInstructions, currentPace: $currentPace)';
+    return 'GoalContext(type: $type, target: $target, deadline: $deadline, confidence: $confidence, specialInstructions: $specialInstructions, currentPace: $currentPace, isFirstTime: $isFirstTime)';
   }
 
   @override
@@ -791,7 +807,9 @@ class _$GoalContextImpl implements _GoalContext {
             const DeepCollectionEquality()
                 .equals(other._specialInstructions, _specialInstructions) &&
             (identical(other.currentPace, currentPace) ||
-                other.currentPace == currentPace));
+                other.currentPace == currentPace) &&
+            (identical(other.isFirstTime, isFirstTime) ||
+                other.isFirstTime == isFirstTime));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -803,7 +821,8 @@ class _$GoalContextImpl implements _GoalContext {
       deadline,
       confidence,
       const DeepCollectionEquality().hash(_specialInstructions),
-      currentPace);
+      currentPace,
+      isFirstTime);
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -828,7 +847,8 @@ abstract class _GoalContext implements GoalContext {
       required final DateTime deadline,
       required final double confidence,
       required final List<String> specialInstructions,
-      final String? currentPace}) = _$GoalContextImpl;
+      final String? currentPace,
+      final bool? isFirstTime}) = _$GoalContextImpl;
 
   factory _GoalContext.fromJson(Map<String, dynamic> json) =
       _$GoalContextImpl.fromJson;
@@ -845,6 +865,8 @@ abstract class _GoalContext implements GoalContext {
   List<String> get specialInstructions;
   @override
   String? get currentPace;
+  @override
+  bool? get isFirstTime;
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.

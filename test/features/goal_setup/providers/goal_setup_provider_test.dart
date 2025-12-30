@@ -2,6 +2,8 @@ import 'package:ash_trainer/data/providers/repository_providers.dart';
 import 'package:ash_trainer/features/goal_setup/presentation/providers/goal_setup_provider.dart';
 import 'package:ash_trainer/features/shared/domain/entities/goal.dart';
 import 'package:ash_trainer/features/shared/domain/entities/user.dart';
+
+import 'package:ash_trainer/features/training/presentation/providers/use_case_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
@@ -12,16 +14,20 @@ import '../../../helpers/test_helpers.mocks.dart';
 void main() {
   late MockUserRepository mockUserRepository;
   late MockGoalRepository mockGoalRepository;
+  late MockGenerateTrainingPlan mockGenerateTrainingPlan;
   late ProviderContainer container;
 
   setUp(() {
     mockUserRepository = MockUserRepository();
     mockGoalRepository = MockGoalRepository();
+    mockGenerateTrainingPlan = MockGenerateTrainingPlan();
 
     container = ProviderContainer(
       overrides: [
         userRepositoryProvider.overrideWithValue(mockUserRepository),
         goalRepositoryProvider.overrideWithValue(mockGoalRepository),
+        generateTrainingPlanProvider
+            .overrideWithValue(mockGenerateTrainingPlan),
       ],
     );
   });
@@ -56,6 +62,12 @@ void main() {
       expect(state.healthPermissionsGranted, false);
       expect(state.isGenerating, false);
       expect(state.error, isNull);
+      expect(state.trainingFrequency, isNull);
+      expect(state.currentWeeklyVolume, isNull);
+      expect(state.preferredDistanceUnit, 'km');
+      expect(state.runningPriority, isNull);
+      expect(state.strengthPriority, isNull);
+      expect(state.mobilityPriority, isNull);
     });
   });
 
@@ -149,6 +161,38 @@ void main() {
       expect(state.preferredWeightUnit, 'lb');
       expect(state.height, 69.0);
       expect(state.preferredHeightUnit, 'in');
+    });
+  });
+
+  group('GoalSetupProvider - Training Context', () {
+    test('setTrainingContext should update frequency, volume and unit', () {
+      final notifier = container.read(goalSetupProvider.notifier);
+
+      notifier.setTrainingContext(
+        frequency: 4,
+        volume: 25.5,
+        distanceUnit: 'mi',
+      );
+
+      final state = container.read(goalSetupProvider);
+      expect(state.trainingFrequency, 4);
+      expect(state.currentWeeklyVolume, 25.5);
+      expect(state.preferredDistanceUnit, 'mi');
+    });
+
+    test('setPillarPriorities should update priorities', () {
+      final notifier = container.read(goalSetupProvider.notifier);
+
+      notifier.setPillarPriorities(
+        running: 'High',
+        strength: 'Medium',
+        mobility: 'Low',
+      );
+
+      final state = container.read(goalSetupProvider);
+      expect(state.runningPriority, 'High');
+      expect(state.strengthPriority, 'Medium');
+      expect(state.mobilityPriority, 'Low');
     });
   });
 
@@ -378,6 +422,10 @@ void main() {
                 id: 'goal-123',
                 userId: 'user-123',
               ));
+      when(mockGenerateTrainingPlan.execute(
+        goalId: anyNamed('goalId'),
+        userId: anyNamed('userId'),
+      )).thenAnswer((_) async {});
 
       await notifier.submitGoal();
 
@@ -393,19 +441,31 @@ void main() {
         capturedUser.availableDays,
         ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
       );
+      // Verify new field
+      expect(capturedUser.preferredDistanceUnit, 'km');
     });
 
-    test('submitGoal should create goal with correct type-specific fields',
-        () async {
+    test('submitGoal should create goal with context and conversion', () async {
       final notifier = container.read(goalSetupProvider.notifier);
       final targetDate = TestFixtures.twelveWeeksFromNow;
 
-      // Set up state for distance milestone
+      // Set up state
       notifier.setPersonalDetails(age: 30);
       notifier.setGoalType(GoalType.distanceMilestone);
       notifier.setDistanceMilestoneDetails(
         distance: TestFixtures.distance10K,
         date: targetDate,
+      );
+      // Set context in Miles to test conversion
+      notifier.setTrainingContext(
+        frequency: 3,
+        volume: 10.0, // 10 miles
+        distanceUnit: 'mi',
+      );
+      notifier.setPillarPriorities(
+        running: 'High',
+        strength: 'Medium',
+        mobility: 'Low',
       );
 
       // Mock repository responses
@@ -424,6 +484,14 @@ void main() {
       expect(capturedGoal.targetDistance, TestFixtures.distance10K);
       expect(capturedGoal.targetDate, targetDate);
       expect(capturedGoal.confidence, 85.0);
+
+      // Verify Context Fields on Goal
+      expect(capturedGoal.initialTrainingFrequency, 3);
+      expect(capturedGoal.initialWeeklyVolume,
+          closeTo(16.09, 0.01)); // 10 miles * 1.60934
+      expect(capturedGoal.runningPriority, 'High');
+      expect(capturedGoal.strengthPriority, 'Medium');
+      expect(capturedGoal.mobilityPriority, 'Low');
     });
 
     test(
@@ -464,6 +532,10 @@ void main() {
           .thenAnswer((_) async => TestDataBuilders.createTestUser());
       when(mockGoalRepository.createGoal(any))
           .thenAnswer((_) async => TestDataBuilders.createEventGoal());
+      when(mockGenerateTrainingPlan.execute(
+        goalId: anyNamed('goalId'),
+        userId: anyNamed('userId'),
+      )).thenAnswer((_) async {});
 
       await notifier.submitGoal();
 
@@ -502,6 +574,10 @@ void main() {
           .thenAnswer((_) async => TestDataBuilders.createTestUser());
       when(mockGoalRepository.createGoal(any)).thenAnswer(
           (_) async => TestDataBuilders.createDistanceMilestoneGoal());
+      when(mockGenerateTrainingPlan.execute(
+        goalId: anyNamed('goalId'),
+        userId: anyNamed('userId'),
+      )).thenAnswer((_) async {});
 
       expect(container.read(goalSetupProvider).isGenerating, false);
 
@@ -542,6 +618,10 @@ void main() {
           .thenAnswer((_) async => TestDataBuilders.createTestUser());
       when(mockGoalRepository.createGoal(any)).thenAnswer(
           (_) async => TestDataBuilders.createDistanceMilestoneGoal());
+      when(mockGenerateTrainingPlan.execute(
+        goalId: anyNamed('goalId'),
+        userId: anyNamed('userId'),
+      )).thenAnswer((_) async {});
 
       final initialStep = container.read(goalSetupProvider).currentStep;
       await notifier.submitGoal();

@@ -29,11 +29,18 @@ mixin _$Goal {
   DateTime? get targetDate => throw _privateConstructorUsedError;
   int? get targetTime => throw _privateConstructorUsedError;
   int? get currentBestTime => throw _privateConstructorUsedError;
+  bool? get isFirstTime => throw _privateConstructorUsedError;
   String? get eventName => throw _privateConstructorUsedError;
   DateTime? get eventDate => throw _privateConstructorUsedError;
   int? get maintenanceFrequency => throw _privateConstructorUsedError;
   int? get maintenanceDuration => throw _privateConstructorUsedError;
   DateTime? get endDate => throw _privateConstructorUsedError;
+  int? get initialTrainingFrequency => throw _privateConstructorUsedError;
+  double? get initialWeeklyVolume =>
+      throw _privateConstructorUsedError; // In km
+  String? get runningPriority => throw _privateConstructorUsedError;
+  String? get strengthPriority => throw _privateConstructorUsedError;
+  String? get mobilityPriority => throw _privateConstructorUsedError;
   double get confidence => throw _privateConstructorUsedError;
   double get adherenceScore => throw _privateConstructorUsedError;
   double get qualityScore => throw _privateConstructorUsedError;
@@ -66,11 +73,17 @@ abstract class $GoalCopyWith<$Res> {
       DateTime? targetDate,
       int? targetTime,
       int? currentBestTime,
+      bool? isFirstTime,
       String? eventName,
       DateTime? eventDate,
       int? maintenanceFrequency,
       int? maintenanceDuration,
       DateTime? endDate,
+      int? initialTrainingFrequency,
+      double? initialWeeklyVolume,
+      String? runningPriority,
+      String? strengthPriority,
+      String? mobilityPriority,
       double confidence,
       double adherenceScore,
       double qualityScore,
@@ -104,11 +117,17 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
     Object? targetDate = freezed,
     Object? targetTime = freezed,
     Object? currentBestTime = freezed,
+    Object? isFirstTime = freezed,
     Object? eventName = freezed,
     Object? eventDate = freezed,
     Object? maintenanceFrequency = freezed,
     Object? maintenanceDuration = freezed,
     Object? endDate = freezed,
+    Object? initialTrainingFrequency = freezed,
+    Object? initialWeeklyVolume = freezed,
+    Object? runningPriority = freezed,
+    Object? strengthPriority = freezed,
+    Object? mobilityPriority = freezed,
     Object? confidence = null,
     Object? adherenceScore = null,
     Object? qualityScore = null,
@@ -154,6 +173,10 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
           ? _value.currentBestTime
           : currentBestTime // ignore: cast_nullable_to_non_nullable
               as int?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
       eventName: freezed == eventName
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
@@ -174,6 +197,26 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      initialTrainingFrequency: freezed == initialTrainingFrequency
+          ? _value.initialTrainingFrequency
+          : initialTrainingFrequency // ignore: cast_nullable_to_non_nullable
+              as int?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
+      runningPriority: freezed == runningPriority
+          ? _value.runningPriority
+          : runningPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      strengthPriority: freezed == strengthPriority
+          ? _value.strengthPriority
+          : strengthPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobilityPriority: freezed == mobilityPriority
+          ? _value.mobilityPriority
+          : mobilityPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
       confidence: null == confidence
           ? _value.confidence
           : confidence // ignore: cast_nullable_to_non_nullable
@@ -223,11 +266,17 @@ abstract class _$$GoalImplCopyWith<$Res> implements $GoalCopyWith<$Res> {
       DateTime? targetDate,
       int? targetTime,
       int? currentBestTime,
+      bool? isFirstTime,
       String? eventName,
       DateTime? eventDate,
       int? maintenanceFrequency,
       int? maintenanceDuration,
       DateTime? endDate,
+      int? initialTrainingFrequency,
+      double? initialWeeklyVolume,
+      String? runningPriority,
+      String? strengthPriority,
+      String? mobilityPriority,
       double confidence,
       double adherenceScore,
       double qualityScore,
@@ -258,11 +307,17 @@ class __$$GoalImplCopyWithImpl<$Res>
     Object? targetDate = freezed,
     Object? targetTime = freezed,
     Object? currentBestTime = freezed,
+    Object? isFirstTime = freezed,
     Object? eventName = freezed,
     Object? eventDate = freezed,
     Object? maintenanceFrequency = freezed,
     Object? maintenanceDuration = freezed,
     Object? endDate = freezed,
+    Object? initialTrainingFrequency = freezed,
+    Object? initialWeeklyVolume = freezed,
+    Object? runningPriority = freezed,
+    Object? strengthPriority = freezed,
+    Object? mobilityPriority = freezed,
     Object? confidence = null,
     Object? adherenceScore = null,
     Object? qualityScore = null,
@@ -308,6 +363,10 @@ class __$$GoalImplCopyWithImpl<$Res>
           ? _value.currentBestTime
           : currentBestTime // ignore: cast_nullable_to_non_nullable
               as int?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
       eventName: freezed == eventName
           ? _value.eventName
           : eventName // ignore: cast_nullable_to_non_nullable
@@ -328,6 +387,26 @@ class __$$GoalImplCopyWithImpl<$Res>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      initialTrainingFrequency: freezed == initialTrainingFrequency
+          ? _value.initialTrainingFrequency
+          : initialTrainingFrequency // ignore: cast_nullable_to_non_nullable
+              as int?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
+      runningPriority: freezed == runningPriority
+          ? _value.runningPriority
+          : runningPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      strengthPriority: freezed == strengthPriority
+          ? _value.strengthPriority
+          : strengthPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
+      mobilityPriority: freezed == mobilityPriority
+          ? _value.mobilityPriority
+          : mobilityPriority // ignore: cast_nullable_to_non_nullable
+              as String?,
       confidence: null == confidence
           ? _value.confidence
           : confidence // ignore: cast_nullable_to_non_nullable
@@ -373,11 +452,17 @@ class _$GoalImpl implements _Goal {
       this.targetDate,
       this.targetTime,
       this.currentBestTime,
+      this.isFirstTime,
       this.eventName,
       this.eventDate,
       this.maintenanceFrequency,
       this.maintenanceDuration,
       this.endDate,
+      this.initialTrainingFrequency,
+      this.initialWeeklyVolume,
+      this.runningPriority,
+      this.strengthPriority,
+      this.mobilityPriority,
       this.confidence = 0.0,
       this.adherenceScore = 0.0,
       this.qualityScore = 0.0,
@@ -409,6 +494,8 @@ class _$GoalImpl implements _Goal {
   @override
   final int? currentBestTime;
   @override
+  final bool? isFirstTime;
+  @override
   final String? eventName;
   @override
   final DateTime? eventDate;
@@ -418,6 +505,17 @@ class _$GoalImpl implements _Goal {
   final int? maintenanceDuration;
   @override
   final DateTime? endDate;
+  @override
+  final int? initialTrainingFrequency;
+  @override
+  final double? initialWeeklyVolume;
+// In km
+  @override
+  final String? runningPriority;
+  @override
+  final String? strengthPriority;
+  @override
+  final String? mobilityPriority;
   @override
   @JsonKey()
   final double confidence;
@@ -440,7 +538,7 @@ class _$GoalImpl implements _Goal {
 
   @override
   String toString() {
-    return 'Goal(id: $id, userId: $userId, type: $type, name: $name, isActive: $isActive, targetDistance: $targetDistance, targetDate: $targetDate, targetTime: $targetTime, currentBestTime: $currentBestTime, eventName: $eventName, eventDate: $eventDate, maintenanceFrequency: $maintenanceFrequency, maintenanceDuration: $maintenanceDuration, endDate: $endDate, confidence: $confidence, adherenceScore: $adherenceScore, qualityScore: $qualityScore, consistencyScore: $consistencyScore, recoveryScore: $recoveryScore, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Goal(id: $id, userId: $userId, type: $type, name: $name, isActive: $isActive, targetDistance: $targetDistance, targetDate: $targetDate, targetTime: $targetTime, currentBestTime: $currentBestTime, isFirstTime: $isFirstTime, eventName: $eventName, eventDate: $eventDate, maintenanceFrequency: $maintenanceFrequency, maintenanceDuration: $maintenanceDuration, endDate: $endDate, initialTrainingFrequency: $initialTrainingFrequency, initialWeeklyVolume: $initialWeeklyVolume, runningPriority: $runningPriority, strengthPriority: $strengthPriority, mobilityPriority: $mobilityPriority, confidence: $confidence, adherenceScore: $adherenceScore, qualityScore: $qualityScore, consistencyScore: $consistencyScore, recoveryScore: $recoveryScore, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -462,6 +560,8 @@ class _$GoalImpl implements _Goal {
                 other.targetTime == targetTime) &&
             (identical(other.currentBestTime, currentBestTime) ||
                 other.currentBestTime == currentBestTime) &&
+            (identical(other.isFirstTime, isFirstTime) ||
+                other.isFirstTime == isFirstTime) &&
             (identical(other.eventName, eventName) ||
                 other.eventName == eventName) &&
             (identical(other.eventDate, eventDate) ||
@@ -471,6 +571,17 @@ class _$GoalImpl implements _Goal {
             (identical(other.maintenanceDuration, maintenanceDuration) ||
                 other.maintenanceDuration == maintenanceDuration) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(
+                    other.initialTrainingFrequency, initialTrainingFrequency) ||
+                other.initialTrainingFrequency == initialTrainingFrequency) &&
+            (identical(other.initialWeeklyVolume, initialWeeklyVolume) ||
+                other.initialWeeklyVolume == initialWeeklyVolume) &&
+            (identical(other.runningPriority, runningPriority) ||
+                other.runningPriority == runningPriority) &&
+            (identical(other.strengthPriority, strengthPriority) ||
+                other.strengthPriority == strengthPriority) &&
+            (identical(other.mobilityPriority, mobilityPriority) ||
+                other.mobilityPriority == mobilityPriority) &&
             (identical(other.confidence, confidence) ||
                 other.confidence == confidence) &&
             (identical(other.adherenceScore, adherenceScore) ||
@@ -500,11 +611,17 @@ class _$GoalImpl implements _Goal {
         targetDate,
         targetTime,
         currentBestTime,
+        isFirstTime,
         eventName,
         eventDate,
         maintenanceFrequency,
         maintenanceDuration,
         endDate,
+        initialTrainingFrequency,
+        initialWeeklyVolume,
+        runningPriority,
+        strengthPriority,
+        mobilityPriority,
         confidence,
         adherenceScore,
         qualityScore,
@@ -541,11 +658,17 @@ abstract class _Goal implements Goal {
       final DateTime? targetDate,
       final int? targetTime,
       final int? currentBestTime,
+      final bool? isFirstTime,
       final String? eventName,
       final DateTime? eventDate,
       final int? maintenanceFrequency,
       final int? maintenanceDuration,
       final DateTime? endDate,
+      final int? initialTrainingFrequency,
+      final double? initialWeeklyVolume,
+      final String? runningPriority,
+      final String? strengthPriority,
+      final String? mobilityPriority,
       final double confidence,
       final double adherenceScore,
       final double qualityScore,
@@ -575,6 +698,8 @@ abstract class _Goal implements Goal {
   @override
   int? get currentBestTime;
   @override
+  bool? get isFirstTime;
+  @override
   String? get eventName;
   @override
   DateTime? get eventDate;
@@ -584,6 +709,16 @@ abstract class _Goal implements Goal {
   int? get maintenanceDuration;
   @override
   DateTime? get endDate;
+  @override
+  int? get initialTrainingFrequency;
+  @override
+  double? get initialWeeklyVolume; // In km
+  @override
+  String? get runningPriority;
+  @override
+  String? get strengthPriority;
+  @override
+  String? get mobilityPriority;
   @override
   double get confidence;
   @override

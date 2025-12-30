@@ -120,7 +120,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 3,
+                  currentStep: 4,
                   label: 'Personal Details',
                 ),
                 const SizedBox(height: 24),

@@ -53,6 +53,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
           type: DriftSqlType.string,
           requiredDuringInsert: false,
           defaultValue: const Constant('cm'));
+  static const VerificationMeta _preferredDistanceUnitMeta =
+      const VerificationMeta('preferredDistanceUnit');
+  @override
+  late final GeneratedColumn<String> preferredDistanceUnit =
+      GeneratedColumn<String>('preferred_distance_unit', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('km'));
   static const VerificationMeta _availableDaysMeta =
       const VerificationMeta('availableDays');
   @override
@@ -97,6 +105,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
         preferredWeightUnit,
         height,
         preferredHeightUnit,
+        preferredDistanceUnit,
         availableDays,
         constraints,
         healthPermissionsGranted,
@@ -143,6 +152,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
           _preferredHeightUnitMeta,
           preferredHeightUnit.isAcceptableOrUnknown(
               data['preferred_height_unit']!, _preferredHeightUnitMeta));
+    }
+    if (data.containsKey('preferred_distance_unit')) {
+      context.handle(
+          _preferredDistanceUnitMeta,
+          preferredDistanceUnit.isAcceptableOrUnknown(
+              data['preferred_distance_unit']!, _preferredDistanceUnitMeta));
     }
     if (data.containsKey('available_days')) {
       context.handle(
@@ -202,6 +217,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
       preferredHeightUnit: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}preferred_height_unit'])!,
+      preferredDistanceUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}preferred_distance_unit'])!,
       availableDays: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}available_days'])!,
       constraints: attachedDatabase.typeMapping
@@ -230,6 +248,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   final String preferredWeightUnit;
   final double? height;
   final String preferredHeightUnit;
+  final String preferredDistanceUnit;
   final String availableDays;
   final String? constraints;
   final bool healthPermissionsGranted;
@@ -243,6 +262,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       required this.preferredWeightUnit,
       this.height,
       required this.preferredHeightUnit,
+      required this.preferredDistanceUnit,
       required this.availableDays,
       this.constraints,
       required this.healthPermissionsGranted,
@@ -266,6 +286,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       map['height'] = Variable<double>(height);
     }
     map['preferred_height_unit'] = Variable<String>(preferredHeightUnit);
+    map['preferred_distance_unit'] = Variable<String>(preferredDistanceUnit);
     map['available_days'] = Variable<String>(availableDays);
     if (!nullToAbsent || constraints != null) {
       map['constraints'] = Variable<String>(constraints);
@@ -289,6 +310,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       height:
           height == null && nullToAbsent ? const Value.absent() : Value(height),
       preferredHeightUnit: Value(preferredHeightUnit),
+      preferredDistanceUnit: Value(preferredDistanceUnit),
       availableDays: Value(availableDays),
       constraints: constraints == null && nullToAbsent
           ? const Value.absent()
@@ -312,6 +334,8 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       height: serializer.fromJson<double?>(json['height']),
       preferredHeightUnit:
           serializer.fromJson<String>(json['preferredHeightUnit']),
+      preferredDistanceUnit:
+          serializer.fromJson<String>(json['preferredDistanceUnit']),
       availableDays: serializer.fromJson<String>(json['availableDays']),
       constraints: serializer.fromJson<String?>(json['constraints']),
       healthPermissionsGranted:
@@ -331,6 +355,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       'preferredWeightUnit': serializer.toJson<String>(preferredWeightUnit),
       'height': serializer.toJson<double?>(height),
       'preferredHeightUnit': serializer.toJson<String>(preferredHeightUnit),
+      'preferredDistanceUnit': serializer.toJson<String>(preferredDistanceUnit),
       'availableDays': serializer.toJson<String>(availableDays),
       'constraints': serializer.toJson<String?>(constraints),
       'healthPermissionsGranted':
@@ -348,6 +373,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           String? preferredWeightUnit,
           Value<double?> height = const Value.absent(),
           String? preferredHeightUnit,
+          String? preferredDistanceUnit,
           String? availableDays,
           Value<String?> constraints = const Value.absent(),
           bool? healthPermissionsGranted,
@@ -361,6 +387,8 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
         preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
         height: height.present ? height.value : this.height,
         preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
+        preferredDistanceUnit:
+            preferredDistanceUnit ?? this.preferredDistanceUnit,
         availableDays: availableDays ?? this.availableDays,
         constraints: constraints.present ? constraints.value : this.constraints,
         healthPermissionsGranted:
@@ -381,6 +409,9 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       preferredHeightUnit: data.preferredHeightUnit.present
           ? data.preferredHeightUnit.value
           : this.preferredHeightUnit,
+      preferredDistanceUnit: data.preferredDistanceUnit.present
+          ? data.preferredDistanceUnit.value
+          : this.preferredDistanceUnit,
       availableDays: data.availableDays.present
           ? data.availableDays.value
           : this.availableDays,
@@ -404,6 +435,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           ..write('preferredWeightUnit: $preferredWeightUnit, ')
           ..write('height: $height, ')
           ..write('preferredHeightUnit: $preferredHeightUnit, ')
+          ..write('preferredDistanceUnit: $preferredDistanceUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -422,6 +454,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       preferredWeightUnit,
       height,
       preferredHeightUnit,
+      preferredDistanceUnit,
       availableDays,
       constraints,
       healthPermissionsGranted,
@@ -438,6 +471,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           other.preferredWeightUnit == this.preferredWeightUnit &&
           other.height == this.height &&
           other.preferredHeightUnit == this.preferredHeightUnit &&
+          other.preferredDistanceUnit == this.preferredDistanceUnit &&
           other.availableDays == this.availableDays &&
           other.constraints == this.constraints &&
           other.healthPermissionsGranted == this.healthPermissionsGranted &&
@@ -453,6 +487,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   final Value<String> preferredWeightUnit;
   final Value<double?> height;
   final Value<String> preferredHeightUnit;
+  final Value<String> preferredDistanceUnit;
   final Value<String> availableDays;
   final Value<String?> constraints;
   final Value<bool> healthPermissionsGranted;
@@ -466,6 +501,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     this.preferredWeightUnit = const Value.absent(),
     this.height = const Value.absent(),
     this.preferredHeightUnit = const Value.absent(),
+    this.preferredDistanceUnit = const Value.absent(),
     this.availableDays = const Value.absent(),
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -480,6 +516,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     this.preferredWeightUnit = const Value.absent(),
     this.height = const Value.absent(),
     this.preferredHeightUnit = const Value.absent(),
+    this.preferredDistanceUnit = const Value.absent(),
     required String availableDays,
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -496,6 +533,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     Expression<String>? preferredWeightUnit,
     Expression<double>? height,
     Expression<String>? preferredHeightUnit,
+    Expression<String>? preferredDistanceUnit,
     Expression<String>? availableDays,
     Expression<String>? constraints,
     Expression<bool>? healthPermissionsGranted,
@@ -512,6 +550,8 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       if (height != null) 'height': height,
       if (preferredHeightUnit != null)
         'preferred_height_unit': preferredHeightUnit,
+      if (preferredDistanceUnit != null)
+        'preferred_distance_unit': preferredDistanceUnit,
       if (availableDays != null) 'available_days': availableDays,
       if (constraints != null) 'constraints': constraints,
       if (healthPermissionsGranted != null)
@@ -529,6 +569,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       Value<String>? preferredWeightUnit,
       Value<double?>? height,
       Value<String>? preferredHeightUnit,
+      Value<String>? preferredDistanceUnit,
       Value<String>? availableDays,
       Value<String?>? constraints,
       Value<bool>? healthPermissionsGranted,
@@ -542,6 +583,8 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
       height: height ?? this.height,
       preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
+      preferredDistanceUnit:
+          preferredDistanceUnit ?? this.preferredDistanceUnit,
       availableDays: availableDays ?? this.availableDays,
       constraints: constraints ?? this.constraints,
       healthPermissionsGranted:
@@ -577,6 +620,10 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       map['preferred_height_unit'] =
           Variable<String>(preferredHeightUnit.value);
     }
+    if (preferredDistanceUnit.present) {
+      map['preferred_distance_unit'] =
+          Variable<String>(preferredDistanceUnit.value);
+    }
     if (availableDays.present) {
       map['available_days'] = Variable<String>(availableDays.value);
     }
@@ -606,6 +653,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
           ..write('preferredWeightUnit: $preferredWeightUnit, ')
           ..write('height: $height, ')
           ..write('preferredHeightUnit: $preferredHeightUnit, ')
+          ..write('preferredDistanceUnit: $preferredDistanceUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -682,6 +730,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
   late final GeneratedColumn<int> currentBestTime = GeneratedColumn<int>(
       'current_best_time', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _isFirstTimeMeta =
+      const VerificationMeta('isFirstTime');
+  @override
+  late final GeneratedColumn<bool> isFirstTime = GeneratedColumn<bool>(
+      'is_first_time', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_first_time" IN (0, 1))'));
   static const VerificationMeta _eventNameMeta =
       const VerificationMeta('eventName');
   @override
@@ -712,6 +769,36 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _initialTrainingFrequencyMeta =
+      const VerificationMeta('initialTrainingFrequency');
+  @override
+  late final GeneratedColumn<int> initialTrainingFrequency =
+      GeneratedColumn<int>('initial_training_frequency', aliasedName, true,
+          type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _initialWeeklyVolumeMeta =
+      const VerificationMeta('initialWeeklyVolume');
+  @override
+  late final GeneratedColumn<double> initialWeeklyVolume =
+      GeneratedColumn<double>('initial_weekly_volume', aliasedName, true,
+          type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _runningPriorityMeta =
+      const VerificationMeta('runningPriority');
+  @override
+  late final GeneratedColumn<String> runningPriority = GeneratedColumn<String>(
+      'running_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _strengthPriorityMeta =
+      const VerificationMeta('strengthPriority');
+  @override
+  late final GeneratedColumn<String> strengthPriority = GeneratedColumn<String>(
+      'strength_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _mobilityPriorityMeta =
+      const VerificationMeta('mobilityPriority');
+  @override
+  late final GeneratedColumn<String> mobilityPriority = GeneratedColumn<String>(
+      'mobility_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _confidenceMeta =
       const VerificationMeta('confidence');
   @override
@@ -775,11 +862,17 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
         targetDate,
         targetTime,
         currentBestTime,
+        isFirstTime,
         eventName,
         eventDate,
         maintenanceFrequency,
         maintenanceDuration,
         endDate,
+        initialTrainingFrequency,
+        initialWeeklyVolume,
+        runningPriority,
+        strengthPriority,
+        mobilityPriority,
         confidence,
         adherenceScore,
         qualityScore,
@@ -847,6 +940,12 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           currentBestTime.isAcceptableOrUnknown(
               data['current_best_time']!, _currentBestTimeMeta));
     }
+    if (data.containsKey('is_first_time')) {
+      context.handle(
+          _isFirstTimeMeta,
+          isFirstTime.isAcceptableOrUnknown(
+              data['is_first_time']!, _isFirstTimeMeta));
+    }
     if (data.containsKey('event_name')) {
       context.handle(_eventNameMeta,
           eventName.isAcceptableOrUnknown(data['event_name']!, _eventNameMeta));
@@ -870,6 +969,37 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
     if (data.containsKey('end_date')) {
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('initial_training_frequency')) {
+      context.handle(
+          _initialTrainingFrequencyMeta,
+          initialTrainingFrequency.isAcceptableOrUnknown(
+              data['initial_training_frequency']!,
+              _initialTrainingFrequencyMeta));
+    }
+    if (data.containsKey('initial_weekly_volume')) {
+      context.handle(
+          _initialWeeklyVolumeMeta,
+          initialWeeklyVolume.isAcceptableOrUnknown(
+              data['initial_weekly_volume']!, _initialWeeklyVolumeMeta));
+    }
+    if (data.containsKey('running_priority')) {
+      context.handle(
+          _runningPriorityMeta,
+          runningPriority.isAcceptableOrUnknown(
+              data['running_priority']!, _runningPriorityMeta));
+    }
+    if (data.containsKey('strength_priority')) {
+      context.handle(
+          _strengthPriorityMeta,
+          strengthPriority.isAcceptableOrUnknown(
+              data['strength_priority']!, _strengthPriorityMeta));
+    }
+    if (data.containsKey('mobility_priority')) {
+      context.handle(
+          _mobilityPriorityMeta,
+          mobilityPriority.isAcceptableOrUnknown(
+              data['mobility_priority']!, _mobilityPriorityMeta));
     }
     if (data.containsKey('confidence')) {
       context.handle(
@@ -940,6 +1070,8 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           .read(DriftSqlType.int, data['${effectivePrefix}target_time']),
       currentBestTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}current_best_time']),
+      isFirstTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_first_time']),
       eventName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}event_name']),
       eventDate: attachedDatabase.typeMapping
@@ -950,6 +1082,17 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           DriftSqlType.int, data['${effectivePrefix}maintenance_duration']),
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      initialTrainingFrequency: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}initial_training_frequency']),
+      initialWeeklyVolume: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}initial_weekly_volume']),
+      runningPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}running_priority']),
+      strengthPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}strength_priority']),
+      mobilityPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}mobility_priority']),
       confidence: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}confidence'])!,
       adherenceScore: attachedDatabase.typeMapping.read(
@@ -983,11 +1126,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
   final DateTime? targetDate;
   final int? targetTime;
   final int? currentBestTime;
+  final bool? isFirstTime;
   final String? eventName;
   final DateTime? eventDate;
   final int? maintenanceFrequency;
   final int? maintenanceDuration;
   final DateTime? endDate;
+  final int? initialTrainingFrequency;
+  final double? initialWeeklyVolume;
+  final String? runningPriority;
+  final String? strengthPriority;
+  final String? mobilityPriority;
   final double confidence;
   final double adherenceScore;
   final double qualityScore;
@@ -1005,11 +1154,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       this.targetDate,
       this.targetTime,
       this.currentBestTime,
+      this.isFirstTime,
       this.eventName,
       this.eventDate,
       this.maintenanceFrequency,
       this.maintenanceDuration,
       this.endDate,
+      this.initialTrainingFrequency,
+      this.initialWeeklyVolume,
+      this.runningPriority,
+      this.strengthPriority,
+      this.mobilityPriority,
       required this.confidence,
       required this.adherenceScore,
       required this.qualityScore,
@@ -1037,6 +1192,9 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
     if (!nullToAbsent || currentBestTime != null) {
       map['current_best_time'] = Variable<int>(currentBestTime);
     }
+    if (!nullToAbsent || isFirstTime != null) {
+      map['is_first_time'] = Variable<bool>(isFirstTime);
+    }
     if (!nullToAbsent || eventName != null) {
       map['event_name'] = Variable<String>(eventName);
     }
@@ -1051,6 +1209,22 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
     }
     if (!nullToAbsent || endDate != null) {
       map['end_date'] = Variable<DateTime>(endDate);
+    }
+    if (!nullToAbsent || initialTrainingFrequency != null) {
+      map['initial_training_frequency'] =
+          Variable<int>(initialTrainingFrequency);
+    }
+    if (!nullToAbsent || initialWeeklyVolume != null) {
+      map['initial_weekly_volume'] = Variable<double>(initialWeeklyVolume);
+    }
+    if (!nullToAbsent || runningPriority != null) {
+      map['running_priority'] = Variable<String>(runningPriority);
+    }
+    if (!nullToAbsent || strengthPriority != null) {
+      map['strength_priority'] = Variable<String>(strengthPriority);
+    }
+    if (!nullToAbsent || mobilityPriority != null) {
+      map['mobility_priority'] = Variable<String>(mobilityPriority);
     }
     map['confidence'] = Variable<double>(confidence);
     map['adherence_score'] = Variable<double>(adherenceScore);
@@ -1081,6 +1255,9 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       currentBestTime: currentBestTime == null && nullToAbsent
           ? const Value.absent()
           : Value(currentBestTime),
+      isFirstTime: isFirstTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isFirstTime),
       eventName: eventName == null && nullToAbsent
           ? const Value.absent()
           : Value(eventName),
@@ -1096,6 +1273,21 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       endDate: endDate == null && nullToAbsent
           ? const Value.absent()
           : Value(endDate),
+      initialTrainingFrequency: initialTrainingFrequency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(initialTrainingFrequency),
+      initialWeeklyVolume: initialWeeklyVolume == null && nullToAbsent
+          ? const Value.absent()
+          : Value(initialWeeklyVolume),
+      runningPriority: runningPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(runningPriority),
+      strengthPriority: strengthPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(strengthPriority),
+      mobilityPriority: mobilityPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mobilityPriority),
       confidence: Value(confidence),
       adherenceScore: Value(adherenceScore),
       qualityScore: Value(qualityScore),
@@ -1119,6 +1311,7 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       targetDate: serializer.fromJson<DateTime?>(json['targetDate']),
       targetTime: serializer.fromJson<int?>(json['targetTime']),
       currentBestTime: serializer.fromJson<int?>(json['currentBestTime']),
+      isFirstTime: serializer.fromJson<bool?>(json['isFirstTime']),
       eventName: serializer.fromJson<String?>(json['eventName']),
       eventDate: serializer.fromJson<DateTime?>(json['eventDate']),
       maintenanceFrequency:
@@ -1126,6 +1319,13 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       maintenanceDuration:
           serializer.fromJson<int?>(json['maintenanceDuration']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      initialTrainingFrequency:
+          serializer.fromJson<int?>(json['initialTrainingFrequency']),
+      initialWeeklyVolume:
+          serializer.fromJson<double?>(json['initialWeeklyVolume']),
+      runningPriority: serializer.fromJson<String?>(json['runningPriority']),
+      strengthPriority: serializer.fromJson<String?>(json['strengthPriority']),
+      mobilityPriority: serializer.fromJson<String?>(json['mobilityPriority']),
       confidence: serializer.fromJson<double>(json['confidence']),
       adherenceScore: serializer.fromJson<double>(json['adherenceScore']),
       qualityScore: serializer.fromJson<double>(json['qualityScore']),
@@ -1148,11 +1348,18 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       'targetDate': serializer.toJson<DateTime?>(targetDate),
       'targetTime': serializer.toJson<int?>(targetTime),
       'currentBestTime': serializer.toJson<int?>(currentBestTime),
+      'isFirstTime': serializer.toJson<bool?>(isFirstTime),
       'eventName': serializer.toJson<String?>(eventName),
       'eventDate': serializer.toJson<DateTime?>(eventDate),
       'maintenanceFrequency': serializer.toJson<int?>(maintenanceFrequency),
       'maintenanceDuration': serializer.toJson<int?>(maintenanceDuration),
       'endDate': serializer.toJson<DateTime?>(endDate),
+      'initialTrainingFrequency':
+          serializer.toJson<int?>(initialTrainingFrequency),
+      'initialWeeklyVolume': serializer.toJson<double?>(initialWeeklyVolume),
+      'runningPriority': serializer.toJson<String?>(runningPriority),
+      'strengthPriority': serializer.toJson<String?>(strengthPriority),
+      'mobilityPriority': serializer.toJson<String?>(mobilityPriority),
       'confidence': serializer.toJson<double>(confidence),
       'adherenceScore': serializer.toJson<double>(adherenceScore),
       'qualityScore': serializer.toJson<double>(qualityScore),
@@ -1173,11 +1380,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           Value<DateTime?> targetDate = const Value.absent(),
           Value<int?> targetTime = const Value.absent(),
           Value<int?> currentBestTime = const Value.absent(),
+          Value<bool?> isFirstTime = const Value.absent(),
           Value<String?> eventName = const Value.absent(),
           Value<DateTime?> eventDate = const Value.absent(),
           Value<int?> maintenanceFrequency = const Value.absent(),
           Value<int?> maintenanceDuration = const Value.absent(),
           Value<DateTime?> endDate = const Value.absent(),
+          Value<int?> initialTrainingFrequency = const Value.absent(),
+          Value<double?> initialWeeklyVolume = const Value.absent(),
+          Value<String?> runningPriority = const Value.absent(),
+          Value<String?> strengthPriority = const Value.absent(),
+          Value<String?> mobilityPriority = const Value.absent(),
           double? confidence,
           double? adherenceScore,
           double? qualityScore,
@@ -1198,6 +1411,7 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         currentBestTime: currentBestTime.present
             ? currentBestTime.value
             : this.currentBestTime,
+        isFirstTime: isFirstTime.present ? isFirstTime.value : this.isFirstTime,
         eventName: eventName.present ? eventName.value : this.eventName,
         eventDate: eventDate.present ? eventDate.value : this.eventDate,
         maintenanceFrequency: maintenanceFrequency.present
@@ -1207,6 +1421,21 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
             ? maintenanceDuration.value
             : this.maintenanceDuration,
         endDate: endDate.present ? endDate.value : this.endDate,
+        initialTrainingFrequency: initialTrainingFrequency.present
+            ? initialTrainingFrequency.value
+            : this.initialTrainingFrequency,
+        initialWeeklyVolume: initialWeeklyVolume.present
+            ? initialWeeklyVolume.value
+            : this.initialWeeklyVolume,
+        runningPriority: runningPriority.present
+            ? runningPriority.value
+            : this.runningPriority,
+        strengthPriority: strengthPriority.present
+            ? strengthPriority.value
+            : this.strengthPriority,
+        mobilityPriority: mobilityPriority.present
+            ? mobilityPriority.value
+            : this.mobilityPriority,
         confidence: confidence ?? this.confidence,
         adherenceScore: adherenceScore ?? this.adherenceScore,
         qualityScore: qualityScore ?? this.qualityScore,
@@ -1232,6 +1461,8 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       currentBestTime: data.currentBestTime.present
           ? data.currentBestTime.value
           : this.currentBestTime,
+      isFirstTime:
+          data.isFirstTime.present ? data.isFirstTime.value : this.isFirstTime,
       eventName: data.eventName.present ? data.eventName.value : this.eventName,
       eventDate: data.eventDate.present ? data.eventDate.value : this.eventDate,
       maintenanceFrequency: data.maintenanceFrequency.present
@@ -1241,6 +1472,21 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           ? data.maintenanceDuration.value
           : this.maintenanceDuration,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      initialTrainingFrequency: data.initialTrainingFrequency.present
+          ? data.initialTrainingFrequency.value
+          : this.initialTrainingFrequency,
+      initialWeeklyVolume: data.initialWeeklyVolume.present
+          ? data.initialWeeklyVolume.value
+          : this.initialWeeklyVolume,
+      runningPriority: data.runningPriority.present
+          ? data.runningPriority.value
+          : this.runningPriority,
+      strengthPriority: data.strengthPriority.present
+          ? data.strengthPriority.value
+          : this.strengthPriority,
+      mobilityPriority: data.mobilityPriority.present
+          ? data.mobilityPriority.value
+          : this.mobilityPriority,
       confidence:
           data.confidence.present ? data.confidence.value : this.confidence,
       adherenceScore: data.adherenceScore.present
@@ -1272,11 +1518,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           ..write('targetDate: $targetDate, ')
           ..write('targetTime: $targetTime, ')
           ..write('currentBestTime: $currentBestTime, ')
+          ..write('isFirstTime: $isFirstTime, ')
           ..write('eventName: $eventName, ')
           ..write('eventDate: $eventDate, ')
           ..write('maintenanceFrequency: $maintenanceFrequency, ')
           ..write('maintenanceDuration: $maintenanceDuration, ')
           ..write('endDate: $endDate, ')
+          ..write('initialTrainingFrequency: $initialTrainingFrequency, ')
+          ..write('initialWeeklyVolume: $initialWeeklyVolume, ')
+          ..write('runningPriority: $runningPriority, ')
+          ..write('strengthPriority: $strengthPriority, ')
+          ..write('mobilityPriority: $mobilityPriority, ')
           ..write('confidence: $confidence, ')
           ..write('adherenceScore: $adherenceScore, ')
           ..write('qualityScore: $qualityScore, ')
@@ -1299,11 +1551,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         targetDate,
         targetTime,
         currentBestTime,
+        isFirstTime,
         eventName,
         eventDate,
         maintenanceFrequency,
         maintenanceDuration,
         endDate,
+        initialTrainingFrequency,
+        initialWeeklyVolume,
+        runningPriority,
+        strengthPriority,
+        mobilityPriority,
         confidence,
         adherenceScore,
         qualityScore,
@@ -1325,11 +1583,17 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           other.targetDate == this.targetDate &&
           other.targetTime == this.targetTime &&
           other.currentBestTime == this.currentBestTime &&
+          other.isFirstTime == this.isFirstTime &&
           other.eventName == this.eventName &&
           other.eventDate == this.eventDate &&
           other.maintenanceFrequency == this.maintenanceFrequency &&
           other.maintenanceDuration == this.maintenanceDuration &&
           other.endDate == this.endDate &&
+          other.initialTrainingFrequency == this.initialTrainingFrequency &&
+          other.initialWeeklyVolume == this.initialWeeklyVolume &&
+          other.runningPriority == this.runningPriority &&
+          other.strengthPriority == this.strengthPriority &&
+          other.mobilityPriority == this.mobilityPriority &&
           other.confidence == this.confidence &&
           other.adherenceScore == this.adherenceScore &&
           other.qualityScore == this.qualityScore &&
@@ -1349,11 +1613,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
   final Value<DateTime?> targetDate;
   final Value<int?> targetTime;
   final Value<int?> currentBestTime;
+  final Value<bool?> isFirstTime;
   final Value<String?> eventName;
   final Value<DateTime?> eventDate;
   final Value<int?> maintenanceFrequency;
   final Value<int?> maintenanceDuration;
   final Value<DateTime?> endDate;
+  final Value<int?> initialTrainingFrequency;
+  final Value<double?> initialWeeklyVolume;
+  final Value<String?> runningPriority;
+  final Value<String?> strengthPriority;
+  final Value<String?> mobilityPriority;
   final Value<double> confidence;
   final Value<double> adherenceScore;
   final Value<double> qualityScore;
@@ -1371,11 +1641,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.targetDate = const Value.absent(),
     this.targetTime = const Value.absent(),
     this.currentBestTime = const Value.absent(),
+    this.isFirstTime = const Value.absent(),
     this.eventName = const Value.absent(),
     this.eventDate = const Value.absent(),
     this.maintenanceFrequency = const Value.absent(),
     this.maintenanceDuration = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.initialTrainingFrequency = const Value.absent(),
+    this.initialWeeklyVolume = const Value.absent(),
+    this.runningPriority = const Value.absent(),
+    this.strengthPriority = const Value.absent(),
+    this.mobilityPriority = const Value.absent(),
     this.confidence = const Value.absent(),
     this.adherenceScore = const Value.absent(),
     this.qualityScore = const Value.absent(),
@@ -1394,11 +1670,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.targetDate = const Value.absent(),
     this.targetTime = const Value.absent(),
     this.currentBestTime = const Value.absent(),
+    this.isFirstTime = const Value.absent(),
     this.eventName = const Value.absent(),
     this.eventDate = const Value.absent(),
     this.maintenanceFrequency = const Value.absent(),
     this.maintenanceDuration = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.initialTrainingFrequency = const Value.absent(),
+    this.initialWeeklyVolume = const Value.absent(),
+    this.runningPriority = const Value.absent(),
+    this.strengthPriority = const Value.absent(),
+    this.mobilityPriority = const Value.absent(),
     this.confidence = const Value.absent(),
     this.adherenceScore = const Value.absent(),
     this.qualityScore = const Value.absent(),
@@ -1421,11 +1703,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     Expression<DateTime>? targetDate,
     Expression<int>? targetTime,
     Expression<int>? currentBestTime,
+    Expression<bool>? isFirstTime,
     Expression<String>? eventName,
     Expression<DateTime>? eventDate,
     Expression<int>? maintenanceFrequency,
     Expression<int>? maintenanceDuration,
     Expression<DateTime>? endDate,
+    Expression<int>? initialTrainingFrequency,
+    Expression<double>? initialWeeklyVolume,
+    Expression<String>? runningPriority,
+    Expression<String>? strengthPriority,
+    Expression<String>? mobilityPriority,
     Expression<double>? confidence,
     Expression<double>? adherenceScore,
     Expression<double>? qualityScore,
@@ -1444,6 +1732,7 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       if (targetDate != null) 'target_date': targetDate,
       if (targetTime != null) 'target_time': targetTime,
       if (currentBestTime != null) 'current_best_time': currentBestTime,
+      if (isFirstTime != null) 'is_first_time': isFirstTime,
       if (eventName != null) 'event_name': eventName,
       if (eventDate != null) 'event_date': eventDate,
       if (maintenanceFrequency != null)
@@ -1451,6 +1740,13 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       if (maintenanceDuration != null)
         'maintenance_duration': maintenanceDuration,
       if (endDate != null) 'end_date': endDate,
+      if (initialTrainingFrequency != null)
+        'initial_training_frequency': initialTrainingFrequency,
+      if (initialWeeklyVolume != null)
+        'initial_weekly_volume': initialWeeklyVolume,
+      if (runningPriority != null) 'running_priority': runningPriority,
+      if (strengthPriority != null) 'strength_priority': strengthPriority,
+      if (mobilityPriority != null) 'mobility_priority': mobilityPriority,
       if (confidence != null) 'confidence': confidence,
       if (adherenceScore != null) 'adherence_score': adherenceScore,
       if (qualityScore != null) 'quality_score': qualityScore,
@@ -1471,11 +1767,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       Value<DateTime?>? targetDate,
       Value<int?>? targetTime,
       Value<int?>? currentBestTime,
+      Value<bool?>? isFirstTime,
       Value<String?>? eventName,
       Value<DateTime?>? eventDate,
       Value<int?>? maintenanceFrequency,
       Value<int?>? maintenanceDuration,
       Value<DateTime?>? endDate,
+      Value<int?>? initialTrainingFrequency,
+      Value<double?>? initialWeeklyVolume,
+      Value<String?>? runningPriority,
+      Value<String?>? strengthPriority,
+      Value<String?>? mobilityPriority,
       Value<double>? confidence,
       Value<double>? adherenceScore,
       Value<double>? qualityScore,
@@ -1493,11 +1795,18 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       targetDate: targetDate ?? this.targetDate,
       targetTime: targetTime ?? this.targetTime,
       currentBestTime: currentBestTime ?? this.currentBestTime,
+      isFirstTime: isFirstTime ?? this.isFirstTime,
       eventName: eventName ?? this.eventName,
       eventDate: eventDate ?? this.eventDate,
       maintenanceFrequency: maintenanceFrequency ?? this.maintenanceFrequency,
       maintenanceDuration: maintenanceDuration ?? this.maintenanceDuration,
       endDate: endDate ?? this.endDate,
+      initialTrainingFrequency:
+          initialTrainingFrequency ?? this.initialTrainingFrequency,
+      initialWeeklyVolume: initialWeeklyVolume ?? this.initialWeeklyVolume,
+      runningPriority: runningPriority ?? this.runningPriority,
+      strengthPriority: strengthPriority ?? this.strengthPriority,
+      mobilityPriority: mobilityPriority ?? this.mobilityPriority,
       confidence: confidence ?? this.confidence,
       adherenceScore: adherenceScore ?? this.adherenceScore,
       qualityScore: qualityScore ?? this.qualityScore,
@@ -1538,6 +1847,9 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     if (currentBestTime.present) {
       map['current_best_time'] = Variable<int>(currentBestTime.value);
     }
+    if (isFirstTime.present) {
+      map['is_first_time'] = Variable<bool>(isFirstTime.value);
+    }
     if (eventName.present) {
       map['event_name'] = Variable<String>(eventName.value);
     }
@@ -1552,6 +1864,23 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     }
     if (endDate.present) {
       map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (initialTrainingFrequency.present) {
+      map['initial_training_frequency'] =
+          Variable<int>(initialTrainingFrequency.value);
+    }
+    if (initialWeeklyVolume.present) {
+      map['initial_weekly_volume'] =
+          Variable<double>(initialWeeklyVolume.value);
+    }
+    if (runningPriority.present) {
+      map['running_priority'] = Variable<String>(runningPriority.value);
+    }
+    if (strengthPriority.present) {
+      map['strength_priority'] = Variable<String>(strengthPriority.value);
+    }
+    if (mobilityPriority.present) {
+      map['mobility_priority'] = Variable<String>(mobilityPriority.value);
     }
     if (confidence.present) {
       map['confidence'] = Variable<double>(confidence.value);
@@ -1589,11 +1918,17 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
           ..write('targetDate: $targetDate, ')
           ..write('targetTime: $targetTime, ')
           ..write('currentBestTime: $currentBestTime, ')
+          ..write('isFirstTime: $isFirstTime, ')
           ..write('eventName: $eventName, ')
           ..write('eventDate: $eventDate, ')
           ..write('maintenanceFrequency: $maintenanceFrequency, ')
           ..write('maintenanceDuration: $maintenanceDuration, ')
           ..write('endDate: $endDate, ')
+          ..write('initialTrainingFrequency: $initialTrainingFrequency, ')
+          ..write('initialWeeklyVolume: $initialWeeklyVolume, ')
+          ..write('runningPriority: $runningPriority, ')
+          ..write('strengthPriority: $strengthPriority, ')
+          ..write('mobilityPriority: $mobilityPriority, ')
           ..write('confidence: $confidence, ')
           ..write('adherenceScore: $adherenceScore, ')
           ..write('qualityScore: $qualityScore, ')
@@ -4894,6 +5229,7 @@ typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
   Value<String> preferredWeightUnit,
   Value<double?> height,
   Value<String> preferredHeightUnit,
+  Value<String> preferredDistanceUnit,
   required String availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -4908,6 +5244,7 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<String> preferredWeightUnit,
   Value<double?> height,
   Value<String> preferredHeightUnit,
+  Value<String> preferredDistanceUnit,
   Value<String> availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -5013,6 +5350,10 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get preferredHeightUnit => $composableBuilder(
       column: $table.preferredHeightUnit,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit,
       builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get availableDays => $composableBuilder(
@@ -5148,6 +5489,10 @@ class $$UsersTableOrderingComposer
       column: $table.preferredHeightUnit,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit,
+      builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get availableDays => $composableBuilder(
       column: $table.availableDays,
       builder: (column) => ColumnOrderings(column));
@@ -5195,6 +5540,9 @@ class $$UsersTableAnnotationComposer
 
   GeneratedColumn<String> get preferredHeightUnit => $composableBuilder(
       column: $table.preferredHeightUnit, builder: (column) => column);
+
+  GeneratedColumn<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit, builder: (column) => column);
 
   GeneratedColumn<String> get availableDays => $composableBuilder(
       column: $table.availableDays, builder: (column) => column);
@@ -5331,6 +5679,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<String> preferredWeightUnit = const Value.absent(),
             Value<double?> height = const Value.absent(),
             Value<String> preferredHeightUnit = const Value.absent(),
+            Value<String> preferredDistanceUnit = const Value.absent(),
             Value<String> availableDays = const Value.absent(),
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -5345,6 +5694,7 @@ class $$UsersTableTableManager extends RootTableManager<
             preferredWeightUnit: preferredWeightUnit,
             height: height,
             preferredHeightUnit: preferredHeightUnit,
+            preferredDistanceUnit: preferredDistanceUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,
@@ -5359,6 +5709,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<String> preferredWeightUnit = const Value.absent(),
             Value<double?> height = const Value.absent(),
             Value<String> preferredHeightUnit = const Value.absent(),
+            Value<String> preferredDistanceUnit = const Value.absent(),
             required String availableDays,
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -5373,6 +5724,7 @@ class $$UsersTableTableManager extends RootTableManager<
             preferredWeightUnit: preferredWeightUnit,
             height: height,
             preferredHeightUnit: preferredHeightUnit,
+            preferredDistanceUnit: preferredDistanceUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,
@@ -5482,11 +5834,17 @@ typedef $$GoalsTableCreateCompanionBuilder = GoalsCompanion Function({
   Value<DateTime?> targetDate,
   Value<int?> targetTime,
   Value<int?> currentBestTime,
+  Value<bool?> isFirstTime,
   Value<String?> eventName,
   Value<DateTime?> eventDate,
   Value<int?> maintenanceFrequency,
   Value<int?> maintenanceDuration,
   Value<DateTime?> endDate,
+  Value<int?> initialTrainingFrequency,
+  Value<double?> initialWeeklyVolume,
+  Value<String?> runningPriority,
+  Value<String?> strengthPriority,
+  Value<String?> mobilityPriority,
   Value<double> confidence,
   Value<double> adherenceScore,
   Value<double> qualityScore,
@@ -5505,11 +5863,17 @@ typedef $$GoalsTableUpdateCompanionBuilder = GoalsCompanion Function({
   Value<DateTime?> targetDate,
   Value<int?> targetTime,
   Value<int?> currentBestTime,
+  Value<bool?> isFirstTime,
   Value<String?> eventName,
   Value<DateTime?> eventDate,
   Value<int?> maintenanceFrequency,
   Value<int?> maintenanceDuration,
   Value<DateTime?> endDate,
+  Value<int?> initialTrainingFrequency,
+  Value<double?> initialWeeklyVolume,
+  Value<String?> runningPriority,
+  Value<String?> strengthPriority,
+  Value<String?> mobilityPriority,
   Value<double> confidence,
   Value<double> adherenceScore,
   Value<double> qualityScore,
@@ -5589,6 +5953,9 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
       column: $table.currentBestTime,
       builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get eventName => $composableBuilder(
       column: $table.eventName, builder: (column) => ColumnFilters(column));
 
@@ -5605,6 +5972,26 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => ColumnFilters(column));
@@ -5706,6 +6093,9 @@ class $$GoalsTableOrderingComposer
       column: $table.currentBestTime,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get eventName => $composableBuilder(
       column: $table.eventName, builder: (column) => ColumnOrderings(column));
 
@@ -5722,6 +6112,26 @@ class $$GoalsTableOrderingComposer
 
   ColumnOrderings<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => ColumnOrderings(column));
@@ -5802,6 +6212,9 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<int> get currentBestTime => $composableBuilder(
       column: $table.currentBestTime, builder: (column) => column);
 
+  GeneratedColumn<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => column);
+
   GeneratedColumn<String> get eventName =>
       $composableBuilder(column: $table.eventName, builder: (column) => column);
 
@@ -5816,6 +6229,21 @@ class $$GoalsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency, builder: (column) => column);
+
+  GeneratedColumn<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume, builder: (column) => column);
+
+  GeneratedColumn<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority, builder: (column) => column);
+
+  GeneratedColumn<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority, builder: (column) => column);
+
+  GeneratedColumn<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority, builder: (column) => column);
 
   GeneratedColumn<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => column);
@@ -5912,11 +6340,17 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<DateTime?> targetDate = const Value.absent(),
             Value<int?> targetTime = const Value.absent(),
             Value<int?> currentBestTime = const Value.absent(),
+            Value<bool?> isFirstTime = const Value.absent(),
             Value<String?> eventName = const Value.absent(),
             Value<DateTime?> eventDate = const Value.absent(),
             Value<int?> maintenanceFrequency = const Value.absent(),
             Value<int?> maintenanceDuration = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<int?> initialTrainingFrequency = const Value.absent(),
+            Value<double?> initialWeeklyVolume = const Value.absent(),
+            Value<String?> runningPriority = const Value.absent(),
+            Value<String?> strengthPriority = const Value.absent(),
+            Value<String?> mobilityPriority = const Value.absent(),
             Value<double> confidence = const Value.absent(),
             Value<double> adherenceScore = const Value.absent(),
             Value<double> qualityScore = const Value.absent(),
@@ -5935,11 +6369,17 @@ class $$GoalsTableTableManager extends RootTableManager<
             targetDate: targetDate,
             targetTime: targetTime,
             currentBestTime: currentBestTime,
+            isFirstTime: isFirstTime,
             eventName: eventName,
             eventDate: eventDate,
             maintenanceFrequency: maintenanceFrequency,
             maintenanceDuration: maintenanceDuration,
             endDate: endDate,
+            initialTrainingFrequency: initialTrainingFrequency,
+            initialWeeklyVolume: initialWeeklyVolume,
+            runningPriority: runningPriority,
+            strengthPriority: strengthPriority,
+            mobilityPriority: mobilityPriority,
             confidence: confidence,
             adherenceScore: adherenceScore,
             qualityScore: qualityScore,
@@ -5958,11 +6398,17 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<DateTime?> targetDate = const Value.absent(),
             Value<int?> targetTime = const Value.absent(),
             Value<int?> currentBestTime = const Value.absent(),
+            Value<bool?> isFirstTime = const Value.absent(),
             Value<String?> eventName = const Value.absent(),
             Value<DateTime?> eventDate = const Value.absent(),
             Value<int?> maintenanceFrequency = const Value.absent(),
             Value<int?> maintenanceDuration = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<int?> initialTrainingFrequency = const Value.absent(),
+            Value<double?> initialWeeklyVolume = const Value.absent(),
+            Value<String?> runningPriority = const Value.absent(),
+            Value<String?> strengthPriority = const Value.absent(),
+            Value<String?> mobilityPriority = const Value.absent(),
             Value<double> confidence = const Value.absent(),
             Value<double> adherenceScore = const Value.absent(),
             Value<double> qualityScore = const Value.absent(),
@@ -5981,11 +6427,17 @@ class $$GoalsTableTableManager extends RootTableManager<
             targetDate: targetDate,
             targetTime: targetTime,
             currentBestTime: currentBestTime,
+            isFirstTime: isFirstTime,
             eventName: eventName,
             eventDate: eventDate,
             maintenanceFrequency: maintenanceFrequency,
             maintenanceDuration: maintenanceDuration,
             endDate: endDate,
+            initialTrainingFrequency: initialTrainingFrequency,
+            initialWeeklyVolume: initialWeeklyVolume,
+            runningPriority: runningPriority,
+            strengthPriority: strengthPriority,
+            mobilityPriority: mobilityPriority,
             confidence: confidence,
             adherenceScore: adherenceScore,
             qualityScore: qualityScore,

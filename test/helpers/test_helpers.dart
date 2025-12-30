@@ -2,11 +2,12 @@ import 'package:ash_trainer/features/shared/domain/entities/goal.dart';
 import 'package:ash_trainer/features/shared/domain/entities/user.dart';
 import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.dart';
 import 'package:ash_trainer/features/shared/domain/repositories/user_repository.dart';
+import 'package:ash_trainer/features/training/application/usecases/generate_training_plan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mockito/annotations.dart';
 
 // Generate mocks for repositories
-@GenerateMocks([UserRepository, GoalRepository])
+@GenerateMocks([UserRepository, GoalRepository, GenerateTrainingPlan])
 void main() {}
 
 /// Test Data Builders

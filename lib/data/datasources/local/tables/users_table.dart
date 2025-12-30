@@ -11,6 +11,8 @@ class Users extends Table {
   RealColumn get height => real().nullable()(); // Always stored in CM
   TextColumn get preferredHeightUnit =>
       text().withDefault(const Constant('cm'))(); // UI display preference
+  TextColumn get preferredDistanceUnit =>
+      text().withDefault(const Constant('km'))(); // UI display preference
   TextColumn get availableDays => text()(); // JSON array
   TextColumn get constraints => text().nullable()();
   BoolColumn get healthPermissionsGranted =>

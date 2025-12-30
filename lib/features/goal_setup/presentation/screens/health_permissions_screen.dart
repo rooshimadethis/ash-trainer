@@ -23,8 +23,7 @@ class HealthPermissionsScreen extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 6,
-                  totalSteps: 6,
+                  currentStep: 7,
                   label: 'Connect Health',
                 ),
                 const SizedBox(height: 32),
