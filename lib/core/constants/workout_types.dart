@@ -30,6 +30,27 @@ class WorkoutTypes {
     }
   }
 
+  static IconData getIcon(String type) {
+    switch (type) {
+      case easyRun:
+        return Icons.directions_run;
+      case tempo:
+        return Icons.speed;
+      case intervals:
+        return Icons.timer;
+      case longRun:
+        return Icons.event;
+      case rest:
+        return Icons.hotel;
+      case strength:
+        return Icons.fitness_center;
+      case mobility:
+        return Icons.self_improvement;
+      default:
+        return Icons.help_outline;
+    }
+  }
+
   static String getDisplayName(String type) {
     switch (type) {
       case easyRun:

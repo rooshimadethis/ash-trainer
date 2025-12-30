@@ -31,6 +31,11 @@ final todayWorkoutProvider = FutureProvider<Workout?>((ref) async {
   return workouts.isNotEmpty ? workouts.first : null;
 });
 
+/// Provider for the selected date
+final selectedDateProvider = StateProvider<DateTime>((ref) {
+  return DateTime.now();
+});
+
 /// Provider for the weekly workouts based on selectedWeekProvider
 final weeklyWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
   final startOfWeek = ref.watch(selectedWeekProvider);
