@@ -80,7 +80,6 @@ class BuildCoachingChatContext {
         deadline: goal.targetDate ??
             goal.endDate ??
             DateTime.now().add(const Duration(days: 90)),
-        confidence: goal.confidence,
         specialInstructions: [],
       ),
       trainingPhilosophy: 'Balanced approach focusing on consistency.',

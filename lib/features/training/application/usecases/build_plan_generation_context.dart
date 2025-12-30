@@ -3,6 +3,7 @@ import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.
 import 'package:ash_trainer/features/shared/domain/repositories/workout_repository.dart';
 import 'package:ash_trainer/features/shared/domain/entities/ai/context_models.dart';
 import 'package:ash_trainer/features/shared/domain/entities/goal.dart';
+import 'build_plan_philosophy.dart';
 
 class BuildPlanGenerationContext {
   final UserRepository _userRepo;
@@ -82,7 +83,6 @@ class BuildPlanGenerationContext {
       type: goal.type.name,
       target: _formatGoalTarget(goal),
       deadline: deadline,
-      confidence: goal.confidence,
       specialInstructions: [], // Can populate based on user prefs or logic
       currentPace: _formatPace(goal.currentBestTime),
       isFirstTime: goal.isFirstTime,
@@ -101,7 +101,10 @@ class BuildPlanGenerationContext {
       user: userContext,
       goal: goalContext,
       trainingHistory: trainingHistory,
-      trainingPhilosophy: _getTrainingPhilosophy(goal.type),
+      philosophy: buildPlanPhilosophy(
+        goal: goal,
+        weeklyVolume: currentVolume ?? goal.initialWeeklyVolume ?? 20.0,
+      ),
     );
   }
 
@@ -116,18 +119,5 @@ class BuildPlanGenerationContext {
     if (seconds == null) return null;
     // Placeholder formatting
     return '$seconds seconds';
-  }
-
-  String _getTrainingPhilosophy(GoalType type) {
-    switch (type) {
-      case GoalType.distanceMilestone:
-        return 'Focus on gradual volume increase. Pyramidal intensity distribution: 80% easy, 20% moderate.';
-      case GoalType.timePerformance:
-        return 'Focus on speed development mixed with aerobic base. Polarized training: 80% easy, 20% hard intervals.';
-      case GoalType.event:
-        return 'Periodized training peaking at event date. Includes specific race-pace work.';
-      case GoalType.maintenance:
-        return 'Consistent frequency, moderate volume to preserve adaptations without burnout.';
-    }
   }
 }

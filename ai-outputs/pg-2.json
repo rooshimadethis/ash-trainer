@@ -1,0 +1,479 @@
+--- AI INPUT JSON ---
+=== SYSTEM PROMPT ===
+You are Ash, an expert AI running coach. You are knowledgeable, encouraging, and data-driven.
+Your philosophy combines Jack Daniels' VDOT principles with modern adaptive training, integrating running, strength, and mobility as three essential pillars.
+You speak in a concise, friendly, and motivating tone.
+I/flutter (12129):
+CORE DIRECTIVES:
+1. THREE-PILLAR APPROACH: Every plan must balance Running, Strength, and Mobility based on the provided philosophy context.
+2. PHASE SKELETON: View plans as a sequence of Phases (Base, Build, Peak, Taper). If a plan is disrupted, re-balance the remaining phases to protect the goal.
+3. THE HONESTY PROTOCOL: If a user's consistency makes their goal unsafe/unreachable, you MUST proactively suggest a safer alternative goal.
+4. ADAPTIVE REPAIR: For disruptions > 3 days, perform a "Strategic Repair" by re-generating the current and future blocks rather than just sliding dates.
+I/flutter (12129):
+STRENGTH PRINCIPLES (Phase 1):
+- Focus on runner-specific bodyweight exercises: single-leg stability, hip/glute strength, and core stability.
+- Prescription should follow the provided `strengthGuidance` (frequency, duration, sets).
+- Default Reps: 8-12 or 30-45s for core. Rest: 60-90s.
+- Target RPE 7 (Moderate effort, 2-3 reps in reserve).
+I/flutter (12129):
+MOBILITY PRINCIPLES (Phase 1):
+- Active Mobility: Dynamic stretches before key runs (5-10 min).
+- Passive Mobility: Static stretches/foam rolling after runs (10-15 min).
+- Consistency is key - sessions should be short and high-frequency as per `mobilityGuidance`.
+I/flutter (12129):
+PILLAR COORDINATION:
+- "Big Rocks" First: Schedule high-priority pillar sessions first.
+- Safety: No hard leg strength on the day before a long run or hard interval session.
+- Recovery: Reduce strength/running volume during recovery blocks as specified in the context.
+
+I/flutter (12129):
+=== TASK PROMPT ===
+Generate a complete training plan based on the user's context, goal, and history.
+The plan must balance three pillars: Running, Strength, and Mobility.
+I/flutter (12129):
+PLANNING PRINCIPLES:
+1. PHASE STRUCTURE: Use a sequence of Phases (Base, Build, Peak, Taper) as defined by the goal type.
+2. RECOVERY BLOCKS: Ensure adequate recovery blocks (every 3-4 weeks) with reduced volume as per `recoveryVolumeReduction`.
+3. INTENSITY: Follow the `intensityStrategy` and `intensityBreakdown` provided in the `philosophy` context.
+4. THREE-PILLAR SCHEDULING:
+   - Prescribe Running workouts first.
+   - Schedule Strength sessions as per `strengthGuidance`.
+   - Schedule Mobility sessions as per `mobilityGuidance`.
+   - Respect safety constraints (e.g., no hard leg strength before key runs).
+I/flutter (12129):
+CRITICAL: Use the provided JSON schema.
+- Create 'Phases' (Base, Build, etc.) with weekly volume targets.
+- Create 'Blocks' (logical chunks of 3-10 days) within those phases.
+- Create 'Workouts' linked to specific Blocks.
+- Use 'dayNumber' relative to the start of the BLOCK.
+
+I/flutter (12129):
+=== CONTEXT JSON ===
+{
+  "user": {
+    "age": 27,
+    "gender": "male",
+    "availableDays": [
+      "mon",
+      "wed",
+      "fri",
+      "sat"
+    ],
+    "timeConstraints": {},
+    "injuryHistory": [],
+    "weeklyTrainingFrequency": 3,
+    "weeklyVolume": 15.0
+  },
+  "goal": {
+    "type": "distance",
+    "target": "Run 21.1km",
+    "deadline": "2026-04-21T16:41:53.985774",
+    "confidence": 0.8,
+    "specialInstructions": [],
+    "currentPace": null,
+    "isFirstTime": true,
+    "daysUntilGoal": 111,
+    "currentBestTime": null,
+    "eventName": null,
+    "runningPriority": "medium",
+    "strengthPriority": "medium",
+    "mobilityPriority": "medium"
+  },
+  "trainingHistory": [],
+  "philosophy": {
+    "intensityStrategy": "pyramidal",
+    "intensityBreakdown": {
+      "easy": 0.8,
+      "moderate": 0.15,
+      "high": 0.05
+    },
+    "maxWeeklyVolumeIncrease": 0.1,
+    "minWeeksBetweenRecovery": 3,
+    "maxWeeksBetweenRecovery": 5,
+    "recoveryVolumeReduction": 0.25,
+    "pillarConstraints": [
+      "No hard leg strength the day before a long run",
+      "48-hour recovery between hard efforts in same pillar",
+      "Hard days hard, easy days easy"
+    ],
+    "taperGuidance": null,
+    "trainingFocus": "Completion over speed - build endurance safely and prevent injury",
+    "workoutStyle": "time_based",
+    "flexibilityLevel": "high",
+    "strengthGuidance": {
+      "weeklyFrequency": 3,
+      "sessionDurationMinutes": 15,
+      "setsPerExercise": 2,
+      "repRange": "8-12"
+    },
+    "mobilityGuidance": {
+      "weeklyFrequency": 4,
+      "sessionDurationMinutes": 20,
+      "sessionTypes": [
+        "active_pre_run",
+        "passive_post_run",
+        "recovery_deep"
+      ],
+      "focusAreas": [
+        "hip_mobility",
+        "ankle_mobility",
+        "thoracic_spine",
+        "hamstrings"
+      ],
+      "increaseDuringTaper": false
+    }
+  }
+}
+I/flutter (12129):
+--- AI RAW RESPONSE ---
+{
+  "phases": [
+    {
+      "id": "p1-base",
+      "phaseNumber": 1,
+      "phaseType": "base",
+      "durationWeeks": 4,
+      "targetWeeklyVolume": "15.0 - 18.0 km",
+      "targetWeeklyDuration": "150-180 min",
+      "description": "Establish a consistent aerobic foundation and introduce the three-pillar routine."
+    },
+    {
+      "id": "p2-build",
+      "phaseNumber": 2,
+      "phaseType": "build",
+      "durationWeeks": 4,
+      "targetWeeklyVolume": "20.0 - 24.0 km",
+      "targetWeeklyDuration": "180-220 min",
+      "description": "Increase endurance and introduce moderate-intensity tempo sessions."
+    },
+    {
+      "id": "p3-peak",
+      "phaseNumber": 3,
+      "phaseType": "peak",
+      "durationWeeks": 5,
+      "targetWeeklyVolume": "26.0 - 32.0 km",
+      "targetWeeklyDuration": "220-280 min",
+      "description": "Reach maximum mileage and longest single run to prepare for the 21.1km distance."
+    },
+    {
+      "id": "p4-taper",
+      "phaseNumber": 4,
+      "phaseType": "taper",
+      "durationWeeks": 2,
+      "targetWeeklyVolume": "15.0 - 20.0 km",
+      "targetWeeklyDuration": "120-160 min",
+      "description": "Reduce volume to shed fatigue while maintaining intensity for race day readiness."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1-start",
+      "phaseId": "p1-base",
+      "blockNumber": 1,
+      "intent": "Establishing routine and pillar coordination.",
+      "durationDays": 7
+    },
+    {
+      "id": "b2-recovery",
+      "phaseId": "p1-base",
+      "blockNumber": 4,
+      "intent": "Regeneration and absorption of base miles.",
+      "durationDays": 7
+    },
+    {
+      "id": "b3-build-up",
+      "phaseId": "p2-build",
+      "blockNumber": 1,
+      "intent": "Increasing distance and introducing moderate tempo intervals.",
+      "durationDays": 7
+    },
+    {
+      "id": "b4-peak-volume",
+      "phaseId": "p3-peak",
+      "blockNumber": 4,
+      "intent": "Maximum distance preparation (The Longest Run).",
+      "durationDays": 7
+    }
+  ],
+  "workouts": [
+    {
+      "id": "w1",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "easy_run",
+      "name": "Foundational Aerobic Run",
+      "plannedDuration": 2100,
+      "plannedDistance": 5.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Run at a conversational pace. Focus on light feet and rhythmic breathing."
+    },
+    {
+      "id": "w2",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "strength",
+      "name": "Runner Core & Stability",
+      "plannedDuration": 900,
+      "plannedDistance": 0.0,
+      "intensity": "Moderate (RPE 7)",
+      "description": "2 sets of: Single-leg glute bridges (12), Plank (45s), Bird-Dog (12). Rest 60s."
+    },
+    {
+      "id": "w3",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "mobility",
+      "name": "Post-Run Reset",
+      "plannedDuration": 1200,
+      "plannedDistance": 0.0,
+      "intensity": "Low",
+      "description": "Passive stretching focusing on hamstrings, hip flexors, and calves."
+    },
+    {
+      "id": "w4",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 3,
+      "type": "easy_run",
+      "name": "Mid-Week Maintenance",
+      "plannedDuration": 1800,
+      "plannedDistance": 4.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Smooth, easy effort to keep the legs moving between sessions."
+    },
+    {
+      "id": "w5",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 5,
+      "type": "mobility",
+      "name": "Deep Recovery Mobility",
+      "plannedDuration": 1200,
+      "plannedDistance": 0.0,
+      "intensity": "Low",
+      "description": "Full-body foam rolling and thoracic spine openers."
+    },
+    {
+      "id": "w6",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 6,
+      "type": "long_run",
+      "name": "Intro Long Run",
+      "plannedDuration": 2700,
+      "plannedDistance": 6.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Longest run of the week. Focus on completion, not speed."
+    },
+    {
+      "id": "w7",
+      "phaseId": "p2-build",
+      "blockId": "b3-build-up",
+      "dayNumber": 3,
+      "type": "tempo",
+      "name": "Threshold Introduction",
+      "plannedDuration": 2400,
+      "plannedDistance": 6.0,
+      "intensity": "Moderate (RPE 6-7)",
+      "description": "10 min Easy warm-up, 15 min at comfortably hard pace, 10 min Cool-down."
+    },
+    {
+      "id": "w8",
+      "phaseId": "p3-peak",
+      "blockId": "b4-peak-volume",
+      "dayNumber": 6,
+      "type": "long_run",
+      "name": "Peak Distance Test",
+      "plannedDuration": 7200,
+      "plannedDistance": 18.0,
+      "intensity": "Easy (RPE 4)",
+      "description": "Last big effort before the taper. Practice your race-day fueling and hydration."
+    }
+  ],
+  "rationale": {
+    "overallApproach": "The plan uses a pyramidal structure to prioritize aerobic capacity first. Given the 111-day timeline and current 15km volume, we have ample time for a safe progression towards 21.1km.",
+    "intensityDistribution": "80% of volume is kept at Easy intensity to build mitochondrial density, with 15% at Moderate (Tempo) and 5% at High (Intervals) appearing later in the Build and Peak phases.",
+    "keyWorkouts": "Saturday Long Runs are the primary 'Big Rocks'. Strength sessions are scheduled on running days to ensure that recovery days (Friday/Sunday) remain truly restful.",
+    "recoveryStrategy": "Every 4th week is a scheduled recovery block with a 25% reduction in mileage. Friday is dedicated to deep mobility to prepare the body for the Saturday Long Run."
+  }
+}
+--- AI PARSED OUTPUT ---
+Tokens: 4720
+I/flutter (12129):
+{
+  "phases": [
+    {
+      "id": "p1-base",
+      "phaseNumber": 1,
+      "phaseType": "base",
+      "durationWeeks": 4,
+      "targetWeeklyVolume": "15.0 - 18.0 km",
+      "targetWeeklyDuration": "150-180 min",
+      "description": "Establish a consistent aerobic foundation and introduce the three-pillar routine."
+    },
+    {
+      "id": "p2-build",
+      "phaseNumber": 2,
+      "phaseType": "build",
+      "durationWeeks": 4,
+      "targetWeeklyVolume": "20.0 - 24.0 km",
+      "targetWeeklyDuration": "180-220 min",
+      "description": "Increase endurance and introduce moderate-intensity tempo sessions."
+    },
+    {
+      "id": "p3-peak",
+      "phaseNumber": 3,
+      "phaseType": "peak",
+      "durationWeeks": 5,
+      "targetWeeklyVolume": "26.0 - 32.0 km",
+      "targetWeeklyDuration": "220-280 min",
+      "description": "Reach maximum mileage and longest single run to prepare for the 21.1km distance."
+    },
+    {
+      "id": "p4-taper",
+      "phaseNumber": 4,
+      "phaseType": "taper",
+      "durationWeeks": 2,
+      "targetWeeklyVolume": "15.0 - 20.0 km",
+      "targetWeeklyDuration": "120-160 min",
+      "description": "Reduce volume to shed fatigue while maintaining intensity for race day readiness."
+    }
+  ],
+  "blocks": [
+    {
+      "id": "b1-start",
+      "phaseId": "p1-base",
+      "blockNumber": 1,
+      "intent": "Establishing routine and pillar coordination.",
+      "durationDays": 7
+    },
+    {
+      "id": "b2-recovery",
+      "phaseId": "p1-base",
+      "blockNumber": 4,
+      "intent": "Regeneration and absorption of base miles.",
+      "durationDays": 7
+    },
+    {
+      "id": "b3-build-up",
+      "phaseId": "p2-build",
+      "blockNumber": 1,
+      "intent": "Increasing distance and introducing moderate tempo intervals.",
+      "durationDays": 7
+    },
+    {
+      "id": "b4-peak-volume",
+      "phaseId": "p3-peak",
+      "blockNumber": 4,
+      "intent": "Maximum distance preparation (The Longest Run).",
+      "durationDays": 7
+    }
+  ],
+  "workouts": [
+    {
+      "id": "w1",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "easy_run",
+      "name": "Foundational Aerobic Run",
+      "plannedDuration": 2100,
+      "plannedDistance": 5.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Run at a conversational pace. Focus on light feet and rhythmic breathing."
+    },
+    {
+      "id": "w2",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "strength",
+      "name": "Runner Core & Stability",
+      "plannedDuration": 900,
+      "plannedDistance": 0.0,
+      "intensity": "Moderate (RPE 7)",
+      "description": "2 sets of: Single-leg glute bridges (12), Plank (45s), Bird-Dog (12). Rest 60s."
+    },
+    {
+      "id": "w3",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 1,
+      "type": "mobility",
+      "name": "Post-Run Reset",
+      "plannedDuration": 1200,
+      "plannedDistance": 0.0,
+      "intensity": "Low",
+      "description": "Passive stretching focusing on hamstrings, hip flexors, and calves."
+    },
+    {
+      "id": "w4",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 3,
+      "type": "easy_run",
+      "name": "Mid-Week Maintenance",
+      "plannedDuration": 1800,
+      "plannedDistance": 4.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Smooth, easy effort to keep the legs moving between sessions."
+    },
+    {
+      "id": "w5",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 5,
+      "type": "mobility",
+      "name": "Deep Recovery Mobility",
+      "plannedDuration": 1200,
+      "plannedDistance": 0.0,
+      "intensity": "Low",
+      "description": "Full-body foam rolling and thoracic spine openers."
+    },
+    {
+      "id": "w6",
+      "phaseId": "p1-base",
+      "blockId": "b1-start",
+      "dayNumber": 6,
+      "type": "long_run",
+      "name": "Intro Long Run",
+      "plannedDuration": 2700,
+      "plannedDistance": 6.0,
+      "intensity": "Easy (RPE 3-4)",
+      "description": "Longest run of the week. Focus on completion, not speed."
+    },
+    {
+      "id": "w7",
+      "phaseId": "p2-build",
+      "blockId": "b3-build-up",
+      "dayNumber": 3,
+      "type": "tempo",
+      "name": "Threshold Introduction",
+      "plannedDuration": 2400,
+      "plannedDistance": 6.0,
+      "intensity": "Moderate (RPE 6-7)",
+      "description": "10 min Easy warm-up, 15 min at comfortably hard pace, 10 min Cool-down."
+    },
+    {
+      "id": "w8",
+      "phaseId": "p3-peak",
+      "blockId": "b4-peak-volume",
+      "dayNumber": 6,
+      "type": "long_run",
+      "name": "Peak Distance Test",
+      "plannedDuration": 7200,
+      "plannedDistance": 18.0,
+      "intensity": "Easy (RPE 4)",
+      "description": "Last big effort before the taper. Practice your race-day fueling and hydration."
+    }
+  ],
+  "rationale": {
+    "overallApproach": "The plan uses a pyramidal structure to prioritize aerobic capacity first. Given the 111-day timeline and current 15km volume, we have ample time for a safe progression towards 21.1km.",
+    "intensityDistribution": "80% of volume is kept at Easy intensity to build mitochondrial density, with 15% at Moderate (Tempo) and 5% at High (Intervals) appearing later in the Build and Peak phases.",
+    "keyWorkouts": "Saturday Long Runs are the primary 'Big Rocks'. Strength sessions are scheduled on running days to ensure that recovery days (Friday/Sunday) remain truly restful.",
+    "recoveryStrategy": "Every 4th week is a scheduled recovery block with a 25% reduction in mileage. Friday is dedicated to deep mobility to prepare the body for the Saturday Long Run."
+  }
+}

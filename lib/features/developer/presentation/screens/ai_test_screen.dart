@@ -7,8 +7,9 @@ import '../../../../core/constants/ai_schemas.dart';
 import '../../../../core/constants/prompts.dart';
 import 'dart:convert';
 import '../../../../data/providers/repository_providers.dart';
-import '../../../../features/shared/domain/entities/goal.dart';
+import '../../../shared/domain/entities/goal.dart';
 import '../../../training/application/usecases/build_plan_generation_context.dart';
+import '../../../training/application/usecases/build_plan_philosophy.dart';
 
 class AITestScreen extends ConsumerStatefulWidget {
   const AITestScreen({super.key});
@@ -34,16 +35,16 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
   String _mobilityPriority = 'low';
 
   // Form Fields - Goal
-  String _goalType = 'distance'; // distance, time, consistency
-  String _goalTarget = 'Marathon';
+  String _goalType = 'distance'; // distance, time, maintenance, event
+  double _selectedDistance = 42.2;
   int _goalWeeks = 16;
   bool _isFirstTime = false;
+  int? _targetTime; // in seconds
   int? _currentBestTime; // in seconds
   String? _eventName;
 
   List<String> _availableDays = ['mon', 'wed', 'fri', 'sat'];
   String _trainingPhilosophy = 'Standard Periodization';
-  double _confidence = 0.8;
 
   Future<void> _loadFromRealData() async {
     try {
@@ -93,16 +94,17 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
 
         // Populate Form - Goal fields
         _goalType = contextData.goal.type;
-        _goalTarget = contextData.goal.target;
-        _confidence = contextData.goal.confidence;
+        _selectedDistance = double.tryParse(
+                contextData.goal.target.replaceAll(RegExp(r'[^0-9.]'), '')) ??
+            42.2;
         _isFirstTime = contextData.goal.isFirstTime ?? false;
         _currentBestTime = contextData.goal.currentBestTime;
         _eventName = contextData.goal.eventName;
         _runningPriority = contextData.goal.runningPriority ?? 'high';
         _strengthPriority = contextData.goal.strengthPriority ?? 'medium';
         _mobilityPriority = contextData.goal.mobilityPriority ?? 'low';
-        _trainingPhilosophy =
-            contextData.trainingPhilosophy; // Load real philosophy
+        _trainingPhilosophy = const JsonEncoder.withIndent('  ')
+            .convert(contextData.philosophy.toJson());
 
         // Calculate approx weeks from deadline
         _goalWeeks = (contextData.goal.daysUntilGoal ?? 112) ~/ 7;
@@ -143,9 +145,12 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
         ),
         goal: GoalContext(
           type: _goalType,
-          target: _goalTarget,
+          target: _targetTime != null
+              ? 'Run ${_selectedDistance}km in $_targetTime seconds'
+              : (_goalType == 'event' && _eventName != null
+                  ? 'Train for $_eventName'
+                  : 'Run ${_selectedDistance}km'),
           deadline: deadline,
-          confidence: _confidence,
           specialInstructions: [],
           isFirstTime: _isFirstTime,
           // Timeline calculations
@@ -158,8 +163,26 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
           strengthPriority: _strengthPriority,
           mobilityPriority: _mobilityPriority,
         ),
-        trainingHistory: [], // TODO: We could populate this from real data too if we updated the context builder to expose it more easily, or keep it empty for "Manual" test
-        trainingPhilosophy: _trainingPhilosophy,
+        trainingHistory: [],
+        philosophy: buildPlanPhilosophy(
+          goal: Goal(
+            id: 'test-goal',
+            userId: 'test-user',
+            type: _getGoalType(_goalType),
+            name: 'Test Goal',
+            targetDistance: _selectedDistance,
+            targetDate: deadline,
+            targetTime: _targetTime,
+            initialTrainingFrequency: _trainingFrequency,
+            initialWeeklyVolume: _weeklyVolume,
+            runningPriority: _runningPriority,
+            strengthPriority: _strengthPriority,
+            mobilityPriority: _mobilityPriority,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+          weeklyVolume: _weeklyVolume,
+        ),
       );
 
       const systemPrompt = AIPrompts.ashPersona;
@@ -277,6 +300,38 @@ $contextJson
                       onSaved: (v) => _weeklyVolume = double.parse(v!),
                     ),
                     const SizedBox(height: 16),
+                    const Text('Available Days',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 8,
+                      children: [
+                        'mon',
+                        'tue',
+                        'wed',
+                        'thu',
+                        'fri',
+                        'sat',
+                        'sun'
+                      ].map((day) {
+                        final isSelected = _availableDays.contains(day);
+                        return FilterChip(
+                          label: Text(day.toUpperCase()),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _availableDays.add(day);
+                              } else {
+                                _availableDays.remove(day);
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                    const SizedBox(height: 16),
                     const Text('Pillar Priorities',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold)),
@@ -327,20 +382,60 @@ $contextJson
                         DropdownMenuItem(
                             value: 'time', child: Text('Time Performance')),
                         DropdownMenuItem(
+                            value: 'event', child: Text('Event (Race)')),
+                        DropdownMenuItem(
                             value: 'maintenance', child: Text('Maintenance')),
                       ],
                       onChanged: (v) => setState(() => _goalType = v!),
                     ),
-                    TextFormField(
-                      decoration:
-                          const InputDecoration(labelText: 'Target Event'),
-                      initialValue: 'Marathon',
-                      onSaved: (v) => _goalTarget = v!,
+                    const SizedBox(height: 16),
+                    if (_goalType == 'event')
+                      TextFormField(
+                        decoration:
+                            const InputDecoration(labelText: 'Event Name'),
+                        initialValue: _eventName ?? '',
+                        onChanged: (v) => _eventName = v,
+                        validator: (v) =>
+                            (_goalType == 'event' && (v == null || v.isEmpty))
+                                ? 'Required for events'
+                                : null,
+                      ),
+                    const SizedBox(height: 8),
+                    DropdownButtonFormField<double>(
+                      initialValue: _selectedDistance,
+                      decoration: const InputDecoration(labelText: 'Distance'),
+                      items: const [
+                        DropdownMenuItem(value: 5.0, child: Text('5K')),
+                        DropdownMenuItem(value: 10.0, child: Text('10K')),
+                        DropdownMenuItem(
+                            value: 21.1, child: Text('Half Marathon')),
+                        DropdownMenuItem(value: 42.2, child: Text('Marathon')),
+                        DropdownMenuItem(value: -1.0, child: Text('Custom')),
+                      ],
+                      onChanged: (v) => setState(() => _selectedDistance = v!),
                     ),
+                    if (_selectedDistance == -1.0)
+                      TextFormField(
+                        decoration: const InputDecoration(
+                            labelText: 'Custom Distance (km)'),
+                        keyboardType: TextInputType.number,
+                        onChanged: (v) =>
+                            _selectedDistance = double.tryParse(v) ?? 0.0,
+                      ),
+                    const SizedBox(height: 8),
+                    TextFormField(
+                      decoration: const InputDecoration(
+                          labelText: 'Target Time (seconds, optional)'),
+                      initialValue: _targetTime?.toString() ?? '',
+                      keyboardType: TextInputType.number,
+                      onSaved: (v) => _targetTime =
+                          (v != null && v.isNotEmpty) ? int.parse(v) : null,
+                    ),
+                    const SizedBox(height: 8),
                     TextFormField(
                       decoration:
                           const InputDecoration(labelText: 'Duration (Weeks)'),
-                      initialValue: '16',
+                      initialValue: _goalWeeks.toString(),
                       keyboardType: TextInputType.number,
                       onSaved: (v) => _goalWeeks = int.parse(v!),
                     ),
@@ -358,29 +453,13 @@ $contextJson
                       onSaved: (v) =>
                           _currentBestTime = v!.isEmpty ? null : int.parse(v),
                     ),
-                    TextFormField(
-                      decoration: const InputDecoration(
-                          labelText: 'Event Name (optional)'),
-                      initialValue: _eventName ?? '',
-                      onSaved: (v) => _eventName = v!.isEmpty ? null : v,
-                    ),
                     const SizedBox(height: 16),
                     TextFormField(
                       decoration: const InputDecoration(
-                          labelText: 'Training Philosophy'),
+                          labelText: 'Training Philosophy (JSON Override)'),
                       initialValue: _trainingPhilosophy,
-                      maxLines: 2,
+                      maxLines: 4,
                       onSaved: (v) => _trainingPhilosophy = v!,
-                    ),
-                    const SizedBox(height: 16),
-                    Text('Confidence: $_confidence'),
-                    Slider(
-                      value: _confidence,
-                      min: 0.1,
-                      max: 1.0,
-                      divisions: 9,
-                      label: _confidence.toString(),
-                      onChanged: (v) => setState(() => _confidence = v),
                     ),
                     const SizedBox(height: 24),
                     SizedBox(
@@ -463,5 +542,20 @@ $contextJson
         ],
       ),
     );
+  }
+
+  GoalType _getGoalType(String type) {
+    switch (type) {
+      case 'distance':
+        return GoalType.distanceMilestone;
+      case 'time':
+        return GoalType.timePerformance;
+      case 'maintenance':
+        return GoalType.maintenance;
+      case 'event':
+        return GoalType.event;
+      default:
+        return GoalType.distanceMilestone;
+    }
   }
 }
