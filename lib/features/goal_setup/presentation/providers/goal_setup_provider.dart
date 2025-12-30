@@ -6,6 +6,12 @@ import '../../../../data/providers/repository_providers.dart';
 // State for the Goal Setup flow
 class GoalSetupState {
   final int currentStep;
+  final int? age;
+  final String? gender;
+  final double? weight;
+  final String preferredWeightUnit;
+  final double? height;
+  final String preferredHeightUnit;
   final List<String> unavailableDays;
   final String? constraints;
   final GoalType? selectedGoalType;
@@ -26,6 +32,12 @@ class GoalSetupState {
 
   const GoalSetupState({
     this.currentStep = 1,
+    this.age,
+    this.gender,
+    this.weight,
+    this.preferredWeightUnit = 'kg',
+    this.height,
+    this.preferredHeightUnit = 'cm',
     this.unavailableDays = const [],
     this.constraints,
     this.selectedGoalType,
@@ -45,6 +57,12 @@ class GoalSetupState {
 
   GoalSetupState copyWith({
     int? currentStep,
+    int? age,
+    String? gender,
+    double? weight,
+    String? preferredWeightUnit,
+    double? height,
+    String? preferredHeightUnit,
     List<String>? unavailableDays,
     String? constraints,
     GoalType? selectedGoalType,
@@ -63,6 +81,12 @@ class GoalSetupState {
   }) {
     return GoalSetupState(
       currentStep: currentStep ?? this.currentStep,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      weight: weight ?? this.weight,
+      preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
+      height: height ?? this.height,
+      preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
       unavailableDays: unavailableDays ?? this.unavailableDays,
       constraints: constraints ?? this.constraints,
       selectedGoalType: selectedGoalType ?? this.selectedGoalType,
@@ -96,6 +120,24 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
     if (state.currentStep > 1) {
       state = state.copyWith(currentStep: state.currentStep - 1);
     }
+  }
+
+  void setPersonalDetails({
+    int? age,
+    String? gender,
+    double? weight,
+    String? weightUnit,
+    double? height,
+    String? heightUnit,
+  }) {
+    state = state.copyWith(
+      age: age,
+      gender: gender,
+      weight: weight,
+      preferredWeightUnit: weightUnit,
+      height: height,
+      preferredHeightUnit: heightUnit,
+    );
   }
 
   void setUnavailableDays(List<String> days) {
@@ -167,6 +209,12 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
 
       final newUser = User(
         id: '', // DB will assign ID
+        age: state.age,
+        gender: state.gender,
+        weight: state.weight,
+        preferredWeightUnit: state.preferredWeightUnit,
+        height: state.height,
+        preferredHeightUnit: state.preferredHeightUnit,
         availableDays: availableDays,
         constraints: state.constraints,
         healthPermissionsGranted: state.healthPermissionsGranted,

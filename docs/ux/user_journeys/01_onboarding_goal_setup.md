@@ -41,60 +41,7 @@
 
 ---
 
-### Step 2: Availability Screen
-**User Sees**:
-- Question: "When are you NOT available to train?"
-- Weekly calendar with selectable days (Mon-Sun)
-- Helper text: "Tap any days that are off-limits (work, family time, Netflix binges... we get it)"
-- Progress indicator (Step 1 of 4)
-
-**User Can**:
-- Tap days to select/deselect unavailable days → Updates selection
-- Tap "Next" → Goes to Step 3 (if at least 2 days remain available)
-- Tap "Skip" → Goes to Step 3 (assumes all days available)
-- Tap "Back" → Goes to Step 1
-
-**Data Displayed**:
-- None
-
-**Data Collected**:
-- `User.unavailableDays` (array of day names)
-- Computed: `User.availableDays` = all days minus unavailable days
-
-**Edge Cases**:
-- No days selected: Treated as "all days available"
-- 6+ days selected: Show warning "Only 1 training day available. We recommend at least 2-3 days per week"
-- All 7 days selected: Show error "You need at least one day available for training"
-
----
-
-### Step 3: Constraints Check Screen
-**User Sees**:
-- Question: "Anything I should know about? (Injuries, time limits, etc.)"
-- Text input field (optional)
-- Examples: "Knee gets cranky after 5K", "Max 30 min per session", "All good!"
-- Helper text: "This helps me keep you healthy and realistic"
-- Progress indicator (Step 2 of 4)
-
-**User Can**:
-- Type constraints (optional)
-- Tap "Next" → Goes to Step 4
-- Tap "Skip" → Goes to Step 4 (no constraints recorded)
-- Tap "Back" → Goes to Step 2
-
-**Data Displayed**:
-- None
-
-**Data Collected**:
-- `User.constraints` (text, nullable)
-
-**Edge Cases**:
-- Empty input: Treated as "no constraints"
-- Long text: Character limit at 500 chars
-
----
-
-### Step 4: Goal Type Selection Screen
+### Step 2: Goal Type Selection Screen
 **User Sees**:
 - Question: "Alright, what's the dream? What are we chasing together?"
 - Four goal type cards with icons and descriptions:
@@ -102,12 +49,12 @@
   - **Time Performance**: "Get faster ⚡" (PR that 5K, crush your time)
   - **Event**: "Race day ready 🏁" (Specific race, specific date)
   - **Maintenance**: "Stay consistent 🔄" (Keep the habit alive)
-- Progress indicator (Step 3 of 4)
+- Progress indicator (Step 1 of 5)
 
 **User Can**:
 - Tap a goal type card → Highlights selection
-- Tap "Next" → Goes to Step 5 (goal-specific details)
-- Tap "Back" → Goes to Step 3
+- Tap "Next" → Goes to Step 3 (goal-specific details)
+- Tap "Back" → Goes to Step 1
 
 **Data Displayed**:
 - None
@@ -121,8 +68,8 @@
 
 ---
 
-### Step 5a: Distance Milestone Details Screen
-*(Shown only if user selected "Distance Milestone" in Step 4)*
+### Step 3a: Distance Milestone Details Screen
+*(Shown only if user selected "Distance Milestone" in Step 2)*
 
 **User Sees**:
 - Question: "What distance are we conquering?"
@@ -134,14 +81,14 @@
   - Custom distance - "Something special?"
 - Optional: "Got a target date in mind?" (date picker, nullable)
 - Helper text: "No pressure - we can adjust this anytime"
-- Progress indicator (Step 5 of 5)
+- Progress indicator (Step 2 of 5)
 
 **User Can**:
 - Select distance → Updates selection
 - Select custom → Shows distance input field
 - Set target date (optional)
-- Tap "Next" → Goes to Step 7 (Health Permissions)
-- Tap "Back" → Goes to Step 5
+- Tap "Next" → Goes to Step 4 (Personal Details)
+- Tap "Back" → Goes to Step 2
 
 **Data Displayed**:
 - None
@@ -157,22 +104,22 @@
 
 ---
 
-### Step 6b: Time Performance Details Screen
-*(Shown only if user selected "Time Performance" in Step 5)*
+### Step 3b: Time Performance Details Screen
+*(Shown only if user selected "Time Performance" in Step 2)*
 
 **User Sees**:
 - Question: "What time are we chasing?"
 - Distance dropdown (5K, 10K, Half Marathon, Marathon, Custom)
 - Target time input (hours:minutes:seconds)
 - Current best time input (optional, for baseline) - "What's your current PR? (helps me plan better)"
-- Progress indicator (Step 5 of 5)
+- Progress indicator (Step 2 of 5)
 
 **User Can**:
 - Select distance → Updates selection
 - Enter target time → Validates format
 - Enter current time (optional)
-- Tap "Next" → Goes to Step 7
-- Tap "Back" → Goes to Step 5
+- Tap "Next" → Goes to Step 4
+- Tap "Back" → Goes to Step 2
 
 **Data Displayed**:
 - None
@@ -188,8 +135,8 @@
 
 ---
 
-### Step 6c: Event Details Screen
-*(Shown only if user selected "Event" in Step 5)*
+### Step 3c: Event Details Screen
+*(Shown only if user selected "Event" in Step 2)*
 
 **User Sees**:
 - Question: "Tell me about this race!"
@@ -197,15 +144,15 @@
 - Race date picker (required) - "When's the big day?"
 - Distance dropdown (5K, 10K, Half Marathon, Marathon, Custom)
 - Optional target time - "Got a time goal? (totally optional)"
-- Progress indicator (Step 5 of 5)
+- Progress indicator (Step 2 of 5)
 
 **User Can**:
 - Enter event name
 - Select race date → Opens date picker (defaults to distance-based estimate; 16w if none selected)
 - Select distance
 - Enter target time (optional)
-- Tap "Next" → Goes to Step 7
-- Tap "Back" → Goes to Step 5
+- Tap "Next" → Goes to Step 4
+- Tap "Back" → Goes to Step 2
 
 **Data Displayed**:
 - None
@@ -223,22 +170,22 @@
 
 ---
 
-### Step 6d: Maintenance Details Screen
-*(Shown only if user selected "Maintenance" in Step 5)*
+### Step 3d: Maintenance Details Screen
+*(Shown only if user selected "Maintenance" in Step 2)*
 
 **User Sees**:
 - Question: "What does 'staying consistent' mean to you?"
 - Frequency selector (1-7 runs per week) - "How often?"
 - Typical run duration (15-90 minutes) - "How long per run?"
 - Optional: "Maintaining until...?" (date picker, nullable) - "Or just keeping it rolling?"
-- Progress indicator (Step 5 of 5)
+- Progress indicator (Step 2 of 5)
 
 **User Can**:
 - Select frequency → Updates selection
 - Select duration → Updates selection
 - Set end date (optional)
-- Tap "Next" → Goes to Step 7
-- Tap "Back" → Goes to Step 5
+- Tap "Next" → Goes to Step 4
+- Tap "Back" → Goes to Step 2
 
 **Data Displayed**:
 - None
@@ -252,6 +199,92 @@
 - Frequency < 2: Show tip "Consider at least 2 runs per week to maintain fitness"
 - No end date: Treated as "ongoing maintenance"
 - Date picker initial date: Defaults to 8 weeks in the future
+
+---
+
+### Step 4: Personal Details Screen
+**User Sees**:
+- Question: "A bit about you..."
+- Age input (numeric)
+- Gender selector (Male, Female, Other/Prefer not to say)
+- Weight input (numeric) with units toggle (kg/lb)
+- Height input (numeric) with units toggle (cm/in)
+- Progress indicator (Step 3 of 5)
+
+**User Can**:
+- Enter age
+- Select gender
+- Enter weight/toggle units
+- Enter height/toggle units
+- Tap "Next" → Goes to Step 5 (Availability)
+- Tap "Back" → Goes to Step 3
+
+**Data Displayed**:
+- None
+
+**Data Collected**:
+- `User.age` (number)
+- `User.gender` (enum: male, female, other, secret)
+- `User.weight` (number, always stored in KG)
+- `User.preferredWeightUnit` (enum: kg, lb) - UI display preference only
+- `User.height` (number, always stored in CM)
+- `User.preferredHeightUnit` (enum: cm, in) - UI display preference only
+
+**Edge Cases**:
+- Age out of range: Show warning if < 13 or > 100
+- Weight out of range: Show warning if < 30kg (66lbs) or > 200kg (440lbs)
+- Height out of range: Show warning if < 100cm (39in) or > 250cm (98in)
+
+---
+
+### Step 5: Availability Screen
+**User Sees**:
+- Question: "When are you NOT available to train?"
+- Weekly calendar with selectable days (Mon-Sun)
+- Helper text: "Tap any days that are off-limits (work, family time, Netflix binges... we get it)"
+- Progress indicator (Step 4 of 5)
+
+**User Can**:
+- Tap days to select/deselect unavailable days → Updates selection
+- Tap "Next" → Goes to Step 6 (if at least 2 days remain available)
+- Tap "Back" → Goes to Step 4
+
+**Data Displayed**:
+- None
+
+**Data Collected**:
+- `User.unavailableDays` (array of day names)
+- Computed: `User.availableDays` = all days minus unavailable days
+
+**Edge Cases**:
+- No days selected: Treated as "all days available"
+- 6+ days selected: Show warning "Only 1 training day available. We recommend at least 2-3 days per week"
+- All 7 days selected: Show error "You need at least one day available for training"
+
+---
+
+### Step 6: Constraints Check Screen
+**User Sees**:
+- Question: "Anything I should know about? (Injuries, time limits, etc.)"
+- Text input field (optional)
+- Examples: "Knee gets cranky after 5K", "Max 30 min per session", "All good!"
+- Helper text: "This helps me keep you healthy and realistic"
+- Progress indicator (Step 5 of 5)
+
+**User Can**:
+- Type constraints (optional)
+- Tap "Next" → Goes to Step 7 (Health Permissions)
+- Tap "Back" → Goes to Step 5
+
+**Data Displayed**:
+- None
+
+**Data Collected**:
+- `User.constraints` (text, nullable)
+
+**Edge Cases**:
+- Empty input: Treated as "no constraints"
+- Long text: Character limit at 500 chars
 
 ---
 
@@ -270,7 +303,7 @@
 - Tap "Grant Permissions" → Opens system health permissions dialog
 - After granting → Goes to Step 8
 - Tap "Skip for now" → Goes to Step 8 (manual logging only)
-- Tap "Back" → Goes to Step 6 (goal-specific screen)
+- Tap "Back" → Goes to Step 6 (Constraints Check Screen)
 
 **Data Displayed**:
 - None
@@ -339,7 +372,7 @@
 - Tap a workout → See workout details (modal)
 - Tap "Looks good!" → Goes to Step 10
 - Tap "Adjust plan" → Opens adjustment options (future feature, for now shows "Coming soon")
-- Tap "Back" → Goes to Step 7
+- Tap "Back" → Goes to Step 9 (Plan Generation screen)
 
 **Data Displayed**:
 - `Workouts[]` for Week 1 (from generated plan)
@@ -477,6 +510,12 @@
 ## Data Model Requirements
 
 ### User Table
+- `age` (number)
+- `gender` (enum: male, female, other, secret)
+- `weight` (number, always stored in KG)
+- `preferredWeightUnit` (enum: kg, lb) - UI display preference only
+- `height` (number, always stored in CM)
+- `preferredHeightUnit` (enum: cm, in) - UI display preference only
 - `trainingHistory` (deprecated - will be inferred from baseline workout performance)
 - `availableDays` (array of strings: ["monday", "tuesday", ...])
 - `constraints` (text, nullable)
@@ -528,8 +567,8 @@
 - Minimize friction: Keep questions simple, provide defaults where possible
 - Health permissions are critical for automatic logging - emphasize benefits
 - First workout is optional but encouraged (helps calibrate AI)
-- Existing users creating new goals skip Steps 1-4 (see Journey #13)
+- Existing users creating new goals skip Steps 1, 4, 5, 6 (see Journey #13)
 
 ---
 
-**Last Updated**: 2025-12-29
+**Last Updated**: 2025-12-29 (Reordered flow & added demographics)

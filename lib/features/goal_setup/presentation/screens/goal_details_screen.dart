@@ -3,11 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/domain/entities/goal.dart';
-import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/presentation/widgets/ash_text_field.dart';
 import '../providers/goal_setup_provider.dart';
-import 'health_permissions_screen.dart';
+import '../widgets/onboarding_navigation.dart';
+import '../widgets/onboarding_progress.dart';
+import 'personal_details_screen.dart';
 
 class GoalDetailsScreen extends ConsumerStatefulWidget {
   const GoalDetailsScreen({super.key});
@@ -77,40 +78,45 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
     final state = ref.watch(goalSetupProvider);
 
     return AshScaffold(
-      appBar: AppBar(
-        title: Text(_getTitle(state.selectedGoalType)),
-        backgroundColor: Colors.transparent,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildFormBody(context, state.selectedGoalType!),
-                  ],
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                const SizedBox(height: 12),
+                const OnboardingProgress(
+                  currentStep: 2,
+                  label: 'Goal Details',
                 ),
-              ),
+                const SizedBox(height: 24),
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(bottom: 120),
+                    child: _buildFormBody(context, state.selectedGoalType!),
+                  ),
+                ),
+              ],
             ),
-            AshButton(
-              label: 'Next',
-              onPressed: () {
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: OnboardingNavigation(
+              onNext: () {
                 _saveState(state.selectedGoalType!);
                 ref.read(goalSetupProvider.notifier).nextStep();
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (_) => const HealthPermissionsScreen(),
+                    builder: (_) => const PersonalDetailsScreen(),
                   ),
                 );
               },
             ),
-            const SizedBox(height: 16),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -131,6 +137,20 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
   }
 
   Widget _buildFormBody(BuildContext context, GoalType type) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          _getTitle(type),
+          style: AppTextStyles.h2,
+        ),
+        const SizedBox(height: 24),
+        _buildContent(type),
+      ],
+    );
+  }
+
+  Widget _buildContent(GoalType type) {
     switch (type) {
       case GoalType.distanceMilestone:
         return _buildDistanceForm();
@@ -212,9 +232,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
           placeholder: 'e.g. Austin Marathon',
         ),
         const SizedBox(height: 16),
-        Text('Race Date',
-            style: AppTextStyles.body.copyWith(fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
+        _buildLabel('Race Date'),
         _buildDatePicker(GoalType.event, distance: _selectedDistance),
         const SizedBox(height: 16),
         _buildDistanceDropdown(),
@@ -264,10 +282,19 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
               setState(() => _maintenanceDuration = val.round()),
         ),
         const SizedBox(height: 16),
-        Text('Maintaining until (Optional)', style: AppTextStyles.body),
-        const SizedBox(height: 8),
+        _buildLabel('Maintaining until (Optional)'),
         _buildDatePicker(GoalType.maintenance),
       ],
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
+      child: Text(
+        text.toUpperCase(),
+        style: AppTextStyles.label,
+      ),
     );
   }
 
@@ -289,9 +316,9 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.borderDark),
+          border: Border.all(color: AppColors.divider),
           borderRadius: BorderRadius.circular(12),
-          color: AppColors.surfaceDark,
+          color: AppColors.surfaceHighlight,
         ),
         child: Row(
           children: [
@@ -319,9 +346,9 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceDark,
+        color: AppColors.surfaceHighlight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.borderDark),
+        border: Border.all(color: AppColors.divider),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
@@ -329,7 +356,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
           items: items,
           onChanged: onChanged,
           hint: Text(hint, style: TextStyle(color: AppColors.textSecondary)),
-          dropdownColor: AppColors.surfaceDark,
+          dropdownColor: AppColors.surfaceHighlight,
           style: AppTextStyles.body.copyWith(color: AppColors.white),
           isExpanded: true,
         ),
@@ -403,18 +430,15 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
         final seconds = int.parse(parts[2]);
         return hours * 3600 + minutes * 60 + seconds;
       }
-      // Simple fallback for minutes or mm:ss if needed, but for now strict HH:MM:SS
       if (parts.length == 2) {
         final minutes = int.parse(parts[0]);
         final seconds = int.parse(parts[1]);
         return minutes * 60 + seconds;
       }
       if (parts.length == 1) {
-        return int.parse(parts[0]) * 60; // Assume minutes if just a number
+        return int.parse(parts[0]) * 60;
       }
-    } catch (_) {
-      // ignore
-    }
+    } catch (_) {}
     return null;
   }
 
@@ -431,8 +455,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
       case GoalType.event:
       case GoalType.distanceMilestone:
       case GoalType.timePerformance:
-        // Calibration based on distance
-        int weeks = 12; // Default fallback
+        int weeks = 12;
         if (distance != null && distance > 0) {
           if (distance <= 5.0) {
             weeks = 8;
@@ -444,12 +467,12 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
             weeks = 20;
           }
         } else if (type == GoalType.event) {
-          weeks = 16; // Default for events if no distance selected yet
+          weeks = 16;
         }
         return now.add(Duration(days: 7 * weeks));
 
       case GoalType.maintenance:
-        return now.add(const Duration(days: 7 * 8)); // 8 weeks
+        return now.add(const Duration(days: 7 * 8));
     }
   }
 }

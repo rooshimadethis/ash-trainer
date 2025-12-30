@@ -6,7 +6,7 @@ import 'ash_card.dart';
 class AshSelectionTile extends StatelessWidget {
   final String title;
   final String? subtitle;
-  final Widget leading; // Can be Text(emoji) or Icon(iconData)
+  final Widget leading;
   final bool isSelected;
   final VoidCallback onTap;
 
@@ -31,13 +31,13 @@ class AshSelectionTile extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppColors.primary.withValues(alpha: 0.2)
-                  : AppColors.surfaceHighlight,
+                  ? AppColors.primary.withValues(alpha: 0.1)
+                  : AppColors.backgroundDark.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
                     ? AppColors.primary.withValues(alpha: 0.3)
-                    : Colors.white.withValues(alpha: 0.05),
+                    : AppColors.divider,
               ),
             ),
             child: Center(child: leading),
@@ -49,12 +49,11 @@ class AshSelectionTile extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: AppTextStyles.body.copyWith(
+                  style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 17,
                     color: isSelected
-                        ? const Color(0xFFFFCCBC)
-                        : AppColors.white, // Light orange when selected
+                        ? AppColors.white
+                        : AppColors.white.withValues(alpha: 0.9),
                   ),
                 ),
                 if (subtitle != null) ...[
@@ -63,7 +62,7 @@ class AshSelectionTile extends StatelessWidget {
                     subtitle!,
                     style: AppTextStyles.bodyMedium.copyWith(
                       color: isSelected
-                          ? const Color(0xFFFFAB91).withValues(alpha: 0.7)
+                          ? AppColors.white.withValues(alpha: 0.7)
                           : AppColors.textSecondary,
                     ),
                   ),
@@ -76,16 +75,17 @@ class AshSelectionTile extends StatelessWidget {
             height: 24,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isSelected ? AppColors.primary : AppColors.backgroundDark,
+              color: isSelected ? AppColors.primary : Colors.transparent,
               border: Border.all(
                 color: isSelected
                     ? AppColors.primary
-                    : Colors.grey.withValues(alpha: 0.5),
+                    : AppColors.textSecondary.withValues(alpha: 0.3),
                 width: 2,
               ),
             ),
             child: isSelected
-                ? const Icon(Icons.check, size: 16, color: AppColors.white)
+                ? const Icon(Icons.check,
+                    size: 16, color: AppColors.backgroundDark)
                 : null,
           ),
         ],

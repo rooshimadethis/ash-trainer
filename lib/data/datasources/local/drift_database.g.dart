@@ -17,6 +17,42 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
       requiredDuringInsert: false,
       defaultConstraints:
           GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _ageMeta = const VerificationMeta('age');
+  @override
+  late final GeneratedColumn<int> age = GeneratedColumn<int>(
+      'age', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _genderMeta = const VerificationMeta('gender');
+  @override
+  late final GeneratedColumn<String> gender = GeneratedColumn<String>(
+      'gender', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _weightMeta = const VerificationMeta('weight');
+  @override
+  late final GeneratedColumn<double> weight = GeneratedColumn<double>(
+      'weight', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _preferredWeightUnitMeta =
+      const VerificationMeta('preferredWeightUnit');
+  @override
+  late final GeneratedColumn<String> preferredWeightUnit =
+      GeneratedColumn<String>('preferred_weight_unit', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('kg'));
+  static const VerificationMeta _heightMeta = const VerificationMeta('height');
+  @override
+  late final GeneratedColumn<double> height = GeneratedColumn<double>(
+      'height', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _preferredHeightUnitMeta =
+      const VerificationMeta('preferredHeightUnit');
+  @override
+  late final GeneratedColumn<String> preferredHeightUnit =
+      GeneratedColumn<String>('preferred_height_unit', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('cm'));
   static const VerificationMeta _availableDaysMeta =
       const VerificationMeta('availableDays');
   @override
@@ -55,6 +91,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        age,
+        gender,
+        weight,
+        preferredWeightUnit,
+        height,
+        preferredHeightUnit,
         availableDays,
         constraints,
         healthPermissionsGranted,
@@ -73,6 +115,34 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('age')) {
+      context.handle(
+          _ageMeta, age.isAcceptableOrUnknown(data['age']!, _ageMeta));
+    }
+    if (data.containsKey('gender')) {
+      context.handle(_genderMeta,
+          gender.isAcceptableOrUnknown(data['gender']!, _genderMeta));
+    }
+    if (data.containsKey('weight')) {
+      context.handle(_weightMeta,
+          weight.isAcceptableOrUnknown(data['weight']!, _weightMeta));
+    }
+    if (data.containsKey('preferred_weight_unit')) {
+      context.handle(
+          _preferredWeightUnitMeta,
+          preferredWeightUnit.isAcceptableOrUnknown(
+              data['preferred_weight_unit']!, _preferredWeightUnitMeta));
+    }
+    if (data.containsKey('height')) {
+      context.handle(_heightMeta,
+          height.isAcceptableOrUnknown(data['height']!, _heightMeta));
+    }
+    if (data.containsKey('preferred_height_unit')) {
+      context.handle(
+          _preferredHeightUnitMeta,
+          preferredHeightUnit.isAcceptableOrUnknown(
+              data['preferred_height_unit']!, _preferredHeightUnitMeta));
     }
     if (data.containsKey('available_days')) {
       context.handle(
@@ -118,6 +188,20 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
     return UserDTO(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      age: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}age']),
+      gender: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}gender']),
+      weight: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}weight']),
+      preferredWeightUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}preferred_weight_unit'])!,
+      height: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}height']),
+      preferredHeightUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}preferred_height_unit'])!,
       availableDays: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}available_days'])!,
       constraints: attachedDatabase.typeMapping
@@ -140,6 +224,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
 
 class UserDTO extends DataClass implements Insertable<UserDTO> {
   final int id;
+  final int? age;
+  final String? gender;
+  final double? weight;
+  final String preferredWeightUnit;
+  final double? height;
+  final String preferredHeightUnit;
   final String availableDays;
   final String? constraints;
   final bool healthPermissionsGranted;
@@ -147,6 +237,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   final DateTime updatedAt;
   const UserDTO(
       {required this.id,
+      this.age,
+      this.gender,
+      this.weight,
+      required this.preferredWeightUnit,
+      this.height,
+      required this.preferredHeightUnit,
       required this.availableDays,
       this.constraints,
       required this.healthPermissionsGranted,
@@ -156,6 +252,20 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<int>(id);
+    if (!nullToAbsent || age != null) {
+      map['age'] = Variable<int>(age);
+    }
+    if (!nullToAbsent || gender != null) {
+      map['gender'] = Variable<String>(gender);
+    }
+    if (!nullToAbsent || weight != null) {
+      map['weight'] = Variable<double>(weight);
+    }
+    map['preferred_weight_unit'] = Variable<String>(preferredWeightUnit);
+    if (!nullToAbsent || height != null) {
+      map['height'] = Variable<double>(height);
+    }
+    map['preferred_height_unit'] = Variable<String>(preferredHeightUnit);
     map['available_days'] = Variable<String>(availableDays);
     if (!nullToAbsent || constraints != null) {
       map['constraints'] = Variable<String>(constraints);
@@ -170,6 +280,15 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
       id: Value(id),
+      age: age == null && nullToAbsent ? const Value.absent() : Value(age),
+      gender:
+          gender == null && nullToAbsent ? const Value.absent() : Value(gender),
+      weight:
+          weight == null && nullToAbsent ? const Value.absent() : Value(weight),
+      preferredWeightUnit: Value(preferredWeightUnit),
+      height:
+          height == null && nullToAbsent ? const Value.absent() : Value(height),
+      preferredHeightUnit: Value(preferredHeightUnit),
       availableDays: Value(availableDays),
       constraints: constraints == null && nullToAbsent
           ? const Value.absent()
@@ -185,6 +304,14 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return UserDTO(
       id: serializer.fromJson<int>(json['id']),
+      age: serializer.fromJson<int?>(json['age']),
+      gender: serializer.fromJson<String?>(json['gender']),
+      weight: serializer.fromJson<double?>(json['weight']),
+      preferredWeightUnit:
+          serializer.fromJson<String>(json['preferredWeightUnit']),
+      height: serializer.fromJson<double?>(json['height']),
+      preferredHeightUnit:
+          serializer.fromJson<String>(json['preferredHeightUnit']),
       availableDays: serializer.fromJson<String>(json['availableDays']),
       constraints: serializer.fromJson<String?>(json['constraints']),
       healthPermissionsGranted:
@@ -198,6 +325,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<int>(id),
+      'age': serializer.toJson<int?>(age),
+      'gender': serializer.toJson<String?>(gender),
+      'weight': serializer.toJson<double?>(weight),
+      'preferredWeightUnit': serializer.toJson<String>(preferredWeightUnit),
+      'height': serializer.toJson<double?>(height),
+      'preferredHeightUnit': serializer.toJson<String>(preferredHeightUnit),
       'availableDays': serializer.toJson<String>(availableDays),
       'constraints': serializer.toJson<String?>(constraints),
       'healthPermissionsGranted':
@@ -209,6 +342,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
 
   UserDTO copyWith(
           {int? id,
+          Value<int?> age = const Value.absent(),
+          Value<String?> gender = const Value.absent(),
+          Value<double?> weight = const Value.absent(),
+          String? preferredWeightUnit,
+          Value<double?> height = const Value.absent(),
+          String? preferredHeightUnit,
           String? availableDays,
           Value<String?> constraints = const Value.absent(),
           bool? healthPermissionsGranted,
@@ -216,6 +355,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           DateTime? updatedAt}) =>
       UserDTO(
         id: id ?? this.id,
+        age: age.present ? age.value : this.age,
+        gender: gender.present ? gender.value : this.gender,
+        weight: weight.present ? weight.value : this.weight,
+        preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
+        height: height.present ? height.value : this.height,
+        preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
         availableDays: availableDays ?? this.availableDays,
         constraints: constraints.present ? constraints.value : this.constraints,
         healthPermissionsGranted:
@@ -226,6 +371,16 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   UserDTO copyWithCompanion(UsersCompanion data) {
     return UserDTO(
       id: data.id.present ? data.id.value : this.id,
+      age: data.age.present ? data.age.value : this.age,
+      gender: data.gender.present ? data.gender.value : this.gender,
+      weight: data.weight.present ? data.weight.value : this.weight,
+      preferredWeightUnit: data.preferredWeightUnit.present
+          ? data.preferredWeightUnit.value
+          : this.preferredWeightUnit,
+      height: data.height.present ? data.height.value : this.height,
+      preferredHeightUnit: data.preferredHeightUnit.present
+          ? data.preferredHeightUnit.value
+          : this.preferredHeightUnit,
       availableDays: data.availableDays.present
           ? data.availableDays.value
           : this.availableDays,
@@ -243,6 +398,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   String toString() {
     return (StringBuffer('UserDTO(')
           ..write('id: $id, ')
+          ..write('age: $age, ')
+          ..write('gender: $gender, ')
+          ..write('weight: $weight, ')
+          ..write('preferredWeightUnit: $preferredWeightUnit, ')
+          ..write('height: $height, ')
+          ..write('preferredHeightUnit: $preferredHeightUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -253,13 +414,30 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   }
 
   @override
-  int get hashCode => Object.hash(id, availableDays, constraints,
-      healthPermissionsGranted, createdAt, updatedAt);
+  int get hashCode => Object.hash(
+      id,
+      age,
+      gender,
+      weight,
+      preferredWeightUnit,
+      height,
+      preferredHeightUnit,
+      availableDays,
+      constraints,
+      healthPermissionsGranted,
+      createdAt,
+      updatedAt);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is UserDTO &&
           other.id == this.id &&
+          other.age == this.age &&
+          other.gender == this.gender &&
+          other.weight == this.weight &&
+          other.preferredWeightUnit == this.preferredWeightUnit &&
+          other.height == this.height &&
+          other.preferredHeightUnit == this.preferredHeightUnit &&
           other.availableDays == this.availableDays &&
           other.constraints == this.constraints &&
           other.healthPermissionsGranted == this.healthPermissionsGranted &&
@@ -269,6 +447,12 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
 
 class UsersCompanion extends UpdateCompanion<UserDTO> {
   final Value<int> id;
+  final Value<int?> age;
+  final Value<String?> gender;
+  final Value<double?> weight;
+  final Value<String> preferredWeightUnit;
+  final Value<double?> height;
+  final Value<String> preferredHeightUnit;
   final Value<String> availableDays;
   final Value<String?> constraints;
   final Value<bool> healthPermissionsGranted;
@@ -276,6 +460,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   final Value<DateTime> updatedAt;
   const UsersCompanion({
     this.id = const Value.absent(),
+    this.age = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.preferredWeightUnit = const Value.absent(),
+    this.height = const Value.absent(),
+    this.preferredHeightUnit = const Value.absent(),
     this.availableDays = const Value.absent(),
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -284,6 +474,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   });
   UsersCompanion.insert({
     this.id = const Value.absent(),
+    this.age = const Value.absent(),
+    this.gender = const Value.absent(),
+    this.weight = const Value.absent(),
+    this.preferredWeightUnit = const Value.absent(),
+    this.height = const Value.absent(),
+    this.preferredHeightUnit = const Value.absent(),
     required String availableDays,
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -294,6 +490,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
         updatedAt = Value(updatedAt);
   static Insertable<UserDTO> custom({
     Expression<int>? id,
+    Expression<int>? age,
+    Expression<String>? gender,
+    Expression<double>? weight,
+    Expression<String>? preferredWeightUnit,
+    Expression<double>? height,
+    Expression<String>? preferredHeightUnit,
     Expression<String>? availableDays,
     Expression<String>? constraints,
     Expression<bool>? healthPermissionsGranted,
@@ -302,6 +504,14 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (age != null) 'age': age,
+      if (gender != null) 'gender': gender,
+      if (weight != null) 'weight': weight,
+      if (preferredWeightUnit != null)
+        'preferred_weight_unit': preferredWeightUnit,
+      if (height != null) 'height': height,
+      if (preferredHeightUnit != null)
+        'preferred_height_unit': preferredHeightUnit,
       if (availableDays != null) 'available_days': availableDays,
       if (constraints != null) 'constraints': constraints,
       if (healthPermissionsGranted != null)
@@ -313,6 +523,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
 
   UsersCompanion copyWith(
       {Value<int>? id,
+      Value<int?>? age,
+      Value<String?>? gender,
+      Value<double?>? weight,
+      Value<String>? preferredWeightUnit,
+      Value<double?>? height,
+      Value<String>? preferredHeightUnit,
       Value<String>? availableDays,
       Value<String?>? constraints,
       Value<bool>? healthPermissionsGranted,
@@ -320,6 +536,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       Value<DateTime>? updatedAt}) {
     return UsersCompanion(
       id: id ?? this.id,
+      age: age ?? this.age,
+      gender: gender ?? this.gender,
+      weight: weight ?? this.weight,
+      preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
+      height: height ?? this.height,
+      preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
       availableDays: availableDays ?? this.availableDays,
       constraints: constraints ?? this.constraints,
       healthPermissionsGranted:
@@ -334,6 +556,26 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<int>(id.value);
+    }
+    if (age.present) {
+      map['age'] = Variable<int>(age.value);
+    }
+    if (gender.present) {
+      map['gender'] = Variable<String>(gender.value);
+    }
+    if (weight.present) {
+      map['weight'] = Variable<double>(weight.value);
+    }
+    if (preferredWeightUnit.present) {
+      map['preferred_weight_unit'] =
+          Variable<String>(preferredWeightUnit.value);
+    }
+    if (height.present) {
+      map['height'] = Variable<double>(height.value);
+    }
+    if (preferredHeightUnit.present) {
+      map['preferred_height_unit'] =
+          Variable<String>(preferredHeightUnit.value);
     }
     if (availableDays.present) {
       map['available_days'] = Variable<String>(availableDays.value);
@@ -358,6 +600,12 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   String toString() {
     return (StringBuffer('UsersCompanion(')
           ..write('id: $id, ')
+          ..write('age: $age, ')
+          ..write('gender: $gender, ')
+          ..write('weight: $weight, ')
+          ..write('preferredWeightUnit: $preferredWeightUnit, ')
+          ..write('height: $height, ')
+          ..write('preferredHeightUnit: $preferredHeightUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -1374,6 +1622,12 @@ abstract class _$AppDatabase extends GeneratedDatabase {
 
 typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
   Value<int> id,
+  Value<int?> age,
+  Value<String?> gender,
+  Value<double?> weight,
+  Value<String> preferredWeightUnit,
+  Value<double?> height,
+  Value<String> preferredHeightUnit,
   required String availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -1382,6 +1636,12 @@ typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
 });
 typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<int> id,
+  Value<int?> age,
+  Value<String?> gender,
+  Value<double?> weight,
+  Value<String> preferredWeightUnit,
+  Value<double?> height,
+  Value<String> preferredHeightUnit,
   Value<String> availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -1418,6 +1678,26 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
   });
   ColumnFilters<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get age => $composableBuilder(
+      column: $table.age, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get gender => $composableBuilder(
+      column: $table.gender, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get weight => $composableBuilder(
+      column: $table.weight, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get preferredWeightUnit => $composableBuilder(
+      column: $table.preferredWeightUnit,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get height => $composableBuilder(
+      column: $table.height, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get preferredHeightUnit => $composableBuilder(
+      column: $table.preferredHeightUnit,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get availableDays => $composableBuilder(
       column: $table.availableDays, builder: (column) => ColumnFilters(column));
@@ -1469,6 +1749,26 @@ class $$UsersTableOrderingComposer
   ColumnOrderings<int> get id => $composableBuilder(
       column: $table.id, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<int> get age => $composableBuilder(
+      column: $table.age, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get gender => $composableBuilder(
+      column: $table.gender, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get weight => $composableBuilder(
+      column: $table.weight, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get preferredWeightUnit => $composableBuilder(
+      column: $table.preferredWeightUnit,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get height => $composableBuilder(
+      column: $table.height, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get preferredHeightUnit => $composableBuilder(
+      column: $table.preferredHeightUnit,
+      builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get availableDays => $composableBuilder(
       column: $table.availableDays,
       builder: (column) => ColumnOrderings(column));
@@ -1498,6 +1798,24 @@ class $$UsersTableAnnotationComposer
   });
   GeneratedColumn<int> get id =>
       $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get age =>
+      $composableBuilder(column: $table.age, builder: (column) => column);
+
+  GeneratedColumn<String> get gender =>
+      $composableBuilder(column: $table.gender, builder: (column) => column);
+
+  GeneratedColumn<double> get weight =>
+      $composableBuilder(column: $table.weight, builder: (column) => column);
+
+  GeneratedColumn<String> get preferredWeightUnit => $composableBuilder(
+      column: $table.preferredWeightUnit, builder: (column) => column);
+
+  GeneratedColumn<double> get height =>
+      $composableBuilder(column: $table.height, builder: (column) => column);
+
+  GeneratedColumn<String> get preferredHeightUnit => $composableBuilder(
+      column: $table.preferredHeightUnit, builder: (column) => column);
 
   GeneratedColumn<String> get availableDays => $composableBuilder(
       column: $table.availableDays, builder: (column) => column);
@@ -1560,6 +1878,12 @@ class $$UsersTableTableManager extends RootTableManager<
               $$UsersTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<int> id = const Value.absent(),
+            Value<int?> age = const Value.absent(),
+            Value<String?> gender = const Value.absent(),
+            Value<double?> weight = const Value.absent(),
+            Value<String> preferredWeightUnit = const Value.absent(),
+            Value<double?> height = const Value.absent(),
+            Value<String> preferredHeightUnit = const Value.absent(),
             Value<String> availableDays = const Value.absent(),
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -1568,6 +1892,12 @@ class $$UsersTableTableManager extends RootTableManager<
           }) =>
               UsersCompanion(
             id: id,
+            age: age,
+            gender: gender,
+            weight: weight,
+            preferredWeightUnit: preferredWeightUnit,
+            height: height,
+            preferredHeightUnit: preferredHeightUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,
@@ -1576,6 +1906,12 @@ class $$UsersTableTableManager extends RootTableManager<
           ),
           createCompanionCallback: ({
             Value<int> id = const Value.absent(),
+            Value<int?> age = const Value.absent(),
+            Value<String?> gender = const Value.absent(),
+            Value<double?> weight = const Value.absent(),
+            Value<String> preferredWeightUnit = const Value.absent(),
+            Value<double?> height = const Value.absent(),
+            Value<String> preferredHeightUnit = const Value.absent(),
             required String availableDays,
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -1584,6 +1920,12 @@ class $$UsersTableTableManager extends RootTableManager<
           }) =>
               UsersCompanion.insert(
             id: id,
+            age: age,
+            gender: gender,
+            weight: weight,
+            preferredWeightUnit: preferredWeightUnit,
+            height: height,
+            preferredHeightUnit: preferredHeightUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,

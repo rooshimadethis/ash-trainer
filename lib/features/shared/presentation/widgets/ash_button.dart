@@ -36,9 +36,10 @@ class AshButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
-          disabledBackgroundColor: Colors.grey.withValues(alpha: 0.3),
+          disabledBackgroundColor: AppColors.surfaceHighlight,
           foregroundColor: AppColors.white,
-          disabledForegroundColor: Colors.white38,
+          disabledForegroundColor:
+              AppColors.textSecondary.withValues(alpha: 0.5),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

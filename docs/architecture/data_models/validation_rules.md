@@ -12,6 +12,12 @@ This document defines input validation and business logic rules for all data ent
 
 | Field | Rule | Error Message |
 |-------|------|---------------|
+| `age` | If provided, must be 13-100 | "Age must be between 13 and 100" |
+| `gender` | If provided, must be one of: male, female, other | "Invalid gender value" |
+| `weight` | If provided, must be 30-200 (stored in KG) | "Weight must be between 30-200 kg (66-440 lbs)" |
+| `preferredWeightUnit` | Must be 'kg' or 'lb' | "Invalid weight unit" |
+| `height` | If provided, must be 100-250 (stored in CM) | "Height must be between 100-250 cm (39-98 in)" |
+| `preferredHeightUnit` | Must be 'cm' or 'in' | "Invalid height unit" |
 | `availableDays` | Must be valid JSON array of day names | "Invalid day selection" |
 | `availableDays` | Must have at least 1 day available | "You need at least one day available for training" |
 | `constraints` | Max 500 characters | "Constraints too long (max 500 characters)" |
@@ -20,6 +26,10 @@ This document defines input validation and business logic rules for all data ent
 
 - **One user per device**: Enforced at application layer (single-user app assumption)
 - **Available days**: Parsed from JSON, validated against `["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]`
+- **Unit Storage**: Weight and height are always stored in KG and CM respectively, regardless of preferred display unit
+- **Unit Conversion**: When user enters values in lbs/inches, convert to KG/CM before storage
+  - Weight: 1 lb = 0.453592 kg
+  - Height: 1 in = 2.54 cm
 
 ---
 

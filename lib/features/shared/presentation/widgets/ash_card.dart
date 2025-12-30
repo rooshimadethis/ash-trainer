@@ -24,19 +24,20 @@ class AshCard extends StatelessWidget {
         curve: Curves.easeInOut,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.surfaceDark,
-          borderRadius: BorderRadius.circular(16),
+          color:
+              isSelected ? AppColors.surfaceHighlight : AppColors.surfaceDark,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
                 ? AppColors.primary
-                : (borderColor ?? AppColors.borderDark.withValues(alpha: 0.5)),
+                : (borderColor ?? AppColors.divider),
             width: isSelected ? 2 : 1,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.2),
-                    blurRadius: 25,
+                    color: AppColors.primary.withValues(alpha: 0.1),
+                    blurRadius: 20,
                     spreadRadius: 0,
                   ),
                 ]

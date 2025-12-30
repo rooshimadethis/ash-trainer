@@ -21,6 +21,14 @@ This document provides detailed Drift table definitions for all 9 entities in th
 class Users extends Table {
   IntColumn get id => integer().autoIncrement()();
   
+  // Personal information
+  IntColumn get age => integer().nullable()();
+  TextColumn get gender => text().nullable()();
+  RealColumn get weight => real().nullable()(); // Always stored in KG
+  TextColumn get preferredWeightUnit => text().withDefault(const Constant('kg'))(); // UI display preference: 'kg' or 'lb'
+  RealColumn get height => real().nullable()(); // Always stored in CM
+  TextColumn get preferredHeightUnit => text().withDefault(const Constant('cm'))(); // UI display preference: 'cm' or 'in'
+  
   // Onboarding data (Journey #1)
   TextColumn get trainingHistory => text()(); // 'beginner' | 'casual' | 'regular' | 'advanced'
   TextColumn get availableDays => text()(); // JSON array: ["monday", "tuesday", ...]
@@ -44,6 +52,11 @@ class Users extends Table {
 **Notes**:
 - `availableDays` stored as JSON array for flexibility
 - `trainingHistory` field is deprecated - fitness level will be inferred from baseline workout (see Journey #1 feedback)
+- **Weight/Height Storage**: Always stored in metric units (KG/CM) for consistency in calculations
+- **Preferred Units**: `preferredWeightUnit` and `preferredHeightUnit` are UI display preferences only
+  - Weight: 'kg' or 'lb' (Health Connect uses KG, HealthKit supports both)
+  - Height: 'cm' or 'in' (Health Connect uses CM, HealthKit supports both)
+- When syncing from HealthKit, values are converted to KG/CM for storage
 
 **Constraints**:
 - `trainingHistory` must be one of: `beginner`, `casual`, `regular`, `advanced`

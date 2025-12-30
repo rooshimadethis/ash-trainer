@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/colors.dart';
+import '../../../../core/theme/text_styles.dart';
 
 class AshTextField extends StatelessWidget {
   final String label;
@@ -20,27 +22,40 @@ class AshTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Basic implementation for now, mirroring the likely simple style
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            label.toUpperCase(),
+            style: AppTextStyles.label,
+          ),
         ),
-        const SizedBox(height: 8),
         TextField(
           controller: controller,
           keyboardType: keyboardType,
           onChanged: onChanged,
           maxLines: maxLines,
+          style: AppTextStyles.bodyLarge.copyWith(color: AppColors.white),
           decoration: InputDecoration(
             hintText: placeholder,
+            hintStyle: TextStyle(
+                color: AppColors.textSecondary.withValues(alpha: 0.5)),
+            filled: true,
+            fillColor: AppColors.surfaceHighlight,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none,
             ),
-            filled: true,
-            // fillColor: AppColors.surfaceHighlight, // Need to import colors if we want this
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: AppColors.divider),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: AppColors.primary, width: 2),
+            ),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),

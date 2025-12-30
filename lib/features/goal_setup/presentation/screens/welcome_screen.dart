@@ -5,7 +5,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
-import 'availability_screen.dart';
+import 'goal_type_selection_screen.dart';
 
 class WelcomeScreen extends ConsumerWidget {
   const WelcomeScreen({super.key});
@@ -22,11 +22,10 @@ class WelcomeScreen extends ConsumerWidget {
             children: [
               const Spacer(),
               // Logo
-              const Center(
-                child: Icon(
-                  Icons.local_fire_department,
-                  size: 80,
-                  color: AppColors.primary,
+              Center(
+                child: Image.asset(
+                  'assets/images/ash.png',
+                  height: 120, // Increased size slightly for the character
                 ),
               ),
               const SizedBox(height: 32),
@@ -62,7 +61,7 @@ class WelcomeScreen extends ConsumerWidget {
                   ref.read(goalSetupProvider.notifier).nextStep();
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                        builder: (_) => const AvailabilityScreen()),
+                        builder: (_) => const GoalTypeSelectionScreen()),
                   );
                 },
               ),

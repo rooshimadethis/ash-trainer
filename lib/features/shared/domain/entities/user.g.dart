@@ -8,6 +8,12 @@ part of 'user.dart';
 
 _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
       id: json['id'] as String,
+      age: (json['age'] as num?)?.toInt(),
+      gender: json['gender'] as String?,
+      weight: (json['weight'] as num?)?.toDouble(),
+      preferredWeightUnit: json['preferredWeightUnit'] as String? ?? 'kg',
+      height: (json['height'] as num?)?.toDouble(),
+      preferredHeightUnit: json['preferredHeightUnit'] as String? ?? 'cm',
       availableDays: (json['availableDays'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -22,6 +28,12 @@ _$UserImpl _$$UserImplFromJson(Map<String, dynamic> json) => _$UserImpl(
 Map<String, dynamic> _$$UserImplToJson(_$UserImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'age': instance.age,
+      'gender': instance.gender,
+      'weight': instance.weight,
+      'preferredWeightUnit': instance.preferredWeightUnit,
+      'height': instance.height,
+      'preferredHeightUnit': instance.preferredHeightUnit,
       'availableDays': instance.availableDays,
       'constraints': instance.constraints,
       'healthPermissionsGranted': instance.healthPermissionsGranted,
