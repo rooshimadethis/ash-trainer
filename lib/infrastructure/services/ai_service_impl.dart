@@ -5,7 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../features/shared/domain/entities/ai/context_models.dart';
 import '../../features/shared/domain/entities/ai/ai_types.dart';
 import '../../features/shared/domain/entities/ai/training_plan_response.dart';
-import '../../features/shared/domain/entities/workout.dart';
+import '../../features/shared/domain/entities/training/workout.dart';
 import '../../features/shared/domain/entities/ai/conversation.dart';
 import '../../core/constants/ai_constants.dart';
 import 'ai_service.dart';

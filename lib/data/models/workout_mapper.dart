@@ -1,6 +1,6 @@
 import 'package:drift/drift.dart';
 import '../datasources/local/drift_database.dart';
-import '../../features/shared/domain/entities/workout.dart';
+import '../../features/shared/domain/entities/training/workout.dart';
 
 extension WorkoutDTOMapper on WorkoutDTO {
   Workout toEntity() {
@@ -8,8 +8,8 @@ extension WorkoutDTOMapper on WorkoutDTO {
       id: id,
       userId: userId.toString(),
       goalId: goalId.toString(),
-      mesocycleId: mesocycleId,
-      microcycleId: microcycleId,
+      phaseId: phaseId,
+      blockId: blockId,
       scheduledDate: scheduledDate,
       type: type,
       name: name,
@@ -33,8 +33,8 @@ extension WorkoutMapper on Workout {
       id: id,
       userId: int.parse(userId),
       goalId: int.parse(goalId),
-      mesocycleId: Value(mesocycleId),
-      microcycleId: Value(microcycleId),
+      phaseId: Value(phaseId),
+      blockId: Value(blockId),
       scheduledDate: scheduledDate,
       type: type,
       name: name,

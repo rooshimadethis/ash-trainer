@@ -16,7 +16,10 @@ import 'daos/conversation_dao.dart';
 import 'daos/context_dao.dart';
 
 import 'tables/workouts_table.dart';
+import 'tables/phases_table.dart';
+import 'tables/training_blocks_table.dart';
 import 'daos/workout_dao.dart';
+import 'daos/training_plan_dao.dart';
 
 part 'drift_database.g.dart';
 
@@ -27,13 +30,16 @@ part 'drift_database.g.dart';
   ConversationMessages,
   LongTermContext,
   MediumTermContext,
-  Workouts
+  Workouts,
+  Phases,
+  TrainingBlocks
 ], daos: [
   UserDao,
   GoalDao,
   ConversationDao,
   ContextDao,
-  WorkoutDao
+  WorkoutDao,
+  TrainingPlanDao
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());

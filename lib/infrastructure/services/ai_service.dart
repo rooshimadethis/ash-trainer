@@ -1,7 +1,7 @@
 import '../../features/shared/domain/entities/ai/context_models.dart';
 import '../../features/shared/domain/entities/ai/ai_types.dart';
 import '../../features/shared/domain/entities/ai/training_plan_response.dart';
-import '../../features/shared/domain/entities/workout.dart';
+import '../../features/shared/domain/entities/training/workout.dart';
 
 /// AI service for plan generation, coaching, and adjustments
 abstract class AIService {

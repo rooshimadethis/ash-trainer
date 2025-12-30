@@ -23,7 +23,7 @@ final goalRepositoryProvider = Provider<GoalRepository>((ref) {
 
 final workoutRepositoryProvider = Provider<WorkoutRepository>((ref) {
   final db = ref.read(driftDatabaseProvider);
-  return WorkoutRepositoryImpl(db.workoutDao);
+  return WorkoutRepositoryImpl(db.workoutDao, db.trainingPlanDao);
 });
 
 final conversationRepositoryProvider = Provider<ConversationRepository>((ref) {

@@ -1,25 +1,27 @@
-import 'package:uuid/uuid.dart';
 import '../../../../infrastructure/services/ai_service.dart';
 import '../../../shared/domain/repositories/workout_repository.dart';
 import '../../../../core/constants/prompts.dart';
 import '../../../../core/constants/ai_schemas.dart';
 import 'build_plan_generation_context.dart';
-import '../../../shared/domain/entities/ai/training_plan_response.dart';
+import '../../../../core/utils/training_plan_scheduler.dart';
 
 class GenerateTrainingPlan {
   final BuildPlanGenerationContext _contextBuilder;
   final AIService _aiService;
   final WorkoutRepository _workoutRepo;
+  final TrainingPlanScheduler _scheduler;
 
   GenerateTrainingPlan(
     this._contextBuilder,
     this._aiService,
     this._workoutRepo,
+    this._scheduler,
   );
 
-  Future<TrainingPlan> execute({
+  Future<void> execute({
     required String goalId,
     required String userId,
+    DateTime? startDate,
   }) async {
     // 1. Build Context
     final context = await _contextBuilder.execute(goalId: goalId);
@@ -32,63 +34,23 @@ class GenerateTrainingPlan {
       responseSchema: AISchemas.trainingPlan,
     );
 
-    // AI returns a plan with placeholder IDs. We need to process it.
-    // However, the AI Service returns a TrainingPlan entity directly.
-    // It has immutable fields. We likely need to reconstruct it with valid IDs
-    // before saving, or save it and let the Repository handle IDs.
-    // Usually, use cases enforce business rules (like assigning IDs).
-
     if (response.data == null) {
       throw Exception('Failed to generate plan');
     }
 
-    final rawPlan = response.data!;
-
-    // 3. Post-Process: Assign UUIDs and link to Goal/User
-    // We need to map placeholder IDs to real UUIDs to ensure referential integrity
-    // if mesocycles/microcycles are referenced by workouts.
-
-    final mesocycleIdMap = <String, String>{};
-    final microcycleIdMap = <String, String>{};
-
-    final processedMesocycles = rawPlan.mesocycles.map((m) {
-      final newId = const Uuid().v4();
-      mesocycleIdMap[m.id] = newId; // Map AI ID to new UUID
-      return m.copyWith(id: newId);
-    }).toList();
-
-    final processedMicrocycles = rawPlan.microcycles.map((m) {
-      final newId = const Uuid().v4();
-      microcycleIdMap[m.id] = newId;
-      return m.copyWith(id: newId);
-    }).toList();
-
-    final processedWorkouts = rawPlan.workouts.map((w) {
-      // Resolve meso/micro references
-      final newMesoId =
-          w.mesocycleId != null ? mesocycleIdMap[w.mesocycleId] : null;
-      final newMicroId =
-          w.microcycleId != null ? microcycleIdMap[w.microcycleId] : null;
-
-      return w.copyWith(
-        id: const Uuid().v4(),
-        userId: userId,
-        goalId: goalId,
-        mesocycleId: newMesoId,
-        microcycleId: newMicroId,
-        status: 'planned', // Enforce status
-      );
-    }).toList();
-
-    final validPlan = rawPlan.copyWith(
-      mesocycles: processedMesocycles,
-      microcycles: processedMicrocycles,
-      workouts: processedWorkouts,
+    // 3. Hydrate Plan (Convert Skeletons to Real Dates)
+    final hydrationResult = _scheduler.hydratePlan(
+      plan: response.data!,
+      startDate: startDate ?? DateTime.now(),
+      userId: userId,
+      goalId: goalId,
     );
 
     // 4. Save Plan
-    await _workoutRepo.saveTrainingPlan(validPlan);
-
-    return validPlan;
+    await _workoutRepo.saveFullTrainingPlan(
+      phases: hydrationResult.phases,
+      blocks: hydrationResult.blocks,
+      workouts: hydrationResult.workouts,
+    );
   }
 }

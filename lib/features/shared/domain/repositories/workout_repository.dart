@@ -1,5 +1,6 @@
-import '../entities/workout.dart';
-import '../entities/ai/training_plan_response.dart';
+import '../entities/training/workout.dart';
+import '../entities/training/phase.dart';
+import '../entities/training/training_block.dart';
 
 abstract class WorkoutRepository {
   /// Get workouts within a specific date range
@@ -12,7 +13,11 @@ abstract class WorkoutRepository {
   Future<Workout?> getWorkout(String id);
 
   /// Save a newly generated training plan (batch insert)
-  Future<void> saveTrainingPlan(TrainingPlan plan);
+  Future<void> saveFullTrainingPlan({
+    required List<Phase> phases,
+    required List<TrainingBlock> blocks,
+    required List<Workout> workouts,
+  });
 
   /// Save or update a single workout
   Future<void> saveWorkout(Workout workout);

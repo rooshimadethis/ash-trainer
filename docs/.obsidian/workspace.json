@@ -185,6 +185,9 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "implementation/db_restructure_adaptive_planning.md",
+    "implementation/adaptive_training_strategy.md",
+    "implementation",
     "architecture/data_models/ai_entities.md",
     "ai/prompts/context_summary.md",
     "ai/prompts/workout_adjustment.md",
@@ -211,15 +214,12 @@
     "architecture/OLD_data_processing/cross_cutting/function_registry.md",
     "architecture/OLD_data_processing/cross_cutting/context_engine.md",
     "architecture/OLD_data_processing/athlete_markers/injury_mgmt.md",
-    "architecture/OLD_data_processing/athlete_markers/biomarkers.md",
     "architecture/OLD_data_processing/training",
     "architecture/OLD_data_processing/lifecycle",
     "architecture/OLD_data_processing/cross_cutting",
     "architecture/OLD_data_processing/athlete_markers",
-    "architecture/OLD_data_processing/_index.md",
     "architecture/OLD_data_processing",
     "architecture/data_models",
-    "architecture/OLD_data_models",
-    "ux/user_journeys"
+    "architecture/OLD_data_models"
   ]
 }

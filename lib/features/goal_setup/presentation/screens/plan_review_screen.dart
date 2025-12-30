@@ -6,7 +6,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
-import '../../../shared/domain/entities/workout.dart';
+import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';

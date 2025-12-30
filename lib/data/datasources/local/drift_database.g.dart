@@ -3074,17 +3074,17 @@ class $WorkoutsTable extends Workouts
   late final GeneratedColumn<int> goalId = GeneratedColumn<int>(
       'goal_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _mesocycleIdMeta =
-      const VerificationMeta('mesocycleId');
+  static const VerificationMeta _phaseIdMeta =
+      const VerificationMeta('phaseId');
   @override
-  late final GeneratedColumn<String> mesocycleId = GeneratedColumn<String>(
-      'mesocycle_id', aliasedName, true,
+  late final GeneratedColumn<String> phaseId = GeneratedColumn<String>(
+      'phase_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _microcycleIdMeta =
-      const VerificationMeta('microcycleId');
+  static const VerificationMeta _blockIdMeta =
+      const VerificationMeta('blockId');
   @override
-  late final GeneratedColumn<String> microcycleId = GeneratedColumn<String>(
-      'microcycle_id', aliasedName, true,
+  late final GeneratedColumn<String> blockId = GeneratedColumn<String>(
+      'block_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _scheduledDateMeta =
       const VerificationMeta('scheduledDate');
@@ -3165,8 +3165,8 @@ class $WorkoutsTable extends Workouts
         id,
         userId,
         goalId,
-        mesocycleId,
-        microcycleId,
+        phaseId,
+        blockId,
         scheduledDate,
         type,
         name,
@@ -3208,17 +3208,13 @@ class $WorkoutsTable extends Workouts
     } else if (isInserting) {
       context.missing(_goalIdMeta);
     }
-    if (data.containsKey('mesocycle_id')) {
-      context.handle(
-          _mesocycleIdMeta,
-          mesocycleId.isAcceptableOrUnknown(
-              data['mesocycle_id']!, _mesocycleIdMeta));
+    if (data.containsKey('phase_id')) {
+      context.handle(_phaseIdMeta,
+          phaseId.isAcceptableOrUnknown(data['phase_id']!, _phaseIdMeta));
     }
-    if (data.containsKey('microcycle_id')) {
-      context.handle(
-          _microcycleIdMeta,
-          microcycleId.isAcceptableOrUnknown(
-              data['microcycle_id']!, _microcycleIdMeta));
+    if (data.containsKey('block_id')) {
+      context.handle(_blockIdMeta,
+          blockId.isAcceptableOrUnknown(data['block_id']!, _blockIdMeta));
     }
     if (data.containsKey('scheduled_date')) {
       context.handle(
@@ -3313,10 +3309,10 @@ class $WorkoutsTable extends Workouts
           .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
       goalId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}goal_id'])!,
-      mesocycleId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}mesocycle_id']),
-      microcycleId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}microcycle_id']),
+      phaseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_id']),
+      blockId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}block_id']),
       scheduledDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}scheduled_date'])!,
       type: attachedDatabase.typeMapping
@@ -3356,8 +3352,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final String id;
   final int userId;
   final int goalId;
-  final String? mesocycleId;
-  final String? microcycleId;
+  final String? phaseId;
+  final String? blockId;
   final DateTime scheduledDate;
   final String type;
   final String name;
@@ -3375,8 +3371,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       {required this.id,
       required this.userId,
       required this.goalId,
-      this.mesocycleId,
-      this.microcycleId,
+      this.phaseId,
+      this.blockId,
       required this.scheduledDate,
       required this.type,
       required this.name,
@@ -3396,11 +3392,11 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<int>(userId);
     map['goal_id'] = Variable<int>(goalId);
-    if (!nullToAbsent || mesocycleId != null) {
-      map['mesocycle_id'] = Variable<String>(mesocycleId);
+    if (!nullToAbsent || phaseId != null) {
+      map['phase_id'] = Variable<String>(phaseId);
     }
-    if (!nullToAbsent || microcycleId != null) {
-      map['microcycle_id'] = Variable<String>(microcycleId);
+    if (!nullToAbsent || blockId != null) {
+      map['block_id'] = Variable<String>(blockId);
     }
     map['scheduled_date'] = Variable<DateTime>(scheduledDate);
     map['type'] = Variable<String>(type);
@@ -3439,12 +3435,12 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id: Value(id),
       userId: Value(userId),
       goalId: Value(goalId),
-      mesocycleId: mesocycleId == null && nullToAbsent
+      phaseId: phaseId == null && nullToAbsent
           ? const Value.absent()
-          : Value(mesocycleId),
-      microcycleId: microcycleId == null && nullToAbsent
+          : Value(phaseId),
+      blockId: blockId == null && nullToAbsent
           ? const Value.absent()
-          : Value(microcycleId),
+          : Value(blockId),
       scheduledDate: Value(scheduledDate),
       type: Value(type),
       name: Value(name),
@@ -3482,8 +3478,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<int>(json['userId']),
       goalId: serializer.fromJson<int>(json['goalId']),
-      mesocycleId: serializer.fromJson<String?>(json['mesocycleId']),
-      microcycleId: serializer.fromJson<String?>(json['microcycleId']),
+      phaseId: serializer.fromJson<String?>(json['phaseId']),
+      blockId: serializer.fromJson<String?>(json['blockId']),
       scheduledDate: serializer.fromJson<DateTime>(json['scheduledDate']),
       type: serializer.fromJson<String>(json['type']),
       name: serializer.fromJson<String>(json['name']),
@@ -3506,8 +3502,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<int>(userId),
       'goalId': serializer.toJson<int>(goalId),
-      'mesocycleId': serializer.toJson<String?>(mesocycleId),
-      'microcycleId': serializer.toJson<String?>(microcycleId),
+      'phaseId': serializer.toJson<String?>(phaseId),
+      'blockId': serializer.toJson<String?>(blockId),
       'scheduledDate': serializer.toJson<DateTime>(scheduledDate),
       'type': serializer.toJson<String>(type),
       'name': serializer.toJson<String>(name),
@@ -3528,8 +3524,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           {String? id,
           int? userId,
           int? goalId,
-          Value<String?> mesocycleId = const Value.absent(),
-          Value<String?> microcycleId = const Value.absent(),
+          Value<String?> phaseId = const Value.absent(),
+          Value<String?> blockId = const Value.absent(),
           DateTime? scheduledDate,
           String? type,
           String? name,
@@ -3547,9 +3543,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
         id: id ?? this.id,
         userId: userId ?? this.userId,
         goalId: goalId ?? this.goalId,
-        mesocycleId: mesocycleId.present ? mesocycleId.value : this.mesocycleId,
-        microcycleId:
-            microcycleId.present ? microcycleId.value : this.microcycleId,
+        phaseId: phaseId.present ? phaseId.value : this.phaseId,
+        blockId: blockId.present ? blockId.value : this.blockId,
         scheduledDate: scheduledDate ?? this.scheduledDate,
         type: type ?? this.type,
         name: name ?? this.name,
@@ -3573,11 +3568,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
-      mesocycleId:
-          data.mesocycleId.present ? data.mesocycleId.value : this.mesocycleId,
-      microcycleId: data.microcycleId.present
-          ? data.microcycleId.value
-          : this.microcycleId,
+      phaseId: data.phaseId.present ? data.phaseId.value : this.phaseId,
+      blockId: data.blockId.present ? data.blockId.value : this.blockId,
       scheduledDate: data.scheduledDate.present
           ? data.scheduledDate.value
           : this.scheduledDate,
@@ -3613,8 +3605,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('mesocycleId: $mesocycleId, ')
-          ..write('microcycleId: $microcycleId, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockId: $blockId, ')
           ..write('scheduledDate: $scheduledDate, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
@@ -3637,8 +3629,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id,
       userId,
       goalId,
-      mesocycleId,
-      microcycleId,
+      phaseId,
+      blockId,
       scheduledDate,
       type,
       name,
@@ -3659,8 +3651,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.goalId == this.goalId &&
-          other.mesocycleId == this.mesocycleId &&
-          other.microcycleId == this.microcycleId &&
+          other.phaseId == this.phaseId &&
+          other.blockId == this.blockId &&
           other.scheduledDate == this.scheduledDate &&
           other.type == this.type &&
           other.name == this.name &&
@@ -3680,8 +3672,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<String> id;
   final Value<int> userId;
   final Value<int> goalId;
-  final Value<String?> mesocycleId;
-  final Value<String?> microcycleId;
+  final Value<String?> phaseId;
+  final Value<String?> blockId;
   final Value<DateTime> scheduledDate;
   final Value<String> type;
   final Value<String> name;
@@ -3700,8 +3692,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.goalId = const Value.absent(),
-    this.mesocycleId = const Value.absent(),
-    this.microcycleId = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockId = const Value.absent(),
     this.scheduledDate = const Value.absent(),
     this.type = const Value.absent(),
     this.name = const Value.absent(),
@@ -3721,8 +3713,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     required String id,
     required int userId,
     required int goalId,
-    this.mesocycleId = const Value.absent(),
-    this.microcycleId = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockId = const Value.absent(),
     required DateTime scheduledDate,
     required String type,
     required String name,
@@ -3749,8 +3741,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<String>? id,
     Expression<int>? userId,
     Expression<int>? goalId,
-    Expression<String>? mesocycleId,
-    Expression<String>? microcycleId,
+    Expression<String>? phaseId,
+    Expression<String>? blockId,
     Expression<DateTime>? scheduledDate,
     Expression<String>? type,
     Expression<String>? name,
@@ -3770,8 +3762,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (goalId != null) 'goal_id': goalId,
-      if (mesocycleId != null) 'mesocycle_id': mesocycleId,
-      if (microcycleId != null) 'microcycle_id': microcycleId,
+      if (phaseId != null) 'phase_id': phaseId,
+      if (blockId != null) 'block_id': blockId,
       if (scheduledDate != null) 'scheduled_date': scheduledDate,
       if (type != null) 'type': type,
       if (name != null) 'name': name,
@@ -3793,8 +3785,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       {Value<String>? id,
       Value<int>? userId,
       Value<int>? goalId,
-      Value<String?>? mesocycleId,
-      Value<String?>? microcycleId,
+      Value<String?>? phaseId,
+      Value<String?>? blockId,
       Value<DateTime>? scheduledDate,
       Value<String>? type,
       Value<String>? name,
@@ -3813,8 +3805,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       id: id ?? this.id,
       userId: userId ?? this.userId,
       goalId: goalId ?? this.goalId,
-      mesocycleId: mesocycleId ?? this.mesocycleId,
-      microcycleId: microcycleId ?? this.microcycleId,
+      phaseId: phaseId ?? this.phaseId,
+      blockId: blockId ?? this.blockId,
       scheduledDate: scheduledDate ?? this.scheduledDate,
       type: type ?? this.type,
       name: name ?? this.name,
@@ -3844,11 +3836,11 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     if (goalId.present) {
       map['goal_id'] = Variable<int>(goalId.value);
     }
-    if (mesocycleId.present) {
-      map['mesocycle_id'] = Variable<String>(mesocycleId.value);
+    if (phaseId.present) {
+      map['phase_id'] = Variable<String>(phaseId.value);
     }
-    if (microcycleId.present) {
-      map['microcycle_id'] = Variable<String>(microcycleId.value);
+    if (blockId.present) {
+      map['block_id'] = Variable<String>(blockId.value);
     }
     if (scheduledDate.present) {
       map['scheduled_date'] = Variable<DateTime>(scheduledDate.value);
@@ -3901,8 +3893,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('mesocycleId: $mesocycleId, ')
-          ..write('microcycleId: $microcycleId, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockId: $blockId, ')
           ..write('scheduledDate: $scheduledDate, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
@@ -3922,6 +3914,938 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   }
 }
 
+class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PhasesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
+  @override
+  late final GeneratedColumn<int> goalId = GeneratedColumn<int>(
+      'goal_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phaseNumberMeta =
+      const VerificationMeta('phaseNumber');
+  @override
+  late final GeneratedColumn<int> phaseNumber = GeneratedColumn<int>(
+      'phase_number', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phaseTypeMeta =
+      const VerificationMeta('phaseType');
+  @override
+  late final GeneratedColumn<String> phaseType = GeneratedColumn<String>(
+      'phase_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationWeeksMeta =
+      const VerificationMeta('durationWeeks');
+  @override
+  late final GeneratedColumn<int> durationWeeks = GeneratedColumn<int>(
+      'duration_weeks', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _targetWeeklyVolumeMeta =
+      const VerificationMeta('targetWeeklyVolume');
+  @override
+  late final GeneratedColumn<String> targetWeeklyVolume =
+      GeneratedColumn<String>('target_weekly_volume', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _targetWeeklyDurationMeta =
+      const VerificationMeta('targetWeeklyDuration');
+  @override
+  late final GeneratedColumn<String> targetWeeklyDuration =
+      GeneratedColumn<String>('target_weekly_duration', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        goalId,
+        phaseNumber,
+        phaseType,
+        durationWeeks,
+        targetWeeklyVolume,
+        targetWeeklyDuration,
+        startDate,
+        endDate,
+        description
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'phases';
+  @override
+  VerificationContext validateIntegrity(Insertable<PhaseDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('goal_id')) {
+      context.handle(_goalIdMeta,
+          goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta));
+    } else if (isInserting) {
+      context.missing(_goalIdMeta);
+    }
+    if (data.containsKey('phase_number')) {
+      context.handle(
+          _phaseNumberMeta,
+          phaseNumber.isAcceptableOrUnknown(
+              data['phase_number']!, _phaseNumberMeta));
+    } else if (isInserting) {
+      context.missing(_phaseNumberMeta);
+    }
+    if (data.containsKey('phase_type')) {
+      context.handle(_phaseTypeMeta,
+          phaseType.isAcceptableOrUnknown(data['phase_type']!, _phaseTypeMeta));
+    } else if (isInserting) {
+      context.missing(_phaseTypeMeta);
+    }
+    if (data.containsKey('duration_weeks')) {
+      context.handle(
+          _durationWeeksMeta,
+          durationWeeks.isAcceptableOrUnknown(
+              data['duration_weeks']!, _durationWeeksMeta));
+    } else if (isInserting) {
+      context.missing(_durationWeeksMeta);
+    }
+    if (data.containsKey('target_weekly_volume')) {
+      context.handle(
+          _targetWeeklyVolumeMeta,
+          targetWeeklyVolume.isAcceptableOrUnknown(
+              data['target_weekly_volume']!, _targetWeeklyVolumeMeta));
+    } else if (isInserting) {
+      context.missing(_targetWeeklyVolumeMeta);
+    }
+    if (data.containsKey('target_weekly_duration')) {
+      context.handle(
+          _targetWeeklyDurationMeta,
+          targetWeeklyDuration.isAcceptableOrUnknown(
+              data['target_weekly_duration']!, _targetWeeklyDurationMeta));
+    } else if (isInserting) {
+      context.missing(_targetWeeklyDurationMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PhaseDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PhaseDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      goalId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}goal_id'])!,
+      phaseNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}phase_number'])!,
+      phaseType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_type'])!,
+      durationWeeks: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration_weeks'])!,
+      targetWeeklyVolume: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}target_weekly_volume'])!,
+      targetWeeklyDuration: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}target_weekly_duration'])!,
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+    );
+  }
+
+  @override
+  $PhasesTable createAlias(String alias) {
+    return $PhasesTable(attachedDatabase, alias);
+  }
+}
+
+class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
+  final String id;
+  final int goalId;
+  final int phaseNumber;
+  final String phaseType;
+  final int durationWeeks;
+  final String targetWeeklyVolume;
+  final String targetWeeklyDuration;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? description;
+  const PhaseDTO(
+      {required this.id,
+      required this.goalId,
+      required this.phaseNumber,
+      required this.phaseType,
+      required this.durationWeeks,
+      required this.targetWeeklyVolume,
+      required this.targetWeeklyDuration,
+      this.startDate,
+      this.endDate,
+      this.description});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['goal_id'] = Variable<int>(goalId);
+    map['phase_number'] = Variable<int>(phaseNumber);
+    map['phase_type'] = Variable<String>(phaseType);
+    map['duration_weeks'] = Variable<int>(durationWeeks);
+    map['target_weekly_volume'] = Variable<String>(targetWeeklyVolume);
+    map['target_weekly_duration'] = Variable<String>(targetWeeklyDuration);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime>(endDate);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    return map;
+  }
+
+  PhasesCompanion toCompanion(bool nullToAbsent) {
+    return PhasesCompanion(
+      id: Value(id),
+      goalId: Value(goalId),
+      phaseNumber: Value(phaseNumber),
+      phaseType: Value(phaseType),
+      durationWeeks: Value(durationWeeks),
+      targetWeeklyVolume: Value(targetWeeklyVolume),
+      targetWeeklyDuration: Value(targetWeeklyDuration),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+    );
+  }
+
+  factory PhaseDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PhaseDTO(
+      id: serializer.fromJson<String>(json['id']),
+      goalId: serializer.fromJson<int>(json['goalId']),
+      phaseNumber: serializer.fromJson<int>(json['phaseNumber']),
+      phaseType: serializer.fromJson<String>(json['phaseType']),
+      durationWeeks: serializer.fromJson<int>(json['durationWeeks']),
+      targetWeeklyVolume:
+          serializer.fromJson<String>(json['targetWeeklyVolume']),
+      targetWeeklyDuration:
+          serializer.fromJson<String>(json['targetWeeklyDuration']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      description: serializer.fromJson<String?>(json['description']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'goalId': serializer.toJson<int>(goalId),
+      'phaseNumber': serializer.toJson<int>(phaseNumber),
+      'phaseType': serializer.toJson<String>(phaseType),
+      'durationWeeks': serializer.toJson<int>(durationWeeks),
+      'targetWeeklyVolume': serializer.toJson<String>(targetWeeklyVolume),
+      'targetWeeklyDuration': serializer.toJson<String>(targetWeeklyDuration),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+      'description': serializer.toJson<String?>(description),
+    };
+  }
+
+  PhaseDTO copyWith(
+          {String? id,
+          int? goalId,
+          int? phaseNumber,
+          String? phaseType,
+          int? durationWeeks,
+          String? targetWeeklyVolume,
+          String? targetWeeklyDuration,
+          Value<DateTime?> startDate = const Value.absent(),
+          Value<DateTime?> endDate = const Value.absent(),
+          Value<String?> description = const Value.absent()}) =>
+      PhaseDTO(
+        id: id ?? this.id,
+        goalId: goalId ?? this.goalId,
+        phaseNumber: phaseNumber ?? this.phaseNumber,
+        phaseType: phaseType ?? this.phaseType,
+        durationWeeks: durationWeeks ?? this.durationWeeks,
+        targetWeeklyVolume: targetWeeklyVolume ?? this.targetWeeklyVolume,
+        targetWeeklyDuration: targetWeeklyDuration ?? this.targetWeeklyDuration,
+        startDate: startDate.present ? startDate.value : this.startDate,
+        endDate: endDate.present ? endDate.value : this.endDate,
+        description: description.present ? description.value : this.description,
+      );
+  PhaseDTO copyWithCompanion(PhasesCompanion data) {
+    return PhaseDTO(
+      id: data.id.present ? data.id.value : this.id,
+      goalId: data.goalId.present ? data.goalId.value : this.goalId,
+      phaseNumber:
+          data.phaseNumber.present ? data.phaseNumber.value : this.phaseNumber,
+      phaseType: data.phaseType.present ? data.phaseType.value : this.phaseType,
+      durationWeeks: data.durationWeeks.present
+          ? data.durationWeeks.value
+          : this.durationWeeks,
+      targetWeeklyVolume: data.targetWeeklyVolume.present
+          ? data.targetWeeklyVolume.value
+          : this.targetWeeklyVolume,
+      targetWeeklyDuration: data.targetWeeklyDuration.present
+          ? data.targetWeeklyDuration.value
+          : this.targetWeeklyDuration,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      description:
+          data.description.present ? data.description.value : this.description,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PhaseDTO(')
+          ..write('id: $id, ')
+          ..write('goalId: $goalId, ')
+          ..write('phaseNumber: $phaseNumber, ')
+          ..write('phaseType: $phaseType, ')
+          ..write('durationWeeks: $durationWeeks, ')
+          ..write('targetWeeklyVolume: $targetWeeklyVolume, ')
+          ..write('targetWeeklyDuration: $targetWeeklyDuration, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('description: $description')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      goalId,
+      phaseNumber,
+      phaseType,
+      durationWeeks,
+      targetWeeklyVolume,
+      targetWeeklyDuration,
+      startDate,
+      endDate,
+      description);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PhaseDTO &&
+          other.id == this.id &&
+          other.goalId == this.goalId &&
+          other.phaseNumber == this.phaseNumber &&
+          other.phaseType == this.phaseType &&
+          other.durationWeeks == this.durationWeeks &&
+          other.targetWeeklyVolume == this.targetWeeklyVolume &&
+          other.targetWeeklyDuration == this.targetWeeklyDuration &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.description == this.description);
+}
+
+class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
+  final Value<String> id;
+  final Value<int> goalId;
+  final Value<int> phaseNumber;
+  final Value<String> phaseType;
+  final Value<int> durationWeeks;
+  final Value<String> targetWeeklyVolume;
+  final Value<String> targetWeeklyDuration;
+  final Value<DateTime?> startDate;
+  final Value<DateTime?> endDate;
+  final Value<String?> description;
+  final Value<int> rowid;
+  const PhasesCompanion({
+    this.id = const Value.absent(),
+    this.goalId = const Value.absent(),
+    this.phaseNumber = const Value.absent(),
+    this.phaseType = const Value.absent(),
+    this.durationWeeks = const Value.absent(),
+    this.targetWeeklyVolume = const Value.absent(),
+    this.targetWeeklyDuration = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PhasesCompanion.insert({
+    required String id,
+    required int goalId,
+    required int phaseNumber,
+    required String phaseType,
+    required int durationWeeks,
+    required String targetWeeklyVolume,
+    required String targetWeeklyDuration,
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        goalId = Value(goalId),
+        phaseNumber = Value(phaseNumber),
+        phaseType = Value(phaseType),
+        durationWeeks = Value(durationWeeks),
+        targetWeeklyVolume = Value(targetWeeklyVolume),
+        targetWeeklyDuration = Value(targetWeeklyDuration);
+  static Insertable<PhaseDTO> custom({
+    Expression<String>? id,
+    Expression<int>? goalId,
+    Expression<int>? phaseNumber,
+    Expression<String>? phaseType,
+    Expression<int>? durationWeeks,
+    Expression<String>? targetWeeklyVolume,
+    Expression<String>? targetWeeklyDuration,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<String>? description,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (goalId != null) 'goal_id': goalId,
+      if (phaseNumber != null) 'phase_number': phaseNumber,
+      if (phaseType != null) 'phase_type': phaseType,
+      if (durationWeeks != null) 'duration_weeks': durationWeeks,
+      if (targetWeeklyVolume != null)
+        'target_weekly_volume': targetWeeklyVolume,
+      if (targetWeeklyDuration != null)
+        'target_weekly_duration': targetWeeklyDuration,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (description != null) 'description': description,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PhasesCompanion copyWith(
+      {Value<String>? id,
+      Value<int>? goalId,
+      Value<int>? phaseNumber,
+      Value<String>? phaseType,
+      Value<int>? durationWeeks,
+      Value<String>? targetWeeklyVolume,
+      Value<String>? targetWeeklyDuration,
+      Value<DateTime?>? startDate,
+      Value<DateTime?>? endDate,
+      Value<String?>? description,
+      Value<int>? rowid}) {
+    return PhasesCompanion(
+      id: id ?? this.id,
+      goalId: goalId ?? this.goalId,
+      phaseNumber: phaseNumber ?? this.phaseNumber,
+      phaseType: phaseType ?? this.phaseType,
+      durationWeeks: durationWeeks ?? this.durationWeeks,
+      targetWeeklyVolume: targetWeeklyVolume ?? this.targetWeeklyVolume,
+      targetWeeklyDuration: targetWeeklyDuration ?? this.targetWeeklyDuration,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      description: description ?? this.description,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (goalId.present) {
+      map['goal_id'] = Variable<int>(goalId.value);
+    }
+    if (phaseNumber.present) {
+      map['phase_number'] = Variable<int>(phaseNumber.value);
+    }
+    if (phaseType.present) {
+      map['phase_type'] = Variable<String>(phaseType.value);
+    }
+    if (durationWeeks.present) {
+      map['duration_weeks'] = Variable<int>(durationWeeks.value);
+    }
+    if (targetWeeklyVolume.present) {
+      map['target_weekly_volume'] = Variable<String>(targetWeeklyVolume.value);
+    }
+    if (targetWeeklyDuration.present) {
+      map['target_weekly_duration'] =
+          Variable<String>(targetWeeklyDuration.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PhasesCompanion(')
+          ..write('id: $id, ')
+          ..write('goalId: $goalId, ')
+          ..write('phaseNumber: $phaseNumber, ')
+          ..write('phaseType: $phaseType, ')
+          ..write('durationWeeks: $durationWeeks, ')
+          ..write('targetWeeklyVolume: $targetWeeklyVolume, ')
+          ..write('targetWeeklyDuration: $targetWeeklyDuration, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('description: $description, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TrainingBlocksTable extends TrainingBlocks
+    with TableInfo<$TrainingBlocksTable, TrainingBlockDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrainingBlocksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _phaseIdMeta =
+      const VerificationMeta('phaseId');
+  @override
+  late final GeneratedColumn<String> phaseId = GeneratedColumn<String>(
+      'phase_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _blockNumberMeta =
+      const VerificationMeta('blockNumber');
+  @override
+  late final GeneratedColumn<int> blockNumber = GeneratedColumn<int>(
+      'block_number', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _intentMeta = const VerificationMeta('intent');
+  @override
+  late final GeneratedColumn<String> intent = GeneratedColumn<String>(
+      'intent', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationDaysMeta =
+      const VerificationMeta('durationDays');
+  @override
+  late final GeneratedColumn<int> durationDays = GeneratedColumn<int>(
+      'duration_days', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, phaseId, blockNumber, intent, durationDays, startDate, endDate];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'training_blocks';
+  @override
+  VerificationContext validateIntegrity(Insertable<TrainingBlockDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('phase_id')) {
+      context.handle(_phaseIdMeta,
+          phaseId.isAcceptableOrUnknown(data['phase_id']!, _phaseIdMeta));
+    } else if (isInserting) {
+      context.missing(_phaseIdMeta);
+    }
+    if (data.containsKey('block_number')) {
+      context.handle(
+          _blockNumberMeta,
+          blockNumber.isAcceptableOrUnknown(
+              data['block_number']!, _blockNumberMeta));
+    } else if (isInserting) {
+      context.missing(_blockNumberMeta);
+    }
+    if (data.containsKey('intent')) {
+      context.handle(_intentMeta,
+          intent.isAcceptableOrUnknown(data['intent']!, _intentMeta));
+    } else if (isInserting) {
+      context.missing(_intentMeta);
+    }
+    if (data.containsKey('duration_days')) {
+      context.handle(
+          _durationDaysMeta,
+          durationDays.isAcceptableOrUnknown(
+              data['duration_days']!, _durationDaysMeta));
+    } else if (isInserting) {
+      context.missing(_durationDaysMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TrainingBlockDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TrainingBlockDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      phaseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_id'])!,
+      blockNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}block_number'])!,
+      intent: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}intent'])!,
+      durationDays: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration_days'])!,
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+    );
+  }
+
+  @override
+  $TrainingBlocksTable createAlias(String alias) {
+    return $TrainingBlocksTable(attachedDatabase, alias);
+  }
+}
+
+class TrainingBlockDTO extends DataClass
+    implements Insertable<TrainingBlockDTO> {
+  final String id;
+  final String phaseId;
+  final int blockNumber;
+  final String intent;
+  final int durationDays;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  const TrainingBlockDTO(
+      {required this.id,
+      required this.phaseId,
+      required this.blockNumber,
+      required this.intent,
+      required this.durationDays,
+      this.startDate,
+      this.endDate});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['phase_id'] = Variable<String>(phaseId);
+    map['block_number'] = Variable<int>(blockNumber);
+    map['intent'] = Variable<String>(intent);
+    map['duration_days'] = Variable<int>(durationDays);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime>(endDate);
+    }
+    return map;
+  }
+
+  TrainingBlocksCompanion toCompanion(bool nullToAbsent) {
+    return TrainingBlocksCompanion(
+      id: Value(id),
+      phaseId: Value(phaseId),
+      blockNumber: Value(blockNumber),
+      intent: Value(intent),
+      durationDays: Value(durationDays),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+    );
+  }
+
+  factory TrainingBlockDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TrainingBlockDTO(
+      id: serializer.fromJson<String>(json['id']),
+      phaseId: serializer.fromJson<String>(json['phaseId']),
+      blockNumber: serializer.fromJson<int>(json['blockNumber']),
+      intent: serializer.fromJson<String>(json['intent']),
+      durationDays: serializer.fromJson<int>(json['durationDays']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'phaseId': serializer.toJson<String>(phaseId),
+      'blockNumber': serializer.toJson<int>(blockNumber),
+      'intent': serializer.toJson<String>(intent),
+      'durationDays': serializer.toJson<int>(durationDays),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+    };
+  }
+
+  TrainingBlockDTO copyWith(
+          {String? id,
+          String? phaseId,
+          int? blockNumber,
+          String? intent,
+          int? durationDays,
+          Value<DateTime?> startDate = const Value.absent(),
+          Value<DateTime?> endDate = const Value.absent()}) =>
+      TrainingBlockDTO(
+        id: id ?? this.id,
+        phaseId: phaseId ?? this.phaseId,
+        blockNumber: blockNumber ?? this.blockNumber,
+        intent: intent ?? this.intent,
+        durationDays: durationDays ?? this.durationDays,
+        startDate: startDate.present ? startDate.value : this.startDate,
+        endDate: endDate.present ? endDate.value : this.endDate,
+      );
+  TrainingBlockDTO copyWithCompanion(TrainingBlocksCompanion data) {
+    return TrainingBlockDTO(
+      id: data.id.present ? data.id.value : this.id,
+      phaseId: data.phaseId.present ? data.phaseId.value : this.phaseId,
+      blockNumber:
+          data.blockNumber.present ? data.blockNumber.value : this.blockNumber,
+      intent: data.intent.present ? data.intent.value : this.intent,
+      durationDays: data.durationDays.present
+          ? data.durationDays.value
+          : this.durationDays,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingBlockDTO(')
+          ..write('id: $id, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockNumber: $blockNumber, ')
+          ..write('intent: $intent, ')
+          ..write('durationDays: $durationDays, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, phaseId, blockNumber, intent, durationDays, startDate, endDate);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TrainingBlockDTO &&
+          other.id == this.id &&
+          other.phaseId == this.phaseId &&
+          other.blockNumber == this.blockNumber &&
+          other.intent == this.intent &&
+          other.durationDays == this.durationDays &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate);
+}
+
+class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
+  final Value<String> id;
+  final Value<String> phaseId;
+  final Value<int> blockNumber;
+  final Value<String> intent;
+  final Value<int> durationDays;
+  final Value<DateTime?> startDate;
+  final Value<DateTime?> endDate;
+  final Value<int> rowid;
+  const TrainingBlocksCompanion({
+    this.id = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockNumber = const Value.absent(),
+    this.intent = const Value.absent(),
+    this.durationDays = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TrainingBlocksCompanion.insert({
+    required String id,
+    required String phaseId,
+    required int blockNumber,
+    required String intent,
+    required int durationDays,
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        phaseId = Value(phaseId),
+        blockNumber = Value(blockNumber),
+        intent = Value(intent),
+        durationDays = Value(durationDays);
+  static Insertable<TrainingBlockDTO> custom({
+    Expression<String>? id,
+    Expression<String>? phaseId,
+    Expression<int>? blockNumber,
+    Expression<String>? intent,
+    Expression<int>? durationDays,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (phaseId != null) 'phase_id': phaseId,
+      if (blockNumber != null) 'block_number': blockNumber,
+      if (intent != null) 'intent': intent,
+      if (durationDays != null) 'duration_days': durationDays,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TrainingBlocksCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? phaseId,
+      Value<int>? blockNumber,
+      Value<String>? intent,
+      Value<int>? durationDays,
+      Value<DateTime?>? startDate,
+      Value<DateTime?>? endDate,
+      Value<int>? rowid}) {
+    return TrainingBlocksCompanion(
+      id: id ?? this.id,
+      phaseId: phaseId ?? this.phaseId,
+      blockNumber: blockNumber ?? this.blockNumber,
+      intent: intent ?? this.intent,
+      durationDays: durationDays ?? this.durationDays,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (phaseId.present) {
+      map['phase_id'] = Variable<String>(phaseId.value);
+    }
+    if (blockNumber.present) {
+      map['block_number'] = Variable<int>(blockNumber.value);
+    }
+    if (intent.present) {
+      map['intent'] = Variable<String>(intent.value);
+    }
+    if (durationDays.present) {
+      map['duration_days'] = Variable<int>(durationDays.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingBlocksCompanion(')
+          ..write('id: $id, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockNumber: $blockNumber, ')
+          ..write('intent: $intent, ')
+          ..write('durationDays: $durationDays, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -3935,12 +4859,16 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MediumTermContextTable mediumTermContext =
       $MediumTermContextTable(this);
   late final $WorkoutsTable workouts = $WorkoutsTable(this);
+  late final $PhasesTable phases = $PhasesTable(this);
+  late final $TrainingBlocksTable trainingBlocks = $TrainingBlocksTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final ConversationDao conversationDao =
       ConversationDao(this as AppDatabase);
   late final ContextDao contextDao = ContextDao(this as AppDatabase);
   late final WorkoutDao workoutDao = WorkoutDao(this as AppDatabase);
+  late final TrainingPlanDao trainingPlanDao =
+      TrainingPlanDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3952,7 +4880,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         conversationMessages,
         longTermContext,
         mediumTermContext,
-        workouts
+        workouts,
+        phases,
+        trainingBlocks
       ];
 }
 
@@ -6469,8 +7399,8 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   required String id,
   required int userId,
   required int goalId,
-  Value<String?> mesocycleId,
-  Value<String?> microcycleId,
+  Value<String?> phaseId,
+  Value<String?> blockId,
   required DateTime scheduledDate,
   required String type,
   required String name,
@@ -6490,8 +7420,8 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<String> id,
   Value<int> userId,
   Value<int> goalId,
-  Value<String?> mesocycleId,
-  Value<String?> microcycleId,
+  Value<String?> phaseId,
+  Value<String?> blockId,
   Value<DateTime> scheduledDate,
   Value<String> type,
   Value<String> name,
@@ -6526,11 +7456,11 @@ class $$WorkoutsTableFilterComposer
   ColumnFilters<int> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get blockId => $composableBuilder(
+      column: $table.blockId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate, builder: (column) => ColumnFilters(column));
@@ -6594,12 +7524,11 @@ class $$WorkoutsTableOrderingComposer
   ColumnOrderings<int> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get blockId => $composableBuilder(
+      column: $table.blockId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate,
@@ -6664,11 +7593,11 @@ class $$WorkoutsTableAnnotationComposer
   GeneratedColumn<int> get goalId =>
       $composableBuilder(column: $table.goalId, builder: (column) => column);
 
-  GeneratedColumn<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => column);
+  GeneratedColumn<String> get phaseId =>
+      $composableBuilder(column: $table.phaseId, builder: (column) => column);
 
-  GeneratedColumn<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId, builder: (column) => column);
+  GeneratedColumn<String> get blockId =>
+      $composableBuilder(column: $table.blockId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate, builder: (column) => column);
@@ -6736,8 +7665,8 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<int> userId = const Value.absent(),
             Value<int> goalId = const Value.absent(),
-            Value<String?> mesocycleId = const Value.absent(),
-            Value<String?> microcycleId = const Value.absent(),
+            Value<String?> phaseId = const Value.absent(),
+            Value<String?> blockId = const Value.absent(),
             Value<DateTime> scheduledDate = const Value.absent(),
             Value<String> type = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -6757,8 +7686,8 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             id: id,
             userId: userId,
             goalId: goalId,
-            mesocycleId: mesocycleId,
-            microcycleId: microcycleId,
+            phaseId: phaseId,
+            blockId: blockId,
             scheduledDate: scheduledDate,
             type: type,
             name: name,
@@ -6778,8 +7707,8 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             required String id,
             required int userId,
             required int goalId,
-            Value<String?> mesocycleId = const Value.absent(),
-            Value<String?> microcycleId = const Value.absent(),
+            Value<String?> phaseId = const Value.absent(),
+            Value<String?> blockId = const Value.absent(),
             required DateTime scheduledDate,
             required String type,
             required String name,
@@ -6799,8 +7728,8 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             id: id,
             userId: userId,
             goalId: goalId,
-            mesocycleId: mesocycleId,
-            microcycleId: microcycleId,
+            phaseId: phaseId,
+            blockId: blockId,
             scheduledDate: scheduledDate,
             type: type,
             name: name,
@@ -6835,6 +7764,456 @@ typedef $$WorkoutsTableProcessedTableManager = ProcessedTableManager<
     (WorkoutDTO, BaseReferences<_$AppDatabase, $WorkoutsTable, WorkoutDTO>),
     WorkoutDTO,
     PrefetchHooks Function()>;
+typedef $$PhasesTableCreateCompanionBuilder = PhasesCompanion Function({
+  required String id,
+  required int goalId,
+  required int phaseNumber,
+  required String phaseType,
+  required int durationWeeks,
+  required String targetWeeklyVolume,
+  required String targetWeeklyDuration,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<String?> description,
+  Value<int> rowid,
+});
+typedef $$PhasesTableUpdateCompanionBuilder = PhasesCompanion Function({
+  Value<String> id,
+  Value<int> goalId,
+  Value<int> phaseNumber,
+  Value<String> phaseType,
+  Value<int> durationWeeks,
+  Value<String> targetWeeklyVolume,
+  Value<String> targetWeeklyDuration,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<String?> description,
+  Value<int> rowid,
+});
+
+class $$PhasesTableFilterComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get goalId => $composableBuilder(
+      column: $table.goalId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get phaseType => $composableBuilder(
+      column: $table.phaseType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+}
+
+class $$PhasesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get goalId => $composableBuilder(
+      column: $table.goalId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get phaseType => $composableBuilder(
+      column: $table.phaseType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+}
+
+class $$PhasesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get goalId =>
+      $composableBuilder(column: $table.goalId, builder: (column) => column);
+
+  GeneratedColumn<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get phaseType =>
+      $composableBuilder(column: $table.phaseType, builder: (column) => column);
+
+  GeneratedColumn<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks, builder: (column) => column);
+
+  GeneratedColumn<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume, builder: (column) => column);
+
+  GeneratedColumn<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+}
+
+class $$PhasesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhasesTable,
+    PhaseDTO,
+    $$PhasesTableFilterComposer,
+    $$PhasesTableOrderingComposer,
+    $$PhasesTableAnnotationComposer,
+    $$PhasesTableCreateCompanionBuilder,
+    $$PhasesTableUpdateCompanionBuilder,
+    (PhaseDTO, BaseReferences<_$AppDatabase, $PhasesTable, PhaseDTO>),
+    PhaseDTO,
+    PrefetchHooks Function()> {
+  $$PhasesTableTableManager(_$AppDatabase db, $PhasesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PhasesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PhasesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PhasesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<int> goalId = const Value.absent(),
+            Value<int> phaseNumber = const Value.absent(),
+            Value<String> phaseType = const Value.absent(),
+            Value<int> durationWeeks = const Value.absent(),
+            Value<String> targetWeeklyVolume = const Value.absent(),
+            Value<String> targetWeeklyDuration = const Value.absent(),
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhasesCompanion(
+            id: id,
+            goalId: goalId,
+            phaseNumber: phaseNumber,
+            phaseType: phaseType,
+            durationWeeks: durationWeeks,
+            targetWeeklyVolume: targetWeeklyVolume,
+            targetWeeklyDuration: targetWeeklyDuration,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required int goalId,
+            required int phaseNumber,
+            required String phaseType,
+            required int durationWeeks,
+            required String targetWeeklyVolume,
+            required String targetWeeklyDuration,
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhasesCompanion.insert(
+            id: id,
+            goalId: goalId,
+            phaseNumber: phaseNumber,
+            phaseType: phaseType,
+            durationWeeks: durationWeeks,
+            targetWeeklyVolume: targetWeeklyVolume,
+            targetWeeklyDuration: targetWeeklyDuration,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PhasesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PhasesTable,
+    PhaseDTO,
+    $$PhasesTableFilterComposer,
+    $$PhasesTableOrderingComposer,
+    $$PhasesTableAnnotationComposer,
+    $$PhasesTableCreateCompanionBuilder,
+    $$PhasesTableUpdateCompanionBuilder,
+    (PhaseDTO, BaseReferences<_$AppDatabase, $PhasesTable, PhaseDTO>),
+    PhaseDTO,
+    PrefetchHooks Function()>;
+typedef $$TrainingBlocksTableCreateCompanionBuilder = TrainingBlocksCompanion
+    Function({
+  required String id,
+  required String phaseId,
+  required int blockNumber,
+  required String intent,
+  required int durationDays,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<int> rowid,
+});
+typedef $$TrainingBlocksTableUpdateCompanionBuilder = TrainingBlocksCompanion
+    Function({
+  Value<String> id,
+  Value<String> phaseId,
+  Value<int> blockNumber,
+  Value<String> intent,
+  Value<int> durationDays,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<int> rowid,
+});
+
+class $$TrainingBlocksTableFilterComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get intent => $composableBuilder(
+      column: $table.intent, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get durationDays => $composableBuilder(
+      column: $table.durationDays, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+}
+
+class $$TrainingBlocksTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get intent => $composableBuilder(
+      column: $table.intent, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get durationDays => $composableBuilder(
+      column: $table.durationDays,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TrainingBlocksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get phaseId =>
+      $composableBuilder(column: $table.phaseId, builder: (column) => column);
+
+  GeneratedColumn<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get intent =>
+      $composableBuilder(column: $table.intent, builder: (column) => column);
+
+  GeneratedColumn<int> get durationDays => $composableBuilder(
+      column: $table.durationDays, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+}
+
+class $$TrainingBlocksTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TrainingBlocksTable,
+    TrainingBlockDTO,
+    $$TrainingBlocksTableFilterComposer,
+    $$TrainingBlocksTableOrderingComposer,
+    $$TrainingBlocksTableAnnotationComposer,
+    $$TrainingBlocksTableCreateCompanionBuilder,
+    $$TrainingBlocksTableUpdateCompanionBuilder,
+    (
+      TrainingBlockDTO,
+      BaseReferences<_$AppDatabase, $TrainingBlocksTable, TrainingBlockDTO>
+    ),
+    TrainingBlockDTO,
+    PrefetchHooks Function()> {
+  $$TrainingBlocksTableTableManager(
+      _$AppDatabase db, $TrainingBlocksTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrainingBlocksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrainingBlocksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TrainingBlocksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> phaseId = const Value.absent(),
+            Value<int> blockNumber = const Value.absent(),
+            Value<String> intent = const Value.absent(),
+            Value<int> durationDays = const Value.absent(),
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TrainingBlocksCompanion(
+            id: id,
+            phaseId: phaseId,
+            blockNumber: blockNumber,
+            intent: intent,
+            durationDays: durationDays,
+            startDate: startDate,
+            endDate: endDate,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String phaseId,
+            required int blockNumber,
+            required String intent,
+            required int durationDays,
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TrainingBlocksCompanion.insert(
+            id: id,
+            phaseId: phaseId,
+            blockNumber: blockNumber,
+            intent: intent,
+            durationDays: durationDays,
+            startDate: startDate,
+            endDate: endDate,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TrainingBlocksTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TrainingBlocksTable,
+    TrainingBlockDTO,
+    $$TrainingBlocksTableFilterComposer,
+    $$TrainingBlocksTableOrderingComposer,
+    $$TrainingBlocksTableAnnotationComposer,
+    $$TrainingBlocksTableCreateCompanionBuilder,
+    $$TrainingBlocksTableUpdateCompanionBuilder,
+    (
+      TrainingBlockDTO,
+      BaseReferences<_$AppDatabase, $TrainingBlocksTable, TrainingBlockDTO>
+    ),
+    TrainingBlockDTO,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6853,4 +8232,8 @@ class $AppDatabaseManager {
       $$MediumTermContextTableTableManager(_db, _db.mediumTermContext);
   $$WorkoutsTableTableManager get workouts =>
       $$WorkoutsTableTableManager(_db, _db.workouts);
+  $$PhasesTableTableManager get phases =>
+      $$PhasesTableTableManager(_db, _db.phases);
+  $$TrainingBlocksTableTableManager get trainingBlocks =>
+      $$TrainingBlocksTableTableManager(_db, _db.trainingBlocks);
 }

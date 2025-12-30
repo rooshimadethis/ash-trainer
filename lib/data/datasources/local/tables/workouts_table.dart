@@ -9,8 +9,8 @@ class Workouts extends Table {
   IntColumn get userId => integer()();
   IntColumn get goalId => integer()();
 
-  TextColumn get mesocycleId => text().nullable()();
-  TextColumn get microcycleId => text().nullable()();
+  TextColumn get phaseId => text().nullable()();
+  TextColumn get blockId => text().nullable()();
 
   DateTimeColumn get scheduledDate => dateTime()();
   TextColumn get type => text()(); // 'easy_run', etc.

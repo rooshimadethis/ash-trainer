@@ -5,6 +5,7 @@ import '../../application/usecases/build_plan_generation_context.dart';
 import '../../application/usecases/generate_training_plan.dart';
 import '../../application/usecases/reschedule_workouts.dart';
 import '../../application/usecases/adjust_workout.dart';
+import '../../../../core/utils/training_plan_scheduler.dart';
 
 final buildPlanGenerationContextProvider =
     Provider<BuildPlanGenerationContext>((ref) {
@@ -20,6 +21,7 @@ final generateTrainingPlanProvider = Provider<GenerateTrainingPlan>((ref) {
     ref.watch(buildPlanGenerationContextProvider),
     ref.watch(aiServiceProvider),
     ref.watch(workoutRepositoryProvider),
+    TrainingPlanScheduler(),
   );
 });
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../infrastructure/services/ai_service.dart';
 import '../../../shared/domain/entities/ai/context_models.dart';
+import '../../../../core/constants/ai_schemas.dart';
 import 'dart:convert';
 
 class AITestScreen extends ConsumerStatefulWidget {
@@ -72,7 +73,7 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
         systemPrompt: 'You are an expert running coach.',
         taskPrompt:
             'Generate a $_goalWeeks week training plan for a $_experienceLevel runner training for $_goalTarget.',
-        responseSchema: _getSchema(),
+        responseSchema: AISchemas.trainingPlan,
       );
 
       final prettyOutput =
@@ -113,66 +114,6 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
     }
   }
 
-  Map<String, dynamic> _getSchema() {
-    return {
-      "type": "object",
-      "properties": {
-        "mesocycles": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {"type": "string"},
-              "name": {"type": "string"},
-              "startDate": {"type": "string"},
-              "endDate": {"type": "string"},
-              "emphasis": {"type": "string"}
-            }
-          }
-        },
-        "microcycles": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {"type": "string"},
-              "weekNumber": {"type": "integer"},
-              "startDate": {"type": "string"},
-              "endDate": {"type": "string"},
-              "emphasis": {"type": "string"}
-            }
-          }
-        },
-        "workouts": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "id": {"type": "string"},
-              "userId": {"type": "string"},
-              "goalId": {"type": "string"},
-              "scheduledDate": {"type": "string"},
-              "type": {"type": "string"},
-              "name": {"type": "string"},
-              "plannedDuration": {"type": "integer"}, // seconds
-              "plannedDistance": {"type": "number"}, // km
-              "status": {"type": "string"}
-            }
-          }
-        },
-        "rationale": {
-          "type": "object",
-          "properties": {
-            "overallApproach": {"type": "string"},
-            "intensityDistribution": {"type": "string"},
-            "keyWorkouts": {"type": "string"},
-            "recoveryStrategy": {"type": "string"}
-          }
-        }
-      }
-    };
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -205,7 +146,7 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                       onSaved: (v) => _gender = v!,
                     ),
                     DropdownButtonFormField<String>(
-                      value: _experienceLevel,
+                      initialValue: _experienceLevel,
                       decoration:
                           const InputDecoration(labelText: 'Experience'),
                       items: const [
@@ -231,7 +172,7 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                             fontSize: 18, fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     DropdownButtonFormField<String>(
-                      value: _goalType,
+                      initialValue: _goalType,
                       decoration: const InputDecoration(labelText: 'Goal Type'),
                       items: const [
                         DropdownMenuItem(
