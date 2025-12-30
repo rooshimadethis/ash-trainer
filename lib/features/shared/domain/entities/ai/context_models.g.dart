@@ -170,6 +170,7 @@ Map<String, dynamic> _$$MediumTermContextImplToJson(
 _$ShortTermContextImpl _$$ShortTermContextImplFromJson(
         Map<String, dynamic> json) =>
     _$ShortTermContextImpl(
+      currentDate: DateTime.parse(json['currentDate'] as String),
       todayWorkout: json['todayWorkout'] == null
           ? null
           : WorkoutSummary.fromJson(
@@ -188,6 +189,7 @@ _$ShortTermContextImpl _$$ShortTermContextImplFromJson(
 Map<String, dynamic> _$$ShortTermContextImplToJson(
         _$ShortTermContextImpl instance) =>
     <String, dynamic>{
+      'currentDate': instance.currentDate.toIso8601String(),
       'todayWorkout': instance.todayWorkout,
       'next7Days': instance.next7Days,
       'conversationHistory': instance.conversationHistory,

@@ -1972,6 +1972,7 @@ ShortTermContext _$ShortTermContextFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ShortTermContext {
+  DateTime get currentDate => throw _privateConstructorUsedError;
   WorkoutSummary? get todayWorkout => throw _privateConstructorUsedError;
   List<WorkoutSummary> get next7Days => throw _privateConstructorUsedError;
   List<ConversationMessage> get conversationHistory =>
@@ -1997,7 +1998,8 @@ abstract class $ShortTermContextCopyWith<$Res> {
       _$ShortTermContextCopyWithImpl<$Res, ShortTermContext>;
   @useResult
   $Res call(
-      {WorkoutSummary? todayWorkout,
+      {DateTime currentDate,
+      WorkoutSummary? todayWorkout,
       List<WorkoutSummary> next7Days,
       List<ConversationMessage> conversationHistory,
       int? currentPainLevel,
@@ -2022,6 +2024,7 @@ class _$ShortTermContextCopyWithImpl<$Res, $Val extends ShortTermContext>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? currentDate = null,
     Object? todayWorkout = freezed,
     Object? next7Days = null,
     Object? conversationHistory = null,
@@ -2030,6 +2033,10 @@ class _$ShortTermContextCopyWithImpl<$Res, $Val extends ShortTermContext>
     Object? weather = freezed,
   }) {
     return _then(_value.copyWith(
+      currentDate: null == currentDate
+          ? _value.currentDate
+          : currentDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       todayWorkout: freezed == todayWorkout
           ? _value.todayWorkout
           : todayWorkout // ignore: cast_nullable_to_non_nullable
@@ -2081,7 +2088,8 @@ abstract class _$$ShortTermContextImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {WorkoutSummary? todayWorkout,
+      {DateTime currentDate,
+      WorkoutSummary? todayWorkout,
       List<WorkoutSummary> next7Days,
       List<ConversationMessage> conversationHistory,
       int? currentPainLevel,
@@ -2105,6 +2113,7 @@ class __$$ShortTermContextImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? currentDate = null,
     Object? todayWorkout = freezed,
     Object? next7Days = null,
     Object? conversationHistory = null,
@@ -2113,6 +2122,10 @@ class __$$ShortTermContextImplCopyWithImpl<$Res>
     Object? weather = freezed,
   }) {
     return _then(_$ShortTermContextImpl(
+      currentDate: null == currentDate
+          ? _value.currentDate
+          : currentDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
       todayWorkout: freezed == todayWorkout
           ? _value.todayWorkout
           : todayWorkout // ignore: cast_nullable_to_non_nullable
@@ -2145,7 +2158,8 @@ class __$$ShortTermContextImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ShortTermContextImpl implements _ShortTermContext {
   const _$ShortTermContextImpl(
-      {this.todayWorkout,
+      {required this.currentDate,
+      this.todayWorkout,
       required final List<WorkoutSummary> next7Days,
       required final List<ConversationMessage> conversationHistory,
       this.currentPainLevel,
@@ -2157,6 +2171,8 @@ class _$ShortTermContextImpl implements _ShortTermContext {
   factory _$ShortTermContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$ShortTermContextImplFromJson(json);
 
+  @override
+  final DateTime currentDate;
   @override
   final WorkoutSummary? todayWorkout;
   final List<WorkoutSummary> _next7Days;
@@ -2185,7 +2201,7 @@ class _$ShortTermContextImpl implements _ShortTermContext {
 
   @override
   String toString() {
-    return 'ShortTermContext(todayWorkout: $todayWorkout, next7Days: $next7Days, conversationHistory: $conversationHistory, currentPainLevel: $currentPainLevel, sleepQuality: $sleepQuality, weather: $weather)';
+    return 'ShortTermContext(currentDate: $currentDate, todayWorkout: $todayWorkout, next7Days: $next7Days, conversationHistory: $conversationHistory, currentPainLevel: $currentPainLevel, sleepQuality: $sleepQuality, weather: $weather)';
   }
 
   @override
@@ -2193,6 +2209,8 @@ class _$ShortTermContextImpl implements _ShortTermContext {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ShortTermContextImpl &&
+            (identical(other.currentDate, currentDate) ||
+                other.currentDate == currentDate) &&
             (identical(other.todayWorkout, todayWorkout) ||
                 other.todayWorkout == todayWorkout) &&
             const DeepCollectionEquality()
@@ -2210,6 +2228,7 @@ class _$ShortTermContextImpl implements _ShortTermContext {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      currentDate,
       todayWorkout,
       const DeepCollectionEquality().hash(_next7Days),
       const DeepCollectionEquality().hash(_conversationHistory),
@@ -2236,7 +2255,8 @@ class _$ShortTermContextImpl implements _ShortTermContext {
 
 abstract class _ShortTermContext implements ShortTermContext {
   const factory _ShortTermContext(
-      {final WorkoutSummary? todayWorkout,
+      {required final DateTime currentDate,
+      final WorkoutSummary? todayWorkout,
       required final List<WorkoutSummary> next7Days,
       required final List<ConversationMessage> conversationHistory,
       final int? currentPainLevel,
@@ -2246,6 +2266,8 @@ abstract class _ShortTermContext implements ShortTermContext {
   factory _ShortTermContext.fromJson(Map<String, dynamic> json) =
       _$ShortTermContextImpl.fromJson;
 
+  @override
+  DateTime get currentDate;
   @override
   WorkoutSummary? get todayWorkout;
   @override

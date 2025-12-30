@@ -110,6 +110,7 @@ class MediumTermContext with _$MediumTermContext {
 @freezed
 class ShortTermContext with _$ShortTermContext {
   const factory ShortTermContext({
+    required DateTime currentDate,
     WorkoutSummary? todayWorkout,
     required List<WorkoutSummary> next7Days,
     required List<ConversationMessage> conversationHistory,

@@ -130,6 +130,7 @@ class BuildCoachingChatContext {
     );
 
     return ShortTermContext(
+      currentDate: now,
       todayWorkout: todayWorkoutSummary,
       next7Days: upcomingWorkouts.map((w) => _toSummary(w)).toList(),
       conversationHistory: messages.reversed.toList(),
