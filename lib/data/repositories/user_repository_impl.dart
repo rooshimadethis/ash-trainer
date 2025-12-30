@@ -10,20 +10,26 @@ class UserRepositoryImpl implements UserRepository {
 
   @override
   Future<User> createUser(User user) async {
-    // Phase 1: Single user, ID 1.
-    // If we were creating a NEW user, we'd use auto-increment, but for logic consistency
-    // we'll assume the user being passed in might not have a valid ID yet.
-    // However, clean architecture says Domain entities should have IDs.
-    // We can ignore the ID in the entity and let the DB assign it, then return a new Entity with the DB ID.
+    // Phase 1: Single user enforcement.
+    // Check if a user already exists.
+    final existingUserDTO = await _dao.getUser();
 
-    // For now, let's map it to a companion without ID (or absent ID)
-    // The mapper handles JSON serialization
+    if (existingUserDTO != null) {
+      // Update the existing user instead of creating a new one.
+      // We must preserve the existing ID.
+      // We generally want to preserve the original createdAt as well.
+      final userToUpdate = user.copyWith(
+        id: existingUserDTO.id.toString(),
+        createdAt: existingUserDTO.createdAt,
+        updatedAt: DateTime.now(),
+      );
 
-    // But wait, user_mapper.dart defined `toDTO` and `toCompanion`.
-    // `toDTO` returns a full object which might need all fields.
-    // Let's us the companion approach for inserts to be safe with auto-increments.
+      await updateUser(userToUpdate);
+      return userToUpdate;
+    }
+
+    // No user exists, proceed with creation.
     final companion = user.toCompanion();
-
     await _dao.insertUser(companion);
 
     // Fetch the fresh user

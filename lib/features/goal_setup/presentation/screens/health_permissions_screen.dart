@@ -59,15 +59,39 @@ class HealthPermissionsScreen extends ConsumerWidget {
             bottom: 0,
             left: 0,
             right: 0,
-            child: OnboardingNavigation(
-              nextLabel: 'Connect Health',
-              onNext: () {
-                ref.read(goalSetupProvider.notifier).setHealthPermissions(true);
-                _next(context, ref);
-              },
-              onBack: () {
-                Navigator.of(context).pop();
-              },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    ref
+                        .read(goalSetupProvider.notifier)
+                        .setHealthPermissions(false);
+                    _next(context, ref);
+                  },
+                  child: Text(
+                    'Skip for now',
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                OnboardingNavigation(
+                  nextLabel: 'Connect Health',
+                  onNext: () async {
+                    await ref
+                        .read(goalSetupProvider.notifier)
+                        .requestHealthPermissions();
+                    if (context.mounted) {
+                      _next(context, ref);
+                    }
+                  },
+                  onBack: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
             ),
           ),
         ],

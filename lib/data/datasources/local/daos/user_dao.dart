@@ -10,7 +10,7 @@ class UserDao extends DatabaseAccessor<AppDatabase> with _$UserDaoMixin {
 
   /* Mapping for JSON conversion done in repository - this just does data access */
 
-  Future<UserDTO?> getUser() => select(users).getSingleOrNull();
+  Future<UserDTO?> getUser() => (select(users)..limit(1)).getSingleOrNull();
 
   Future<void> insertUser(Insertable<UserDTO> user) => into(users).insert(user);
 

@@ -55,6 +55,26 @@ Users can access their data from multiple devices:
 - **Account Verification**: Email verification on signup
 - **Two-Factor Authentication** (Future): Optional 2FA for enhanced security
 
+### User Session Cycle & Credentials
+- **Local-First (Phase 1)**: 
+    - Single implicit user (ID: 1).
+    - No login/logout functionality.
+    - "New User" or "Reset" requires wiping local database.
+- **Cloud Transition (Phase 2+)**:
+    - **Sign Up/Login**: 
+        - Hybrid flow: Local data is preserved and associated with the new account.
+        - Authenticates with cloud provider typically via OAuth (Google/Apple) or Email.
+        - Returns Auth Token (JWT) -> Stored in device Secure Storage.
+    - **Data Migration**: 
+        - Upon first sign-up, any existing local "guest" data is automatically uploaded to the cloud.
+    - **Logout**: 
+        - Auth Token removed from Secure Storage.
+        - **Critical**: Local database (Drift) is **wiped** to ensure privacy.
+        - App state resets to "Onboarding/Welcome".
+    - **Account Switching**: 
+        - Equivalent to Logout -> Login.
+        - Wipes previous user's local data -> Syncs new user's data from cloud.
+
 ---
 
 ## 4. Data Backup & Export

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../features/shared/domain/entities/goal.dart';
 import '../../../../features/shared/domain/entities/user.dart';
 import '../../../../data/providers/repository_providers.dart';
+import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../core/utils/logger.dart';
 
 // State for the Goal Setup flow
@@ -183,6 +184,12 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
       maintenanceDuration: duration,
       endDate: end,
     );
+  }
+
+  Future<void> requestHealthPermissions() async {
+    final healthService = ref.read(healthServiceProvider);
+    final granted = await healthService.requestPermissions();
+    state = state.copyWith(healthPermissionsGranted: granted);
   }
 
   void setHealthPermissions(bool granted) {
