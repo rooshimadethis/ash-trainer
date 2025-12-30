@@ -18,12 +18,12 @@ Ash provides tailored running training strategies based on your goal type. Each 
 *   **Base Phase:** 6-8 weeks of pure aerobic building
 *   **Distance Familiarization:** Practice runs at 80-90% of goal distance
 *   **Minimal Taper:** 7-10 days, 20-30% volume reduction
-*   **Recovery Weeks:** Every 3-4 weeks, reduce volume by 30%
+*   **Recovery Blocks:** Every 3-4 weeks, reduce volume by 20-30% (Recovery Intent)
 
-### Success Metrics
-*   Completing weekly long run
-*   Increasing total weekly running time
-*   Injury-free progression
+### Key Workouts
+*   **Long Runs**: Gradual duration progression
+*   **Easy Aerobic Runs**: Frequency and volume building
+*   **Strides**: Light pickups for neuromuscular variety
 
 ---
 
@@ -36,7 +36,7 @@ Ash provides tailored running training strategies based on your goal type. Each 
 | Aspect | Detail |
 |--------|--------|
 | **Training Style** | **Distance-based**: "6 × 400m intervals" (specific targets) |
-| **Intensity Distribution** | **Polarized (80/20)**: 80% Easy, 20% Hard (Zone 4/5). Minimal "moderate" junk miles. |
+| **Intensity Distribution** | **Hybrid**: Defaults to **Pyramidal** (70-80% Easy) but shifts to **Polarized** if user volume exceeds 40km/week. |
 | **Flexibility** | **Medium**: Key workouts (Intervals/Tempo) are critical. |
 
 ### Phase Structure
@@ -45,9 +45,11 @@ Ash provides tailored running training strategies based on your goal type. Each 
 *   **Peak (2-3 wks):** Highest volume + intensity
 *   **Taper (1-2 wks):** Reduce volume 40-50%, maintain intensity
 
-### Success Metrics
-*   Pace improvements in monthly time trials
-*   Ability to sustain goal pace for longer durations
+### Key Workouts
+*   **Intervals**: Goal race pace repeats (400m-1k)
+*   **Tempo Runs**: Sustained lactate threshold efforts
+*   **Hill Repeats**: Power and economy building
+*   **Time Trials**: Monthly benchmark testing
 
 ---
 
@@ -71,10 +73,17 @@ Ash provides tailored running training strategies based on your goal type. Each 
 | **Half Marathon** | 2 weeks | -30% W1, -50% W2 |
 | **Marathon** | 3 weeks | -20% W1, -40% W2, -60% W3 |
 
-### Success Metrics
-*   Hitting target paces in key workouts
-*   Completing peak weeks without injury
-*   Arriving at race day fresh and confident
+### Key Workouts
+*   **Race Simulation**: Long runs with goal pace segments
+*   **Fueling Practice**: 45-60 min fueling intervals during long runs
+*   **Tune-Up Races**: Mini-tapered benchmark events
+
+### Post-Race Recovery
+Ash prescribes a mandatory recovery period after a Goal Race to ensure long-term health:
+*   **5K**: 3-5 days easy/rest
+*   **10K**: 5-7 days easy/rest
+*   **Half Marathon**: 1-2 weeks reduced volume
+*   **Marathon**: 2-4 weeks recovery (Active Recovery phase)
 
 ---
 
@@ -104,34 +113,67 @@ Ash provides tailored running training strategies based on your goal type. Each 
 
 ## Workout Types
 
+All workouts are prescribed using **Rate of Perceived Exertion (RPE)** on a scale of 1-10.
+
 ### Easy Runs
 *   **Purpose**: Aerobic base building, recovery
-*   **Intensity**: Zone 1-2, conversational pace
+*   **Intensity**: RPE 3-4 (Conversational pace)
 *   **Frequency**: 60-80% of weekly runs
 
 ### Long Runs
 *   **Purpose**: Endurance, mental toughness
-*   **Intensity**: Zone 2, comfortable pace
+*   **Intensity**: RPE 4-5 (Comfortable, sustained effort)
 *   **Frequency**: Once per week
 *   **Duration**: 20-30% of weekly volume
 
 ### Tempo Runs
 *   **Purpose**: Lactate threshold improvement
-*   **Intensity**: Zone 3-4, "comfortably hard"
+*   **Intensity**: RPE 6-7 ("Comfortably hard")
 *   **Frequency**: Once per week (performance goals)
-*   **Duration**: 20-40 minutes at tempo pace
+*   **Duration**: 20-40 minutes at tempo effort
 
 ### Intervals
 *   **Purpose**: VO2 max improvement, speed
-*   **Intensity**: Zone 4-5, hard effort
+*   **Intensity**: RPE 8-10 (Very hard to maximum effort)
 *   **Frequency**: Once per week (performance goals)
-*   **Structure**: 400m-1600m repeats with recovery
+*   **Structure**: 400m-1600m repeats with active recovery
 
 ### Hills
 *   **Purpose**: Strength, power, running economy
-*   **Intensity**: Zone 4-5, hard effort
+*   **Intensity**: RPE 8-9 (Hard effort)
 *   **Frequency**: Every 2-3 weeks
 *   **Structure**: 6-10 hill repeats (30-90 seconds)
+
+### Pillar Coordination
+Ash balances running, strength, and mobility based on your priority.
+
+| Goal Type | Running Priority | Strength Priority | Mobility Priority |
+|-----------|------------------|-------------------|-------------------|
+| Distance Milestone | High | Medium | Medium |
+| Time Performance | High | Medium-High | Medium |
+| Event (Race) | High | Medium (reduce in taper) | High (increase in taper) |
+| Maintenance | Medium | High | High |
+
+---
+
+## 5. Protocols & Edge Cases
+
+### Missed Workouts
+*   **Distance Milestone**: Skip entirely. Consistency > Perfection.
+*   **Time Performance**: Reschedule key workouts if fresh; skip easy runs. Never double up.
+*   **Event (Race)**: Skip in Base; Attempt light version in Build/Peak if 48h to next hard session.
+*   **Maintenance**: Flexible - skip without guilt.
+
+### Return-to-Training Coefficients
+Applied to the first block back after a break to ensure a safe return.
+
+| Duration of Break | First Block Volume | Progression Logic |
+|-------------------|-------------------|-------------------|
+| **<3 days** | 100% | Resume as planned (Minor Slide). |
+| **1 week** | 75-80% | 3-day recovery ramp before resuming intensity. |
+| **2 weeks** | 50-60% | 1 full week of "Base" building volume. |
+| **4+ weeks** | 40-50% | Scrutinize goal (Honesty Protocol). |
+| **2+ months** | 25-30% | Restart from Week 1 of Base Phase. |
 
 ## 🛠️ Technical Logic
 
