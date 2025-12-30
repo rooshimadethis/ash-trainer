@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../features/training/presentation/providers/use_case_providers.dart';
 import '../../../../features/shared/domain/entities/goal.dart';
 import '../../../../features/shared/domain/entities/user.dart';
 import '../../../../data/providers/repository_providers.dart';
@@ -257,9 +258,14 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
         confidence: 85.0, // Per specs
       );
 
-      await goalRepo.createGoal(newGoal);
+      final createdGoal = await goalRepo.createGoal(newGoal);
 
-      // TODO: Trigger plan generation via AI Service
+      // Trigger plan generation via AI Service
+      final generatePlan = ref.read(generateTrainingPlanProvider);
+      await generatePlan.execute(
+        goalId: createdGoal.id,
+        userId: createdUser.id,
+      );
 
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success
