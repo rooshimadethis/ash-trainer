@@ -340,12 +340,12 @@ Ash generates plans as a sequence of **Phases**, which are further broken down i
 Every plan starts with a "Skeleton"—a long-term timeline of phases leading to the goal.
 *   **Dynamic Skeleton**: If life happens, the AI can steal days from a "Base" phase to preserve a "Taper" phase.
 
-### **Training Blocks (The "Liquid" Microcycle)**
+### **Training Blocks (The "Liquid" Block)**
 A **block** is a logical cluster of workouts (typically 3-10 days) within a phase.
 
-A **microcycle** is a single week of training within a mesocycle. It balances stress and recovery across all three pillars (Running, Strength, Mobility).
-
-#### **Key Microcycle Principles**
+A **Training Block** is a logical cluster of workouts within a Phase. It balances stress and recovery across all three pillars (Running, Strength, Mobility).
+ 
+ #### **Key Training Block Principles**
 *   **Hard Days Hard, Easy Days Easy:** Never stack high-intensity sessions back-to-back
 *   **48-Hour Recovery Rule:** Allow 48 hours between hard efforts in the same pillar (e.g., Tuesday Intervals → Friday next hard run)
 *   **Pillar Coordination:** Avoid hard leg strength the day before a key run (e.g., no heavy squats before Long Run)
@@ -368,7 +368,7 @@ A **microcycle** is a single week of training within a mesocycle. It balances st
 *   **Active Mobility:** Dynamic stretches, yoga flows, or movement prep. Can be done before workouts or standalone.
 *   **Passive Mobility:** Static stretching, foam rolling, or restorative yoga. Best for recovery days or post-workout.
 
-#### **Sample Microcycle Structure (Running Priority: High, Strength: Medium)**
+#### **Sample Training Block Structure (Running Priority: High, Strength: Medium)**
 *   **Monday:** Rest or Passive Mobility (20 min)
 *   **Tuesday:** Quality Run 1 (Intervals, RPE 9) + Upper Body Strength (30 min)
 *   **Wednesday:** Easy Aerobic Run (RPE 3-4, 40 min)
@@ -377,7 +377,7 @@ A **microcycle** is a single week of training within a mesocycle. It balances st
 *   **Saturday:** Long Run (RPE 4-5, 60-90 min) + Lower Body Strength (light, 2-3 RIR)
 *   **Sunday:** Full Rest or Cross-Training (bike, swim)
 
-**Note:** This is a template for a **4-day running week** with **2 strength sessions**. Ash customizes based on user's pillar priorities, available days, and current mesocycle week (Week 1-4).
+**Note:** This is a template for a **4-day running week** with **2 strength sessions**. Ash customizes based on user's pillar priorities, available days, and current Phase progression.
 
 ### **Event-Based Periodization (Race Goal)**
 
@@ -581,7 +581,7 @@ For planned busy periods (2-8 weeks), Ash offers a "Maintenance Mode":
 When progress stalls despite consistent training, Ash suggests strategic interventions.
 
 ### **Strength Plateau**
-*   **Deload Week:** Reduce volume by 40%, maintain intensity (already in mesocycle)
+*   **Deload Week:** Reduce volume by 40%, maintain intensity (already built into phase progression)
 *   **Variation Block (2-3 weeks):**
     *   Swap primary lifts for variations (e.g., back squat → front squat, bench → incline bench)
     *   Change rep ranges (if doing 5 reps, try 8-10 reps)
@@ -665,7 +665,7 @@ When a user completes onboarding, Ash generates Week 1 using the following input
 | Goal type | Pillar priority & periodization model (Pyramidal vs. Polarized) |
 | Activity level | Starting volume (Chronic Load baseline) |
 | Training types enjoyed | Pillar composition & exercise pool |
-| Available days | Microcycle structure |
+| Available days | Training Block structure |
 | Injuries/limitations | Movement exclusions + caution flags |
 | Event date (if provided) | Periodization phases with taper |
 

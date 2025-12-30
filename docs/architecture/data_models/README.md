@@ -13,8 +13,8 @@ This directory contains the database schema design for Phase 1 of the Ash Traine
 
 ### Training Domain
 - **goals** - User goals and confidence tracking
-- **mesocycles** - 3-4 week training blocks (Base/Build/Peak/Taper)
-- **microcycles** - Individual training weeks
+- **phases** - High-level training stages (Base/Build/Peak/Taper)
+- **training_blocks** - Individual training weeks
 - **workouts** - Planned and completed workout sessions
 
 ### User Profile Domain
@@ -33,8 +33,8 @@ This directory contains the database schema design for Phase 1 of the Ash Traine
 ```
 User
   └─ Goal (1:N)
-      ├─ Mesocycle (1:N)
-      │   └─ Microcycle (1:N)
+      ├─ Phase (1:N)
+      │   └─ Training Block (1:N)
       │       └─ Workout (1:N)
       └─ GoalConfidenceHistory (1:N)
   ├─ Biomarkers (1:N)

@@ -121,7 +121,7 @@ The calendar uses a **horizontal swipe navigation** with three views:
 **Data Displayed**:
 - `Workouts[]` for current week (7 days)
   - `scheduledDate`, `type`, `plannedDuration`, `plannedDistance`, `status`
-- `Microcycle.weekNumber` (if using periodization)
+- `TrainingBlock.blockNumber` (if using periodization)
 - Computed: Total volume, total time, adherence %
 
 **Data Collected**:
@@ -166,7 +166,7 @@ The calendar uses a **horizontal swipe navigation** with three views:
 **Data Displayed**:
 - `Workouts[]` for 4-week range (28 days)
   - Aggregated by week: total volume, adherence %
-- `Microcycle[]` for the month
+- `TrainingBlock[]` for the month
 - Computed: Monthly totals, averages, longest run
 
 **Data Collected**:
@@ -270,7 +270,7 @@ The calendar uses a **horizontal swipe navigation** with three views:
 - `rpe` (number, 1-10, nullable)
 - `completedAt` (timestamp, nullable)
 
-### Microcycle Table (for periodization)
+### Training Block Table (for periodization)
 - `id` (primary key)
 - `goalId` (foreign key)
 - `weekNumber` (number)

@@ -350,7 +350,7 @@
   - `Goal.type` + goal-specific details
   - **Special instruction**: "Create a benchmark easy run (20 min, Zone 2) as the first workout for calibration"
 - Generate Week 1 training plan
-- Create initial `Microcycle` and `Workouts`
+- Create initial `TrainingBlock` and `Workouts`
 - **First workout must be**: Easy Run, 20 minutes, Zone 2, purpose: "Establish baseline"
 - Calculate initial `Goal.confidence` (default: 85%)
 

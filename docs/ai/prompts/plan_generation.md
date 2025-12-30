@@ -20,14 +20,14 @@ Your task is to generate a complete, periodized training plan based on the user'
 
 **Training Philosophy**:
 - Prioritize long-term consistency over short-term intensity
-- Follow progressive overload principles (10-15% weekly mileage increase max)
-- Use appropriate intensity distribution for goal type (see context)
-- Include recovery weeks every 3-4 weeks
-- Design plans that prevent injury and burnout
+- Follow progressive overload principles
+- **Phase-Based Periodization**: Plans must follow a "Phase Skeleton" (Base, Build, Peak, Taper).
+- **The Honesty Protocol**: If context shows low previous consistency, suggest a more conservative goal type.
+- Include "Recovery Blocks" every 3-4 weeks.
 
 **Output Requirements**:
 - Return a structured JSON response (schema provided)
-- Include mesocycles, microcycles, and individual workouts
+- **Entities**: 'phases' represent top-level goals; 'blocks' represent logical clusters of workouts; 'workouts' are individual sessions.
 - Provide rationale for key training decisions
 - Ensure workouts fit user's available days and time constraints
 ```
@@ -45,7 +45,7 @@ Your task is to generate a complete, periodized training plan based on the user'
 - **Style**: Time-based workouts ("Run for 30 minutes" not "Run 5K")
 - **Intensity Distribution**: Pyramidal (75-80% Easy, 15-20% Moderate, 0-5% High)
 - **Flexibility**: High - skipped workouts are okay, emphasize consistency
-- **Mesocycle Structure**:
+- **Phase Structure**:
   - Base Phase: 6-8 weeks pure aerobic building
   - Distance Familiarization: Practice runs at 80-90% of goal distance
   - Minimal Taper: 7-10 days, 20-30% volume reduction
@@ -67,7 +67,7 @@ Week 8: 3x 30min easy + 1x 50min long
 - **Style**: Distance-based workouts ("6 × 400m intervals")
 - **Intensity Distribution**: Polarized 80/20 (80% Easy, 20% Hard Zone 4/5)
 - **Flexibility**: Medium - key workouts (intervals/tempo) are critical
-- **Mesocycle Structure**:
+- **Phase Structure**:
   - Base: 4-6 weeks aerobic foundation
   - Build: 4-6 weeks race-specific intensity
   - Peak: 2-3 weeks highest volume + intensity
@@ -170,9 +170,9 @@ Week 8: 3x 30min easy + 1x 50min long
 ```json
 {
   "type": "object",
-  "required": ["mesocycles", "microcycles", "workouts", "rationale"],
+  "required": ["phases", "blocks", "workouts", "rationale"],
   "properties": {
-    "mesocycles": {
+    "phases": {
       "type": "array",
       "items": {
         "type": "object",
@@ -185,13 +185,13 @@ Week 8: 3x 30min easy + 1x 50min long
         }
       }
     },
-    "microcycles": {
+    "blocks": {
       "type": "array",
       "items": {
         "type": "object",
           "properties": {
           "weekNumber": {"type": "integer"},
-          "mesocycleId": {"type": "string", "description": "ID of parent Mesocycle"},
+          "phaseId": {"type": "string", "description": "ID of parent Phase"},
           "startDate": {"type": "string", "format": "date"},
           "focus": {"type": "string"},
           "totalMileage": {"type": "number"},
@@ -205,8 +205,8 @@ Week 8: 3x 30min easy + 1x 50min long
         "type": "object",
         "properties": {
           "date": {"type": "string", "format": "date"},
-          "mesocycleId": {"type": "string"},
-          "microcycleId": {"type": "string"},
+          "phaseId": {"type": "string"},
+          "blockId": {"type": "string"},
           "type": {"type": "string", "enum": ["easy", "long", "tempo", "intervals", "hills", "recovery"]},
           "duration": {"type": "integer"},
           "distance": {"type": "number"},

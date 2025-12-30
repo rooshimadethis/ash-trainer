@@ -113,7 +113,7 @@ class Goals extends Table {
 
 **Relationships**:
 - Many goals belong to one user (N:1)
-- One goal has many mesocycles (1:N)
+- One goal has many phases (1:N)
 - One goal has many confidence history records (1:N)
 
 **Constraints**:
@@ -124,51 +124,52 @@ class Goals extends Table {
 
 ---
 
-#### Table: `mesocycles`
-
-**Purpose**: Store 3-4 week training blocks that define periodization phases (Base/Build/Peak/Taper).
-
-**Fields**:
-```dart
-class Mesocycles extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get goalId => integer().references(Goals, #id)();
-  
-  // Mesocycle identification
-  IntColumn get mesocycleNumber => integer()(); // 1, 2, 3, etc.
-  DateTimeColumn get startDate => dateTime()();
-  DateTimeColumn get endDate => dateTime()();
-  
-  // Periodization phase
-  TextColumn get phase => text()(); // 'base' | 'build' | 'peak' | 'taper' | 'recovery'
-  
-  // Training distribution strategy
-  TextColumn get intensityDistribution => text()(); // 'pyramidal' | 'polarized' | 'threshold'
-  
-  // Volume targets
-  RealColumn get targetWeeklyVolume => real()(); // in km, average for this mesocycle
-  IntColumn get targetWeeklyDuration => integer()(); // in seconds, average for this mesocycle
-  
-  // Computed stats (updated by application layer)
-  RealColumn get actualVolume => real().withDefault(const Constant(0.0))(); // in km
-  IntColumn get actualDuration => integer().withDefault(const Constant(0))(); // in seconds
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**Relationships**:
-- Many mesocycles belong to one goal (N:1)
-- One mesocycle has many microcycles (1:N, typically 3-4 weeks)
-
-**Constraints**:
-- `phase` must be one of: `base`, `build`, `peak`, `taper`, `recovery`
-- `intensityDistribution` must be one of: `pyramidal`, `polarized`, `threshold`
-- `mesocycleNumber` must be unique per goal (enforced in application layer)
-- `endDate` must be after `startDate`
-- Typical duration: 3-4 weeks (21-28 days)
+#### Table: `phases`
+ 
+ **Purpose**: Store high-level training phases (Base/Build/Peak/Taper) that define the goal journey.
+ 
+ **Fields**:
+ ```dart
+ class Phases extends Table {
+   IntColumn get id => integer().autoIncrement()();
+   IntColumn get goalId => integer().references(Goals, #id)();
+   
+   // Phase identification
+   IntColumn get phaseNumber => integer()(); // 1, 2, 3, etc.
+   DateTimeColumn get startDate => dateTime().nullable()(); // Populated by App (Hydration)
+   DateTimeColumn get endDate => dateTime().nullable()(); // Populated by App (Hydration)
+   
+   // AI-provided duration
+   IntColumn get durationWeeks => integer()(); 
+   
+   // Periodization phase
+   TextColumn get phaseType => text()(); // 'base' | 'build' | 'peak' | 'taper' | 'recovery'
+   
+   // Training distribution strategy
+   TextColumn get intensityDistribution => text()(); // 'pyramidal' | 'polarized' | 'threshold'
+   
+   // Volume targets
+   RealColumn get targetWeeklyVolume => real()(); // in km
+   IntColumn get targetWeeklyDuration => integer()(); // in seconds
+   
+   // Computed stats
+   RealColumn get actualVolume => real().withDefault(const Constant(0.0))(); 
+   IntColumn get actualDuration => integer().withDefault(const Constant(0))(); 
+   
+   // Metadata
+   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+ }
+ ```
+ 
+ **Relationships**:
+ - Many phases belong to one goal (N:1)
+ - One phase has many training blocks (1:N)
+ 
+ **Constraints**:
+ - `phaseType` must be one of: `base`, `build`, `peak`, `taper`, `recovery`
+ - `intensityDistribution` must be one of: `pyramidal`, `polarized`, `threshold`
+ - `phaseNumber` must be unique per goal
 
 **Phase Definitions** (from product spec):
 - **Base**: 4-8 weeks of aerobic foundation building (75-80% easy running)
@@ -189,8 +190,8 @@ class Workouts extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get userId => integer().references(Users, #id)();
   IntColumn get goalId => integer().references(Goals, #id)();
-  IntColumn get mesocycleId => integer().nullable().references(Mesocycles, #id)();
-  IntColumn get microcycleId => integer().nullable().references(Microcycles, #id)();
+  IntColumn get phaseId => integer().nullable().references(Phases, #id)();
+  IntColumn get blockId => integer().nullable().references(TrainingBlocks, #id)();
   
   // Scheduling
   DateTimeColumn get scheduledDate => dateTime()();
@@ -220,8 +221,8 @@ class Workouts extends Table {
 **Relationships**:
 - Many workouts belong to one user (N:1)
 - Many workouts belong to one goal (N:1)
-- Many workouts belong to one mesocycle (N:1, optional)
-- Many workouts belong to one microcycle (N:1, optional)
+- Many workouts belong to one phase (N:1, optional)
+- Many workouts belong to one training block (N:1, optional)
 
 **Constraints**:
 - `type` must be one of: `easy_run`, `tempo`, `intervals`, `long_run`, `rest`, `strength`, `mobility`
@@ -235,39 +236,41 @@ class Workouts extends Table {
 
 ---
 
-#### Table: `microcycles`
-
-**Purpose**: Store individual training weeks within a mesocycle.
-
-**Fields**:
-```dart
-class Microcycles extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get mesocycleId => integer().references(Mesocycles, #id)();
-  
-  // Week identification
-  IntColumn get weekNumber => integer()(); // 1, 2, 3, etc. (within mesocycle)
-  DateTimeColumn get startDate => dateTime()();
-  DateTimeColumn get endDate => dateTime()();
-  
-  // Computed stats (updated by application layer)
-  RealColumn get totalVolume => real().withDefault(const Constant(0.0))(); // in km
-  IntColumn get totalDuration => integer().withDefault(const Constant(0))(); // in seconds
-  RealColumn get adherencePercentage => real().withDefault(const Constant(0.0))(); // 0-100
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**Relationships**:
-- Many microcycles belong to one mesocycle (N:1)
-- One microcycle has many workouts (1:N)
-
-**Constraints**:
-- `weekNumber` must be unique per mesocycle (enforced in application layer)
-- `endDate` must be after `startDate`
+#### Table: `training_blocks`
+ 
+ **Purpose**: Store logical clusters of workouts (3-10 days) within a phase.
+ 
+ **Fields**:
+ ```dart
+ class TrainingBlocks extends Table {
+   IntColumn get id => integer().autoIncrement()();
+   IntColumn get phaseId => integer().references(Phases, #id)();
+   
+   // Block identification
+   IntColumn get blockNumber => integer()(); // 1, 2, 3, etc.
+   DateTimeColumn get startDate => dateTime().nullable()(); // Populated by App
+   DateTimeColumn get endDate => dateTime().nullable()(); // Populated by App
+   
+   // AI-provided intent
+   TextColumn get intent => text()(); // 'intro' | 'progression' | 'peak' | 'recovery'
+   
+   // Computed stats
+   RealColumn get totalVolume => real().withDefault(const Constant(0.0))(); 
+   IntColumn get totalDuration => integer().withDefault(const Constant(0))(); 
+   RealColumn get adherencePercentage => real().withDefault(const Constant(0.0))(); 
+   
+   // Metadata
+   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+ }
+ ```
+ 
+ **Relationships**:
+ - Many training blocks belong to one phase (N:1)
+ - One training block has many workouts (1:N)
+ 
+ **Constraints**:
+ - `blockNumber` must be unique per phase
 
 ---
 

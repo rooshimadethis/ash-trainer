@@ -15,17 +15,17 @@ erDiagram
     USERS ||--o{ INJURY_RECORDS : "reports"
     USERS ||--o{ ACWR_RECORDS : "monitors"
     
-    GOALS ||--o{ MESOCYCLES : "contains"
+    GOALS ||--o{ PHASES : "contains"
     GOALS ||--o{ GOAL_CONFIDENCE_HISTORY : "tracks"
     
-    MESOCYCLES ||--o{ MICROCYCLES : "contains"
+    PHASES ||--o{ TRAINING_BLOCKS : "contains"
     
-    MICROCYCLES ||--o{ WORKOUTS : "schedules"
+    TRAINING_BLOCKS ||--o{ WORKOUTS : "schedules"
     
     WORKOUTS }o--|| USERS : "belongs to"
     WORKOUTS }o--|| GOALS : "belongs to"
-    WORKOUTS }o--o| MESOCYCLES : "part of"
-    WORKOUTS }o--o| MICROCYCLES : "part of"
+    WORKOUTS }o--o| PHASES : "part of"
+    WORKOUTS }o--o| TRAINING_BLOCKS : "part of"
     WORKOUTS ||--o{ INJURY_RECORDS : "may cause"
     
     USERS {
@@ -62,13 +62,14 @@ erDiagram
         datetime updatedAt
     }
     
-    MESOCYCLES {
+    PHASES {
         int id PK
         int goalId FK
-        int mesocycleNumber
+        int phaseNumber
         datetime startDate
         datetime endDate
-        text phase "enum"
+        int durationWeeks
+        text phaseType "enum"
         text intensityDistribution "enum"
         real targetWeeklyVolume
         int targetWeeklyDuration
@@ -78,12 +79,13 @@ erDiagram
         datetime updatedAt
     }
     
-    MICROCYCLES {
+    TRAINING_BLOCKS {
         int id PK
-        int mesocycleId FK
-        int weekNumber
+        int phaseId FK
+        int blockNumber
         datetime startDate
         datetime endDate
+        text intent "enum"
         real totalVolume
         int totalDuration
         real adherencePercentage
@@ -95,8 +97,8 @@ erDiagram
         int id PK
         int userId FK
         int goalId FK
-        int mesocycleId FK "nullable"
-        int microcycleId FK "nullable"
+        int phaseId FK "nullable"
+        int blockId FK "nullable"
         datetime scheduledDate
         text type "enum"
         text name
@@ -176,9 +178,9 @@ erDiagram
 |--------|---------|-------------------|------------------|
 | **users** | Profile and preferences | Root entity | 1 |
 | **goals** | Training goals | 1 user : N goals | ~1-5 |
-| **mesocycles** | 3-4 week training blocks | 1 goal : N mesocycles | ~3-5 per goal |
-| **microcycles** | Weekly training plans | 1 mesocycle : N microcycles | 3-4 per mesocycle |
-| **workouts** | Individual sessions | 1 microcycle : N workouts | ~3-7 per week |
+| **phases** | High-level training stages | 1 goal : N phases | ~3-5 per goal |
+| **training_blocks** | Logical clusters of workouts | 1 phase : N blocks | ~3-10 per phase |
+| **workouts** | Individual sessions | 1 block : N workouts | ~3-7 per week |
 | **biomarkers** | Daily health metrics | 1 user : N biomarkers | 1 per day |
 | **injury_records** | Pain tracking | 1 user : N injuries | Variable |
 | **acwr_records** | Load management | 1 user : N records | 1 per day |
@@ -204,9 +206,9 @@ erDiagram
   - Requires migration strategy for schema changes
 
 ### Periodization Hierarchy
-- **Structure**: Goal → Mesocycle → Microcycle → Workout
+- **Structure**: Goal → Phase → Training Block → Workout
 - **Rationale**: Matches sports science periodization model
-- **Flexibility**: Workouts can exist without mesocycle/microcycle for ad-hoc sessions
+- **Flexibility**: Workouts can exist without Phase/Block for ad-hoc sessions
 
 ### Daily Aggregated Records
 - **Tables**: `biomarkers`, `acwr_records`

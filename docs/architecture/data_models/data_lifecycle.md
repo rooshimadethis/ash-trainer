@@ -58,41 +58,43 @@ This document defines how data is created, updated, deleted, and how cascading b
 - **Strategy**: Soft delete recommended (preserve training history)
 - **Alternative**: Hard delete with cascade
 - **Cascade behavior**: 
-  - Delete all mesocycles → microcycles → workouts
+  - Delete all phases → training blocks → workouts
   - Delete all confidence history
 - **Implementation**: ON DELETE CASCADE for all foreign keys referencing `goals.id`
 
 ---
 
-### Table: `mesocycles`
+### Table: `phases`
 
 #### Creation
 - **When**: Plan generation (during onboarding or goal creation)
-- **Trigger**: AI generates training plan for goal
-- **Required fields**: `goalId`, `mesocycleNumber`, `startDate`, `endDate`, `phase`, `intensityDistribution`, `targetWeeklyVolume`, `targetWeeklyDuration`
+- **Trigger**: AI generates training plan skeleton for goal
+- **Required fields**: `goalId`, `phaseNumber`, `durationWeeks`, `phaseType`, `intensityDistribution`, `targetWeeklyVolume`, `targetWeeklyDuration`
+- **Hydration**: App calculates `startDate` and `endDate` based on goal start date and cumulative phase durations.
 - **Initial values**:
   - `actualVolume = 0.0`
   - `actualDuration = 0`
 
 #### Updates
-- **Frequency**: Weekly (computed stats)
+- **Frequency**: Weekly (computed stats) or on strategic repair
 - **Triggers**:
-  - Microcycle completion (update `actualVolume`, `actualDuration`)
-  - Plan adjustment by AI
+  - Block completion (update `actualVolume`, `actualDuration`)
+  - Adaptive Repair by AI (e.g., shortening a phase to preserve the goal deadline)
 
 #### Deletion
 - **Strategy**: Hard delete (part of goal lifecycle)
-- **Cascade behavior**: Delete all microcycles → workouts
-- **Implementation**: ON DELETE CASCADE for all foreign keys referencing `mesocycles.id`
+- **Cascade behavior**: Delete all training blocks → workouts
+- **Implementation**: ON DELETE CASCADE for all foreign keys referencing `phases.id`
 
 ---
 
-### Table: `microcycles`
+### Table: `training_blocks`
 
 #### Creation
-- **When**: Mesocycle creation (part of plan generation)
-- **Trigger**: AI generates weekly plans within mesocycle
-- **Required fields**: `mesocycleId`, `weekNumber`, `startDate`, `endDate`
+- **When**: Phase creation (part of plan generation)
+- **Trigger**: AI generates logical blocks within phase
+- **Required fields**: `phaseId`, `blockNumber`, `intent`
+- **Hydration**: App calculates `startDate` and `endDate` based on offsets.
 - **Initial values**:
   - `totalVolume = 0.0`
   - `totalDuration = 0`
@@ -102,12 +104,12 @@ This document defines how data is created, updated, deleted, and how cascading b
 - **Frequency**: Daily (as workouts complete)
 - **Triggers**:
   - Workout completion (update computed stats)
-  - End of week (finalize adherence percentage)
+  - End of block (finalize adherence percentage)
 
 #### Deletion
-- **Strategy**: Hard delete (part of mesocycle lifecycle)
-- **Cascade behavior**: Delete all workouts (or set `microcycleId = NULL` for ad-hoc workouts)
-- **Implementation**: ON DELETE SET NULL for `workouts.microcycleId` (preserve ad-hoc workouts)
+- **Strategy**: Hard delete (part of phase lifecycle)
+- **Cascade behavior**: Delete all workouts
+- **Implementation**: ON DELETE CASCADE for `workouts.blockId`
 
 ---
 
@@ -240,12 +242,12 @@ graph TD
     User -->|CASCADE| Injuries[Delete Injury Records]
     User -->|CASCADE| ACWR[Delete ACWR Records]
     
-    Goals -->|CASCADE| Mesocycles[Delete Mesocycles]
+    Goals -->|CASCADE| Phases[Delete Phases]
     Goals -->|CASCADE| ConfHistory[Delete Confidence History]
     
-    Mesocycles -->|CASCADE| Microcycles[Delete Microcycles]
+    Phases -->|CASCADE| TrainingBlocks[Delete Training Blocks]
     
-    Microcycles -->|SET NULL| Workouts[Preserve Workouts]
+    TrainingBlocks -->|CASCADE| Workouts[Delete Workouts]
     
     Workouts -->|SET NULL| InjuryRecords[Preserve Injury Records]
 ```
@@ -258,8 +260,8 @@ graph TD
 |--------|-----------|-----------|
 | **users** | Indefinite | Core profile data |
 | **goals** | Indefinite (soft delete) | Training history |
-| **mesocycles** | Indefinite | Periodization history |
-| **microcycles** | Indefinite | Weekly training history |
+| **phases** | Indefinite | Periodization history |
+| **training_blocks** | Indefinite | Weekly training history |
 | **workouts** | Indefinite (soft delete) | Training log |
 | **biomarkers** | 1 year | Health trends |
 | **injury_records** | Indefinite | Medical history |

@@ -57,9 +57,10 @@ Every AI call costs money. Design patterns that minimize unnecessary calls:
 
 | Feature | AI Responsibility | Trigger |
 |---------|------------------|---------|
-| **Training Plan Generation** | Generate mesocycles, microcycles, and workouts | Goal creation, major replanning |
+| **Training Plan Generation** | Generate Phases, Training Blocks, and Workouts | Goal creation, major replanning |
 | **Workout Adjustments** | Modify individual workouts based on feedback | User requests change, pain/fatigue signals |
-| **Workout Rescheduling** | Move workouts within/across micro/mesocycles | Schedule conflicts, injury recovery, time off |
+| **Strategic Repair** | Re-balance remaining Phases/Blocks after major disruption | Disruptions >3 days, or Phase boundary overlap |
+| **The Honesty Protocol** | Downgrade goals if consistency is too low | Low ACWR/Adherence detected |
 | **Coaching Chat** | Daily check-ins, motivational messages, Q&A | User initiates chat, daily notification |
 
 
@@ -71,9 +72,11 @@ Every AI call costs money. Design patterns that minimize unnecessary calls:
 | **Confidence Explanations** | Generate natural language explanation of score changes | Template-based, no AI needed |
 | **Context Aggregation** | Build aggregated context data for AI calls | Deterministic data transformation |
 | **Workout Logging** | Record completion, RPE, distance, pace | Simple CRUD, offline-first |
-| **Calendar Display** | Render workouts, handle date navigation | UI logic, no intelligence needed |
+| **Phase Hydration** | Map logical durations (weeks/offsets) to calendar dates | Post-AI generation logic |
 | **Load Management** | Calculate ACWR, detect overtraining | Sports science formulas, deterministic |
-| **Taper Logic** | Apply volume reduction protocols | Rule-based (see [training_plans.md](../ux/product_spec/training/running/training_plans.md)) |
+
+| **The Sliding Rule** | Automatically move missed sessions forward (<3 days) | Deterministic scheduling, no AI needed |
+| **Taper Logic** | Apply volume reduction protocols | Rule-based (see [training_philosophy.md](../ux/training_philosophy.md)) |
 
 ---
 
@@ -327,7 +330,7 @@ abstract class AIService {
     required Map<String, dynamic> responseSchema,
   });
   
-  /// Reschedule workouts within/across micro/mesocycles
+  /// Reschedule workouts within/across Phases/Blocks
   /// Context is pre-built by BuildRescheduleContext use case
   Future<List<Workout>> rescheduleWorkouts({
     required String systemPrompt,
@@ -1092,7 +1095,7 @@ Use Case: GenerateTrainingPlan
 AI Service: generatePlan()
   ├─ Input: Goal, User, Training History
   ├─ Context: Long-Term (cached) + Medium-Term
-  ├─ Output: Full plan (mesocycles, microcycles, workouts)
+  ├─ Output: Full plan (phases, blocks, workouts)
   ↓
 Repository: Save all workouts to DB
   ↓
@@ -1447,7 +1450,7 @@ test('AIService generates valid training plan', () async {
   );
   
   expect(plan.workouts.length, greaterThan(0));
-  expect(plan.mesocycles.length, greaterThan(0));
+  expect(plan.phases.length, greaterThan(0));
 });
 ```
 

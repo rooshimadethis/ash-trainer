@@ -14,7 +14,7 @@ Ash provides tailored running training strategies based on your goal type. Each 
 | **Intensity Distribution** | **Pyramidal**: 75-80% Easy, 15-20% Moderate, 0-5% High |
 | **Flexibility** | **High**: Skip workouts without guilt. Consistency > Perfection. |
 
-### Mesocycle Structure
+### Phase Structure
 *   **Base Phase:** 6-8 weeks of pure aerobic building
 *   **Distance Familiarization:** Practice runs at 80-90% of goal distance
 *   **Minimal Taper:** 7-10 days, 20-30% volume reduction
@@ -39,7 +39,7 @@ Ash provides tailored running training strategies based on your goal type. Each 
 | **Intensity Distribution** | **Polarized (80/20)**: 80% Easy, 20% Hard (Zone 4/5). Minimal "moderate" junk miles. |
 | **Flexibility** | **Medium**: Key workouts (Intervals/Tempo) are critical. |
 
-### Mesocycle Structure
+### Phase Structure
 *   **Base (4-6 wks):** Build aerobic foundation
 *   **Build (4-6 wks):** Introduce race-specific intensity
 *   **Peak (2-3 wks):** Highest volume + intensity

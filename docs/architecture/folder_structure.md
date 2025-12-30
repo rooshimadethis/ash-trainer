@@ -125,8 +125,8 @@ features/
         │   ├── user.dart
         │   ├── goal.dart
         │   ├── workout.dart
-        │   ├── mesocycle.dart
-        │   ├── microcycle.dart
+        │   ├── phase.dart
+        │   ├── training_block.dart
         │   ├── biomarker.dart
         │   ├── injury_record.dart
         │   ├── acwr_record.dart
@@ -135,8 +135,8 @@ features/
             ├── user_repository.dart
             ├── goal_repository.dart
             ├── workout_repository.dart
-            ├── mesocycle_repository.dart
-            ├── microcycle_repository.dart
+            ├── phase_repository.dart
+            ├── training_block_repository.dart
             ├── biomarker_repository.dart
             ├── injury_repository.dart
             └── acwr_repository.dart
@@ -154,8 +154,8 @@ data/
 │   ├── user_repository_impl.dart
 │   ├── goal_repository_impl.dart
 │   ├── workout_repository_impl.dart
-│   ├── mesocycle_repository_impl.dart
-│   ├── microcycle_repository_impl.dart
+│   ├── phase_repository_impl.dart
+│   ├── training_block_repository_impl.dart
 │   ├── biomarker_repository_impl.dart
 │   ├── injury_repository_impl.dart
 │   └── acwr_repository_impl.dart
@@ -167,9 +167,10 @@ data/
 │   │   ├── tables/
 │   │   │   ├── users_table.dart
 │   │   │   ├── goals_table.dart
-│   │   │   ├── mesocycles_table.dart
-│   │   │   ├── microcycles_table.dart
-│   │   │   ├── workouts_table.dart
+│   │   │   ├── phases_table.dart
+│   │   │   ├── training_blocks_table.dart
+│   │   │   ├── phases_table.dart
+│   │   │   ├── training_blocks_table.dart
 │   │   │   ├── biomarkers_table.dart
 │   │   │   ├── injury_records_table.dart
 │   │   │   ├── acwr_records_table.dart
@@ -178,8 +179,8 @@ data/
 │   │       ├── user_dao.dart
 │   │       ├── goal_dao.dart
 │   │       ├── workout_dao.dart
-│   │       ├── mesocycle_dao.dart
-│   │       ├── microcycle_dao.dart
+│   │       ├── phase_dao.dart
+│   │       ├── training_block_dao.dart
 │   │       ├── biomarker_dao.dart
 │   │       ├── injury_dao.dart
 │   │       └── acwr_dao.dart
@@ -192,8 +193,8 @@ data/
     ├── user_dto.dart
     ├── goal_dto.dart
     ├── workout_dto.dart
-    ├── mesocycle_dto.dart
-    ├── microcycle_dto.dart
+    ├── phase_dto.dart
+    ├── training_block_dto.dart
     ├── biomarker_dto.dart
     ├── injury_dto.dart
     └── acwr_dto.dart
