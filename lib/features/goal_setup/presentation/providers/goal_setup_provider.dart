@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../features/shared/domain/entities/goal.dart';
 import '../../../../features/shared/domain/entities/user.dart';
 import '../../../../data/providers/repository_providers.dart';
+import '../../../../core/utils/logger.dart';
 
 // State for the Goal Setup flow
 class GoalSetupState {
@@ -255,7 +256,8 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
 
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success
-    } catch (e) {
+    } catch (e, stackTrace) {
+      AppLogger.error('Failed to submit goal', e, stackTrace);
       state = state.copyWith(isGenerating: false, error: e.toString());
     }
   }

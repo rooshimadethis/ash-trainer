@@ -209,6 +209,8 @@
 - Gender selector (Male, Female, Other/Prefer not to say)
 - Weight input (numeric) with units toggle (kg/lb)
 - Height input (numeric) with units toggle (cm/in)
+  - If 'cm' selected: Single input field
+  - If 'in' selected: Split input fields for Feet and Inches
 - Progress indicator (Step 3 of 5)
 
 **User Can**:

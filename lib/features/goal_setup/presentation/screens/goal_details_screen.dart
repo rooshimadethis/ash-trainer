@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../shared/domain/entities/goal.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/presentation/widgets/ash_text_field.dart';
@@ -438,7 +439,9 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
       if (parts.length == 1) {
         return int.parse(parts[0]) * 60;
       }
-    } catch (_) {}
+    } catch (e, stackTrace) {
+      AppLogger.warning('Failed to parse duration: $text', e, stackTrace);
+    }
     return null;
   }
 

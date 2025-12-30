@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
 import 'plan_review_screen.dart';
@@ -25,6 +26,7 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen> {
             MaterialPageRoute(builder: (_) => const PlanReviewScreen()),
           );
         } else {
+          AppLogger.error('Plan generation failed', next.error!, null);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${next.error}')),
           );

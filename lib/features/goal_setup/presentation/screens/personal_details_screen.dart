@@ -21,6 +21,10 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
+  // New controllers for split input
+  final _feetController = TextEditingController();
+  final _inchesController = TextEditingController();
+
   String? _gender;
   String _weightUnit = 'kg';
   String _heightUnit = 'cm';
@@ -31,10 +35,29 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
     final state = ref.read(goalSetupProvider);
     if (state.age != null) _ageController.text = state.age.toString();
     if (state.weight != null) _weightController.text = state.weight.toString();
-    if (state.height != null) _heightController.text = state.height.toString();
+
     _gender = state.gender;
     _weightUnit = state.preferredWeightUnit;
     _heightUnit = state.preferredHeightUnit;
+
+    // Handle height initialization
+    if (state.height != null) {
+      if (_heightUnit == 'cm') {
+        _heightController.text = state.height.toString();
+      } else {
+        // Convert stored total inches to feet/inches
+        // Assuming state.height is stored in the preferred unit (inches) if unit is 'in'
+        final totalInches = state.height!;
+        final feet = (totalInches / 12).floor();
+        final inches = totalInches % 12;
+        _feetController.text = feet.toString();
+        // Show inches with optional decimal, but usually 0 decimal for height is fine
+        // Using toStringAsFixed(0) or similar logic if integer preferred
+        _inchesController.text = inches == inches.roundToDouble()
+            ? inches.toInt().toString()
+            : inches.toString();
+      }
+    }
   }
 
   @override
@@ -42,7 +65,47 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
+    _feetController.dispose();
+    _inchesController.dispose();
     super.dispose();
+  }
+
+  void _updateHeightUnit(String newUnit) {
+    if (_heightUnit == newUnit) return;
+
+    setState(() {
+      if (newUnit == 'in') {
+        // Convert FROM cm TO feet/inches
+        final cmProfile = double.tryParse(_heightController.text);
+        if (cmProfile != null) {
+          final totalInches = cmProfile / 2.54;
+          final feet = (totalInches / 12).floor();
+          final inches = totalInches % 12;
+
+          _feetController.text = feet.toString();
+          // Keep max 1 decimal place for cleaner UI
+          _inchesController.text =
+              inches.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '');
+        } else {
+          _feetController.clear();
+          _inchesController.clear();
+        }
+      } else {
+        // Convert FROM feet/inches TO cm
+        final feet = int.tryParse(_feetController.text) ?? 0;
+        final inches = double.tryParse(_inchesController.text) ?? 0.0;
+
+        if (feet > 0 || inches > 0) {
+          final totalInches = (feet * 12) + inches;
+          final cm = totalInches * 2.54;
+          _heightController.text =
+              cm.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '');
+        } else {
+          _heightController.clear();
+        }
+      }
+      _heightUnit = newUnit;
+    });
   }
 
   @override
@@ -149,20 +212,60 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: TextField(
-                                controller: _heightController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^\d*\.?\d*')),
-                                ],
-                                style: AppTextStyles.bodyLarge
-                                    .copyWith(color: AppColors.white),
-                                decoration:
-                                    _buildInputDecoration('Your height'),
-                              ),
+                              child: _heightUnit == 'cm'
+                                  ? TextField(
+                                      controller: _heightController,
+                                      keyboardType:
+                                          const TextInputType.numberWithOptions(
+                                              decimal: true),
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.allow(
+                                            RegExp(r'^\d*\.?\d*')),
+                                      ],
+                                      style: AppTextStyles.bodyLarge
+                                          .copyWith(color: AppColors.white),
+                                      decoration:
+                                          _buildInputDecoration('Your height'),
+                                    )
+                                  : Row(
+                                      children: [
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _feetController,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            style: AppTextStyles.bodyLarge
+                                                .copyWith(
+                                                    color: AppColors.white),
+                                            decoration:
+                                                _buildInputDecoration('Feet')
+                                                    .copyWith(suffixText: "ft"),
+                                          ),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: TextField(
+                                            controller: _inchesController,
+                                            keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                                decimal: true),
+                                            inputFormatters: [
+                                              FilteringTextInputFormatter.allow(
+                                                  RegExp(r'^\d*\.?\d*')),
+                                            ],
+                                            style: AppTextStyles.bodyLarge
+                                                .copyWith(
+                                                    color: AppColors.white),
+                                            decoration:
+                                                _buildInputDecoration('Inches')
+                                                    .copyWith(suffixText: "in"),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                             ),
                             const SizedBox(width: 16),
                             Container(
@@ -195,7 +298,18 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
               onNext: () {
                 final age = int.tryParse(_ageController.text);
                 final weight = double.tryParse(_weightController.text);
-                final height = double.tryParse(_heightController.text);
+
+                double? height;
+                if (_heightUnit == 'cm') {
+                  height = double.tryParse(_heightController.text);
+                } else {
+                  final feet = double.tryParse(_feetController.text) ?? 0;
+                  final inches = double.tryParse(_inchesController.text) ?? 0;
+                  // Only save if at least one value is entered to avoid saving 0.0 for empty form
+                  if (feet > 0 || inches > 0) {
+                    height = (feet * 12) + inches;
+                  }
+                }
 
                 ref.read(goalSetupProvider.notifier).setPersonalDetails(
                       age: age,
@@ -302,7 +416,8 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
   Widget _buildHeightUnitButton(String unit) {
     final isSelected = _heightUnit == unit;
     return GestureDetector(
-      onTap: () => setState(() => _heightUnit = unit),
+      // Use the new update method
+      onTap: () => _updateHeightUnit(unit),
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(

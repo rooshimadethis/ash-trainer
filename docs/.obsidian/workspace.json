@@ -185,6 +185,9 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "OLD_flows/user_flows.md",
+    "OLD_flows/onboarding_flow.md",
+    "OLD_flows",
     "architecture/error_handling.md",
     "architecture/interfaces.md",
     "architecture/OLD_data_processing/training/running/training_plans.md",
@@ -215,8 +218,6 @@
     "ux/product_spec/training/pillars.md",
     "architecture/data_models/entities.md",
     "architecture/data_models/data_lifecycle.md",
-    "architecture/data_models/validation_rules.md",
-    "architecture/data_models/_index.md",
     "architecture/data_models",
     "architecture/OLD_data_models",
     "ux/user_journeys"
