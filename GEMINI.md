@@ -9,6 +9,20 @@ All documentation is located in the `docs/` directory.
 ### 🧠 AI & Personality
 * **[Prompts & Persona](docs/ai/prompts.md)** (`docs/ai/prompts.md`): System prompts, personality guidelines ("Ash"), and LLM strategy.
 * **[AI Backlog](docs/ai/backlog.md)** (`docs/ai/backlog.md`): Implementation checklist, missing components, and AI-specific technical debt.
+* **[Philosophy Context Architecture](docs/TODO/philosophy_context_architecture.md)** (`docs/TODO/philosophy_context_architecture.md`): Structured philosophy guidance for AI plan generation, replacing single-string approach with principle-based context models.
+
+#### Philosophy Context Strategy
+The AI receives structured philosophy guidance through context models rather than a single string. This enables:
+* **Principle-based guidance**: Provides constraints and principles, not prescriptions - AI reasons about optimal plan structure
+* **Three-pillar integration**: Running, strength (Phase 1 MVP), and mobility (Phase 1 MVP) prescription logic
+* **AI autonomy**: AI has creative freedom within safety constraints (max volume increase, recovery frequency, pillar coordination)
+
+**Key Philosophy Docs**:
+* Running: `docs/ux/training_philosophy.md`, `docs/ux/product_spec/training/running/training_plans.md`
+* Strength (Phase 1): `docs/ux/product_spec/training/strength/strength_philosophy_phase1.md`
+* Mobility (Phase 1): `docs/ux/product_spec/training/mobility/mobility_philosophy_phase1.md`
+
+**Context Models**: `PlanGenerationPhilosophy` includes `StrengthGuidance` and `MobilityGuidance` for balanced three-pillar plans.
 
 ### 🏗️ Architecture & Data
 * **[Data Models](docs/architecture/data_models/_index.md)** (`docs/architecture/data_models/_index.md`): Schema definitions, core entities (User, Goals, Workouts), and database strategy.

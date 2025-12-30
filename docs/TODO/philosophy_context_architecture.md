@@ -114,7 +114,6 @@ class StrengthGuidance with _$StrengthGuidance {
   const factory StrengthGuidance({
     required int weeklyFrequency,        // 1-4 based on priority
     required int sessionDurationMinutes, // 10-20 for Phase 1
-    required String weeklyFocus,         // "single_leg_core", "hip_glute_posterior", "plyometric_core", "single_leg_hip_glute"
     required int setsPerExercise,        // 2-3 based on priority
     required String repRange,            // "8-12" or "30-45s" for core
   }) = _StrengthGuidance;
@@ -137,7 +136,6 @@ class MobilityGuidance with _$MobilityGuidance {
 PlanGenerationPhilosophy buildPlanPhilosophy(
   Goal goal, 
   double weeklyVolume,
-  int currentWeekNumber,
 ) {
   final intensityStrategy = _selectIntensityStrategy(goal.type, weeklyVolume);
   final taperGuidance = goal.type == GoalType.event 
@@ -166,7 +164,6 @@ PlanGenerationPhilosophy buildPlanPhilosophy(
     strengthGuidance: _buildStrengthGuidance(
       goal.type,
       goal.strengthPriority,
-      currentWeekNumber,
     ),
     
     // Mobility guidance (Phase 1 - MVP)
@@ -259,7 +256,6 @@ String _getFlexibilityLevel(GoalType goalType) {
 StrengthGuidance _buildStrengthGuidance(
   GoalType goalType,
   String strengthPriority,
-  int weekNumber,
 ) {
   int frequency = _getStrengthFrequency(strengthPriority, goalType);
   int duration = strengthPriority == 'high' ? 20 : (strengthPriority == 'medium' ? 15 : 10);
@@ -268,7 +264,6 @@ StrengthGuidance _buildStrengthGuidance(
   return StrengthGuidance(
     weeklyFrequency: frequency,
     sessionDurationMinutes: duration,
-    weeklyFocus: _getStrengthWeeklyFocus(weekNumber),
     setsPerExercise: sets,
     repRange: "8-12",
   );
@@ -283,17 +278,6 @@ int _getStrengthFrequency(String priority, GoalType goalType) {
     case 'medium': return 3;
     case 'low': return 2;
     default: return 2;
-  }
-}
-
-String _getStrengthWeeklyFocus(int weekNumber) {
-  // 4-week rotation pattern
-  switch (weekNumber % 4) {
-    case 1: return "single_leg_core";
-    case 2: return "hip_glute_posterior";
-    case 3: return "plyometric_core"; // Only if user is intermediate+
-    case 0: return "single_leg_hip_glute";
-    default: return "single_leg_core";
   }
 }
 
@@ -350,11 +334,11 @@ FREQUENCY & VOLUME:
 - Low priority: 1-2x/week, 10 min sessions, 2 sets per exercise
 - Maintenance goals: Boost to 3x/week if running is low priority
 
-4-WEEK ROTATION:
-- Week 1: Single-leg stability + Core (e.g., Single-Leg Glute Bridge, Plank)
-- Week 2: Hip/Glute strength + Posterior chain (e.g., Clamshells, Single-Leg RDL)
-- Week 3: Plyometrics + Core (e.g., Single-Leg Hops, Bird Dogs) - intermediate+ only
-- Week 4: Single-leg stability + Hip/Glute strength (e.g., Bulgarian Split Squat, Lateral Lunges)
+EXERCISE SELECTION:
+- Prioritize single-leg stability (highest priority for runners)
+- Include hip & glute strength (injury prevention)
+- Include core stability (running economy)
+- Rotate movement patterns across sessions for balanced development
 
 PRESCRIPTION FORMAT:
 - 2-3 bodyweight exercises per session
