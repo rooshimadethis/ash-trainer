@@ -4,8 +4,6 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:drift_db_viewer/drift_db_viewer.dart';
-import '../../../../infrastructure/providers/service_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -30,18 +28,6 @@ class HomeScreen extends ConsumerWidget {
                 style: AppTextStyles.bodyLarge),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          final db = ref.read(driftDatabaseProvider);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => DriftDbViewer(db),
-            ),
-          );
-        },
-        backgroundColor: AppColors.primary,
-        child: const Icon(Icons.storage, color: Colors.white),
       ),
     );
   }

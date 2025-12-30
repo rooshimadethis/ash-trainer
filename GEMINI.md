@@ -12,34 +12,25 @@ All documentation is located in the `docs/` directory.
 
 ### 🏗️ Architecture & Data
 * **[Data Models](docs/architecture/data_models/_index.md)** (`docs/architecture/data_models/_index.md`): Schema definitions, core entities (User, Goals, Workouts), and database strategy.
-* **[Data Processing Plan](docs/architecture/data_processing/_index.md)** (`docs/architecture/data_processing/_index.md`): Hybrid local/cloud architecture, "Training Engine" logic, and memory tiering strategy.
+* **[System Architecture](docs/architecture/system_architecture.md)** (`docs/architecture/system_architecture.md`): High-level overview of the 5-layer Clean Architecture and component interaction.
+* **[Interfaces & Contracts](docs/architecture/interfaces.md)** (`docs/architecture/interfaces.md`): Definitions for cross-layer communication, repository patterns, and service contracts.
+* **[Folder Structure](docs/architecture/folder_structure.md)** (`docs/architecture/folder_structure.md`): Logical and physical organization of the codebase.
+* **[Error Handling](docs/architecture/error_handling.md)** (`docs/architecture/error_handling.md`): Global strategy for exception management, state recovery, and user feedback.
+
 
 ### 📱 Product & Features
 * **[Product Specification](docs/ux/product_spec/_index.md)** (`docs/ux/product_spec/_index.md`): Core vision, feature definitions (Goal Setting, Calendar, Coaching), and UI/UX philosophy.
-* **[Features Folder](docs/features/)** (`docs/features/`): Breakdown of complex features into atomic documents (Currently empty, intended for new feature specs).
+* **[User Journey Inventory](docs/ux/user_journeys/user_journey_inventory.md)** (`docs/ux/user_journeys/user_journey_inventory.md`): Master list of all user flows, categorized by persona and lifecycle stage.
+* **[Individual Journeys](docs/ux/user_journeys/)** (`docs/ux/user_journeys/`): Detailed step-by-step walkthroughs for specific tasks (e.g., Onboarding, Logging a Workout).
 
 ## 🔄 Workflows & Knowledge Management
 
 ### 1. Atomic Documentation
 To prevent "idea sprawl," we follow an **atomic documentation** principle:
-* **One Feature, One File**: When brainstorming a large feature (e.g., "Voice Mode"), create a new file in `docs/features/voice_mode.md` rather than appending to the giant Product Spec.
+* **One Feature, One File**: When brainstorming a large feature (e.g., "Voice Mode"), create a new file in `docs/ux/product_spec/voice_mode.md` rather than appending to the giant Product Spec.
 * **Link, Don't Duplicate**: Use Markdown links to reference the Persona or Architecture docs instead of repeating those details.
 
-### 2. The Documentation Graph (One-Way Flow)
-To ensure context is easy to follow for both humans and AI, we enforce a strict **one-way linking flow**:
-
-1.  **Product Spec** (`docs/ux/product_spec/*.md`)
-    *   **Content**: The "What" (Features) and the "Why" (Training Philosophy).
-    *   **Links To**: `Data Processing` docs for implementation details.
-2.  **Data Processing** (`docs/architecture/data_processing/*.md`)
-    *   **Content**: The "How" (Algorithms, Business Logic, Queries).
-    *   **Structure**: Mirrors product_spec with feature-aligned files (`training/`, `athlete_markers/`, `lifecycle/`) plus `cross_cutting/` for shared algorithms.
-    *   **Links To**: `Data Models` for schema definitions, and sideways to `cross_cutting` for shared logic.
-3.  **Data Models** (`docs/architecture/data_models/*.md`)
-    *   **Content**: The "Truth" (Database Schemas, Field Definitions).
-    *   **Links To**: None (Leaf nodes).
-
-### 3. Cross-Linking
+### 2. Cross-Linking
 We use relative Markdown links to keep the graph connected while maintaining the flow.
 
 ## 🛠️ Engineering & Implementation Guidelines
