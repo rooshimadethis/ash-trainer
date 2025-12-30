@@ -185,6 +185,8 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "TODO/calendar_block_visualization.md",
+    "TODO/colors.md",
     "ux/product_spec/training/mobility/mobility_philosophy_phase1.md",
     "ux/product_spec/training/strength/strength_philosophy_phase1.md",
     "TODO/philosophy_context_architecture.md",
@@ -216,8 +218,6 @@
     "architecture/OLD_data_processing/training/intensity.md",
     "architecture/OLD_data_processing/training/goals.md",
     "architecture/OLD_data_processing/training/coaching.md",
-    "architecture/OLD_data_processing/training/calendar.md",
-    "architecture/OLD_data_processing/lifecycle/time_off.md",
     "architecture/OLD_data_processing/training",
     "architecture/OLD_data_processing/lifecycle",
     "architecture/OLD_data_processing/cross_cutting"

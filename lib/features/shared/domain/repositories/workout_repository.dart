@@ -9,6 +9,12 @@ abstract class WorkoutRepository {
     required DateTime endDate,
   });
 
+  /// Get training blocks within a specific date range
+  Future<List<TrainingBlock>> getBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// Get a single workout by ID
   Future<Workout?> getWorkout(String id);
 

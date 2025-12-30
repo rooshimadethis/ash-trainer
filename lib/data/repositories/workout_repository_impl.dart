@@ -24,6 +24,18 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
+  Future<List<TrainingBlock>> getBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    final dtos = await _trainingPlanDao.getBlocksForDateRange(
+      startDate: startDate,
+      endDate: endDate,
+    );
+    return dtos.map((dto) => dto.toEntity()).toList();
+  }
+
+  @override
   Future<Workout?> getWorkout(String id) async {
     final dto = await _workoutDao.getWorkoutById(id);
     return dto?.toEntity();

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/colors.dart';
 
 class WorkoutTypes {
   static const String easyRun = 'easy_run';
@@ -12,21 +13,20 @@ class WorkoutTypes {
   static Color getColor(String type) {
     switch (type) {
       case easyRun:
-        return Colors.green;
+        return AppColors.runEasy;
       case tempo:
-        return Colors.orange;
+        return AppColors.runTempo;
       case intervals:
-        return Colors.red;
+        return AppColors.runIntervals;
       case longRun:
-        return Colors.blue;
-      case rest:
-        return Colors.grey;
+        return AppColors.runLong;
       case strength:
-        return Colors.purple;
+        return AppColors.strength;
       case mobility:
-        return Colors.teal;
+        return AppColors.mobility;
+      case rest:
       default:
-        return Colors.grey;
+        return AppColors.rest;
     }
   }
 

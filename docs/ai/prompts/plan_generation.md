@@ -30,6 +30,7 @@ Your task is to generate a complete, periodized training plan based on the user'
 - **Entities**: 'phases' represent top-level goals; 'blocks' represent logical clusters of workouts; 'workouts' are individual sessions.
 - Provide rationale for key training decisions
 - Ensure workouts fit user's available days and time constraints
+- DO NOT include the day of the week in the workout name (e.g. "Easy Run", NOT "Monday Easy Run").
 ```
 
 ---

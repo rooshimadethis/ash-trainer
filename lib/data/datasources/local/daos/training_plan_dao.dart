@@ -19,4 +19,20 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
   Future<void> deletePhasesForGoal(int goalId) {
     return (delete(phases)..where((t) => t.goalId.equals(goalId))).go();
   }
+
+  /// Get training blocks that overlap with the given date range.
+  Future<List<TrainingBlockDTO>> getBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return (select(trainingBlocks)
+          ..where((t) {
+            // Block overlaps if:
+            // block.startDate <= range.endDate AND block.endDate >= range.startDate
+            return t.startDate.isSmallerOrEqualValue(endDate) &
+                t.endDate.isBiggerOrEqualValue(startDate);
+          })
+          ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
+        .get();
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/domain/entities/training/workout.dart';
+import '../../../shared/domain/entities/training/training_block.dart';
 import '../../../../data/providers/repository_providers.dart';
 
 /// Provider for the selected week in the Weekly View
@@ -53,4 +54,34 @@ final monthlyWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
   final end = start.add(const Duration(days: 28));
 
   return ref.watch(workoutsForRangeProvider((start, end)).future);
+});
+
+/// Provider for fetching blocks for a specific date range
+final blocksForRangeProvider =
+    FutureProvider.family<List<TrainingBlock>, (DateTime, DateTime)>(
+        (ref, range) async {
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.getBlocksForDateRange(
+    startDate: range.$1,
+    endDate: range.$2,
+  );
+});
+
+/// Provider for the weekly blocks based on selectedWeekProvider
+final weeklyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
+  final startOfWeek = ref.watch(selectedWeekProvider);
+  final endOfWeek = startOfWeek.add(const Duration(days: 7));
+
+  return ref.watch(blocksForRangeProvider((startOfWeek, endOfWeek)).future);
+});
+
+/// Provider for the monthly/4-week overview blocks
+final monthlyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  // Last week + Current week + Next 2 weeks = 28 days
+  final start = today.subtract(Duration(days: today.weekday - 1 + 7));
+  final end = start.add(const Duration(days: 28));
+
+  return ref.watch(blocksForRangeProvider((start, end)).future);
 });
