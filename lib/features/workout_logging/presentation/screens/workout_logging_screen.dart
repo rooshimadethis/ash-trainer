@@ -65,7 +65,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
             const SizedBox(height: 12),
             TextField(
               keyboardType: TextInputType.number,
-              style: AppTextStyles.h1.copyWith(color: AppColors.primary),
+              style: AppTextStyles.h1
+                  .copyWith(color: Theme.of(context).colorScheme.primary),
               decoration: const InputDecoration(
                 hintText: '0',
                 suffixText: 'min',
@@ -87,7 +88,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
               TextField(
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
-                style: AppTextStyles.h1.copyWith(color: AppColors.primary),
+                style: AppTextStyles.h1
+                    .copyWith(color: Theme.of(context).colorScheme.primary),
                 decoration: const InputDecoration(
                   hintText: '0.0',
                   suffixText: 'km',
@@ -116,7 +118,7 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
               min: 1,
               max: 10,
               divisions: 9,
-              activeColor: AppColors.primary,
+              activeColor: Theme.of(context).colorScheme.primary,
               inactiveColor: AppColors.surfaceDark,
               onChanged: (val) => setState(() => _rpe = val.round()),
             ),
