@@ -23,7 +23,15 @@ class ApplyRescheduleMatrix {
       return isPlannedMissed || isSkippedKey;
     }).toList();
 
-    if (missed.isEmpty) return;
+    if (missed.isEmpty) {
+      print('ApplyRescheduleMatrix: No missed or skipped key workouts found.');
+      return;
+    }
+
+    print('ApplyRescheduleMatrix: Found ${missed.length} workouts to process:');
+    for (final m in missed) {
+      print(' - ${m.name} (${m.status}, ${_formatDate(m.scheduledDate)})');
+    }
 
     // 3. For each missed workout, identify its block and relevant buddies
     // We group by block to optimize
@@ -51,7 +59,13 @@ class ApplyRescheduleMatrix {
 
     // 5. Save updates
     if (allUpdates.isNotEmpty) {
+      print('ApplyRescheduleMatrix: Saving ${allUpdates.length} updates:');
+      for (final u in allUpdates) {
+        print(' - ${u.name} -> ${u.status} on ${_formatDate(u.scheduledDate)}');
+      }
       await _workoutRepo.batchUpdateWorkouts(allUpdates);
+    } else {
+      print('ApplyRescheduleMatrix: No updates generated.');
     }
   }
 
@@ -59,5 +73,9 @@ class ApplyRescheduleMatrix {
     // Check if the date is strictly before "today" (midnight)
     final today = DateTime(now.year, now.month, now.day);
     return date.isBefore(today);
+  }
+
+  String _formatDate(DateTime d) {
+    return '${d.month}/${d.day}';
   }
 }

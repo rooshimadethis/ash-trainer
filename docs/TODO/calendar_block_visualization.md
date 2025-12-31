@@ -1,3 +1,5 @@
+We can color based on the workout for the day
+
 # Plan: Calendar Block & Phase Visualization
 
 ## Objective

@@ -182,52 +182,58 @@ class _RationaleSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (goal.rationaleOverallApproach == null) return const SizedBox.shrink();
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.lightbulb_outline,
+                color: AppColors.accentBlue, size: 20),
+            const SizedBox(width: 8),
+            Text('The Strategy',
+                style: AppTextStyles.h3.copyWith(color: AppColors.accentBlue)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildRationaleCard(
+            'Overall Approach', goal.rationaleOverallApproach, Icons.flag),
+        _buildRationaleCard('Intensity Distribution',
+            goal.rationaleIntensityDistribution, Icons.bar_chart),
+        _buildRationaleCard(
+            'Key Workouts', goal.rationaleKeyWorkouts, Icons.star),
+        _buildRationaleCard('Recovery Strategy', goal.rationaleRecoveryStrategy,
+            Icons.battery_charging_full),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Widget _buildRationaleCard(String label, String? content, IconData icon) {
+    if (content == null) return const SizedBox.shrink();
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.surfaceHighlight,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.3)),
+        border: Border.all(color: AppColors.border),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.lightbulb_outline,
-                  color: AppColors.accentBlue, size: 20),
+              Icon(icon, size: 16, color: AppColors.textSecondary),
               const SizedBox(width: 8),
-              Text('The Strategy',
-                  style:
-                      AppTextStyles.h3.copyWith(color: AppColors.accentBlue)),
+              Text(label.toUpperCase(),
+                  style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0)),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildRationaleItem(
-              'Overall Approach', goal.rationaleOverallApproach),
-          _buildRationaleItem('Intensity', goal.rationaleIntensityDistribution),
-          _buildRationaleItem('Key Workouts', goal.rationaleKeyWorkouts),
-          _buildRationaleItem('Recovery', goal.rationaleRecoveryStrategy),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRationaleItem(String label, String? content) {
-    if (content == null) return const SizedBox.shrink();
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label.toUpperCase(),
-              style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.0)),
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
           Text(content,
               style: const TextStyle(
                   color: Colors.white, fontSize: 13, height: 1.4)),
