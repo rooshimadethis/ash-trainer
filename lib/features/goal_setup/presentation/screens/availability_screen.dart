@@ -95,7 +95,7 @@ class AvailabilityScreen extends ConsumerWidget {
                     child: Text(
                       '⚠ Only 1 training day available. We recommend at least 2-3.',
                       style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.accentOrange),
+                          .copyWith(color: AppColors.accentBlue),
                       textAlign: TextAlign.center,
                     ),
                   ),

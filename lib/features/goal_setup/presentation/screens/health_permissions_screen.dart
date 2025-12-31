@@ -101,7 +101,7 @@ class HealthPermissionsScreen extends ConsumerWidget {
   Widget _buildBenefitRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: AppColors.accentOrange),
+        Icon(icon, size: 20, color: AppColors.accentBlue),
         const SizedBox(width: 12),
         Text(
           text,

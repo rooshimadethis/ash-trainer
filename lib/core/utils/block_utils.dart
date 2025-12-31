@@ -18,7 +18,7 @@ class BlockUtils {
     } else if (i.contains('recover')) {
       baseColor = AppColors.blockRecovery;
     } else {
-      baseColor = AppColors.accentOrange; // Default
+      baseColor = AppColors.accentBlue; // Default
     }
 
     // Modulate color based on block number to distinguish adjacent blocks blocks

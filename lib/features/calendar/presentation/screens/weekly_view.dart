@@ -212,14 +212,16 @@ class WeeklyView extends ConsumerWidget {
                             dayBlock.intent, dayBlock.blockNumber),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        '${dayBlock.intent.toUpperCase()} BLOCK',
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.0,
+                      Flexible(
+                        child: Text(
+                          dayBlock.intent.toUpperCase(),
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: BlockUtils.getColorForIntent(
+                                dayBlock.intent, dayBlock.blockNumber),
+                            fontSize: 10,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 1.0,
+                          ),
                         ),
                       ),
                     ],
