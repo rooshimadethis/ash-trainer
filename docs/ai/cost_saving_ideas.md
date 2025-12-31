@@ -56,3 +56,14 @@ The app is configured to use `gemini-3-flash-preview` (likely a placeholder or f
 
 **Action:**
 Add logging for `response.usageMetadata.totalTokenCount` to an analytics service (e.g., Firebase Analytics) to track real-world costs per user and identify "heavy" users or features.
+
+## 7. Handle Model Loops (Reliability & Cost)
+
+**Problem:**
+Generative models can occasionally get stuck in repetition loops (repeating the same word or phrase indefinitely), which not only degrades user experience but also consumes the maximum allowed output tokens, spiking costs.
+
+**Solution:**
+*   **`maxOutputTokens`**: Set a strict limit on `maxOutputTokens` in the `GenerationConfig`. For chat responses, this should be reasonable (e.g., 500-1000 tokens) to prevent runaway costs if a loop occurs.
+*   **`stopSequences`**: If the prompt structure uses specific delimiters (e.g., "User:", "Model:"), add these to `stopSequences` to ensure the model stops generating if it hallucinates the start of a new turn.
+*   **Detection**: Implement client-side logic to detect repetition in the stream (e.g., if the same substring appears X times in a row) and abort the connection `chatSession.sendMessage` early.
+*   **Temperature**: Avoid setting `temperature` too low (near 0) for creative tasks, as it can sometimes increase the likelihood of repetitive loops. Keep it around 0.7-1.0 for chat.
