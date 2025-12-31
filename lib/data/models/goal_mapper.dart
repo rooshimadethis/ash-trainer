@@ -30,6 +30,10 @@ extension GoalDTOMapper on GoalDTO {
       qualityScore: qualityScore,
       consistencyScore: consistencyScore,
       recoveryScore: recoveryScore,
+      rationaleOverallApproach: rationaleOverallApproach,
+      rationaleIntensityDistribution: rationaleIntensityDistribution,
+      rationaleKeyWorkouts: rationaleKeyWorkouts,
+      rationaleRecoveryStrategy: rationaleRecoveryStrategy,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -64,6 +68,10 @@ extension GoalMapper on Goal {
       qualityScore: Value(qualityScore),
       consistencyScore: Value(consistencyScore),
       recoveryScore: Value(recoveryScore),
+      rationaleOverallApproach: Value(rationaleOverallApproach),
+      rationaleIntensityDistribution: Value(rationaleIntensityDistribution),
+      rationaleKeyWorkouts: Value(rationaleKeyWorkouts),
+      rationaleRecoveryStrategy: Value(rationaleRecoveryStrategy),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

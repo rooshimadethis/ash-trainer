@@ -57,7 +57,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -78,6 +78,13 @@ class AppDatabase extends _$AppDatabase {
             if (i == 3) {
               // Add isKey column for Algorithmic Rescheduling
               await m.addColumn(workouts, workouts.isKey);
+            }
+            if (i == 4) {
+              // Add rationale columns for Phase 2: AI Rationale
+              await m.addColumn(goals, goals.rationaleOverallApproach);
+              await m.addColumn(goals, goals.rationaleIntensityDistribution);
+              await m.addColumn(goals, goals.rationaleKeyWorkouts);
+              await m.addColumn(goals, goals.rationaleRecoveryStrategy);
             }
           }
         },

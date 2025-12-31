@@ -117,6 +117,21 @@ class BuildPlanningContext {
       config: PlanningConfig(
         mode: mode,
         startDate: startDate,
+        upcomingWeekdays: List.generate(28, (index) {
+          final date = startDate.add(Duration(days: index));
+          // Manual weekday mapping to avoid dependency on intl for now if not present,
+          // or use simple switch. Dart DateTime.weekday is 1=Mon, 7=Sun.
+          const days = [
+            'Monday',
+            'Tuesday',
+            'Wednesday',
+            'Thursday',
+            'Friday',
+            'Saturday',
+            'Sunday'
+          ];
+          return days[date.weekday - 1];
+        }),
         instruction: instruction,
       ),
       philosophy: philosophy,

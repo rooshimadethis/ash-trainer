@@ -839,6 +839,31 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
       type: DriftSqlType.double,
       requiredDuringInsert: false,
       defaultValue: const Constant(0.0));
+  static const VerificationMeta _rationaleOverallApproachMeta =
+      const VerificationMeta('rationaleOverallApproach');
+  @override
+  late final GeneratedColumn<String> rationaleOverallApproach =
+      GeneratedColumn<String>('rationale_overall_approach', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleIntensityDistributionMeta =
+      const VerificationMeta('rationaleIntensityDistribution');
+  @override
+  late final GeneratedColumn<String> rationaleIntensityDistribution =
+      GeneratedColumn<String>(
+          'rationale_intensity_distribution', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleKeyWorkoutsMeta =
+      const VerificationMeta('rationaleKeyWorkouts');
+  @override
+  late final GeneratedColumn<String> rationaleKeyWorkouts =
+      GeneratedColumn<String>('rationale_key_workouts', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleRecoveryStrategyMeta =
+      const VerificationMeta('rationaleRecoveryStrategy');
+  @override
+  late final GeneratedColumn<String> rationaleRecoveryStrategy =
+      GeneratedColumn<String>('rationale_recovery_strategy', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -878,6 +903,10 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
         qualityScore,
         consistencyScore,
         recoveryScore,
+        rationaleOverallApproach,
+        rationaleIntensityDistribution,
+        rationaleKeyWorkouts,
+        rationaleRecoveryStrategy,
         createdAt,
         updatedAt
       ];
@@ -1031,6 +1060,33 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           recoveryScore.isAcceptableOrUnknown(
               data['recovery_score']!, _recoveryScoreMeta));
     }
+    if (data.containsKey('rationale_overall_approach')) {
+      context.handle(
+          _rationaleOverallApproachMeta,
+          rationaleOverallApproach.isAcceptableOrUnknown(
+              data['rationale_overall_approach']!,
+              _rationaleOverallApproachMeta));
+    }
+    if (data.containsKey('rationale_intensity_distribution')) {
+      context.handle(
+          _rationaleIntensityDistributionMeta,
+          rationaleIntensityDistribution.isAcceptableOrUnknown(
+              data['rationale_intensity_distribution']!,
+              _rationaleIntensityDistributionMeta));
+    }
+    if (data.containsKey('rationale_key_workouts')) {
+      context.handle(
+          _rationaleKeyWorkoutsMeta,
+          rationaleKeyWorkouts.isAcceptableOrUnknown(
+              data['rationale_key_workouts']!, _rationaleKeyWorkoutsMeta));
+    }
+    if (data.containsKey('rationale_recovery_strategy')) {
+      context.handle(
+          _rationaleRecoveryStrategyMeta,
+          rationaleRecoveryStrategy.isAcceptableOrUnknown(
+              data['rationale_recovery_strategy']!,
+              _rationaleRecoveryStrategyMeta));
+    }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
           createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
@@ -1103,6 +1159,18 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           DriftSqlType.double, data['${effectivePrefix}consistency_score'])!,
       recoveryScore: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}recovery_score'])!,
+      rationaleOverallApproach: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_overall_approach']),
+      rationaleIntensityDistribution: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_intensity_distribution']),
+      rationaleKeyWorkouts: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_key_workouts']),
+      rationaleRecoveryStrategy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_recovery_strategy']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -1142,6 +1210,10 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
   final double qualityScore;
   final double consistencyScore;
   final double recoveryScore;
+  final String? rationaleOverallApproach;
+  final String? rationaleIntensityDistribution;
+  final String? rationaleKeyWorkouts;
+  final String? rationaleRecoveryStrategy;
   final DateTime createdAt;
   final DateTime updatedAt;
   const GoalDTO(
@@ -1170,6 +1242,10 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       required this.qualityScore,
       required this.consistencyScore,
       required this.recoveryScore,
+      this.rationaleOverallApproach,
+      this.rationaleIntensityDistribution,
+      this.rationaleKeyWorkouts,
+      this.rationaleRecoveryStrategy,
       required this.createdAt,
       required this.updatedAt});
   @override
@@ -1231,6 +1307,21 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
     map['quality_score'] = Variable<double>(qualityScore);
     map['consistency_score'] = Variable<double>(consistencyScore);
     map['recovery_score'] = Variable<double>(recoveryScore);
+    if (!nullToAbsent || rationaleOverallApproach != null) {
+      map['rationale_overall_approach'] =
+          Variable<String>(rationaleOverallApproach);
+    }
+    if (!nullToAbsent || rationaleIntensityDistribution != null) {
+      map['rationale_intensity_distribution'] =
+          Variable<String>(rationaleIntensityDistribution);
+    }
+    if (!nullToAbsent || rationaleKeyWorkouts != null) {
+      map['rationale_key_workouts'] = Variable<String>(rationaleKeyWorkouts);
+    }
+    if (!nullToAbsent || rationaleRecoveryStrategy != null) {
+      map['rationale_recovery_strategy'] =
+          Variable<String>(rationaleRecoveryStrategy);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -1293,6 +1384,20 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       qualityScore: Value(qualityScore),
       consistencyScore: Value(consistencyScore),
       recoveryScore: Value(recoveryScore),
+      rationaleOverallApproach: rationaleOverallApproach == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rationaleOverallApproach),
+      rationaleIntensityDistribution:
+          rationaleIntensityDistribution == null && nullToAbsent
+              ? const Value.absent()
+              : Value(rationaleIntensityDistribution),
+      rationaleKeyWorkouts: rationaleKeyWorkouts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rationaleKeyWorkouts),
+      rationaleRecoveryStrategy:
+          rationaleRecoveryStrategy == null && nullToAbsent
+              ? const Value.absent()
+              : Value(rationaleRecoveryStrategy),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1331,6 +1436,14 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       qualityScore: serializer.fromJson<double>(json['qualityScore']),
       consistencyScore: serializer.fromJson<double>(json['consistencyScore']),
       recoveryScore: serializer.fromJson<double>(json['recoveryScore']),
+      rationaleOverallApproach:
+          serializer.fromJson<String?>(json['rationaleOverallApproach']),
+      rationaleIntensityDistribution:
+          serializer.fromJson<String?>(json['rationaleIntensityDistribution']),
+      rationaleKeyWorkouts:
+          serializer.fromJson<String?>(json['rationaleKeyWorkouts']),
+      rationaleRecoveryStrategy:
+          serializer.fromJson<String?>(json['rationaleRecoveryStrategy']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1365,6 +1478,13 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       'qualityScore': serializer.toJson<double>(qualityScore),
       'consistencyScore': serializer.toJson<double>(consistencyScore),
       'recoveryScore': serializer.toJson<double>(recoveryScore),
+      'rationaleOverallApproach':
+          serializer.toJson<String?>(rationaleOverallApproach),
+      'rationaleIntensityDistribution':
+          serializer.toJson<String?>(rationaleIntensityDistribution),
+      'rationaleKeyWorkouts': serializer.toJson<String?>(rationaleKeyWorkouts),
+      'rationaleRecoveryStrategy':
+          serializer.toJson<String?>(rationaleRecoveryStrategy),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1396,6 +1516,10 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           double? qualityScore,
           double? consistencyScore,
           double? recoveryScore,
+          Value<String?> rationaleOverallApproach = const Value.absent(),
+          Value<String?> rationaleIntensityDistribution = const Value.absent(),
+          Value<String?> rationaleKeyWorkouts = const Value.absent(),
+          Value<String?> rationaleRecoveryStrategy = const Value.absent(),
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       GoalDTO(
@@ -1441,6 +1565,18 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         qualityScore: qualityScore ?? this.qualityScore,
         consistencyScore: consistencyScore ?? this.consistencyScore,
         recoveryScore: recoveryScore ?? this.recoveryScore,
+        rationaleOverallApproach: rationaleOverallApproach.present
+            ? rationaleOverallApproach.value
+            : this.rationaleOverallApproach,
+        rationaleIntensityDistribution: rationaleIntensityDistribution.present
+            ? rationaleIntensityDistribution.value
+            : this.rationaleIntensityDistribution,
+        rationaleKeyWorkouts: rationaleKeyWorkouts.present
+            ? rationaleKeyWorkouts.value
+            : this.rationaleKeyWorkouts,
+        rationaleRecoveryStrategy: rationaleRecoveryStrategy.present
+            ? rationaleRecoveryStrategy.value
+            : this.rationaleRecoveryStrategy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -1501,6 +1637,19 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       recoveryScore: data.recoveryScore.present
           ? data.recoveryScore.value
           : this.recoveryScore,
+      rationaleOverallApproach: data.rationaleOverallApproach.present
+          ? data.rationaleOverallApproach.value
+          : this.rationaleOverallApproach,
+      rationaleIntensityDistribution:
+          data.rationaleIntensityDistribution.present
+              ? data.rationaleIntensityDistribution.value
+              : this.rationaleIntensityDistribution,
+      rationaleKeyWorkouts: data.rationaleKeyWorkouts.present
+          ? data.rationaleKeyWorkouts.value
+          : this.rationaleKeyWorkouts,
+      rationaleRecoveryStrategy: data.rationaleRecoveryStrategy.present
+          ? data.rationaleRecoveryStrategy.value
+          : this.rationaleRecoveryStrategy,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1534,6 +1683,11 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           ..write('qualityScore: $qualityScore, ')
           ..write('consistencyScore: $consistencyScore, ')
           ..write('recoveryScore: $recoveryScore, ')
+          ..write('rationaleOverallApproach: $rationaleOverallApproach, ')
+          ..write(
+              'rationaleIntensityDistribution: $rationaleIntensityDistribution, ')
+          ..write('rationaleKeyWorkouts: $rationaleKeyWorkouts, ')
+          ..write('rationaleRecoveryStrategy: $rationaleRecoveryStrategy, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1567,6 +1721,10 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         qualityScore,
         consistencyScore,
         recoveryScore,
+        rationaleOverallApproach,
+        rationaleIntensityDistribution,
+        rationaleKeyWorkouts,
+        rationaleRecoveryStrategy,
         createdAt,
         updatedAt
       ]);
@@ -1599,6 +1757,11 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           other.qualityScore == this.qualityScore &&
           other.consistencyScore == this.consistencyScore &&
           other.recoveryScore == this.recoveryScore &&
+          other.rationaleOverallApproach == this.rationaleOverallApproach &&
+          other.rationaleIntensityDistribution ==
+              this.rationaleIntensityDistribution &&
+          other.rationaleKeyWorkouts == this.rationaleKeyWorkouts &&
+          other.rationaleRecoveryStrategy == this.rationaleRecoveryStrategy &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1629,6 +1792,10 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
   final Value<double> qualityScore;
   final Value<double> consistencyScore;
   final Value<double> recoveryScore;
+  final Value<String?> rationaleOverallApproach;
+  final Value<String?> rationaleIntensityDistribution;
+  final Value<String?> rationaleKeyWorkouts;
+  final Value<String?> rationaleRecoveryStrategy;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const GoalsCompanion({
@@ -1657,6 +1824,10 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.qualityScore = const Value.absent(),
     this.consistencyScore = const Value.absent(),
     this.recoveryScore = const Value.absent(),
+    this.rationaleOverallApproach = const Value.absent(),
+    this.rationaleIntensityDistribution = const Value.absent(),
+    this.rationaleKeyWorkouts = const Value.absent(),
+    this.rationaleRecoveryStrategy = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -1686,6 +1857,10 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.qualityScore = const Value.absent(),
     this.consistencyScore = const Value.absent(),
     this.recoveryScore = const Value.absent(),
+    this.rationaleOverallApproach = const Value.absent(),
+    this.rationaleIntensityDistribution = const Value.absent(),
+    this.rationaleKeyWorkouts = const Value.absent(),
+    this.rationaleRecoveryStrategy = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
   })  : userId = Value(userId),
@@ -1719,6 +1894,10 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     Expression<double>? qualityScore,
     Expression<double>? consistencyScore,
     Expression<double>? recoveryScore,
+    Expression<String>? rationaleOverallApproach,
+    Expression<String>? rationaleIntensityDistribution,
+    Expression<String>? rationaleKeyWorkouts,
+    Expression<String>? rationaleRecoveryStrategy,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -1752,6 +1931,14 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       if (qualityScore != null) 'quality_score': qualityScore,
       if (consistencyScore != null) 'consistency_score': consistencyScore,
       if (recoveryScore != null) 'recovery_score': recoveryScore,
+      if (rationaleOverallApproach != null)
+        'rationale_overall_approach': rationaleOverallApproach,
+      if (rationaleIntensityDistribution != null)
+        'rationale_intensity_distribution': rationaleIntensityDistribution,
+      if (rationaleKeyWorkouts != null)
+        'rationale_key_workouts': rationaleKeyWorkouts,
+      if (rationaleRecoveryStrategy != null)
+        'rationale_recovery_strategy': rationaleRecoveryStrategy,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -1783,6 +1970,10 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       Value<double>? qualityScore,
       Value<double>? consistencyScore,
       Value<double>? recoveryScore,
+      Value<String?>? rationaleOverallApproach,
+      Value<String?>? rationaleIntensityDistribution,
+      Value<String?>? rationaleKeyWorkouts,
+      Value<String?>? rationaleRecoveryStrategy,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return GoalsCompanion(
@@ -1812,6 +2003,13 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       qualityScore: qualityScore ?? this.qualityScore,
       consistencyScore: consistencyScore ?? this.consistencyScore,
       recoveryScore: recoveryScore ?? this.recoveryScore,
+      rationaleOverallApproach:
+          rationaleOverallApproach ?? this.rationaleOverallApproach,
+      rationaleIntensityDistribution:
+          rationaleIntensityDistribution ?? this.rationaleIntensityDistribution,
+      rationaleKeyWorkouts: rationaleKeyWorkouts ?? this.rationaleKeyWorkouts,
+      rationaleRecoveryStrategy:
+          rationaleRecoveryStrategy ?? this.rationaleRecoveryStrategy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -1897,6 +2095,22 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     if (recoveryScore.present) {
       map['recovery_score'] = Variable<double>(recoveryScore.value);
     }
+    if (rationaleOverallApproach.present) {
+      map['rationale_overall_approach'] =
+          Variable<String>(rationaleOverallApproach.value);
+    }
+    if (rationaleIntensityDistribution.present) {
+      map['rationale_intensity_distribution'] =
+          Variable<String>(rationaleIntensityDistribution.value);
+    }
+    if (rationaleKeyWorkouts.present) {
+      map['rationale_key_workouts'] =
+          Variable<String>(rationaleKeyWorkouts.value);
+    }
+    if (rationaleRecoveryStrategy.present) {
+      map['rationale_recovery_strategy'] =
+          Variable<String>(rationaleRecoveryStrategy.value);
+    }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
     }
@@ -1934,6 +2148,11 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
           ..write('qualityScore: $qualityScore, ')
           ..write('consistencyScore: $consistencyScore, ')
           ..write('recoveryScore: $recoveryScore, ')
+          ..write('rationaleOverallApproach: $rationaleOverallApproach, ')
+          ..write(
+              'rationaleIntensityDistribution: $rationaleIntensityDistribution, ')
+          ..write('rationaleKeyWorkouts: $rationaleKeyWorkouts, ')
+          ..write('rationaleRecoveryStrategy: $rationaleRecoveryStrategy, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -6602,6 +6821,10 @@ typedef $$GoalsTableCreateCompanionBuilder = GoalsCompanion Function({
   Value<double> qualityScore,
   Value<double> consistencyScore,
   Value<double> recoveryScore,
+  Value<String?> rationaleOverallApproach,
+  Value<String?> rationaleIntensityDistribution,
+  Value<String?> rationaleKeyWorkouts,
+  Value<String?> rationaleRecoveryStrategy,
   required DateTime createdAt,
   required DateTime updatedAt,
 });
@@ -6631,6 +6854,10 @@ typedef $$GoalsTableUpdateCompanionBuilder = GoalsCompanion Function({
   Value<double> qualityScore,
   Value<double> consistencyScore,
   Value<double> recoveryScore,
+  Value<String?> rationaleOverallApproach,
+  Value<String?> rationaleIntensityDistribution,
+  Value<String?> rationaleKeyWorkouts,
+  Value<String?> rationaleRecoveryStrategy,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
 });
@@ -6761,6 +6988,23 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<double> get recoveryScore => $composableBuilder(
       column: $table.recoveryScore, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -6904,6 +7148,23 @@ class $$GoalsTableOrderingComposer
       column: $table.recoveryScore,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy,
+      builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnOrderings(column));
 
@@ -7012,6 +7273,20 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<double> get recoveryScore => $composableBuilder(
       column: $table.recoveryScore, builder: (column) => column);
 
+  GeneratedColumn<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach, builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts, builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy, builder: (column) => column);
+
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
 
@@ -7108,6 +7383,11 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<double> qualityScore = const Value.absent(),
             Value<double> consistencyScore = const Value.absent(),
             Value<double> recoveryScore = const Value.absent(),
+            Value<String?> rationaleOverallApproach = const Value.absent(),
+            Value<String?> rationaleIntensityDistribution =
+                const Value.absent(),
+            Value<String?> rationaleKeyWorkouts = const Value.absent(),
+            Value<String?> rationaleRecoveryStrategy = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
           }) =>
@@ -7137,6 +7417,10 @@ class $$GoalsTableTableManager extends RootTableManager<
             qualityScore: qualityScore,
             consistencyScore: consistencyScore,
             recoveryScore: recoveryScore,
+            rationaleOverallApproach: rationaleOverallApproach,
+            rationaleIntensityDistribution: rationaleIntensityDistribution,
+            rationaleKeyWorkouts: rationaleKeyWorkouts,
+            rationaleRecoveryStrategy: rationaleRecoveryStrategy,
             createdAt: createdAt,
             updatedAt: updatedAt,
           ),
@@ -7166,6 +7450,11 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<double> qualityScore = const Value.absent(),
             Value<double> consistencyScore = const Value.absent(),
             Value<double> recoveryScore = const Value.absent(),
+            Value<String?> rationaleOverallApproach = const Value.absent(),
+            Value<String?> rationaleIntensityDistribution =
+                const Value.absent(),
+            Value<String?> rationaleKeyWorkouts = const Value.absent(),
+            Value<String?> rationaleRecoveryStrategy = const Value.absent(),
             required DateTime createdAt,
             required DateTime updatedAt,
           }) =>
@@ -7195,6 +7484,10 @@ class $$GoalsTableTableManager extends RootTableManager<
             qualityScore: qualityScore,
             consistencyScore: consistencyScore,
             recoveryScore: recoveryScore,
+            rationaleOverallApproach: rationaleOverallApproach,
+            rationaleIntensityDistribution: rationaleIntensityDistribution,
+            rationaleKeyWorkouts: rationaleKeyWorkouts,
+            rationaleRecoveryStrategy: rationaleRecoveryStrategy,
             createdAt: createdAt,
             updatedAt: updatedAt,
           ),

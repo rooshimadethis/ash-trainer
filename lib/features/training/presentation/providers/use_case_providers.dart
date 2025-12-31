@@ -22,6 +22,7 @@ final generateTrainingPlanProvider = Provider<GenerateTrainingPlan>((ref) {
     ref.watch(buildPlanningContextProvider),
     ref.watch(aiServiceProvider),
     ref.watch(workoutRepositoryProvider),
+    ref.watch(goalRepositoryProvider),
     TrainingPlanScheduler(),
   );
 });

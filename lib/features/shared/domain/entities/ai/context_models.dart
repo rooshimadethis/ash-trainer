@@ -46,6 +46,8 @@ class PlanningConfig with _$PlanningConfig {
   const factory PlanningConfig({
     required PlanningMode mode,
     required DateTime startDate,
+    required List<String>
+        upcomingWeekdays, // Lookup list for AI (Index 0 = Day 1)
     required String instruction,
   }) = _PlanningConfig;
 

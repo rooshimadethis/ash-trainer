@@ -6,6 +6,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/domain/entities/training/workout.dart';
+import '../../../shared/domain/entities/goal.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';
@@ -20,6 +21,13 @@ final week1WorkoutsProvider =
     endDate:
         DateTime(now.year, now.month, now.day).add(const Duration(days: 7)),
   );
+});
+
+final activeGoalProvider = FutureProvider.autoDispose<Goal>((ref) async {
+  final repo = ref.watch(goalRepositoryProvider);
+  final goal = await repo.getActiveGoal();
+  if (goal == null) throw Exception('No active goal found');
+  return goal;
 });
 
 class PlanReviewScreen extends ConsumerWidget {
@@ -37,30 +45,50 @@ class PlanReviewScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Ready! 🎉', style: AppTextStyles.h2),
-            const SizedBox(height: 24),
             Expanded(
-              child: workoutsAsync.when(
-                data: (workouts) {
-                  if (workouts.isEmpty) {
-                    return Center(
-                        child: Text('No workouts found',
-                            style: AppTextStyles.bodyLarge));
-                  }
-                  return ListView.builder(
-                    itemCount: workouts.length,
-                    itemBuilder: (context, index) {
-                      final workout = workouts[index];
-                      return _WorkoutTile(workout: workout);
-                    },
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(
-                    child: Text('Error: $err',
-                        style: const TextStyle(color: Colors.red))),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('Ready! 🎉', style: AppTextStyles.h2),
+                    const SizedBox(height: 24),
+                    Consumer(builder: (context, ref, _) {
+                      final goalAsync = ref.watch(activeGoalProvider);
+                      return goalAsync.maybeWhen(
+                        data: (goal) => _RationaleSection(goal: goal),
+                        orElse: () => const SizedBox.shrink(),
+                      );
+                    }),
+                    Text('Week 1 Preview', style: AppTextStyles.h3),
+                    const SizedBox(height: 12),
+                    workoutsAsync.when(
+                      data: (workouts) {
+                        if (workouts.isEmpty) {
+                          return Center(
+                              child: Text('No workouts found',
+                                  style: AppTextStyles.bodyLarge));
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: workouts.length,
+                          itemBuilder: (context, index) {
+                            final workout = workouts[index];
+                            return _WorkoutTile(workout: workout);
+                          },
+                        );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Center(
+                          child: Text('Error: $err',
+                              style: const TextStyle(color: Colors.red))),
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 16),
             AshButton(
               label: 'Looks Good!',
               onPressed: () {
@@ -139,6 +167,70 @@ class _WorkoutTile extends StatelessWidget {
             child: Text(WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
                 style: TextStyle(fontSize: 10, color: color)),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RationaleSection extends StatelessWidget {
+  final Goal goal;
+
+  const _RationaleSection({required this.goal});
+
+  @override
+  Widget build(BuildContext context) {
+    if (goal.rationaleOverallApproach == null) return const SizedBox.shrink();
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 24),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHighlight,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.accentBlue.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.lightbulb_outline,
+                  color: AppColors.accentBlue, size: 20),
+              const SizedBox(width: 8),
+              Text('The Strategy',
+                  style:
+                      AppTextStyles.h3.copyWith(color: AppColors.accentBlue)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildRationaleItem(
+              'Overall Approach', goal.rationaleOverallApproach),
+          _buildRationaleItem('Intensity', goal.rationaleIntensityDistribution),
+          _buildRationaleItem('Key Workouts', goal.rationaleKeyWorkouts),
+          _buildRationaleItem('Recovery', goal.rationaleRecoveryStrategy),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRationaleItem(String label, String? content) {
+    if (content == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label.toUpperCase(),
+              style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.0)),
+          const SizedBox(height: 4),
+          Text(content,
+              style: const TextStyle(
+                  color: Colors.white, fontSize: 13, height: 1.4)),
         ],
       ),
     );

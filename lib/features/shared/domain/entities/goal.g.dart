@@ -39,6 +39,11 @@ _$GoalImpl _$$GoalImplFromJson(Map<String, dynamic> json) => _$GoalImpl(
       qualityScore: (json['qualityScore'] as num?)?.toDouble() ?? 0.0,
       consistencyScore: (json['consistencyScore'] as num?)?.toDouble() ?? 0.0,
       recoveryScore: (json['recoveryScore'] as num?)?.toDouble() ?? 0.0,
+      rationaleOverallApproach: json['rationaleOverallApproach'] as String?,
+      rationaleIntensityDistribution:
+          json['rationaleIntensityDistribution'] as String?,
+      rationaleKeyWorkouts: json['rationaleKeyWorkouts'] as String?,
+      rationaleRecoveryStrategy: json['rationaleRecoveryStrategy'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -70,6 +75,10 @@ Map<String, dynamic> _$$GoalImplToJson(_$GoalImpl instance) =>
       'qualityScore': instance.qualityScore,
       'consistencyScore': instance.consistencyScore,
       'recoveryScore': instance.recoveryScore,
+      'rationaleOverallApproach': instance.rationaleOverallApproach,
+      'rationaleIntensityDistribution': instance.rationaleIntensityDistribution,
+      'rationaleKeyWorkouts': instance.rationaleKeyWorkouts,
+      'rationaleRecoveryStrategy': instance.rationaleRecoveryStrategy,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

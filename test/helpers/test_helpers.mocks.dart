@@ -209,6 +209,30 @@ class MockGoalRepository extends _i1.Mock implements _i6.GoalRepository {
       ) as _i5.Future<void>);
 
   @override
+  _i5.Future<void> updateRationale({
+    required String? goalId,
+    required String? overallApproach,
+    required String? intensityDistribution,
+    required String? keyWorkouts,
+    required String? recoveryStrategy,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateRationale,
+          [],
+          {
+            #goalId: goalId,
+            #overallApproach: overallApproach,
+            #intensityDistribution: intensityDistribution,
+            #keyWorkouts: keyWorkouts,
+            #recoveryStrategy: recoveryStrategy,
+          },
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
   _i5.Future<void> deactivateGoal(String? goalId) => (super.noSuchMethod(
         Invocation.method(
           #deactivateGoal,

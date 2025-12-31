@@ -331,6 +331,8 @@ PlanningConfig _$PlanningConfigFromJson(Map<String, dynamic> json) {
 mixin _$PlanningConfig {
   PlanningMode get mode => throw _privateConstructorUsedError;
   DateTime get startDate => throw _privateConstructorUsedError;
+  List<String> get upcomingWeekdays =>
+      throw _privateConstructorUsedError; // Lookup list for AI (Index 0 = Day 1)
   String get instruction => throw _privateConstructorUsedError;
 
   /// Serializes this PlanningConfig to a JSON map.
@@ -349,7 +351,11 @@ abstract class $PlanningConfigCopyWith<$Res> {
           PlanningConfig value, $Res Function(PlanningConfig) then) =
       _$PlanningConfigCopyWithImpl<$Res, PlanningConfig>;
   @useResult
-  $Res call({PlanningMode mode, DateTime startDate, String instruction});
+  $Res call(
+      {PlanningMode mode,
+      DateTime startDate,
+      List<String> upcomingWeekdays,
+      String instruction});
 }
 
 /// @nodoc
@@ -369,6 +375,7 @@ class _$PlanningConfigCopyWithImpl<$Res, $Val extends PlanningConfig>
   $Res call({
     Object? mode = null,
     Object? startDate = null,
+    Object? upcomingWeekdays = null,
     Object? instruction = null,
   }) {
     return _then(_value.copyWith(
@@ -380,6 +387,10 @@ class _$PlanningConfigCopyWithImpl<$Res, $Val extends PlanningConfig>
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      upcomingWeekdays: null == upcomingWeekdays
+          ? _value.upcomingWeekdays
+          : upcomingWeekdays // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       instruction: null == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
@@ -396,7 +407,11 @@ abstract class _$$PlanningConfigImplCopyWith<$Res>
       __$$PlanningConfigImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({PlanningMode mode, DateTime startDate, String instruction});
+  $Res call(
+      {PlanningMode mode,
+      DateTime startDate,
+      List<String> upcomingWeekdays,
+      String instruction});
 }
 
 /// @nodoc
@@ -414,6 +429,7 @@ class __$$PlanningConfigImplCopyWithImpl<$Res>
   $Res call({
     Object? mode = null,
     Object? startDate = null,
+    Object? upcomingWeekdays = null,
     Object? instruction = null,
   }) {
     return _then(_$PlanningConfigImpl(
@@ -425,6 +441,10 @@ class __$$PlanningConfigImplCopyWithImpl<$Res>
           ? _value.startDate
           : startDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      upcomingWeekdays: null == upcomingWeekdays
+          ? _value._upcomingWeekdays
+          : upcomingWeekdays // ignore: cast_nullable_to_non_nullable
+              as List<String>,
       instruction: null == instruction
           ? _value.instruction
           : instruction // ignore: cast_nullable_to_non_nullable
@@ -437,7 +457,11 @@ class __$$PlanningConfigImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$PlanningConfigImpl implements _PlanningConfig {
   const _$PlanningConfigImpl(
-      {required this.mode, required this.startDate, required this.instruction});
+      {required this.mode,
+      required this.startDate,
+      required final List<String> upcomingWeekdays,
+      required this.instruction})
+      : _upcomingWeekdays = upcomingWeekdays;
 
   factory _$PlanningConfigImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlanningConfigImplFromJson(json);
@@ -446,12 +470,22 @@ class _$PlanningConfigImpl implements _PlanningConfig {
   final PlanningMode mode;
   @override
   final DateTime startDate;
+  final List<String> _upcomingWeekdays;
+  @override
+  List<String> get upcomingWeekdays {
+    if (_upcomingWeekdays is EqualUnmodifiableListView)
+      return _upcomingWeekdays;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_upcomingWeekdays);
+  }
+
+// Lookup list for AI (Index 0 = Day 1)
   @override
   final String instruction;
 
   @override
   String toString() {
-    return 'PlanningConfig(mode: $mode, startDate: $startDate, instruction: $instruction)';
+    return 'PlanningConfig(mode: $mode, startDate: $startDate, upcomingWeekdays: $upcomingWeekdays, instruction: $instruction)';
   }
 
   @override
@@ -462,13 +496,16 @@ class _$PlanningConfigImpl implements _PlanningConfig {
             (identical(other.mode, mode) || other.mode == mode) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
+            const DeepCollectionEquality()
+                .equals(other._upcomingWeekdays, _upcomingWeekdays) &&
             (identical(other.instruction, instruction) ||
                 other.instruction == instruction));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, mode, startDate, instruction);
+  int get hashCode => Object.hash(runtimeType, mode, startDate,
+      const DeepCollectionEquality().hash(_upcomingWeekdays), instruction);
 
   /// Create a copy of PlanningConfig
   /// with the given fields replaced by the non-null parameter values.
@@ -491,6 +528,7 @@ abstract class _PlanningConfig implements PlanningConfig {
   const factory _PlanningConfig(
       {required final PlanningMode mode,
       required final DateTime startDate,
+      required final List<String> upcomingWeekdays,
       required final String instruction}) = _$PlanningConfigImpl;
 
   factory _PlanningConfig.fromJson(Map<String, dynamic> json) =
@@ -500,6 +538,8 @@ abstract class _PlanningConfig implements PlanningConfig {
   PlanningMode get mode;
   @override
   DateTime get startDate;
+  @override
+  List<String> get upcomingWeekdays; // Lookup list for AI (Index 0 = Day 1)
   @override
   String get instruction;
 

@@ -33,6 +33,10 @@ class Goal with _$Goal {
     @Default(0.0) double qualityScore,
     @Default(0.0) double consistencyScore,
     @Default(0.0) double recoveryScore,
+    String? rationaleOverallApproach,
+    String? rationaleIntensityDistribution,
+    String? rationaleKeyWorkouts,
+    String? rationaleRecoveryStrategy,
     required DateTime createdAt,
     required DateTime updatedAt,
   }) = _Goal;

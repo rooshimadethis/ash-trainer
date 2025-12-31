@@ -33,6 +33,9 @@ _$PlanningConfigImpl _$$PlanningConfigImplFromJson(Map<String, dynamic> json) =>
     _$PlanningConfigImpl(
       mode: $enumDecode(_$PlanningModeEnumMap, json['mode']),
       startDate: DateTime.parse(json['startDate'] as String),
+      upcomingWeekdays: (json['upcomingWeekdays'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
       instruction: json['instruction'] as String,
     );
 
@@ -41,6 +44,7 @@ Map<String, dynamic> _$$PlanningConfigImplToJson(
     <String, dynamic>{
       'mode': _$PlanningModeEnumMap[instance.mode]!,
       'startDate': instance.startDate.toIso8601String(),
+      'upcomingWeekdays': instance.upcomingWeekdays,
       'instruction': instance.instruction,
     };
 

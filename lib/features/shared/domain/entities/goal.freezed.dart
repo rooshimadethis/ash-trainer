@@ -46,6 +46,11 @@ mixin _$Goal {
   double get qualityScore => throw _privateConstructorUsedError;
   double get consistencyScore => throw _privateConstructorUsedError;
   double get recoveryScore => throw _privateConstructorUsedError;
+  String? get rationaleOverallApproach => throw _privateConstructorUsedError;
+  String? get rationaleIntensityDistribution =>
+      throw _privateConstructorUsedError;
+  String? get rationaleKeyWorkouts => throw _privateConstructorUsedError;
+  String? get rationaleRecoveryStrategy => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
   DateTime get updatedAt => throw _privateConstructorUsedError;
 
@@ -89,6 +94,10 @@ abstract class $GoalCopyWith<$Res> {
       double qualityScore,
       double consistencyScore,
       double recoveryScore,
+      String? rationaleOverallApproach,
+      String? rationaleIntensityDistribution,
+      String? rationaleKeyWorkouts,
+      String? rationaleRecoveryStrategy,
       DateTime createdAt,
       DateTime updatedAt});
 }
@@ -133,6 +142,10 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
     Object? qualityScore = null,
     Object? consistencyScore = null,
     Object? recoveryScore = null,
+    Object? rationaleOverallApproach = freezed,
+    Object? rationaleIntensityDistribution = freezed,
+    Object? rationaleKeyWorkouts = freezed,
+    Object? rationaleRecoveryStrategy = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -237,6 +250,22 @@ class _$GoalCopyWithImpl<$Res, $Val extends Goal>
           ? _value.recoveryScore
           : recoveryScore // ignore: cast_nullable_to_non_nullable
               as double,
+      rationaleOverallApproach: freezed == rationaleOverallApproach
+          ? _value.rationaleOverallApproach
+          : rationaleOverallApproach // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleIntensityDistribution: freezed == rationaleIntensityDistribution
+          ? _value.rationaleIntensityDistribution
+          : rationaleIntensityDistribution // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleKeyWorkouts: freezed == rationaleKeyWorkouts
+          ? _value.rationaleKeyWorkouts
+          : rationaleKeyWorkouts // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleRecoveryStrategy: freezed == rationaleRecoveryStrategy
+          ? _value.rationaleRecoveryStrategy
+          : rationaleRecoveryStrategy // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -282,6 +311,10 @@ abstract class _$$GoalImplCopyWith<$Res> implements $GoalCopyWith<$Res> {
       double qualityScore,
       double consistencyScore,
       double recoveryScore,
+      String? rationaleOverallApproach,
+      String? rationaleIntensityDistribution,
+      String? rationaleKeyWorkouts,
+      String? rationaleRecoveryStrategy,
       DateTime createdAt,
       DateTime updatedAt});
 }
@@ -323,6 +356,10 @@ class __$$GoalImplCopyWithImpl<$Res>
     Object? qualityScore = null,
     Object? consistencyScore = null,
     Object? recoveryScore = null,
+    Object? rationaleOverallApproach = freezed,
+    Object? rationaleIntensityDistribution = freezed,
+    Object? rationaleKeyWorkouts = freezed,
+    Object? rationaleRecoveryStrategy = freezed,
     Object? createdAt = null,
     Object? updatedAt = null,
   }) {
@@ -427,6 +464,22 @@ class __$$GoalImplCopyWithImpl<$Res>
           ? _value.recoveryScore
           : recoveryScore // ignore: cast_nullable_to_non_nullable
               as double,
+      rationaleOverallApproach: freezed == rationaleOverallApproach
+          ? _value.rationaleOverallApproach
+          : rationaleOverallApproach // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleIntensityDistribution: freezed == rationaleIntensityDistribution
+          ? _value.rationaleIntensityDistribution
+          : rationaleIntensityDistribution // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleKeyWorkouts: freezed == rationaleKeyWorkouts
+          ? _value.rationaleKeyWorkouts
+          : rationaleKeyWorkouts // ignore: cast_nullable_to_non_nullable
+              as String?,
+      rationaleRecoveryStrategy: freezed == rationaleRecoveryStrategy
+          ? _value.rationaleRecoveryStrategy
+          : rationaleRecoveryStrategy // ignore: cast_nullable_to_non_nullable
+              as String?,
       createdAt: null == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -468,6 +521,10 @@ class _$GoalImpl implements _Goal {
       this.qualityScore = 0.0,
       this.consistencyScore = 0.0,
       this.recoveryScore = 0.0,
+      this.rationaleOverallApproach,
+      this.rationaleIntensityDistribution,
+      this.rationaleKeyWorkouts,
+      this.rationaleRecoveryStrategy,
       required this.createdAt,
       required this.updatedAt});
 
@@ -532,13 +589,21 @@ class _$GoalImpl implements _Goal {
   @JsonKey()
   final double recoveryScore;
   @override
+  final String? rationaleOverallApproach;
+  @override
+  final String? rationaleIntensityDistribution;
+  @override
+  final String? rationaleKeyWorkouts;
+  @override
+  final String? rationaleRecoveryStrategy;
+  @override
   final DateTime createdAt;
   @override
   final DateTime updatedAt;
 
   @override
   String toString() {
-    return 'Goal(id: $id, userId: $userId, type: $type, name: $name, isActive: $isActive, targetDistance: $targetDistance, targetDate: $targetDate, targetTime: $targetTime, currentBestTime: $currentBestTime, isFirstTime: $isFirstTime, eventName: $eventName, eventDate: $eventDate, maintenanceFrequency: $maintenanceFrequency, maintenanceDuration: $maintenanceDuration, endDate: $endDate, initialTrainingFrequency: $initialTrainingFrequency, initialWeeklyVolume: $initialWeeklyVolume, runningPriority: $runningPriority, strengthPriority: $strengthPriority, mobilityPriority: $mobilityPriority, confidence: $confidence, adherenceScore: $adherenceScore, qualityScore: $qualityScore, consistencyScore: $consistencyScore, recoveryScore: $recoveryScore, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'Goal(id: $id, userId: $userId, type: $type, name: $name, isActive: $isActive, targetDistance: $targetDistance, targetDate: $targetDate, targetTime: $targetTime, currentBestTime: $currentBestTime, isFirstTime: $isFirstTime, eventName: $eventName, eventDate: $eventDate, maintenanceFrequency: $maintenanceFrequency, maintenanceDuration: $maintenanceDuration, endDate: $endDate, initialTrainingFrequency: $initialTrainingFrequency, initialWeeklyVolume: $initialWeeklyVolume, runningPriority: $runningPriority, strengthPriority: $strengthPriority, mobilityPriority: $mobilityPriority, confidence: $confidence, adherenceScore: $adherenceScore, qualityScore: $qualityScore, consistencyScore: $consistencyScore, recoveryScore: $recoveryScore, rationaleOverallApproach: $rationaleOverallApproach, rationaleIntensityDistribution: $rationaleIntensityDistribution, rationaleKeyWorkouts: $rationaleKeyWorkouts, rationaleRecoveryStrategy: $rationaleRecoveryStrategy, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -571,8 +636,7 @@ class _$GoalImpl implements _Goal {
             (identical(other.maintenanceDuration, maintenanceDuration) ||
                 other.maintenanceDuration == maintenanceDuration) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
-            (identical(
-                    other.initialTrainingFrequency, initialTrainingFrequency) ||
+            (identical(other.initialTrainingFrequency, initialTrainingFrequency) ||
                 other.initialTrainingFrequency == initialTrainingFrequency) &&
             (identical(other.initialWeeklyVolume, initialWeeklyVolume) ||
                 other.initialWeeklyVolume == initialWeeklyVolume) &&
@@ -592,6 +656,18 @@ class _$GoalImpl implements _Goal {
                 other.consistencyScore == consistencyScore) &&
             (identical(other.recoveryScore, recoveryScore) ||
                 other.recoveryScore == recoveryScore) &&
+            (identical(
+                    other.rationaleOverallApproach, rationaleOverallApproach) ||
+                other.rationaleOverallApproach == rationaleOverallApproach) &&
+            (identical(other.rationaleIntensityDistribution,
+                    rationaleIntensityDistribution) ||
+                other.rationaleIntensityDistribution ==
+                    rationaleIntensityDistribution) &&
+            (identical(other.rationaleKeyWorkouts, rationaleKeyWorkouts) ||
+                other.rationaleKeyWorkouts == rationaleKeyWorkouts) &&
+            (identical(other.rationaleRecoveryStrategy,
+                    rationaleRecoveryStrategy) ||
+                other.rationaleRecoveryStrategy == rationaleRecoveryStrategy) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
             (identical(other.updatedAt, updatedAt) ||
@@ -627,6 +703,10 @@ class _$GoalImpl implements _Goal {
         qualityScore,
         consistencyScore,
         recoveryScore,
+        rationaleOverallApproach,
+        rationaleIntensityDistribution,
+        rationaleKeyWorkouts,
+        rationaleRecoveryStrategy,
         createdAt,
         updatedAt
       ]);
@@ -674,6 +754,10 @@ abstract class _Goal implements Goal {
       final double qualityScore,
       final double consistencyScore,
       final double recoveryScore,
+      final String? rationaleOverallApproach,
+      final String? rationaleIntensityDistribution,
+      final String? rationaleKeyWorkouts,
+      final String? rationaleRecoveryStrategy,
       required final DateTime createdAt,
       required final DateTime updatedAt}) = _$GoalImpl;
 
@@ -729,6 +813,14 @@ abstract class _Goal implements Goal {
   double get consistencyScore;
   @override
   double get recoveryScore;
+  @override
+  String? get rationaleOverallApproach;
+  @override
+  String? get rationaleIntensityDistribution;
+  @override
+  String? get rationaleKeyWorkouts;
+  @override
+  String? get rationaleRecoveryStrategy;
   @override
   DateTime get createdAt;
   @override

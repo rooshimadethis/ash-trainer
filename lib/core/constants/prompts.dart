@@ -71,6 +71,11 @@ CRITICAL: Use the provided JSON schema.
     - Set `isKey: true` for important "Long Runs" and high-intensity "Quality" sessions (Intervals, Tempo, Hills).
     - For Strength sessions, set `isKey: true` if the user's Strength priority is 'High' or use best judgement. 
     - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
+6. CALENDAR ALIGNMENT:
+    - Use the `upcomingWeekdays` list from the config to map `dayNumber` to real days.
+    - Index 0 corresponds to `dayNumber: 1`. 
+    - Example: If `upcomingWeekdays[0]` is 'Saturday' and you want a Long Run, schedule it on `dayNumber: 1`.
+    - You MUST align your `dayNumber` selection with the user's `availableDays` and prefer weekends for Long Runs.
 ''';
 
   static const String adjustWorkoutTask = '''

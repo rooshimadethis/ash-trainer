@@ -35,6 +35,12 @@ class Goals extends Table {
   RealColumn get consistencyScore => real().withDefault(const Constant(0.0))();
   RealColumn get recoveryScore => real().withDefault(const Constant(0.0))();
 
+  // Rationale configuration
+  TextColumn get rationaleOverallApproach => text().nullable()();
+  TextColumn get rationaleIntensityDistribution => text().nullable()();
+  TextColumn get rationaleKeyWorkouts => text().nullable()();
+  TextColumn get rationaleRecoveryStrategy => text().nullable()();
+
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();
 }

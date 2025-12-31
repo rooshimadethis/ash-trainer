@@ -142,6 +142,19 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
         config: PlanningConfig(
           mode: _planningMode,
           startDate: DateTime.now(),
+          upcomingWeekdays: List.generate(28, (index) {
+            final date = DateTime.now().add(Duration(days: index));
+            const days = [
+              'Monday',
+              'Tuesday',
+              'Wednesday',
+              'Thursday',
+              'Friday',
+              'Saturday',
+              'Sunday'
+            ];
+            return days[date.weekday - 1];
+          }),
           instruction: 'Create a plan from scratch',
         ),
         user: UserContext(
@@ -278,7 +291,7 @@ $contextJson
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   DropdownButtonFormField<PlanningMode>(
-                    value: _planningMode,
+                    initialValue: _planningMode,
                     decoration: const InputDecoration(labelText: 'Mode'),
                     items: PlanningMode.values
                         .map((m) => DropdownMenuItem(

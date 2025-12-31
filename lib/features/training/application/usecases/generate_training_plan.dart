@@ -1,5 +1,6 @@
 import '../../../../infrastructure/services/ai_service.dart';
 import '../../../shared/domain/repositories/workout_repository.dart';
+import '../../../shared/domain/repositories/goal_repository.dart';
 import '../../../../core/constants/prompts.dart';
 import '../../../../core/constants/ai_schemas.dart';
 import 'build_planning_context.dart';
@@ -10,12 +11,14 @@ class GenerateTrainingPlan {
   final BuildPlanningContext _contextBuilder;
   final AIService _aiService;
   final WorkoutRepository _workoutRepo;
+  final GoalRepository _goalRepo;
   final TrainingPlanScheduler _scheduler;
 
   GenerateTrainingPlan(
     this._contextBuilder,
     this._aiService,
     this._workoutRepo,
+    this._goalRepo,
     this._scheduler,
   );
 
@@ -68,6 +71,16 @@ class GenerateTrainingPlan {
       phases: hydrationResult.phases,
       blocks: hydrationResult.blocks,
       workouts: hydrationResult.workouts,
+    );
+
+    // 5. Save Rationale
+    final rationale = response.data!.rationale;
+    await _goalRepo.updateRationale(
+      goalId: goalId,
+      overallApproach: rationale.overallApproach,
+      intensityDistribution: rationale.intensityDistribution,
+      keyWorkouts: rationale.keyWorkouts,
+      recoveryStrategy: rationale.recoveryStrategy,
     );
   }
 }
