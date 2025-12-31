@@ -73,15 +73,12 @@ class HealthServiceImpl implements HealthService {
         endTime: endOfDay,
       );
 
-      print('Health data points fetched: ${healthData.length}');
-
       int? sleepDuration;
       double? hrv;
       int? rhr;
 
       for (var point in healthData) {
         final value = point.value;
-        print('Point: ${point.type}, Value: $value');
         if (value is NumericHealthValue) {
           if (point.type == HealthDataType.SLEEP_ASLEEP) {
             // Sleep duration is in minutes
@@ -98,11 +95,8 @@ class HealthServiceImpl implements HealthService {
         }
       }
 
-      print('Parsed Health Data - Sleep: $sleepDuration, HRV: $hrv, RHR: $rhr');
-
       // Return null if no data at all
       if (sleepDuration == null && hrv == null && rhr == null) {
-        print('No health data parsed, returning null');
         return null;
       }
 
