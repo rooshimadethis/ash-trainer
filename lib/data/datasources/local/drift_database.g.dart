@@ -3489,6 +3489,12 @@ class $WorkoutsTable extends Workouts
   late final GeneratedColumn<int> rpe = GeneratedColumn<int>(
       'rpe', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _syncedFromMeta =
+      const VerificationMeta('syncedFrom');
+  @override
+  late final GeneratedColumn<String> syncedFrom = GeneratedColumn<String>(
+      'synced_from', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _completedAtMeta =
       const VerificationMeta('completedAt');
   @override
@@ -3514,6 +3520,7 @@ class $WorkoutsTable extends Workouts
         actualDistance,
         actualPace,
         rpe,
+        syncedFrom,
         completedAt
       ];
   @override
@@ -3623,6 +3630,12 @@ class $WorkoutsTable extends Workouts
       context.handle(
           _rpeMeta, rpe.isAcceptableOrUnknown(data['rpe']!, _rpeMeta));
     }
+    if (data.containsKey('synced_from')) {
+      context.handle(
+          _syncedFromMeta,
+          syncedFrom.isAcceptableOrUnknown(
+              data['synced_from']!, _syncedFromMeta));
+    }
     if (data.containsKey('completed_at')) {
       context.handle(
           _completedAtMeta,
@@ -3672,6 +3685,8 @@ class $WorkoutsTable extends Workouts
           .read(DriftSqlType.double, data['${effectivePrefix}actual_pace']),
       rpe: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}rpe']),
+      syncedFrom: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}synced_from']),
       completedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}completed_at']),
     );
@@ -3701,6 +3716,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final double? actualDistance;
   final double? actualPace;
   final int? rpe;
+  final String? syncedFrom;
   final DateTime? completedAt;
   const WorkoutDTO(
       {required this.id,
@@ -3720,6 +3736,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       this.actualDistance,
       this.actualPace,
       this.rpe,
+      this.syncedFrom,
       this.completedAt});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -3758,6 +3775,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
     }
     if (!nullToAbsent || rpe != null) {
       map['rpe'] = Variable<int>(rpe);
+    }
+    if (!nullToAbsent || syncedFrom != null) {
+      map['synced_from'] = Variable<String>(syncedFrom);
     }
     if (!nullToAbsent || completedAt != null) {
       map['completed_at'] = Variable<DateTime>(completedAt);
@@ -3800,6 +3820,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ? const Value.absent()
           : Value(actualPace),
       rpe: rpe == null && nullToAbsent ? const Value.absent() : Value(rpe),
+      syncedFrom: syncedFrom == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncedFrom),
       completedAt: completedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(completedAt),
@@ -3827,6 +3850,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualDistance: serializer.fromJson<double?>(json['actualDistance']),
       actualPace: serializer.fromJson<double?>(json['actualPace']),
       rpe: serializer.fromJson<int?>(json['rpe']),
+      syncedFrom: serializer.fromJson<String?>(json['syncedFrom']),
       completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
     );
   }
@@ -3851,6 +3875,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'actualDistance': serializer.toJson<double?>(actualDistance),
       'actualPace': serializer.toJson<double?>(actualPace),
       'rpe': serializer.toJson<int?>(rpe),
+      'syncedFrom': serializer.toJson<String?>(syncedFrom),
       'completedAt': serializer.toJson<DateTime?>(completedAt),
     };
   }
@@ -3873,6 +3898,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           Value<double?> actualDistance = const Value.absent(),
           Value<double?> actualPace = const Value.absent(),
           Value<int?> rpe = const Value.absent(),
+          Value<String?> syncedFrom = const Value.absent(),
           Value<DateTime?> completedAt = const Value.absent()}) =>
       WorkoutDTO(
         id: id ?? this.id,
@@ -3896,6 +3922,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
             actualDistance.present ? actualDistance.value : this.actualDistance,
         actualPace: actualPace.present ? actualPace.value : this.actualPace,
         rpe: rpe.present ? rpe.value : this.rpe,
+        syncedFrom: syncedFrom.present ? syncedFrom.value : this.syncedFrom,
         completedAt: completedAt.present ? completedAt.value : this.completedAt,
       );
   WorkoutDTO copyWithCompanion(WorkoutsCompanion data) {
@@ -3929,6 +3956,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualPace:
           data.actualPace.present ? data.actualPace.value : this.actualPace,
       rpe: data.rpe.present ? data.rpe.value : this.rpe,
+      syncedFrom:
+          data.syncedFrom.present ? data.syncedFrom.value : this.syncedFrom,
       completedAt:
           data.completedAt.present ? data.completedAt.value : this.completedAt,
     );
@@ -3954,6 +3983,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ..write('actualDistance: $actualDistance, ')
           ..write('actualPace: $actualPace, ')
           ..write('rpe: $rpe, ')
+          ..write('syncedFrom: $syncedFrom, ')
           ..write('completedAt: $completedAt')
           ..write(')'))
         .toString();
@@ -3978,6 +4008,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualDistance,
       actualPace,
       rpe,
+      syncedFrom,
       completedAt);
   @override
   bool operator ==(Object other) =>
@@ -4000,6 +4031,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           other.actualDistance == this.actualDistance &&
           other.actualPace == this.actualPace &&
           other.rpe == this.rpe &&
+          other.syncedFrom == this.syncedFrom &&
           other.completedAt == this.completedAt);
 }
 
@@ -4021,6 +4053,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<double?> actualDistance;
   final Value<double?> actualPace;
   final Value<int?> rpe;
+  final Value<String?> syncedFrom;
   final Value<DateTime?> completedAt;
   final Value<int> rowid;
   const WorkoutsCompanion({
@@ -4041,6 +4074,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.actualDistance = const Value.absent(),
     this.actualPace = const Value.absent(),
     this.rpe = const Value.absent(),
+    this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -4062,6 +4096,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.actualDistance = const Value.absent(),
     this.actualPace = const Value.absent(),
     this.rpe = const Value.absent(),
+    this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
@@ -4090,6 +4125,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<double>? actualDistance,
     Expression<double>? actualPace,
     Expression<int>? rpe,
+    Expression<String>? syncedFrom,
     Expression<DateTime>? completedAt,
     Expression<int>? rowid,
   }) {
@@ -4111,6 +4147,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       if (actualDistance != null) 'actual_distance': actualDistance,
       if (actualPace != null) 'actual_pace': actualPace,
       if (rpe != null) 'rpe': rpe,
+      if (syncedFrom != null) 'synced_from': syncedFrom,
       if (completedAt != null) 'completed_at': completedAt,
       if (rowid != null) 'rowid': rowid,
     });
@@ -4134,6 +4171,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       Value<double?>? actualDistance,
       Value<double?>? actualPace,
       Value<int?>? rpe,
+      Value<String?>? syncedFrom,
       Value<DateTime?>? completedAt,
       Value<int>? rowid}) {
     return WorkoutsCompanion(
@@ -4154,6 +4192,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       actualDistance: actualDistance ?? this.actualDistance,
       actualPace: actualPace ?? this.actualPace,
       rpe: rpe ?? this.rpe,
+      syncedFrom: syncedFrom ?? this.syncedFrom,
       completedAt: completedAt ?? this.completedAt,
       rowid: rowid ?? this.rowid,
     );
@@ -4213,6 +4252,9 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     if (rpe.present) {
       map['rpe'] = Variable<int>(rpe.value);
     }
+    if (syncedFrom.present) {
+      map['synced_from'] = Variable<String>(syncedFrom.value);
+    }
     if (completedAt.present) {
       map['completed_at'] = Variable<DateTime>(completedAt.value);
     }
@@ -4242,6 +4284,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
           ..write('actualDistance: $actualDistance, ')
           ..write('actualPace: $actualPace, ')
           ..write('rpe: $rpe, ')
+          ..write('syncedFrom: $syncedFrom, ')
           ..write('completedAt: $completedAt, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -4312,6 +4355,22 @@ class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
   late final GeneratedColumn<String> description = GeneratedColumn<String>(
       'description', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _actualDistanceMeta =
+      const VerificationMeta('actualDistance');
+  @override
+  late final GeneratedColumn<double> actualDistance = GeneratedColumn<double>(
+      'actual_distance', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _actualDurationMeta =
+      const VerificationMeta('actualDuration');
+  @override
+  late final GeneratedColumn<int> actualDuration = GeneratedColumn<int>(
+      'actual_duration', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -4323,7 +4382,9 @@ class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
         targetWeeklyDuration,
         startDate,
         endDate,
-        description
+        description,
+        actualDistance,
+        actualDuration
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -4398,6 +4459,18 @@ class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
     }
+    if (data.containsKey('actual_distance')) {
+      context.handle(
+          _actualDistanceMeta,
+          actualDistance.isAcceptableOrUnknown(
+              data['actual_distance']!, _actualDistanceMeta));
+    }
+    if (data.containsKey('actual_duration')) {
+      context.handle(
+          _actualDurationMeta,
+          actualDuration.isAcceptableOrUnknown(
+              data['actual_duration']!, _actualDurationMeta));
+    }
     return context;
   }
 
@@ -4428,6 +4501,10 @@ class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      actualDistance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}actual_distance'])!,
+      actualDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_duration'])!,
     );
   }
 
@@ -4448,6 +4525,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
   final DateTime? startDate;
   final DateTime? endDate;
   final String? description;
+  final double actualDistance;
+  final int actualDuration;
   const PhaseDTO(
       {required this.id,
       required this.goalId,
@@ -4458,7 +4537,9 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       required this.targetWeeklyDuration,
       this.startDate,
       this.endDate,
-      this.description});
+      this.description,
+      required this.actualDistance,
+      required this.actualDuration});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4478,6 +4559,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
     }
+    map['actual_distance'] = Variable<double>(actualDistance);
+    map['actual_duration'] = Variable<int>(actualDuration);
     return map;
   }
 
@@ -4499,6 +4582,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
     );
   }
 
@@ -4518,6 +4603,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       startDate: serializer.fromJson<DateTime?>(json['startDate']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
       description: serializer.fromJson<String?>(json['description']),
+      actualDistance: serializer.fromJson<double>(json['actualDistance']),
+      actualDuration: serializer.fromJson<int>(json['actualDuration']),
     );
   }
   @override
@@ -4534,6 +4621,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       'startDate': serializer.toJson<DateTime?>(startDate),
       'endDate': serializer.toJson<DateTime?>(endDate),
       'description': serializer.toJson<String?>(description),
+      'actualDistance': serializer.toJson<double>(actualDistance),
+      'actualDuration': serializer.toJson<int>(actualDuration),
     };
   }
 
@@ -4547,7 +4636,9 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
           String? targetWeeklyDuration,
           Value<DateTime?> startDate = const Value.absent(),
           Value<DateTime?> endDate = const Value.absent(),
-          Value<String?> description = const Value.absent()}) =>
+          Value<String?> description = const Value.absent(),
+          double? actualDistance,
+          int? actualDuration}) =>
       PhaseDTO(
         id: id ?? this.id,
         goalId: goalId ?? this.goalId,
@@ -4559,6 +4650,8 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
         startDate: startDate.present ? startDate.value : this.startDate,
         endDate: endDate.present ? endDate.value : this.endDate,
         description: description.present ? description.value : this.description,
+        actualDistance: actualDistance ?? this.actualDistance,
+        actualDuration: actualDuration ?? this.actualDuration,
       );
   PhaseDTO copyWithCompanion(PhasesCompanion data) {
     return PhaseDTO(
@@ -4580,6 +4673,12 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
       description:
           data.description.present ? data.description.value : this.description,
+      actualDistance: data.actualDistance.present
+          ? data.actualDistance.value
+          : this.actualDistance,
+      actualDuration: data.actualDuration.present
+          ? data.actualDuration.value
+          : this.actualDuration,
     );
   }
 
@@ -4595,7 +4694,9 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
           ..write('targetWeeklyDuration: $targetWeeklyDuration, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration')
           ..write(')'))
         .toString();
   }
@@ -4611,7 +4712,9 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
       targetWeeklyDuration,
       startDate,
       endDate,
-      description);
+      description,
+      actualDistance,
+      actualDuration);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4625,7 +4728,9 @@ class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
           other.targetWeeklyDuration == this.targetWeeklyDuration &&
           other.startDate == this.startDate &&
           other.endDate == this.endDate &&
-          other.description == this.description);
+          other.description == this.description &&
+          other.actualDistance == this.actualDistance &&
+          other.actualDuration == this.actualDuration);
 }
 
 class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
@@ -4639,6 +4744,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
   final Value<DateTime?> startDate;
   final Value<DateTime?> endDate;
   final Value<String?> description;
+  final Value<double> actualDistance;
+  final Value<int> actualDuration;
   final Value<int> rowid;
   const PhasesCompanion({
     this.id = const Value.absent(),
@@ -4651,6 +4758,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.description = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   PhasesCompanion.insert({
@@ -4664,6 +4773,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
     this.description = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         goalId = Value(goalId),
@@ -4683,6 +4794,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
     Expression<String>? description,
+    Expression<double>? actualDistance,
+    Expression<int>? actualDuration,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4698,6 +4811,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
       if (description != null) 'description': description,
+      if (actualDistance != null) 'actual_distance': actualDistance,
+      if (actualDuration != null) 'actual_duration': actualDuration,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4713,6 +4828,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
       Value<DateTime?>? startDate,
       Value<DateTime?>? endDate,
       Value<String?>? description,
+      Value<double>? actualDistance,
+      Value<int>? actualDuration,
       Value<int>? rowid}) {
     return PhasesCompanion(
       id: id ?? this.id,
@@ -4725,6 +4842,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       description: description ?? this.description,
+      actualDistance: actualDistance ?? this.actualDistance,
+      actualDuration: actualDuration ?? this.actualDuration,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4763,6 +4882,12 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
     if (description.present) {
       map['description'] = Variable<String>(description.value);
     }
+    if (actualDistance.present) {
+      map['actual_distance'] = Variable<double>(actualDistance.value);
+    }
+    if (actualDuration.present) {
+      map['actual_duration'] = Variable<int>(actualDuration.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4782,6 +4907,8 @@ class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
           ..write('description: $description, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -4834,9 +4961,34 @@ class $TrainingBlocksTable extends TrainingBlocks
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _actualDistanceMeta =
+      const VerificationMeta('actualDistance');
   @override
-  List<GeneratedColumn> get $columns =>
-      [id, phaseId, blockNumber, intent, durationDays, startDate, endDate];
+  late final GeneratedColumn<double> actualDistance = GeneratedColumn<double>(
+      'actual_distance', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _actualDurationMeta =
+      const VerificationMeta('actualDuration');
+  @override
+  late final GeneratedColumn<int> actualDuration = GeneratedColumn<int>(
+      'actual_duration', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        phaseId,
+        blockNumber,
+        intent,
+        durationDays,
+        startDate,
+        endDate,
+        actualDistance,
+        actualDuration
+      ];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -4888,6 +5040,18 @@ class $TrainingBlocksTable extends TrainingBlocks
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
     }
+    if (data.containsKey('actual_distance')) {
+      context.handle(
+          _actualDistanceMeta,
+          actualDistance.isAcceptableOrUnknown(
+              data['actual_distance']!, _actualDistanceMeta));
+    }
+    if (data.containsKey('actual_duration')) {
+      context.handle(
+          _actualDurationMeta,
+          actualDuration.isAcceptableOrUnknown(
+              data['actual_duration']!, _actualDurationMeta));
+    }
     return context;
   }
 
@@ -4911,6 +5075,10 @@ class $TrainingBlocksTable extends TrainingBlocks
           .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      actualDistance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}actual_distance'])!,
+      actualDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_duration'])!,
     );
   }
 
@@ -4929,6 +5097,8 @@ class TrainingBlockDTO extends DataClass
   final int durationDays;
   final DateTime? startDate;
   final DateTime? endDate;
+  final double actualDistance;
+  final int actualDuration;
   const TrainingBlockDTO(
       {required this.id,
       required this.phaseId,
@@ -4936,7 +5106,9 @@ class TrainingBlockDTO extends DataClass
       required this.intent,
       required this.durationDays,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      required this.actualDistance,
+      required this.actualDuration});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -4951,6 +5123,8 @@ class TrainingBlockDTO extends DataClass
     if (!nullToAbsent || endDate != null) {
       map['end_date'] = Variable<DateTime>(endDate);
     }
+    map['actual_distance'] = Variable<double>(actualDistance);
+    map['actual_duration'] = Variable<int>(actualDuration);
     return map;
   }
 
@@ -4967,6 +5141,8 @@ class TrainingBlockDTO extends DataClass
       endDate: endDate == null && nullToAbsent
           ? const Value.absent()
           : Value(endDate),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
     );
   }
 
@@ -4981,6 +5157,8 @@ class TrainingBlockDTO extends DataClass
       durationDays: serializer.fromJson<int>(json['durationDays']),
       startDate: serializer.fromJson<DateTime?>(json['startDate']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      actualDistance: serializer.fromJson<double>(json['actualDistance']),
+      actualDuration: serializer.fromJson<int>(json['actualDuration']),
     );
   }
   @override
@@ -4994,6 +5172,8 @@ class TrainingBlockDTO extends DataClass
       'durationDays': serializer.toJson<int>(durationDays),
       'startDate': serializer.toJson<DateTime?>(startDate),
       'endDate': serializer.toJson<DateTime?>(endDate),
+      'actualDistance': serializer.toJson<double>(actualDistance),
+      'actualDuration': serializer.toJson<int>(actualDuration),
     };
   }
 
@@ -5004,7 +5184,9 @@ class TrainingBlockDTO extends DataClass
           String? intent,
           int? durationDays,
           Value<DateTime?> startDate = const Value.absent(),
-          Value<DateTime?> endDate = const Value.absent()}) =>
+          Value<DateTime?> endDate = const Value.absent(),
+          double? actualDistance,
+          int? actualDuration}) =>
       TrainingBlockDTO(
         id: id ?? this.id,
         phaseId: phaseId ?? this.phaseId,
@@ -5013,6 +5195,8 @@ class TrainingBlockDTO extends DataClass
         durationDays: durationDays ?? this.durationDays,
         startDate: startDate.present ? startDate.value : this.startDate,
         endDate: endDate.present ? endDate.value : this.endDate,
+        actualDistance: actualDistance ?? this.actualDistance,
+        actualDuration: actualDuration ?? this.actualDuration,
       );
   TrainingBlockDTO copyWithCompanion(TrainingBlocksCompanion data) {
     return TrainingBlockDTO(
@@ -5026,6 +5210,12 @@ class TrainingBlockDTO extends DataClass
           : this.durationDays,
       startDate: data.startDate.present ? data.startDate.value : this.startDate,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      actualDistance: data.actualDistance.present
+          ? data.actualDistance.value
+          : this.actualDistance,
+      actualDuration: data.actualDuration.present
+          ? data.actualDuration.value
+          : this.actualDuration,
     );
   }
 
@@ -5038,14 +5228,16 @@ class TrainingBlockDTO extends DataClass
           ..write('intent: $intent, ')
           ..write('durationDays: $durationDays, ')
           ..write('startDate: $startDate, ')
-          ..write('endDate: $endDate')
+          ..write('endDate: $endDate, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      id, phaseId, blockNumber, intent, durationDays, startDate, endDate);
+  int get hashCode => Object.hash(id, phaseId, blockNumber, intent,
+      durationDays, startDate, endDate, actualDistance, actualDuration);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -5056,7 +5248,9 @@ class TrainingBlockDTO extends DataClass
           other.intent == this.intent &&
           other.durationDays == this.durationDays &&
           other.startDate == this.startDate &&
-          other.endDate == this.endDate);
+          other.endDate == this.endDate &&
+          other.actualDistance == this.actualDistance &&
+          other.actualDuration == this.actualDuration);
 }
 
 class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
@@ -5067,6 +5261,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
   final Value<int> durationDays;
   final Value<DateTime?> startDate;
   final Value<DateTime?> endDate;
+  final Value<double> actualDistance;
+  final Value<int> actualDuration;
   final Value<int> rowid;
   const TrainingBlocksCompanion({
     this.id = const Value.absent(),
@@ -5076,6 +5272,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
     this.durationDays = const Value.absent(),
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TrainingBlocksCompanion.insert({
@@ -5086,6 +5284,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
     required int durationDays,
     this.startDate = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         phaseId = Value(phaseId),
@@ -5100,6 +5300,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
     Expression<int>? durationDays,
     Expression<DateTime>? startDate,
     Expression<DateTime>? endDate,
+    Expression<double>? actualDistance,
+    Expression<int>? actualDuration,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -5110,6 +5312,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
       if (durationDays != null) 'duration_days': durationDays,
       if (startDate != null) 'start_date': startDate,
       if (endDate != null) 'end_date': endDate,
+      if (actualDistance != null) 'actual_distance': actualDistance,
+      if (actualDuration != null) 'actual_duration': actualDuration,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -5122,6 +5326,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
       Value<int>? durationDays,
       Value<DateTime?>? startDate,
       Value<DateTime?>? endDate,
+      Value<double>? actualDistance,
+      Value<int>? actualDuration,
       Value<int>? rowid}) {
     return TrainingBlocksCompanion(
       id: id ?? this.id,
@@ -5131,6 +5337,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
       durationDays: durationDays ?? this.durationDays,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      actualDistance: actualDistance ?? this.actualDistance,
+      actualDuration: actualDuration ?? this.actualDuration,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -5159,6 +5367,12 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
     if (endDate.present) {
       map['end_date'] = Variable<DateTime>(endDate.value);
     }
+    if (actualDistance.present) {
+      map['actual_distance'] = Variable<double>(actualDistance.value);
+    }
+    if (actualDuration.present) {
+      map['actual_duration'] = Variable<int>(actualDuration.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -5175,6 +5389,8 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
           ..write('durationDays: $durationDays, ')
           ..write('startDate: $startDate, ')
           ..write('endDate: $endDate, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -7865,6 +8081,7 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   Value<double?> actualDistance,
   Value<double?> actualPace,
   Value<int?> rpe,
+  Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
   Value<int> rowid,
 });
@@ -7886,6 +8103,7 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<double?> actualDistance,
   Value<double?> actualPace,
   Value<int?> rpe,
+  Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
   Value<int> rowid,
 });
@@ -7953,6 +8171,9 @@ class $$WorkoutsTableFilterComposer
 
   ColumnFilters<int> get rpe => $composableBuilder(
       column: $table.rpe, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnFilters(column));
@@ -8023,6 +8244,9 @@ class $$WorkoutsTableOrderingComposer
   ColumnOrderings<int> get rpe => $composableBuilder(
       column: $table.rpe, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnOrderings(column));
 }
@@ -8087,6 +8311,9 @@ class $$WorkoutsTableAnnotationComposer
   GeneratedColumn<int> get rpe =>
       $composableBuilder(column: $table.rpe, builder: (column) => column);
 
+  GeneratedColumn<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => column);
+
   GeneratedColumn<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => column);
 }
@@ -8131,6 +8358,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<double?> actualDistance = const Value.absent(),
             Value<double?> actualPace = const Value.absent(),
             Value<int?> rpe = const Value.absent(),
+            Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -8152,6 +8380,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             actualDistance: actualDistance,
             actualPace: actualPace,
             rpe: rpe,
+            syncedFrom: syncedFrom,
             completedAt: completedAt,
             rowid: rowid,
           ),
@@ -8173,6 +8402,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<double?> actualDistance = const Value.absent(),
             Value<double?> actualPace = const Value.absent(),
             Value<int?> rpe = const Value.absent(),
+            Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -8194,6 +8424,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             actualDistance: actualDistance,
             actualPace: actualPace,
             rpe: rpe,
+            syncedFrom: syncedFrom,
             completedAt: completedAt,
             rowid: rowid,
           ),
@@ -8227,6 +8458,8 @@ typedef $$PhasesTableCreateCompanionBuilder = PhasesCompanion Function({
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
   Value<String?> description,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
   Value<int> rowid,
 });
 typedef $$PhasesTableUpdateCompanionBuilder = PhasesCompanion Function({
@@ -8240,6 +8473,8 @@ typedef $$PhasesTableUpdateCompanionBuilder = PhasesCompanion Function({
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
   Value<String?> description,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
   Value<int> rowid,
 });
 
@@ -8283,6 +8518,14 @@ class $$PhasesTableFilterComposer
 
   ColumnFilters<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$PhasesTableOrderingComposer
@@ -8326,6 +8569,14 @@ class $$PhasesTableOrderingComposer
 
   ColumnOrderings<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$PhasesTableAnnotationComposer
@@ -8366,6 +8617,12 @@ class $$PhasesTableAnnotationComposer
 
   GeneratedColumn<String> get description => $composableBuilder(
       column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance, builder: (column) => column);
+
+  GeneratedColumn<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration, builder: (column) => column);
 }
 
 class $$PhasesTableTableManager extends RootTableManager<
@@ -8401,6 +8658,8 @@ class $$PhasesTableTableManager extends RootTableManager<
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               PhasesCompanion(
@@ -8414,6 +8673,8 @@ class $$PhasesTableTableManager extends RootTableManager<
             startDate: startDate,
             endDate: endDate,
             description: description,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -8427,6 +8688,8 @@ class $$PhasesTableTableManager extends RootTableManager<
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
             Value<String?> description = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               PhasesCompanion.insert(
@@ -8440,6 +8703,8 @@ class $$PhasesTableTableManager extends RootTableManager<
             startDate: startDate,
             endDate: endDate,
             description: description,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -8470,6 +8735,8 @@ typedef $$TrainingBlocksTableCreateCompanionBuilder = TrainingBlocksCompanion
   required int durationDays,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
   Value<int> rowid,
 });
 typedef $$TrainingBlocksTableUpdateCompanionBuilder = TrainingBlocksCompanion
@@ -8481,6 +8748,8 @@ typedef $$TrainingBlocksTableUpdateCompanionBuilder = TrainingBlocksCompanion
   Value<int> durationDays,
   Value<DateTime?> startDate,
   Value<DateTime?> endDate,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
   Value<int> rowid,
 });
 
@@ -8513,6 +8782,14 @@ class $$TrainingBlocksTableFilterComposer
 
   ColumnFilters<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnFilters(column));
 }
 
 class $$TrainingBlocksTableOrderingComposer
@@ -8545,6 +8822,14 @@ class $$TrainingBlocksTableOrderingComposer
 
   ColumnOrderings<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnOrderings(column));
 }
 
 class $$TrainingBlocksTableAnnotationComposer
@@ -8576,6 +8861,12 @@ class $$TrainingBlocksTableAnnotationComposer
 
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance, builder: (column) => column);
+
+  GeneratedColumn<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration, builder: (column) => column);
 }
 
 class $$TrainingBlocksTableTableManager extends RootTableManager<
@@ -8612,6 +8903,8 @@ class $$TrainingBlocksTableTableManager extends RootTableManager<
             Value<int> durationDays = const Value.absent(),
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TrainingBlocksCompanion(
@@ -8622,6 +8915,8 @@ class $$TrainingBlocksTableTableManager extends RootTableManager<
             durationDays: durationDays,
             startDate: startDate,
             endDate: endDate,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -8632,6 +8927,8 @@ class $$TrainingBlocksTableTableManager extends RootTableManager<
             required int durationDays,
             Value<DateTime?> startDate = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               TrainingBlocksCompanion.insert(
@@ -8642,6 +8939,8 @@ class $$TrainingBlocksTableTableManager extends RootTableManager<
             durationDays: durationDays,
             startDate: startDate,
             endDate: endDate,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

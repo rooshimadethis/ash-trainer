@@ -53,7 +53,26 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onUpgrade: (m, from, to) async {
+          for (var i = from; i < to; i++) {
+            if (i == 1) {
+              // Add columns for Phase 2: Workout Logging
+              await m.addColumn(workouts, workouts.syncedFrom);
+              await m.addColumn(phases, phases.actualDistance);
+              await m.addColumn(phases, phases.actualDuration);
+              await m.addColumn(trainingBlocks, trainingBlocks.actualDistance);
+              await m.addColumn(trainingBlocks, trainingBlocks.actualDuration);
+            }
+          }
+        },
+        beforeOpen: (details) async {
+          await customStatement('PRAGMA foreign_keys = ON');
+        },
+      );
 
   @override
   Future<void> close() {

@@ -19,6 +19,8 @@ _$TrainingBlockImpl _$$TrainingBlockImplFromJson(Map<String, dynamic> json) =>
       endDate: json['endDate'] == null
           ? null
           : DateTime.parse(json['endDate'] as String),
+      actualDistance: (json['actualDistance'] as num?)?.toDouble() ?? 0.0,
+      actualDuration: (json['actualDuration'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$TrainingBlockImplToJson(_$TrainingBlockImpl instance) =>
@@ -30,4 +32,6 @@ Map<String, dynamic> _$$TrainingBlockImplToJson(_$TrainingBlockImpl instance) =>
       'durationDays': instance.durationDays,
       'startDate': instance.startDate?.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),
+      'actualDistance': instance.actualDistance,
+      'actualDuration': instance.actualDuration,
     };

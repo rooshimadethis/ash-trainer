@@ -48,7 +48,38 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
 
   @override
   Future<void> logWorkout(Workout workout) async {
-    await _workoutDao.updateWorkout(workout.toCompanion());
+    // We use the db instance from the DAO to run a transaction
+    await _workoutDao.transaction(() async {
+      // 1. Update the workout itself
+      await _workoutDao.updateWorkout(workout.toCompanion());
+
+      // 2. Recalculate Block stats
+      if (workout.blockId != null) {
+        final blockStats = await _workoutDao.getStatsForBlock(workout.blockId!);
+        await _trainingPlanDao.updateBlockStats(
+          workout.blockId!,
+          blockStats.distance,
+          blockStats.duration,
+        );
+
+        // 3. Recalculate Phase stats
+        // We need the phaseId from the block
+        final block = await _trainingPlanDao.getBlocksForDateRange(
+          startDate: workout.scheduledDate,
+          endDate: workout.scheduledDate,
+        );
+        // Find the specific block to get the phaseId
+        final relevantBlock = block.firstWhere((b) => b.id == workout.blockId);
+
+        final phaseStats =
+            await _trainingPlanDao.getStatsForPhase(relevantBlock.phaseId);
+        await _trainingPlanDao.updatePhaseStats(
+          relevantBlock.phaseId,
+          phaseStats.distance,
+          phaseStats.duration,
+        );
+      }
+    });
   }
 
   @override

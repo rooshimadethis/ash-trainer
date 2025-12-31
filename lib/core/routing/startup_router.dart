@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../data/providers/repository_providers.dart';
 import '../../features/onboarding/presentation/screens/welcome_screen.dart';
 import '../../features/dashboard/presentation/screens/home_screen.dart';
+import '../utils/logger.dart';
 
 enum StartupState {
   noUser,
@@ -34,8 +35,7 @@ class StartupRouter extends ConsumerWidget {
 
         final state = snapshot.data ?? StartupState.noUser;
 
-        // ignore: avoid_print
-        print('📍 Startup routing: state=$state');
+        AppLogger.info('📍 Startup routing: state=$state');
 
         switch (state) {
           case StartupState.noUser:
@@ -58,9 +58,8 @@ class StartupRouter extends ConsumerWidget {
       if (activeGoal == null) return StartupState.noActiveGoal;
 
       return StartupState.ready;
-    } catch (e) {
-      // ignore: avoid_print
-      print('⚠️ Error checking startup state: $e');
+    } catch (e, stack) {
+      AppLogger.error('⚠️ Error checking startup state', e, stack);
       return StartupState.noUser;
     }
   }

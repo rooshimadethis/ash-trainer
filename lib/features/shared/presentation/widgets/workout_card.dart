@@ -8,11 +8,13 @@ import '../../../../core/constants/workout_types.dart';
 class WorkoutCard extends StatelessWidget {
   final Workout workout;
   final VoidCallback? onTap;
+  final bool useWorkoutColor;
 
   const WorkoutCard({
     super.key,
     required this.workout,
     this.onTap,
+    this.useWorkoutColor = false,
   });
 
   @override
@@ -22,8 +24,11 @@ class WorkoutCard extends StatelessWidget {
     return AshCard(
       onTap: onTap,
       borderWidth: 1.0,
-      borderColor: AppColors.border,
-      backgroundColor: AppColors.surface,
+      borderColor:
+          useWorkoutColor ? typeColor.withValues(alpha: 0.3) : AppColors.border,
+      backgroundColor: useWorkoutColor
+          ? typeColor.withValues(alpha: 0.1)
+          : AppColors.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -62,19 +67,29 @@ class WorkoutCard extends StatelessWidget {
                 ),
               ),
               const Spacer(),
-              if (workout.status == 'completed')
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.check,
-                    color: AppColors.success,
-                    size: 14,
+              Container(
+                width: 24,
+                height: 24,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: workout.status == 'completed'
+                      ? AppColors.success
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: workout.status == 'completed'
+                        ? AppColors.success
+                        : AppColors.textSecondary.withValues(alpha: 0.3),
+                    width: 2,
                   ),
                 ),
+                child: workout.status == 'completed'
+                    ? const Icon(
+                        Icons.check,
+                        color: AppColors.backgroundDark,
+                        size: 16,
+                      )
+                    : null,
+              ),
             ],
           ),
           const SizedBox(height: 16),

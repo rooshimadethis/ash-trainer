@@ -62,7 +62,7 @@ The calendar uses a **horizontal swipe navigation** with three views:
 - Tap "Adjust" → Opens workout adjustment dialog
 - Tap Recovery Widget → Opens biomarker details (Journey #10)
 - Tap Goal Progress → Opens goal detail screen (Journey #5)
-- Tap upcoming workout → Opens workout detail modal
+- Tap upcoming workout → Opens **Workout Detail Screen**
 - Swipe left → Goes to Weekly View
 - Tap Settings → Opens settings screen
 
@@ -111,7 +111,7 @@ The calendar uses a **horizontal swipe navigation** with three views:
   - "Monthly →" (swipe left)
 
 **User Can**:
-- Tap any day card → Opens workout detail modal
+- Tap any day card → Opens **Workout Detail Screen**
 - Swipe left/right on week → Navigate to previous/next week
 - Tap week navigation arrows → Jump weeks
 - Swipe right → Goes back to Today View
@@ -180,11 +180,13 @@ The calendar uses a **horizontal swipe navigation** with three views:
 
 ---
 
-## Workout Detail Modal
+## Workout Detail Screen
 
 **Triggered by**: Tapping any workout card from any view
 
 **User Sees**:
+- **Navigation Bar**:
+  - Back button (always present)
 - **Workout Header**:
   - Workout type and name
   - Scheduled date and time
@@ -194,20 +196,19 @@ The calendar uses a **horizontal swipe navigation** with three views:
   - Intensity (zone, RPE, pace)
   - Purpose/description
   - Warm-up/cool-down instructions (if applicable)
-- **Actions** (varies by status):
-  - **Planned**: "Start Workout", "Adjust", "Reschedule", "Skip"
-  - **Completed**: View stats, RPE, notes
-  - **Missed**: "Reschedule", "Mark as intentional skip"
+- **Sticky Bottom Action Bar** (Conditional):
+  - **IF Scheduled for TODAY**: "Log Workout" button
+  - **ELSE**: No action button (Back button in nav is the only exit)
 - **Related Info**:
   - Weather forecast (if future workout)
   - Previous similar workout stats (for comparison)
 
 **User Can**:
-- Tap "Start Workout" → Opens workout tracking (Journey #3)
-- Tap "Adjust" → Opens adjustment dialog (Journey #2)
+- Tap "Log Workout" (if today) → Opens workout logging flow (Journey #3)
+- Tap Back button → Returns to previous calendar view
+- Tap "Adjust" (if today/planned) → Opens adjustment dialog
 - Tap "Reschedule" → Opens date picker
 - Tap "Skip" → Confirms skip, updates plan
-- Swipe down or tap X → Closes modal
 
 **Data Displayed**:
 - Full `Workout` record

@@ -38,4 +38,25 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
   Future<void> deleteWorkoutsForGoal(int goalId) {
     return (delete(workouts)..where((t) => t.goalId.equals(goalId))).go();
   }
+
+  Future<({double distance, int duration})> getStatsForBlock(
+      String blockId) async {
+    final distanceQuery = selectOnly(workouts)
+      ..addColumns([workouts.actualDistance.sum()])
+      ..where(workouts.blockId.equals(blockId) &
+          workouts.status.equals('completed'));
+
+    final durationQuery = selectOnly(workouts)
+      ..addColumns([workouts.actualDuration.sum()])
+      ..where(workouts.blockId.equals(blockId) &
+          workouts.status.equals('completed'));
+
+    final distanceResult = await distanceQuery.getSingle();
+    final durationResult = await durationQuery.getSingle();
+
+    return (
+      distance: distanceResult.read(workouts.actualDistance.sum()) ?? 0.0,
+      duration: durationResult.read(workouts.actualDuration.sum()) ?? 0,
+    );
+  }
 }

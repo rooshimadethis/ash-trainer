@@ -222,6 +222,7 @@ class Workouts extends Table {
   RealColumn get actualDistance => real().nullable()(); // in km
   RealColumn get actualPace => real().nullable()(); // min/km
   IntColumn get rpe => integer().nullable()(); // 1-10
+  TextColumn get syncedFrom => text().nullable()(); // 'manual' | 'health_api' | 'screenshot'
   DateTimeColumn get completedAt => dateTime().nullable()();
   
   // Metadata

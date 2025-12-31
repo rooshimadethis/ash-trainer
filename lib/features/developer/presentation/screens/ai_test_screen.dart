@@ -10,6 +10,7 @@ import '../../../../data/providers/repository_providers.dart';
 import '../../../shared/domain/entities/goal.dart';
 import '../../../training/application/usecases/build_plan_generation_context.dart';
 import '../../../training/application/usecases/build_plan_philosophy.dart';
+import '../../../../core/utils/logger.dart';
 
 class AITestScreen extends ConsumerStatefulWidget {
   const AITestScreen({super.key});
@@ -111,7 +112,8 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
 
         _output = 'Loaded context for Goal: ${selectedGoal.id}';
       });
-    } catch (e) {
+    } catch (e, stack) {
+      AppLogger.error('Error loading data in AI Test Screen', e, stack);
       setState(() => _output = 'Error loading data: $e');
     }
   }
@@ -219,12 +221,12 @@ $contextJson
         _output = prettyOutput;
       });
 
-      debugPrint('--- AI INPUT JSON ---');
-      debugPrint(_inputJson);
-      debugPrint('--- AI RAW RESPONSE ---');
-      debugPrint(_rawResponse);
-      debugPrint('--- AI PARSED OUTPUT ---');
-      debugPrint(_output);
+      AppLogger.info('--- AI INPUT JSON ---');
+      AppLogger.info(_inputJson);
+      AppLogger.info('--- AI RAW RESPONSE ---');
+      AppLogger.info(_rawResponse);
+      AppLogger.info('--- AI PARSED OUTPUT ---');
+      AppLogger.info(_output);
     } catch (e, st) {
       if (e is AIProcessingException) {
         setState(() {
@@ -239,9 +241,7 @@ $contextJson
           _rawResponse = '';
         });
       }
-      debugPrint('--- AI ERROR ---');
-      debugPrint(e.toString());
-      debugPrint(st.toString());
+      AppLogger.error('AI Test Screen Analysis Error', e, st);
     } finally {
       setState(() {
         _isLoading = false;

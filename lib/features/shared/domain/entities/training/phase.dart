@@ -16,6 +16,8 @@ class Phase with _$Phase {
     DateTime? startDate,
     DateTime? endDate,
     String? description,
+    @Default(0.0) double actualDistance,
+    @Default(0) int actualDuration,
   }) = _Phase;
 
   factory Phase.fromJson(Map<String, dynamic> json) => _$PhaseFromJson(json);

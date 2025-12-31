@@ -13,6 +13,10 @@ class Phases extends Table {
   DateTimeColumn get endDate => dateTime().nullable()();
   TextColumn get description => text().nullable()();
 
+  // Stats
+  RealColumn get actualDistance => real().withDefault(const Constant(0.0))();
+  IntColumn get actualDuration => integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

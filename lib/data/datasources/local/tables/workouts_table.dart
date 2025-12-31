@@ -27,6 +27,8 @@ class Workouts extends Table {
   RealColumn get actualDistance => real().nullable()();
   RealColumn get actualPace => real().nullable()();
   IntColumn get rpe => integer().nullable()();
+  TextColumn get syncedFrom =>
+      text().nullable()(); // 'manual', 'health_api', 'screenshot'
   DateTimeColumn get completedAt => dateTime().nullable()();
 
   @override

@@ -35,4 +35,39 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
           ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
         .get();
   }
+
+  Future<void> updateBlockStats(String blockId, double distance, int duration) {
+    return (update(trainingBlocks)..where((t) => t.id.equals(blockId)))
+        .write(TrainingBlocksCompanion(
+      actualDistance: Value(distance),
+      actualDuration: Value(duration),
+    ));
+  }
+
+  Future<void> updatePhaseStats(String phaseId, double distance, int duration) {
+    return (update(phases)..where((t) => t.id.equals(phaseId)))
+        .write(PhasesCompanion(
+      actualDistance: Value(distance),
+      actualDuration: Value(duration),
+    ));
+  }
+
+  Future<({double distance, int duration})> getStatsForPhase(
+      String phaseId) async {
+    final distanceQuery = selectOnly(trainingBlocks)
+      ..addColumns([trainingBlocks.actualDistance.sum()])
+      ..where(trainingBlocks.phaseId.equals(phaseId));
+
+    final durationQuery = selectOnly(trainingBlocks)
+      ..addColumns([trainingBlocks.actualDuration.sum()])
+      ..where(trainingBlocks.phaseId.equals(phaseId));
+
+    final distanceResult = await distanceQuery.getSingle();
+    final durationResult = await durationQuery.getSingle();
+
+    return (
+      distance: distanceResult.read(trainingBlocks.actualDistance.sum()) ?? 0.0,
+      duration: durationResult.read(trainingBlocks.actualDuration.sum()) ?? 0,
+    );
+  }
 }

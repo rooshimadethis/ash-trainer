@@ -9,6 +9,7 @@ import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
 import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
+import 'workout_detail_screen.dart';
 
 class WeeklyView extends ConsumerWidget {
   const WeeklyView({super.key});
@@ -251,8 +252,22 @@ class WeeklyView extends ConsumerWidget {
               : ListView.separated(
                   padding: const EdgeInsets.all(20),
                   itemCount: dayWorkouts.length,
-                  itemBuilder: (context, index) =>
-                      WorkoutCard(workout: dayWorkouts[index]),
+                  itemBuilder: (context, index) {
+                    final workout = dayWorkouts[index];
+                    return WorkoutCard(
+                      workout: workout,
+                      useWorkoutColor: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                WorkoutDetailScreen(workout: workout),
+                          ),
+                        );
+                      },
+                    );
+                  },
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: 16),
                 ),

@@ -9,28 +9,23 @@
 ---
 
 ## Entry Points
-- **Automatic**: App detects a new workout from Health Connect (Android) or HealthKit (iOS).
-- **Manual**: Tap on a planned workout card in [Today View](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md#view-1-today-view-defaulthome) and select "Log Workout".
-- **Retroactive**: Long-press a past date in [Weekly View](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md#view-2-weekly-view-swipe-left-from-today) and select "Log Past Workout".
-- **Notification**: Tap "Workout detected! Tap here to review and log it."
+- **Manual (Priority)**: Tap on a planned workout card in [Today View](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md#view-1-today-view-defaulthome), then tap "Log Workout" on the [Workout Detail Screen](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md#workout-detail-screen).
+- **Automatic (Phase 3+)**: App detects a new workout from Health Connect (Android) or HealthKit (iOS).
+- **Retroactive**: Tap on a past workout card in [Weekly View](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/04_calendar_view.md#view-2-weekly-view-swipe-left-from-today).
+- **Notification**: Tap "Workout detected! Tap here to review and log it." (Phase 3+)
 
 ---
 
 ## User Flow
 
-### Step 1: Workout Review (The "Sync" Screen)
+### Step 1: Workout Review & Metric Input
 
 **User Sees**:
-- **Status Header**: "Great run! Here's what we found..."
-- **Data Cards**:
-  - Distance (e.g., "8.2 km")
-  - Duration (e.g., "45:12")
-  - Pace/Intensity (e.g., "5:30 min/km")
-  - Heart Rate avg (e.g., "152 bpm")
-- **Sync Status**: 
-  - "Linked to: Easy Run (Monday, Dec 29)"
-  - Or: "Unlinked workout" (if no planned workout matches)
-- **Falling Back**: "Not what you did? [Edit Manually] or [Upload Screenshot]"
+- **Type-Specific Layout**: The input form varies based on the `Workout.type`:
+  - **Running**: Fields for Distance (km/mi), Duration (hh:mm:ss), and optional Avg Heart Rate.
+  - **Strength & Mobility**: Field for `actualDuration`.
+- **Status Header**: "Great session! Let's log your stats."
+- **Confirmation Button**: "Continue to Feedback"
 
 **User Can**:
 - **Confirm Data**: Advance to Step 2.
@@ -122,23 +117,64 @@
 
 ---
 
-## Data Model Requirements
+## 🗺️ Feature Roadmap
 
-### Workout Table Updates
-- `actualDistance` (double)
-- `actualDuration` (duration)
-- `rpe` (int, 1-10)
-- `notes` (string)
-- `status` (enum: completed)
-- `syncedFrom` (enum: health_kit, health_connect, manual, screenshot)
+Based on the user journey above, here is the phased implementation plan for the Workout Logging system.
 
-### PainRecord Table
-- `id` (PK)
-- `workoutId` (FK)
-- `location` (enum/string)
-- `severity` (int, 1-10)
-- `trend` (enum: better, same, worse)
-- `timestamp` (DateTime)
+### Phase 2: Core Training Loop (MVP)
+*Goal: Enable manual logging and completion tracking.*
+
+**Features**:
+- [ ] **Workout Detail Screen**: Full-screen view with conditional "Log Workout" today button.
+- [ ] **Simple RPE Picker**: 1-10 slider for subjective intensity measurement.
+- [ ] **Manual Data Entry**: Form for distance, duration, and pace.
+- [ ] **Dashboards Update**: Reflect completed status in Today and Weekly views.
+
+**Model & Logic**:
+- [ ] **Workout Table**: Add `actualDistance`, `actualDuration`, `rpe`, `status`, `syncedFrom`, `actualPace`, `completedAt`.
+- [ ] **Operations**: `logWorkout(workoutId, ...)`, `watchWorkout(workoutId)`.
+- [ ] **Side Effects**: Increment `actualVolume` and `actualDuration` in `Phase` and `TrainingBlock` after logging.
+
+### Phase 3: Intelligence & Safety
+*Goal: Add Health APIs and safety logic.*
+
+**Features**:
+- [ ] **Health API Integration**: Passive sync for distance, duration, and HR.
+- [ ] **Pain Check-In Flow**: Body-part selection and severity tracking (1-10).
+- [ ] **AI Coaching Feedback**: Real-time evaluation of the workout.
+- [ ] **Dynamic Adjustments**: "Compensate" logic based on load/pain.
+
+**Model & Logic**:
+- [ ] **PainRecord Table**: Add `id`, `workoutId`, `location`, `severity`, `trend`, `timestamp`.
+- [ ] **Operations**: `reportPain(...)`, `getCoachingFeedback(workoutId)`.
+- [ ] **Side Effects**: Trigger `recalculateLoad(userId)` for ACWR calculation.
+
+### Phase 4: Polish & Robustness
+*Goal: Eliminate friction and provide deep insights.*
+
+**Features**:
+- [ ] **Screenshot OCR Fallback**: Extact workout stats from uploaded images.
+- [ ] **Pain Visualization**: Charts showing pain trends for specific body parts.
+- [ ] **Post-Workout Recovery Advice**: Intensity-based mobility drills.
+- [ ] **Weekly Summary Integration**: Aggregating completion data into progress recaps.
+- [ ] **Workout Journaling**: Add `notes` field for qualitative session logs.
+
+---
+
+## 🛡️ Data Integrity & Side Effect Strategy
+
+To ensure that `actualVolume` and `adherencePercentage` remain accurate even when workouts are edited, deleted, or retroactive-logged, we use a **Centralized Recalculation Pattern**:
+
+### 1. Atomic Transactions
+Every function that modifies a `Workout` (Create/Update/Delete/Log) MUST be wrapped in a database **Transaction**. This ensures that the workout change and the stat update succeed or fail together.
+
+### 2. The `syncStatsForBlock(blockId)` Hook
+Instead of manually incrementing/decrementing values (which leads to drift over time), the repository will trigger a full recalculation of the parent `TrainingBlock` and `Phase` whenever a child workout is touched.
+- **Logic**: `SELECT sum(actualDistance), sum(actualDuration) FROM workouts WHERE block_id = ? AND status = 'completed'`
+- **Trigger**: Called automatically within the transaction at the end of `logWorkout`, `deleteWorkout`, or `adjustWorkout`.
+
+### 3. Reactive UI Updates
+By using Drift's `watch` capabilities, the UI providers will automatically refresh the "Today" and "Weekly" views the moment the transaction commits. The user never has to "pull to refresh" to see their updated volume totals.
 
 ---
 

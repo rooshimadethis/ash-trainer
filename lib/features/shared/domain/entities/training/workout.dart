@@ -24,6 +24,7 @@ class Workout with _$Workout {
     double? actualDistance,
     double? actualPace,
     int? rpe,
+    String? syncedFrom,
     DateTime? completedAt,
   }) = _Workout;
 

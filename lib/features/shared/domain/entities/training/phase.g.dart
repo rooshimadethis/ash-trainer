@@ -21,6 +21,8 @@ _$PhaseImpl _$$PhaseImplFromJson(Map<String, dynamic> json) => _$PhaseImpl(
           ? null
           : DateTime.parse(json['endDate'] as String),
       description: json['description'] as String?,
+      actualDistance: (json['actualDistance'] as num?)?.toDouble() ?? 0.0,
+      actualDuration: (json['actualDuration'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$PhaseImplToJson(_$PhaseImpl instance) =>
@@ -35,4 +37,6 @@ Map<String, dynamic> _$$PhaseImplToJson(_$PhaseImpl instance) =>
       'startDate': instance.startDate?.toIso8601String(),
       'endDate': instance.endDate?.toIso8601String(),
       'description': instance.description,
+      'actualDistance': instance.actualDistance,
+      'actualDuration': instance.actualDuration,
     };

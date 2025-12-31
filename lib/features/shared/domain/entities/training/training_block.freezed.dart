@@ -27,6 +27,8 @@ mixin _$TrainingBlock {
   int get durationDays => throw _privateConstructorUsedError;
   DateTime? get startDate => throw _privateConstructorUsedError;
   DateTime? get endDate => throw _privateConstructorUsedError;
+  double get actualDistance => throw _privateConstructorUsedError;
+  int get actualDuration => throw _privateConstructorUsedError;
 
   /// Serializes this TrainingBlock to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +53,9 @@ abstract class $TrainingBlockCopyWith<$Res> {
       String intent,
       int durationDays,
       DateTime? startDate,
-      DateTime? endDate});
+      DateTime? endDate,
+      double actualDistance,
+      int actualDuration});
 }
 
 /// @nodoc
@@ -76,6 +80,8 @@ class _$TrainingBlockCopyWithImpl<$Res, $Val extends TrainingBlock>
     Object? durationDays = null,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? actualDistance = null,
+    Object? actualDuration = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -106,6 +112,14 @@ class _$TrainingBlockCopyWithImpl<$Res, $Val extends TrainingBlock>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      actualDistance: null == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
+              as double,
+      actualDuration: null == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -125,7 +139,9 @@ abstract class _$$TrainingBlockImplCopyWith<$Res>
       String intent,
       int durationDays,
       DateTime? startDate,
-      DateTime? endDate});
+      DateTime? endDate,
+      double actualDistance,
+      int actualDuration});
 }
 
 /// @nodoc
@@ -148,6 +164,8 @@ class __$$TrainingBlockImplCopyWithImpl<$Res>
     Object? durationDays = null,
     Object? startDate = freezed,
     Object? endDate = freezed,
+    Object? actualDistance = null,
+    Object? actualDuration = null,
   }) {
     return _then(_$TrainingBlockImpl(
       id: null == id
@@ -178,6 +196,14 @@ class __$$TrainingBlockImplCopyWithImpl<$Res>
           ? _value.endDate
           : endDate // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      actualDistance: null == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
+              as double,
+      actualDuration: null == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -192,7 +218,9 @@ class _$TrainingBlockImpl implements _TrainingBlock {
       required this.intent,
       required this.durationDays,
       this.startDate,
-      this.endDate});
+      this.endDate,
+      this.actualDistance = 0.0,
+      this.actualDuration = 0});
 
   factory _$TrainingBlockImpl.fromJson(Map<String, dynamic> json) =>
       _$$TrainingBlockImplFromJson(json);
@@ -211,10 +239,16 @@ class _$TrainingBlockImpl implements _TrainingBlock {
   final DateTime? startDate;
   @override
   final DateTime? endDate;
+  @override
+  @JsonKey()
+  final double actualDistance;
+  @override
+  @JsonKey()
+  final int actualDuration;
 
   @override
   String toString() {
-    return 'TrainingBlock(id: $id, phaseId: $phaseId, blockNumber: $blockNumber, intent: $intent, durationDays: $durationDays, startDate: $startDate, endDate: $endDate)';
+    return 'TrainingBlock(id: $id, phaseId: $phaseId, blockNumber: $blockNumber, intent: $intent, durationDays: $durationDays, startDate: $startDate, endDate: $endDate, actualDistance: $actualDistance, actualDuration: $actualDuration)';
   }
 
   @override
@@ -231,13 +265,17 @@ class _$TrainingBlockImpl implements _TrainingBlock {
                 other.durationDays == durationDays) &&
             (identical(other.startDate, startDate) ||
                 other.startDate == startDate) &&
-            (identical(other.endDate, endDate) || other.endDate == endDate));
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.actualDistance, actualDistance) ||
+                other.actualDistance == actualDistance) &&
+            (identical(other.actualDuration, actualDuration) ||
+                other.actualDuration == actualDuration));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, phaseId, blockNumber, intent,
-      durationDays, startDate, endDate);
+      durationDays, startDate, endDate, actualDistance, actualDuration);
 
   /// Create a copy of TrainingBlock
   /// with the given fields replaced by the non-null parameter values.
@@ -263,7 +301,9 @@ abstract class _TrainingBlock implements TrainingBlock {
       required final String intent,
       required final int durationDays,
       final DateTime? startDate,
-      final DateTime? endDate}) = _$TrainingBlockImpl;
+      final DateTime? endDate,
+      final double actualDistance,
+      final int actualDuration}) = _$TrainingBlockImpl;
 
   factory _TrainingBlock.fromJson(Map<String, dynamic> json) =
       _$TrainingBlockImpl.fromJson;
@@ -282,6 +322,10 @@ abstract class _TrainingBlock implements TrainingBlock {
   DateTime? get startDate;
   @override
   DateTime? get endDate;
+  @override
+  double get actualDistance;
+  @override
+  int get actualDuration;
 
   /// Create a copy of TrainingBlock
   /// with the given fields replaced by the non-null parameter values.

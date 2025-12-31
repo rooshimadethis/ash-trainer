@@ -31,6 +31,8 @@ mixin _$Phase {
   DateTime? get startDate => throw _privateConstructorUsedError;
   DateTime? get endDate => throw _privateConstructorUsedError;
   String? get description => throw _privateConstructorUsedError;
+  double get actualDistance => throw _privateConstructorUsedError;
+  int get actualDuration => throw _privateConstructorUsedError;
 
   /// Serializes this Phase to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -56,7 +58,9 @@ abstract class $PhaseCopyWith<$Res> {
       String targetWeeklyDuration,
       DateTime? startDate,
       DateTime? endDate,
-      String? description});
+      String? description,
+      double actualDistance,
+      int actualDuration});
 }
 
 /// @nodoc
@@ -84,6 +88,8 @@ class _$PhaseCopyWithImpl<$Res, $Val extends Phase>
     Object? startDate = freezed,
     Object? endDate = freezed,
     Object? description = freezed,
+    Object? actualDistance = null,
+    Object? actualDuration = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -126,6 +132,14 @@ class _$PhaseCopyWithImpl<$Res, $Val extends Phase>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      actualDistance: null == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
+              as double,
+      actualDuration: null == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -147,7 +161,9 @@ abstract class _$$PhaseImplCopyWith<$Res> implements $PhaseCopyWith<$Res> {
       String targetWeeklyDuration,
       DateTime? startDate,
       DateTime? endDate,
-      String? description});
+      String? description,
+      double actualDistance,
+      int actualDuration});
 }
 
 /// @nodoc
@@ -173,6 +189,8 @@ class __$$PhaseImplCopyWithImpl<$Res>
     Object? startDate = freezed,
     Object? endDate = freezed,
     Object? description = freezed,
+    Object? actualDistance = null,
+    Object? actualDuration = null,
   }) {
     return _then(_$PhaseImpl(
       id: null == id
@@ -215,6 +233,14 @@ class __$$PhaseImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String?,
+      actualDistance: null == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
+              as double,
+      actualDuration: null == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -232,7 +258,9 @@ class _$PhaseImpl implements _Phase {
       required this.targetWeeklyDuration,
       this.startDate,
       this.endDate,
-      this.description});
+      this.description,
+      this.actualDistance = 0.0,
+      this.actualDuration = 0});
 
   factory _$PhaseImpl.fromJson(Map<String, dynamic> json) =>
       _$$PhaseImplFromJson(json);
@@ -258,10 +286,16 @@ class _$PhaseImpl implements _Phase {
   final DateTime? endDate;
   @override
   final String? description;
+  @override
+  @JsonKey()
+  final double actualDistance;
+  @override
+  @JsonKey()
+  final int actualDuration;
 
   @override
   String toString() {
-    return 'Phase(id: $id, goalId: $goalId, phaseNumber: $phaseNumber, phaseType: $phaseType, durationWeeks: $durationWeeks, targetWeeklyVolume: $targetWeeklyVolume, targetWeeklyDuration: $targetWeeklyDuration, startDate: $startDate, endDate: $endDate, description: $description)';
+    return 'Phase(id: $id, goalId: $goalId, phaseNumber: $phaseNumber, phaseType: $phaseType, durationWeeks: $durationWeeks, targetWeeklyVolume: $targetWeeklyVolume, targetWeeklyDuration: $targetWeeklyDuration, startDate: $startDate, endDate: $endDate, description: $description, actualDistance: $actualDistance, actualDuration: $actualDuration)';
   }
 
   @override
@@ -285,7 +319,11 @@ class _$PhaseImpl implements _Phase {
                 other.startDate == startDate) &&
             (identical(other.endDate, endDate) || other.endDate == endDate) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.actualDistance, actualDistance) ||
+                other.actualDistance == actualDistance) &&
+            (identical(other.actualDuration, actualDuration) ||
+                other.actualDuration == actualDuration));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -301,7 +339,9 @@ class _$PhaseImpl implements _Phase {
       targetWeeklyDuration,
       startDate,
       endDate,
-      description);
+      description,
+      actualDistance,
+      actualDuration);
 
   /// Create a copy of Phase
   /// with the given fields replaced by the non-null parameter values.
@@ -330,7 +370,9 @@ abstract class _Phase implements Phase {
       required final String targetWeeklyDuration,
       final DateTime? startDate,
       final DateTime? endDate,
-      final String? description}) = _$PhaseImpl;
+      final String? description,
+      final double actualDistance,
+      final int actualDuration}) = _$PhaseImpl;
 
   factory _Phase.fromJson(Map<String, dynamic> json) = _$PhaseImpl.fromJson;
 
@@ -354,6 +396,10 @@ abstract class _Phase implements Phase {
   DateTime? get endDate;
   @override
   String? get description;
+  @override
+  double get actualDistance;
+  @override
+  int get actualDuration;
 
   /// Create a copy of Phase
   /// with the given fields replaced by the non-null parameter values.

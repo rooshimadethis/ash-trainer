@@ -111,6 +111,7 @@ erDiagram
         real actualDistance "nullable"
         real actualPace "nullable"
         int rpe "nullable"
+        text syncedFrom "enum (manual, health_api, screenshot)"
         datetime completedAt "nullable"
         datetime createdAt
         datetime updatedAt

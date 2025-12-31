@@ -10,6 +10,10 @@ class TrainingBlocks extends Table {
   DateTimeColumn get startDate => dateTime().nullable()();
   DateTimeColumn get endDate => dateTime().nullable()();
 
+  // Stats
+  RealColumn get actualDistance => real().withDefault(const Constant(0.0))();
+  IntColumn get actualDuration => integer().withDefault(const Constant(0))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

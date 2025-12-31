@@ -15,6 +15,8 @@ extension PhaseMapper on Phase {
       startDate: Value(startDate),
       endDate: Value(endDate),
       description: Value(description),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
     );
   }
 }
@@ -32,6 +34,8 @@ extension PhaseDTOMapper on PhaseDTO {
       startDate: startDate,
       endDate: endDate,
       description: description,
+      actualDistance: actualDistance,
+      actualDuration: actualDuration,
     );
   }
 }

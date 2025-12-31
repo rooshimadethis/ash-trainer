@@ -12,6 +12,8 @@ extension TrainingBlockMapper on TrainingBlock {
       durationDays: durationDays,
       startDate: Value(startDate),
       endDate: Value(endDate),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
     );
   }
 }
@@ -26,6 +28,8 @@ extension TrainingBlockDTOMapper on TrainingBlockDTO {
       durationDays: durationDays,
       startDate: startDate,
       endDate: endDate,
+      actualDistance: actualDistance,
+      actualDuration: actualDuration,
     );
   }
 }

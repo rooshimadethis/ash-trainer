@@ -70,6 +70,13 @@ class AppTextStyles {
         textBaseline: TextBaseline.alphabetic,
       );
 
+  static TextStyle get labelLarge => display.copyWith(
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+        color: AppColors.primary,
+        letterSpacing: 0.1,
+      );
+
   static TextStyle get labelSmall => display.copyWith(
         fontSize: 10,
         fontWeight: FontWeight.w600,

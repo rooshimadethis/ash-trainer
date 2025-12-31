@@ -13,6 +13,8 @@ class TrainingBlock with _$TrainingBlock {
     required int durationDays,
     DateTime? startDate,
     DateTime? endDate,
+    @Default(0.0) double actualDistance,
+    @Default(0) int actualDuration,
   }) = _TrainingBlock;
 
   factory TrainingBlock.fromJson(Map<String, dynamic> json) =>

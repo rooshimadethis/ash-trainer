@@ -8,6 +8,7 @@ import '../../../shared/presentation/widgets/workout_card.dart';
 import '../providers/calendar_provider.dart';
 import '../widgets/recovery_widget.dart';
 import 'package:intl/intl.dart';
+import 'workout_detail_screen.dart';
 
 class TodayView extends ConsumerWidget {
   const TodayView({super.key});
@@ -75,7 +76,19 @@ class TodayView extends ConsumerWidget {
               if (workout == null) {
                 return _restDayCard();
               }
-              return WorkoutCard(workout: workout);
+              return WorkoutCard(
+                workout: workout,
+                useWorkoutColor: true,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          WorkoutDetailScreen(workout: workout),
+                    ),
+                  );
+                },
+              );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Text('Error loading workout: $err'),
