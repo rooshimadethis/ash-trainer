@@ -10,26 +10,33 @@ final selectedWeekProvider = StateProvider<DateTime>((ref) {
   return now.subtract(Duration(days: now.weekday - 1));
 });
 
-/// Provider for fetching workouts for a specific date range
+/// Provider for fetching workouts for a specific date range (Reactive)
 final workoutsForRangeProvider =
-    FutureProvider.family<List<Workout>, (DateTime, DateTime)>(
-        (ref, range) async {
+    StreamProvider.family<List<Workout>, (DateTime, DateTime)>((ref, range) {
   final workoutRepository = ref.watch(workoutRepositoryProvider);
-  return workoutRepository.getWorkoutsForDateRange(
+  return workoutRepository.watchWorkoutsForDateRange(
     startDate: range.$1,
     endDate: range.$2,
   );
 });
 
 /// Provider for today's workout
-final todayWorkoutProvider = FutureProvider<Workout?>((ref) async {
+final todayWorkoutProvider = StreamProvider<Workout?>((ref) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   final tomorrow = today.add(const Duration(days: 1));
 
-  final workouts =
-      await ref.watch(workoutsForRangeProvider((today, tomorrow)).future);
-  return workouts.isNotEmpty ? workouts.first : null;
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository
+      .watchWorkoutsForDateRange(startDate: today, endDate: tomorrow)
+      .map((workouts) => workouts.isNotEmpty ? workouts.first : null);
+});
+
+/// Provider for a single workout by ID
+final workoutDetailProvider =
+    StreamProvider.family<Workout?, String>((ref, id) {
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.watchWorkout(id);
 });
 
 /// Provider for the selected date
@@ -38,22 +45,30 @@ final selectedDateProvider = StateProvider<DateTime>((ref) {
 });
 
 /// Provider for the weekly workouts based on selectedWeekProvider
-final weeklyWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
+final weeklyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
   final startOfWeek = ref.watch(selectedWeekProvider);
   final endOfWeek = startOfWeek.add(const Duration(days: 7));
 
-  return ref.watch(workoutsForRangeProvider((startOfWeek, endOfWeek)).future);
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.watchWorkoutsForDateRange(
+    startDate: startOfWeek,
+    endDate: endOfWeek,
+  );
 });
 
 /// Provider for the monthly/4-week overview
-final monthlyWorkoutsProvider = FutureProvider<List<Workout>>((ref) async {
+final monthlyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
   final now = DateTime.now();
   final today = DateTime(now.year, now.month, now.day);
   // Last week + Current week + Next 2 weeks = 28 days
   final start = today.subtract(Duration(days: today.weekday - 1 + 7));
   final end = start.add(const Duration(days: 28));
 
-  return ref.watch(workoutsForRangeProvider((start, end)).future);
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.watchWorkoutsForDateRange(
+    startDate: start,
+    endDate: end,
+  );
 });
 
 /// Provider for fetching blocks for a specific date range

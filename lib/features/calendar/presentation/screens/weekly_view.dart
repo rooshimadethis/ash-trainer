@@ -354,32 +354,35 @@ class _DayColumn extends ConsumerWidget {
                       child: SingleChildScrollView(
                         physics: const NeverScrollableScrollPhysics(),
                         child: Column(
-                          children: workouts
-                              .map((w) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 4),
-                                    child: Container(
-                                      width: 20,
-                                      height: 20,
-                                      decoration: BoxDecoration(
-                                        color: WorkoutTypes.getColor(w.type)
-                                            .withValues(alpha: 0.15),
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: WorkoutTypes.getColor(w.type)
-                                              .withValues(alpha: 0.4),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Icon(
-                                          WorkoutTypes.getIcon(w.type),
-                                          size: 10,
-                                          color: WorkoutTypes.getColor(w.type),
-                                        ),
-                                      ),
-                                    ),
-                                  ))
-                              .toList(),
+                          children: workouts.map((w) {
+                            final isCompleted = w.status == 'completed';
+                            final displayColor = WorkoutTypes.getColor(w.type);
+
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 4),
+                              child: Container(
+                                width: 22,
+                                height: 22,
+                                decoration: BoxDecoration(
+                                  color: displayColor.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: displayColor.withValues(alpha: 0.4),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(
+                                    isCompleted
+                                        ? Icons.check_rounded
+                                        : WorkoutTypes.getIcon(w.type),
+                                    size: 11,
+                                    color: displayColor,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                     ),

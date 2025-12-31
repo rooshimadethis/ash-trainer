@@ -7,6 +7,8 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
+import '../providers/calendar_provider.dart';
+import '../../../../data/providers/repository_providers.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final Workout workout;
@@ -15,6 +17,21 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final workoutAsync = ref.watch(workoutDetailProvider(workout.id));
+
+    return workoutAsync.when(
+      data: (liveWorkout) {
+        if (liveWorkout == null) {
+          return const Scaffold(body: Center(child: Text('Workout not found')));
+        }
+        return _buildContent(context, ref, liveWorkout);
+      },
+      loading: () => _buildContent(context, ref, workout),
+      error: (e, st) => _buildContent(context, ref, workout),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, WidgetRef ref, Workout workout) {
     final typeColor = WorkoutTypes.getColor(workout.type);
     final isToday = _isToday(workout.scheduledDate);
     final isCompleted = workout.status == 'completed';
@@ -173,9 +190,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
                 )
               else if (isCompleted)
                 AshButton(
-                  label: 'Workout Logged',
+                  label: 'Undo Log',
                   variant: AshButtonVariant.secondary,
-                  onPressed: null, // Disabled or allows editing?
+                  onPressed: () => _showUndoConfirmation(context, ref, workout),
                 )
               else
                 AshButton(
@@ -205,6 +222,42 @@ class WorkoutDetailScreen extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  void _showUndoConfirmation(
+      BuildContext context, WidgetRef ref, Workout workout) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text('Undo Completion?',
+            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+        content: Text(
+          'This will remove your actual stats and mark the workout as incomplete.',
+          style:
+              AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('Cancel',
+                style: AppTextStyles.buttonText
+                    .copyWith(color: AppColors.primary)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              await ref
+                  .read(workoutRepositoryProvider)
+                  .unlogWorkout(workout.id);
+            },
+            child: Text('Undo',
+                style:
+                    AppTextStyles.buttonText.copyWith(color: AppColors.error)),
+          ),
+        ],
       ),
     );
   }

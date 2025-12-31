@@ -17,8 +17,22 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
         .get();
   }
 
+  Stream<List<WorkoutDTO>> watchWorkoutsForDateRange(
+      DateTime start, DateTime end) {
+    return (select(workouts)
+          ..where(
+              (t) => t.scheduledDate.isBetween(Variable(start), Variable(end)))
+          ..orderBy([(t) => OrderingTerm(expression: t.scheduledDate)]))
+        .watch();
+  }
+
   Future<WorkoutDTO?> getWorkoutById(String id) {
     return (select(workouts)..where((t) => t.id.equals(id))).getSingleOrNull();
+  }
+
+  Stream<WorkoutDTO?> watchWorkoutById(String id) {
+    return (select(workouts)..where((t) => t.id.equals(id)))
+        .watchSingleOrNull();
   }
 
   Future<void> insertWorkout(Insertable<WorkoutDTO> workout) {

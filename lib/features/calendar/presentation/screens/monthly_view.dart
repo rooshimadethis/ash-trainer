@@ -362,19 +362,30 @@ class _WeekRow extends StatelessWidget {
                             const SizedBox(height: 6),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: dayWorkouts
-                                  .take(3)
-                                  .map((w) => Container(
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 1.5),
-                                        width: 6,
-                                        height: 6,
-                                        decoration: BoxDecoration(
-                                          color: WorkoutTypes.getColor(w.type),
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ))
-                                  .toList(),
+                              children: dayWorkouts.take(3).map((w) {
+                                final isCompleted = w.status == 'completed';
+                                final displayColor =
+                                    WorkoutTypes.getColor(w.type);
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 1.5),
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: displayColor,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: isCompleted
+                                      ? const Center(
+                                          child: Icon(
+                                            Icons.check,
+                                            size: 6,
+                                            color: AppColors.white,
+                                          ),
+                                        )
+                                      : null,
+                                );
+                              }).toList(),
                             ),
                           ],
                         ),

@@ -24,6 +24,16 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
+  Stream<List<Workout>> watchWorkoutsForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _workoutDao
+        .watchWorkoutsForDateRange(startDate, endDate)
+        .map((dtos) => dtos.map((dto) => dto.toEntity()).toList());
+  }
+
+  @override
   Future<List<TrainingBlock>> getBlocksForDateRange({
     required DateTime startDate,
     required DateTime endDate,
@@ -39,6 +49,11 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   Future<Workout?> getWorkout(String id) async {
     final dto = await _workoutDao.getWorkoutById(id);
     return dto?.toEntity();
+  }
+
+  @override
+  Stream<Workout?> watchWorkout(String id) {
+    return _workoutDao.watchWorkoutById(id).map((dto) => dto?.toEntity());
   }
 
   @override
@@ -69,6 +84,51 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
           endDate: workout.scheduledDate,
         );
         // Find the specific block to get the phaseId
+        final relevantBlock = block.firstWhere((b) => b.id == workout.blockId);
+
+        final phaseStats =
+            await _trainingPlanDao.getStatsForPhase(relevantBlock.phaseId);
+        await _trainingPlanDao.updatePhaseStats(
+          relevantBlock.phaseId,
+          phaseStats.distance,
+          phaseStats.duration,
+        );
+      }
+    });
+  }
+
+  @override
+  Future<void> unlogWorkout(String workoutId) async {
+    await _workoutDao.transaction(() async {
+      final dto = await _workoutDao.getWorkoutById(workoutId);
+      if (dto == null) return;
+
+      final workout = dto.toEntity();
+
+      // 1. Reset the workout
+      final updatedWorkout = workout.copyWith(
+        status: 'planned',
+        actualDuration: 0,
+        actualDistance: 0.0,
+        actualPace: null,
+        rpe: null,
+        completedAt: null,
+      );
+      await _workoutDao.updateWorkout(updatedWorkout.toCompanion());
+
+      // 2. Recalculate stats (same logic as logWorkout)
+      if (workout.blockId != null) {
+        final blockStats = await _workoutDao.getStatsForBlock(workout.blockId!);
+        await _trainingPlanDao.updateBlockStats(
+          workout.blockId!,
+          blockStats.distance,
+          blockStats.duration,
+        );
+
+        final block = await _trainingPlanDao.getBlocksForDateRange(
+          startDate: workout.scheduledDate,
+          endDate: workout.scheduledDate,
+        );
         final relevantBlock = block.firstWhere((b) => b.id == workout.blockId);
 
         final phaseStats =

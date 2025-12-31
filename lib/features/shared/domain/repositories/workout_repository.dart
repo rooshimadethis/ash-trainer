@@ -9,6 +9,12 @@ abstract class WorkoutRepository {
     required DateTime endDate,
   });
 
+  /// Watch workouts within a specific date range (reactive)
+  Stream<List<Workout>> watchWorkoutsForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// Get training blocks within a specific date range
   Future<List<TrainingBlock>> getBlocksForDateRange({
     required DateTime startDate,
@@ -17,6 +23,9 @@ abstract class WorkoutRepository {
 
   /// Get a single workout by ID
   Future<Workout?> getWorkout(String id);
+
+  /// Watch a single workout by ID
+  Stream<Workout?> watchWorkout(String id);
 
   /// Save a newly generated training plan (batch insert)
   Future<void> saveFullTrainingPlan({
@@ -30,6 +39,9 @@ abstract class WorkoutRepository {
 
   /// Log a completed workout (update status, actuals)
   Future<void> logWorkout(Workout workout);
+
+  /// Unmark a workout as complete and clear actuals
+  Future<void> unlogWorkout(String workoutId);
 
   /// Delete workouts for a specific goal (e.g. before regenerating)
   Future<void> deleteWorkoutsForGoal(String goalId);
