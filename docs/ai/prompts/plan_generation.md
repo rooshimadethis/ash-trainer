@@ -31,6 +31,7 @@ Your task is to generate a complete, periodized training plan based on the user'
 - Provide rationale for key training decisions
 - Ensure workouts fit user's available days and time constraints
 - DO NOT include the day of the week in the workout name (e.g. "Easy Run", NOT "Monday Easy Run").
+- **Token Efficiency**: Return ONLY the new or modified phases, blocks, and workouts. Do not repeat unchanged historical data.
 ```
 
 ---
@@ -260,6 +261,53 @@ Generate a complete 12-week plan following polarized 80/20 training principles.
 ```
 
 ---
+
+## Adaptive Planning Prompts
+
+### 1. Horizon Extension (Horizon Filling)
+
+**Use Case**: User is progressing well. We need to generate the *next* chunk of training (e.g., transition from Base to Build) without disrupting the flow.
+
+**Prompt Template**:
+```text
+You are extending an existing training plan for:
+[User Context]
+
+**Current State**:
+- Current Phase: [Phase Name] (Ends on [Date])
+- Last Scheduled Workout: [Date]
+- Recent Performance: [Summary of compliance/RPE]
+
+**Task**:
+Generate the next [N] weeks of training starting from [StartDate].
+- Continue the progression from the current phase.
+- If the current phase is ending, transition smoothly to the next logical phase (e.g., Base -> Build).
+- Maintain the user's established rhythm (available days: [Days]).
+```
+
+### 2. Strategic Repair (Recovery Bridge)
+
+**Use Case**: User missed significant time (3+ days). We need to build a "bridge" to get them back on track safely.
+
+**Prompt Template**:
+```text
+The user has missed [N] consecutive days of training due to [Reason/Unknown].
+Last completed workout: [Date].
+
+**Task**:
+Generate a "Return to Training" block starting [Tomorrow].
+1. **Bridge Block**: Create a short (3-7 day) block to ramp volume back up.
+   - Use "Return-to-Training" coefficient: [X]% for the first few sessions.
+   - Focus on easy aerobic volume and mobility.
+2. **Resume Plan**: After the bridge, resume the original plan structure (Phase: [Phase Name]), but adjust starting intensity if needed to match the new fitness level.
+
+**Constraints**:
+- First workout SHOULD be [Easy Run / Mobility] to test readiness.
+- NO high-intensity intervals in the first 3 days of return.
+```
+
+---
+
 
 ## Validation Rules
 

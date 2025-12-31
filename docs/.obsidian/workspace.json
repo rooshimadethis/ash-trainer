@@ -185,6 +185,9 @@
   },
   "active": "4e4d0571531b976a",
   "lastOpenFiles": [
+    "TODO/generate_more.md",
+    "TODO/implementation_plan_phase2.md",
+    "TODO/implementation_plan_phase2.md.resolved",
     "ux/user_journeys/03_workout_logging_completion.md",
     "TODO/calendar_block_visualization.md",
     "TODO/colors.md",
@@ -216,10 +219,7 @@
     "architecture/OLD_data_processing/training/running/training_plans.md",
     "architecture/OLD_data_processing/training/running",
     "architecture/OLD_data_processing/training/pillars.md",
-    "architecture/OLD_data_processing/training/intensity.md",
-    "architecture/OLD_data_processing/training/goals.md",
     "architecture/OLD_data_processing/training",
-    "architecture/OLD_data_processing/lifecycle",
-    "architecture/OLD_data_processing/cross_cutting"
+    "architecture/OLD_data_processing/lifecycle"
   ]
 }

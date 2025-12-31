@@ -142,6 +142,21 @@ abstract class WorkoutRepository {
   
   /// Watches workouts for a date
   Stream<List<Workout>> watchWorkoutsForDate(DateTime date);
+
+  /// Gets the date of the last scheduled workout
+  /// Used for "Horizon Filling"
+  Future<DateTime?> getLastScheduledWorkoutDate(String goalId);
+
+  /// Gets the number of consecutive days with missed workouts (ending yesterday)
+  /// Used for "Strategic Repair" trigger
+  Future<int> getConsecutiveMissedDays(String goalId);
+
+  /// Deletes all future workouts starting from a specific date
+  /// Used during "Strategic Repair" to clear the runway for a new plan
+  Future<void> clearFutureWorkouts({
+    required String goalId,
+    required DateTime fromDate,
+  });
 }
 ```
 
