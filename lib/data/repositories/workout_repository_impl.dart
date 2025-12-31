@@ -75,6 +75,15 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
+  Future<void> batchUpdateWorkouts(List<Workout> workouts) async {
+    await _workoutDao.transaction(() async {
+      for (final workout in workouts) {
+        await _workoutDao.updateWorkout(workout.toCompanion());
+      }
+    });
+  }
+
+  @override
   Future<void> unlogWorkout(String workoutId) async {
     await _workoutDao.transaction(() async {
       final dto = await _workoutDao.getWorkoutById(workoutId);

@@ -40,6 +40,9 @@ abstract class WorkoutRepository {
   /// Log a completed workout (update status, actuals)
   Future<void> logWorkout(Workout workout);
 
+  /// Batch update multiple workouts
+  Future<void> batchUpdateWorkouts(List<Workout> workouts);
+
   /// Unmark a workout as complete and clear actuals
   Future<void> unlogWorkout(String workoutId);
 

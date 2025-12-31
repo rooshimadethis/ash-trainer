@@ -73,6 +73,7 @@ class AISchemas {
             "plannedDistance": {"type": "number", "description": "Kilometers"},
             "intensity": {"type": "string"},
             "description": {"type": "string"},
+            "isKey": {"type": "boolean", "default": false},
           },
           "required": [
             "id",

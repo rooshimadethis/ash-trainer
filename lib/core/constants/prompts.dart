@@ -65,7 +65,12 @@ CRITICAL: Use the provided JSON schema.
 - Create 'Blocks' (logical chunks of 3-10 days) within those phases.
 - Create 'Workouts' linked to specific Blocks.
 - Use 'dayNumber' relative to the start of the BLOCK.
-- DO NOT include the day of the week in the workout name (e.g. "Easy Run", NOT "Monday Easy Run").
+- JSON SCHEMA: Strictly adhere to the provided JSON schema. 
+  - WORKOUT NAMES: Never include the day of the week (e.g., "Monday") in names (e.g. "Easy Run", NOT "Monday Easy Run").
+  - KEY WORKOUTS (isKey): 
+    - Set `isKey: true` for important "Long Runs" and high-intensity "Quality" sessions (Intervals, Tempo, Hills).
+    - For Strength sessions, set `isKey: true` if the user's Strength priority is 'High' or use best judgement. 
+    - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
 ''';
 
   static const String coachingChatTask = '''

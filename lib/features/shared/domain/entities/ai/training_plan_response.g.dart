@@ -84,6 +84,7 @@ _$WorkoutSkeletonImpl _$$WorkoutSkeletonImplFromJson(
       plannedDistance: (json['plannedDistance'] as num?)?.toDouble(),
       intensity: json['intensity'] as String,
       description: json['description'] as String,
+      isKey: json['isKey'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$WorkoutSkeletonImplToJson(
@@ -99,6 +100,7 @@ Map<String, dynamic> _$$WorkoutSkeletonImplToJson(
       'plannedDistance': instance.plannedDistance,
       'intensity': instance.intensity,
       'description': instance.description,
+      'isKey': instance.isKey,
     };
 
 _$PlanRationaleImpl _$$PlanRationaleImplFromJson(Map<String, dynamic> json) =>

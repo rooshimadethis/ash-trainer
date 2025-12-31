@@ -5,7 +5,9 @@ import '../../application/usecases/build_plan_generation_context.dart';
 import '../../application/usecases/generate_training_plan.dart';
 import '../../application/usecases/reschedule_workouts.dart';
 import '../../application/usecases/adjust_workout.dart';
+import '../../application/usecases/apply_reschedule_matrix.dart';
 import '../../../../core/utils/training_plan_scheduler.dart';
+import '../../../../core/utils/grid_optimizer.dart';
 
 final buildPlanGenerationContextProvider =
     Provider<BuildPlanGenerationContext>((ref) {
@@ -36,5 +38,16 @@ final adjustWorkoutProvider = Provider<AdjustWorkout>((ref) {
   return AdjustWorkout(
     ref.watch(workoutRepositoryProvider),
     ref.watch(aiServiceProvider),
+  );
+});
+
+final gridOptimizerProvider = Provider<GridOptimizer>((ref) {
+  return GridOptimizer();
+});
+
+final applyRescheduleMatrixProvider = Provider<ApplyRescheduleMatrix>((ref) {
+  return ApplyRescheduleMatrix(
+    ref.watch(workoutRepositoryProvider),
+    ref.watch(gridOptimizerProvider),
   );
 });

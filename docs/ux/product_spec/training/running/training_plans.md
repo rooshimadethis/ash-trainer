@@ -158,11 +158,17 @@ Ash balances running, strength, and mobility based on your priority.
 
 ## 5. Protocols & Edge Cases
 
-### Missed Workouts
-*   **Distance Milestone**: Skip entirely. Consistency > Perfection.
-*   **Time Performance**: Reschedule key workouts if fresh; skip easy runs. See stacking rules below.
-*   **Event (Race)**: Skip in Base; Attempt light version in Build/Peak if 48h to next hard session.
-*   **Maintenance**: Flexible - skip without guilt.
+### Missed Workouts (The Reschedule Matrix)
+Instead of a "queue" where everything slides forward, Ash uses a **fixed grid**. If a block in the grid is missed, it's usually gone unless it's a "Key" workout.
+
+| Missed Session | Action | How to Integrate |
+| :--- | :--- | :--- |
+| **Easy Run** | **Delete** | Skip entirely. Do not try to "catch up" on volume. |
+| **Strength** | **Consolidate** | Move to the next **Hard Run** day. (Run AM, Lift PM - 6h gap). |
+| **Speed/Tempo**| **Swap** | Move to your next **Strength** day. Downgrade that strength to mobility. |
+| **Long Run** | **Priority** | Shift to the next day. Cancel everything else on that day. |
+
+**The 3-Day Trigger**: If you miss 3+ days in a row, Ash triggers a **Strategic Repair** (AI) to rebuild your remaining plan.
 
 ### Same-Day Workout Stacking
 When schedule constraints require multiple workouts on the same day, follow these principles:

@@ -6,6 +6,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../../data/providers/repository_providers.dart';
+import '../../../training/presentation/providers/automation_provider.dart';
 
 class WorkoutLoggingScreen extends ConsumerStatefulWidget {
   final Workout workout;
@@ -167,6 +168,10 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
 
     try {
       await ref.read(workoutRepositoryProvider).logWorkout(updatedWorkout);
+
+      // Trigger automation
+      await ref.read(trainingAutomationProvider).onWorkoutAction();
+
       if (mounted) {
         Navigator.pop(context); // Close logging screen
         Navigator.pop(context); // Close detail screen to show updated status

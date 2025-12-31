@@ -41,6 +41,7 @@ mixin _$Workout {
   double? get actualPace => throw _privateConstructorUsedError;
   int? get rpe => throw _privateConstructorUsedError;
   String? get syncedFrom => throw _privateConstructorUsedError;
+  bool get isKey => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Workout to a JSON map.
@@ -76,6 +77,7 @@ abstract class $WorkoutCopyWith<$Res> {
       double? actualPace,
       int? rpe,
       String? syncedFrom,
+      bool isKey,
       DateTime? completedAt});
 }
 
@@ -112,6 +114,7 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
     Object? actualPace = freezed,
     Object? rpe = freezed,
     Object? syncedFrom = freezed,
+    Object? isKey = null,
     Object? completedAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -187,6 +190,10 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
           ? _value.syncedFrom
           : syncedFrom // ignore: cast_nullable_to_non_nullable
               as String?,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -221,6 +228,7 @@ abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
       double? actualPace,
       int? rpe,
       String? syncedFrom,
+      bool isKey,
       DateTime? completedAt});
 }
 
@@ -255,6 +263,7 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     Object? actualPace = freezed,
     Object? rpe = freezed,
     Object? syncedFrom = freezed,
+    Object? isKey = null,
     Object? completedAt = freezed,
   }) {
     return _then(_$WorkoutImpl(
@@ -330,6 +339,10 @@ class __$$WorkoutImplCopyWithImpl<$Res>
           ? _value.syncedFrom
           : syncedFrom // ignore: cast_nullable_to_non_nullable
               as String?,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -360,6 +373,7 @@ class _$WorkoutImpl implements _Workout {
       this.actualPace,
       this.rpe,
       this.syncedFrom,
+      this.isKey = false,
       this.completedAt});
 
   factory _$WorkoutImpl.fromJson(Map<String, dynamic> json) =>
@@ -407,11 +421,14 @@ class _$WorkoutImpl implements _Workout {
   @override
   final String? syncedFrom;
   @override
+  @JsonKey()
+  final bool isKey;
+  @override
   final DateTime? completedAt;
 
   @override
   String toString() {
-    return 'Workout(id: $id, userId: $userId, goalId: $goalId, phaseId: $phaseId, blockId: $blockId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, syncedFrom: $syncedFrom, completedAt: $completedAt)';
+    return 'Workout(id: $id, userId: $userId, goalId: $goalId, phaseId: $phaseId, blockId: $blockId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, syncedFrom: $syncedFrom, isKey: $isKey, completedAt: $completedAt)';
   }
 
   @override
@@ -446,6 +463,7 @@ class _$WorkoutImpl implements _Workout {
             (identical(other.rpe, rpe) || other.rpe == rpe) &&
             (identical(other.syncedFrom, syncedFrom) ||
                 other.syncedFrom == syncedFrom) &&
+            (identical(other.isKey, isKey) || other.isKey == isKey) &&
             (identical(other.completedAt, completedAt) ||
                 other.completedAt == completedAt));
   }
@@ -472,6 +490,7 @@ class _$WorkoutImpl implements _Workout {
         actualPace,
         rpe,
         syncedFrom,
+        isKey,
         completedAt
       ]);
 
@@ -511,6 +530,7 @@ abstract class _Workout implements Workout {
       final double? actualPace,
       final int? rpe,
       final String? syncedFrom,
+      final bool isKey,
       final DateTime? completedAt}) = _$WorkoutImpl;
 
   factory _Workout.fromJson(Map<String, dynamic> json) = _$WorkoutImpl.fromJson;
@@ -552,6 +572,8 @@ abstract class _Workout implements Workout {
   int? get rpe;
   @override
   String? get syncedFrom;
+  @override
+  bool get isKey;
   @override
   DateTime? get completedAt;
 

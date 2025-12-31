@@ -12,11 +12,27 @@ import 'workout_detail_screen.dart';
 import 'package:ash_trainer/features/dashboard/presentation/providers/dashboard_providers.dart';
 import 'package:ash_trainer/features/dashboard/presentation/widgets/countdown_card.dart';
 
-class TodayView extends ConsumerWidget {
+import 'package:ash_trainer/features/training/presentation/providers/automation_provider.dart';
+
+class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TodayView> createState() => _TodayViewState();
+}
+
+class _TodayViewState extends ConsumerState<TodayView> {
+  @override
+  void initState() {
+    super.initState();
+    // Run automation check after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(trainingAutomationProvider).checkAndReschedule();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final todayWorkoutAsync = ref.watch(todayWorkoutProvider);
     final now = DateTime.now();
     final dateStr = DateFormat('EEEE, MMM d').format(now);

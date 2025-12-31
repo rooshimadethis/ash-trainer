@@ -3501,6 +3501,15 @@ class $WorkoutsTable extends Workouts
   late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
       'completed_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _isKeyMeta = const VerificationMeta('isKey');
+  @override
+  late final GeneratedColumn<bool> isKey = GeneratedColumn<bool>(
+      'is_key', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_key" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
@@ -3521,7 +3530,8 @@ class $WorkoutsTable extends Workouts
         actualPace,
         rpe,
         syncedFrom,
-        completedAt
+        completedAt,
+        isKey
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3642,6 +3652,10 @@ class $WorkoutsTable extends Workouts
           completedAt.isAcceptableOrUnknown(
               data['completed_at']!, _completedAtMeta));
     }
+    if (data.containsKey('is_key')) {
+      context.handle(
+          _isKeyMeta, isKey.isAcceptableOrUnknown(data['is_key']!, _isKeyMeta));
+    }
     return context;
   }
 
@@ -3689,6 +3703,8 @@ class $WorkoutsTable extends Workouts
           .read(DriftSqlType.string, data['${effectivePrefix}synced_from']),
       completedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}completed_at']),
+      isKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_key'])!,
     );
   }
 
@@ -3718,6 +3734,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final int? rpe;
   final String? syncedFrom;
   final DateTime? completedAt;
+  final bool isKey;
   const WorkoutDTO(
       {required this.id,
       required this.userId,
@@ -3737,7 +3754,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       this.actualPace,
       this.rpe,
       this.syncedFrom,
-      this.completedAt});
+      this.completedAt,
+      required this.isKey});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -3782,6 +3800,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
     if (!nullToAbsent || completedAt != null) {
       map['completed_at'] = Variable<DateTime>(completedAt);
     }
+    map['is_key'] = Variable<bool>(isKey);
     return map;
   }
 
@@ -3826,6 +3845,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       completedAt: completedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(completedAt),
+      isKey: Value(isKey),
     );
   }
 
@@ -3852,6 +3872,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       rpe: serializer.fromJson<int?>(json['rpe']),
       syncedFrom: serializer.fromJson<String?>(json['syncedFrom']),
       completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+      isKey: serializer.fromJson<bool>(json['isKey']),
     );
   }
   @override
@@ -3877,6 +3898,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'rpe': serializer.toJson<int?>(rpe),
       'syncedFrom': serializer.toJson<String?>(syncedFrom),
       'completedAt': serializer.toJson<DateTime?>(completedAt),
+      'isKey': serializer.toJson<bool>(isKey),
     };
   }
 
@@ -3899,7 +3921,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           Value<double?> actualPace = const Value.absent(),
           Value<int?> rpe = const Value.absent(),
           Value<String?> syncedFrom = const Value.absent(),
-          Value<DateTime?> completedAt = const Value.absent()}) =>
+          Value<DateTime?> completedAt = const Value.absent(),
+          bool? isKey}) =>
       WorkoutDTO(
         id: id ?? this.id,
         userId: userId ?? this.userId,
@@ -3924,6 +3947,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
         rpe: rpe.present ? rpe.value : this.rpe,
         syncedFrom: syncedFrom.present ? syncedFrom.value : this.syncedFrom,
         completedAt: completedAt.present ? completedAt.value : this.completedAt,
+        isKey: isKey ?? this.isKey,
       );
   WorkoutDTO copyWithCompanion(WorkoutsCompanion data) {
     return WorkoutDTO(
@@ -3960,6 +3984,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           data.syncedFrom.present ? data.syncedFrom.value : this.syncedFrom,
       completedAt:
           data.completedAt.present ? data.completedAt.value : this.completedAt,
+      isKey: data.isKey.present ? data.isKey.value : this.isKey,
     );
   }
 
@@ -3984,7 +4009,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ..write('actualPace: $actualPace, ')
           ..write('rpe: $rpe, ')
           ..write('syncedFrom: $syncedFrom, ')
-          ..write('completedAt: $completedAt')
+          ..write('completedAt: $completedAt, ')
+          ..write('isKey: $isKey')
           ..write(')'))
         .toString();
   }
@@ -4009,7 +4035,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualPace,
       rpe,
       syncedFrom,
-      completedAt);
+      completedAt,
+      isKey);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4032,7 +4059,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           other.actualPace == this.actualPace &&
           other.rpe == this.rpe &&
           other.syncedFrom == this.syncedFrom &&
-          other.completedAt == this.completedAt);
+          other.completedAt == this.completedAt &&
+          other.isKey == this.isKey);
 }
 
 class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
@@ -4055,6 +4083,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<int?> rpe;
   final Value<String?> syncedFrom;
   final Value<DateTime?> completedAt;
+  final Value<bool> isKey;
   final Value<int> rowid;
   const WorkoutsCompanion({
     this.id = const Value.absent(),
@@ -4076,6 +4105,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.rpe = const Value.absent(),
     this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
+    this.isKey = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WorkoutsCompanion.insert({
@@ -4098,6 +4128,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.rpe = const Value.absent(),
     this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
+    this.isKey = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         userId = Value(userId),
@@ -4127,6 +4158,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<int>? rpe,
     Expression<String>? syncedFrom,
     Expression<DateTime>? completedAt,
+    Expression<bool>? isKey,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -4149,6 +4181,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       if (rpe != null) 'rpe': rpe,
       if (syncedFrom != null) 'synced_from': syncedFrom,
       if (completedAt != null) 'completed_at': completedAt,
+      if (isKey != null) 'is_key': isKey,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -4173,6 +4206,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       Value<int?>? rpe,
       Value<String?>? syncedFrom,
       Value<DateTime?>? completedAt,
+      Value<bool>? isKey,
       Value<int>? rowid}) {
     return WorkoutsCompanion(
       id: id ?? this.id,
@@ -4194,6 +4228,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       rpe: rpe ?? this.rpe,
       syncedFrom: syncedFrom ?? this.syncedFrom,
       completedAt: completedAt ?? this.completedAt,
+      isKey: isKey ?? this.isKey,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -4258,6 +4293,9 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     if (completedAt.present) {
       map['completed_at'] = Variable<DateTime>(completedAt.value);
     }
+    if (isKey.present) {
+      map['is_key'] = Variable<bool>(isKey.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -4286,6 +4324,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
           ..write('rpe: $rpe, ')
           ..write('syncedFrom: $syncedFrom, ')
           ..write('completedAt: $completedAt, ')
+          ..write('isKey: $isKey, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -8580,6 +8619,7 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   Value<int?> rpe,
   Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
+  Value<bool> isKey,
   Value<int> rowid,
 });
 typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
@@ -8602,6 +8642,7 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<int?> rpe,
   Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
+  Value<bool> isKey,
   Value<int> rowid,
 });
 
@@ -8674,6 +8715,9 @@ class $$WorkoutsTableFilterComposer
 
   ColumnFilters<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isKey => $composableBuilder(
+      column: $table.isKey, builder: (column) => ColumnFilters(column));
 }
 
 class $$WorkoutsTableOrderingComposer
@@ -8746,6 +8790,9 @@ class $$WorkoutsTableOrderingComposer
 
   ColumnOrderings<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isKey => $composableBuilder(
+      column: $table.isKey, builder: (column) => ColumnOrderings(column));
 }
 
 class $$WorkoutsTableAnnotationComposer
@@ -8813,6 +8860,9 @@ class $$WorkoutsTableAnnotationComposer
 
   GeneratedColumn<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isKey =>
+      $composableBuilder(column: $table.isKey, builder: (column) => column);
 }
 
 class $$WorkoutsTableTableManager extends RootTableManager<
@@ -8857,6 +8907,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<int?> rpe = const Value.absent(),
             Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
+            Value<bool> isKey = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               WorkoutsCompanion(
@@ -8879,6 +8930,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             rpe: rpe,
             syncedFrom: syncedFrom,
             completedAt: completedAt,
+            isKey: isKey,
             rowid: rowid,
           ),
           createCompanionCallback: ({
@@ -8901,6 +8953,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<int?> rpe = const Value.absent(),
             Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
+            Value<bool> isKey = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               WorkoutsCompanion.insert(
@@ -8923,6 +8976,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             rpe: rpe,
             syncedFrom: syncedFrom,
             completedAt: completedAt,
+            isKey: isKey,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0

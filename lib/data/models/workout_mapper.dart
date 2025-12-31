@@ -23,6 +23,7 @@ extension WorkoutDTOMapper on WorkoutDTO {
       actualPace: actualPace,
       rpe: rpe,
       syncedFrom: syncedFrom,
+      isKey: isKey,
       completedAt: completedAt,
     );
   }
@@ -49,6 +50,7 @@ extension WorkoutMapper on Workout {
       actualPace: Value(actualPace),
       rpe: Value(rpe),
       syncedFrom: Value(syncedFrom),
+      isKey: Value(isKey),
       completedAt: Value(completedAt),
     );
   }

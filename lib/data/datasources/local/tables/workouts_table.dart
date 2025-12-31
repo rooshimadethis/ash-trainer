@@ -31,6 +31,9 @@ class Workouts extends Table {
       text().nullable()(); // 'manual', 'health_api', 'screenshot'
   DateTimeColumn get completedAt => dateTime().nullable()();
 
+  // Flag for "Big Rocks" (Long Runs, intervals, high-priority strength)
+  BoolColumn get isKey => boolean().withDefault(const Constant(false))();
+
   @override
   Set<Column> get primaryKey => {id};
 }

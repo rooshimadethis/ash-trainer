@@ -26,6 +26,7 @@ _$WorkoutImpl _$$WorkoutImplFromJson(Map<String, dynamic> json) =>
       actualPace: (json['actualPace'] as num?)?.toDouble(),
       rpe: (json['rpe'] as num?)?.toInt(),
       syncedFrom: json['syncedFrom'] as String?,
+      isKey: json['isKey'] as bool? ?? false,
       completedAt: json['completedAt'] == null
           ? null
           : DateTime.parse(json['completedAt'] as String),
@@ -51,5 +52,6 @@ Map<String, dynamic> _$$WorkoutImplToJson(_$WorkoutImpl instance) =>
       'actualPace': instance.actualPace,
       'rpe': instance.rpe,
       'syncedFrom': instance.syncedFrom,
+      'isKey': instance.isKey,
       'completedAt': instance.completedAt?.toIso8601String(),
     };

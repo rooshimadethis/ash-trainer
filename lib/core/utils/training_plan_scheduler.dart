@@ -100,6 +100,7 @@ class TrainingPlanScheduler {
             intensity: workoutSkeleton.intensity,
             description: workoutSkeleton.description,
             status: 'planned',
+            isKey: workoutSkeleton.isKey,
           );
           hydratedWorkouts.add(workout);
         }

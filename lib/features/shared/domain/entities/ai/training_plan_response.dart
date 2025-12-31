@@ -63,6 +63,7 @@ class WorkoutSkeleton with _$WorkoutSkeleton {
     double? plannedDistance,
     required String intensity,
     required String description,
+    @Default(false) bool isKey,
   }) = _WorkoutSkeleton;
 
   factory WorkoutSkeleton.fromJson(Map<String, dynamic> json) =>

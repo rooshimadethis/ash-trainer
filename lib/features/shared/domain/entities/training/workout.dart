@@ -25,6 +25,7 @@ class Workout with _$Workout {
     double? actualPace,
     int? rpe,
     String? syncedFrom,
+    @Default(false) bool isKey,
     DateTime? completedAt,
   }) = _Workout;
 

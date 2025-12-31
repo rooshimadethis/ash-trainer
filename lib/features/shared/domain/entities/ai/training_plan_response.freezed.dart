@@ -810,6 +810,7 @@ mixin _$WorkoutSkeleton {
   double? get plannedDistance => throw _privateConstructorUsedError;
   String get intensity => throw _privateConstructorUsedError;
   String get description => throw _privateConstructorUsedError;
+  bool get isKey => throw _privateConstructorUsedError;
 
   /// Serializes this WorkoutSkeleton to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -837,7 +838,8 @@ abstract class $WorkoutSkeletonCopyWith<$Res> {
       int plannedDuration,
       double? plannedDistance,
       String intensity,
-      String description});
+      String description,
+      bool isKey});
 }
 
 /// @nodoc
@@ -865,6 +867,7 @@ class _$WorkoutSkeletonCopyWithImpl<$Res, $Val extends WorkoutSkeleton>
     Object? plannedDistance = freezed,
     Object? intensity = null,
     Object? description = null,
+    Object? isKey = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -907,6 +910,10 @@ class _$WorkoutSkeletonCopyWithImpl<$Res, $Val extends WorkoutSkeleton>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -929,7 +936,8 @@ abstract class _$$WorkoutSkeletonImplCopyWith<$Res>
       int plannedDuration,
       double? plannedDistance,
       String intensity,
-      String description});
+      String description,
+      bool isKey});
 }
 
 /// @nodoc
@@ -955,6 +963,7 @@ class __$$WorkoutSkeletonImplCopyWithImpl<$Res>
     Object? plannedDistance = freezed,
     Object? intensity = null,
     Object? description = null,
+    Object? isKey = null,
   }) {
     return _then(_$WorkoutSkeletonImpl(
       id: null == id
@@ -997,6 +1006,10 @@ class __$$WorkoutSkeletonImplCopyWithImpl<$Res>
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
               as String,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -1014,7 +1027,8 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
       required this.plannedDuration,
       this.plannedDistance,
       required this.intensity,
-      required this.description});
+      required this.description,
+      this.isKey = false});
 
   factory _$WorkoutSkeletonImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSkeletonImplFromJson(json);
@@ -1043,10 +1057,13 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
   final String intensity;
   @override
   final String description;
+  @override
+  @JsonKey()
+  final bool isKey;
 
   @override
   String toString() {
-    return 'WorkoutSkeleton(id: $id, phaseId: $phaseId, blockId: $blockId, dayNumber: $dayNumber, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description)';
+    return 'WorkoutSkeleton(id: $id, phaseId: $phaseId, blockId: $blockId, dayNumber: $dayNumber, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, isKey: $isKey)';
   }
 
   @override
@@ -1068,13 +1085,25 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
             (identical(other.intensity, intensity) ||
                 other.intensity == intensity) &&
             (identical(other.description, description) ||
-                other.description == description));
+                other.description == description) &&
+            (identical(other.isKey, isKey) || other.isKey == isKey));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, phaseId, blockId, dayNumber,
-      type, name, plannedDuration, plannedDistance, intensity, description);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      phaseId,
+      blockId,
+      dayNumber,
+      type,
+      name,
+      plannedDuration,
+      plannedDistance,
+      intensity,
+      description,
+      isKey);
 
   /// Create a copy of WorkoutSkeleton
   /// with the given fields replaced by the non-null parameter values.
@@ -1104,7 +1133,8 @@ abstract class _WorkoutSkeleton implements WorkoutSkeleton {
       required final int plannedDuration,
       final double? plannedDistance,
       required final String intensity,
-      required final String description}) = _$WorkoutSkeletonImpl;
+      required final String description,
+      final bool isKey}) = _$WorkoutSkeletonImpl;
 
   factory _WorkoutSkeleton.fromJson(Map<String, dynamic> json) =
       _$WorkoutSkeletonImpl.fromJson;
@@ -1132,6 +1162,8 @@ abstract class _WorkoutSkeleton implements WorkoutSkeleton {
   String get intensity;
   @override
   String get description;
+  @override
+  bool get isKey;
 
   /// Create a copy of WorkoutSkeleton
   /// with the given fields replaced by the non-null parameter values.

@@ -223,12 +223,21 @@ Workload progresses through a Phase via standard stress/recovery blocks:
 
 The "Ash Planning Prompts" must handle these scenarios rigorously.
 
-### **A. Missed Workouts & The "Sliding" Rule**
-*   **Rule:** "Minor interruptions slide; major interruptions repair."
-*   **Logic:**
-    *   **The 48-Hour Slide (App Execution)**: If a user misses 1-2 sessions, the app automatically "slides" the remaining block workouts forward within the same Phase.
-    *   **The Phase Boundary Rule**: If a sliding workout hits the date boundary of the next Phase (e.g., sliding a Peak workout into the Taper), the **Strategic Repair** is triggered.
-    *   **The AI Strategic Repair**: For disruptions > 3 days, the AI re-evaluates the entire Phase Skeleton. It may shorten future phases or change workout types (e.g., swapping intensity for a recovery ramp) to protect the goal.
+### **A. Missed Workouts & The "Fixed Grid" Philosophy**
+Ash treats your training schedule like a **fixed grid**, not a "queue" where everything slides forward. This protects recovery days and ensures the Long Run (the "Big Rock") remains on schedule.
+
+*   **Rule:** "Minor interruptions adapt; major interruptions repair."
+*   **Logic (The ≤ 2 Day Decision Matrix)**:
+    *   **Easy Run**: **Delete**. Do not try to recover these miles; they are gone.
+    *   **Strength Session**: **Consolidate**. Move it to the next **Hard Run** day (Speed or Tempo). Follow the "6-Hour Rule" (Run in AM, Lift in PM).
+    *   **Speed/Tempo Run**: **Swap**. Move the hard run to the next scheduled **Strength** day. Downgrade that strength session to core/mobility only.
+    *   **Long Run**: **Priority**. Shift the Long Run to the next available day. Cancel/Skip whatever was originally on that day (even if it was strength).
+
+*   **The Constraints**:
+    *   **48-Hour Recovery**: No heavy leg strength within 48 hours of a Long Run.
+    *   **6-Hour Rule**: Consolidated sessions must be separated by at least 6 hours (Run First).
+    *   **No Chain Reactions**: A reschedule cannot push the Long Run into the following week.
+    *   **AI Strategic Repair**: For disruptions > 2 days, the AI re-evaluates the entire remaining Phase Skeleton to protect the goal.
 
 ### **B. Injury & Pain Management (Adaptive)**
 *   **Diagnosis Protocol:**
