@@ -63,36 +63,13 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
 
   @override
   Future<void> logWorkout(Workout workout) async {
-    // We use the db instance from the DAO to run a transaction
     await _workoutDao.transaction(() async {
       // 1. Update the workout itself
       await _workoutDao.updateWorkout(workout.toCompanion());
 
-      // 2. Recalculate Block stats
+      // 2. Recalculate Parent Stats
       if (workout.blockId != null) {
-        final blockStats = await _workoutDao.getStatsForBlock(workout.blockId!);
-        await _trainingPlanDao.updateBlockStats(
-          workout.blockId!,
-          blockStats.distance,
-          blockStats.duration,
-        );
-
-        // 3. Recalculate Phase stats
-        // We need the phaseId from the block
-        final block = await _trainingPlanDao.getBlocksForDateRange(
-          startDate: workout.scheduledDate,
-          endDate: workout.scheduledDate,
-        );
-        // Find the specific block to get the phaseId
-        final relevantBlock = block.firstWhere((b) => b.id == workout.blockId);
-
-        final phaseStats =
-            await _trainingPlanDao.getStatsForPhase(relevantBlock.phaseId);
-        await _trainingPlanDao.updatePhaseStats(
-          relevantBlock.phaseId,
-          phaseStats.distance,
-          phaseStats.duration,
-        );
+        await _recalculateParentStats(workout.blockId!);
       }
     });
   }
@@ -116,30 +93,36 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
       );
       await _workoutDao.updateWorkout(updatedWorkout.toCompanion());
 
-      // 2. Recalculate stats (same logic as logWorkout)
+      // 2. Recalculate Parent Stats
       if (workout.blockId != null) {
-        final blockStats = await _workoutDao.getStatsForBlock(workout.blockId!);
-        await _trainingPlanDao.updateBlockStats(
-          workout.blockId!,
-          blockStats.distance,
-          blockStats.duration,
-        );
-
-        final block = await _trainingPlanDao.getBlocksForDateRange(
-          startDate: workout.scheduledDate,
-          endDate: workout.scheduledDate,
-        );
-        final relevantBlock = block.firstWhere((b) => b.id == workout.blockId);
-
-        final phaseStats =
-            await _trainingPlanDao.getStatsForPhase(relevantBlock.phaseId);
-        await _trainingPlanDao.updatePhaseStats(
-          relevantBlock.phaseId,
-          phaseStats.distance,
-          phaseStats.duration,
-        );
+        await _recalculateParentStats(workout.blockId!);
       }
     });
+  }
+
+  /// Centralized logic to recalculate stats for a block and its parent phase.
+  /// Should be called within a database transaction.
+  Future<void> _recalculateParentStats(String blockId) async {
+    // 1. Recalculate and update Block stats
+    final blockStats = await _workoutDao.getStatsForBlock(blockId);
+    await _trainingPlanDao.updateBlockStats(
+      blockId,
+      blockStats.distance,
+      blockStats.duration,
+    );
+
+    // 2. Find the parent Phase ID
+    final blockDto = await _trainingPlanDao.getBlockById(blockId);
+    if (blockDto == null) return;
+
+    // 3. Recalculate and update Phase stats
+    final phaseStats =
+        await _trainingPlanDao.getStatsForPhase(blockDto.phaseId);
+    await _trainingPlanDao.updatePhaseStats(
+      blockDto.phaseId,
+      phaseStats.distance,
+      phaseStats.duration,
+    );
   }
 
   @override

@@ -20,6 +20,11 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
     return (delete(phases)..where((t) => t.goalId.equals(goalId))).go();
   }
 
+  Future<TrainingBlockDTO?> getBlockById(String id) {
+    return (select(trainingBlocks)..where((t) => t.id.equals(id)))
+        .getSingleOrNull();
+  }
+
   /// Get training blocks that overlap with the given date range.
   Future<List<TrainingBlockDTO>> getBlocksForDateRange({
     required DateTime startDate,
