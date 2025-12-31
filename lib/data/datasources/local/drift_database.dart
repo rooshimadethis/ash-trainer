@@ -57,7 +57,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -74,6 +74,10 @@ class AppDatabase extends _$AppDatabase {
             if (i == 2) {
               // Add biomarkers table for recovery widget
               await m.createTable(biomarkers);
+            }
+            if (i == 3) {
+              // Add isKey column for Algorithmic Rescheduling
+              await m.addColumn(workouts, workouts.isKey);
             }
           }
         },

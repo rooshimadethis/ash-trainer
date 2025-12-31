@@ -60,8 +60,8 @@ class AshButton extends StatelessWidget {
           children: [
             Text(label,
                 style: AppTextStyles.buttonText.copyWith(
-                  color: isEnabled && isPrimary
-                      ? AppColors.white
+                  color: isEnabled
+                      ? (isPrimary ? AppColors.white : AppColors.textPrimary)
                       : AppColors.textSecondary,
                 )),
             if (icon != null) ...[

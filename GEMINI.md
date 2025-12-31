@@ -91,5 +91,3 @@ Each feature folder should contain: `presentation/`, `application/`, `domain/`.
 *   **Analysis**: Always run `flutter analyze` after changes (see `flutter-rules.md`).
 
 ---
-
-Currently we are testing and have no users, there is no need to version or migrate schemas.

@@ -72,12 +72,14 @@ class WorkoutCard extends StatelessWidget {
                 height: 24,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: workout.status == 'completed'
-                      ? AppColors.success
+                  color: workout.status == 'completed' ||
+                          workout.status == 'skipped'
+                      ? typeColor
                       : Colors.transparent,
                   border: Border.all(
-                    color: workout.status == 'completed'
-                        ? AppColors.success
+                    color: workout.status == 'completed' ||
+                            workout.status == 'skipped'
+                        ? typeColor
                         : AppColors.textSecondary.withValues(alpha: 0.3),
                     width: 2,
                   ),
@@ -88,7 +90,13 @@ class WorkoutCard extends StatelessWidget {
                         color: AppColors.backgroundDark,
                         size: 16,
                       )
-                    : null,
+                    : workout.status == 'skipped'
+                        ? const Icon(
+                            Icons.close,
+                            color: AppColors.backgroundDark,
+                            size: 16,
+                          )
+                        : null,
               ),
             ],
           ),

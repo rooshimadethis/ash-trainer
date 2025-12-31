@@ -158,6 +158,32 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     ],
                   ),
                 ),
+              ] else if (workout.status == 'skipped') ...[
+                Text('STATUS',
+                    style: AppTextStyles.labelLarge
+                        .copyWith(color: AppColors.error)),
+                const SizedBox(height: 16),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: AppColors.error.withValues(alpha: 0.05),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                        color: AppColors.error.withValues(alpha: 0.2)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.block, color: AppColors.error),
+                      const SizedBox(width: 12),
+                      Text(
+                        'Workout Skipped',
+                        style:
+                            AppTextStyles.h4.copyWith(color: AppColors.error),
+                      ),
+                    ],
+                  ),
+                ),
               ],
 
               const SizedBox(height: 48),
@@ -202,7 +228,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     child: AshButton(
                       label: 'Adjust',
                       variant: AshButtonVariant.secondary,
-                      onPressed: () {},
+                      onPressed: null,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -296,8 +322,38 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
   Future<void> _skipWorkout(
       BuildContext context, WidgetRef ref, Workout workout) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text('Skip Workout?',
+            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+        content: Text(
+          'This will mark the workout as skipped.',
+          style:
+              AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: Text('Cancel',
+                style:
+                    AppTextStyles.buttonText.copyWith(color: AppColors.white)),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: Text('Skip',
+                style:
+                    AppTextStyles.buttonText.copyWith(color: AppColors.error)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
     // Optimistic update / fast return
-    Navigator.pop(context);
+    if (context.mounted) Navigator.pop(context);
 
     try {
       final skippedWorkout = workout.copyWith(status: 'skipped');
