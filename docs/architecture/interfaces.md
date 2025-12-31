@@ -145,7 +145,29 @@ abstract class WorkoutRepository {
 }
 ```
 
-**Note**: See [implementation_plan.md](file:///Users/rooshi/.gemini/antigravity/brain/bfda5bb8-d054-43d3-b48c-f67de0476436/implementation_plan.md) for complete interfaces for all 8 repositories.
+**Note**: See [implementation_plan.md](file:///Users/rooshi/.gemini/antigravity/brain/447231aa-97e6-4495-9cc1-bd1d32f7ae60/implementation_plan.md) for complete recovery widget implementation details.
+
+---
+
+### Biomarker Repository
+
+**Location**: `features/shared/domain/repositories/biomarker_repository.dart`
+
+```dart
+abstract class BiomarkerRepository {
+  /// Watch today's biomarkers (reactive stream)
+  Stream<Biomarker?> watchTodaysBiomarkers();
+  
+  /// Save biomarkers to database
+  Future<Either<Failure, void>> saveBiomarkers(Biomarker biomarker);
+}
+```
+
+**Notes**:
+- MVP implementation only includes two methods (add more as needed)
+- `watchTodaysBiomarkers()` returns a stream for reactive UI updates
+- `saveBiomarkers()` uses upsert pattern (update if exists, insert if not)
+- Additional methods (getByDate, getDateRange, etc.) can be added in future phases
 
 ---
 
@@ -330,36 +352,43 @@ abstract class AIService {
 
 ### Health Service
 
-**Location**: `infrastructure/services/health_service.dart`
+**Location**: `features/shared/domain/services/health_service.dart`
 
 ```dart
+/// Health data returned from Health Connect/HealthKit
+class HealthData {
+  final int? sleepDuration;  // minutes
+  final double? hrv;  // milliseconds (SDNN)
+  final int? rhr;  // beats per minute
+  
+  const HealthData({
+    this.sleepDuration,
+    this.hrv,
+    this.rhr,
+  });
+}
+
 /// Health service for device integration
 abstract class HealthService {
-  /// Requests health permissions
+  /// Request permissions for health data access
   Future<bool> requestPermissions();
   
-  /// Checks if permissions are granted
-  Future<bool> hasPermissions();
-  
-  /// Fetches workouts from health platform
-  Future<List<Workout>> getWorkouts({
-    required DateTime startDate,
-    required DateTime endDate,
-  });
-  
-  /// Fetches sleep data
-  Future<SleepData?> getSleepData(DateTime date);
-  
-  /// Fetches HRV
-  Future<double?> getHRV(DateTime date);
-  
-  /// Fetches resting heart rate
-  Future<int?> getRHR(DateTime date);
-  
-  /// Syncs health data to local database
-  Future<void> syncHealthData();
+  /// Fetch today's health data (sleep, HRV, RHR)
+  Future<HealthData?> fetchTodaysHealthData();
 }
 ```
+
+**Phase 2 MVP Implementation**:
+- Only fetches three metrics: sleep duration, HRV (SDNN), and RHR
+- Requests permissions for: `SLEEP_ASLEEP`, `HEART_RATE_VARIABILITY_SDNN`, `RESTING_HEART_RATE`
+- Returns `null` if no data available or permissions denied
+- All fields in `HealthData` are nullable (partial data is acceptable)
+
+**Future Expansion**:
+- Add `watchHealthData()` stream for real-time updates
+- Add methods for historical data (`getHealthDataForRange`)
+- Add workout sync (`getWorkouts`)
+- Add more health metrics (sleep quality, stress, etc.)
 
 ---
 

@@ -18,8 +18,10 @@ import 'daos/context_dao.dart';
 import 'tables/workouts_table.dart';
 import 'tables/phases_table.dart';
 import 'tables/training_blocks_table.dart';
+import 'tables/biomarkers_table.dart';
 import 'daos/workout_dao.dart';
 import 'daos/training_plan_dao.dart';
+import 'daos/biomarker_dao.dart';
 
 part 'drift_database.g.dart';
 
@@ -32,14 +34,16 @@ part 'drift_database.g.dart';
   MediumTermContext,
   Workouts,
   Phases,
-  TrainingBlocks
+  TrainingBlocks,
+  Biomarkers,
 ], daos: [
   UserDao,
   GoalDao,
   ConversationDao,
   ContextDao,
   WorkoutDao,
-  TrainingPlanDao
+  TrainingPlanDao,
+  BiomarkerDao,
 ])
 class AppDatabase extends _$AppDatabase {
   static int _instanceCount = 0;
@@ -53,7 +57,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -66,6 +70,10 @@ class AppDatabase extends _$AppDatabase {
               await m.addColumn(phases, phases.actualDuration);
               await m.addColumn(trainingBlocks, trainingBlocks.actualDistance);
               await m.addColumn(trainingBlocks, trainingBlocks.actualDuration);
+            }
+            if (i == 2) {
+              // Add biomarkers table for recovery widget
+              await m.createTable(biomarkers);
             }
           }
         },

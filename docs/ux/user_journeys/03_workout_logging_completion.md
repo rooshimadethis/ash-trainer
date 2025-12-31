@@ -125,15 +125,15 @@ Based on the user journey above, here is the phased implementation plan for the 
 *Goal: Enable manual logging and completion tracking.*
 
 **Features**:
-- [ ] **Workout Detail Screen**: Full-screen view with conditional "Log Workout" today button.
-- [ ] **Simple RPE Picker**: 1-10 slider for subjective intensity measurement.
-- [ ] **Manual Data Entry**: Form for distance, duration, and pace.
-- [ ] **Dashboards Update**: Reflect completed status in Today and Weekly views.
+- [x] **Workout Detail Screen**: Full-screen view with conditional "Log Workout" today button.
+- [x] **Simple RPE Picker**: 1-10 slider for subjective intensity measurement.
+- [x] **Manual Data Entry**: Form for distance, duration, and pace.
+- [x] **Dashboards Update**: Reflect completed status in Today and Weekly views.
 
 **Model & Logic**:
-- [ ] **Workout Table**: Add `actualDistance`, `actualDuration`, `rpe`, `status`, `syncedFrom`, `actualPace`, `completedAt`.
-- [ ] **Operations**: `logWorkout(workoutId, ...)`, `watchWorkout(workoutId)`.
-- [ ] **Side Effects**: Increment `actualVolume` and `actualDuration` in `Phase` and `TrainingBlock` after logging.
+- [x] **Workout Table**: Add `actualDistance`, `actualDuration`, `rpe`, `status`, `syncedFrom`, `actualPace`, `completedAt`.
+- [x] **Operations**: `logWorkout(workoutId, ...)`, `watchWorkout(workoutId)`.
+- [x] **Side Effects**: Increment `actualVolume` and `actualDuration` in `Phase` and `TrainingBlock` after logging.
 
 ### Phase 3: Intelligence & Safety
 *Goal: Add Health APIs and safety logic.*

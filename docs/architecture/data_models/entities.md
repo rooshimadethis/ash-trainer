@@ -291,7 +291,14 @@ class Workouts extends Table {
 
 #### Table: `biomarkers`
 
-**Purpose**: Store daily health metrics from Health Connect/HealthKit.
+**Purpose**: Store daily health metrics from Health Connect/HealthKit for the recovery widget.
+
+**Phase 2 MVP Scope**: Only three metrics are displayed in the recovery widget:
+- Sleep duration (formatted as "7h 30m")
+- HRV (Heart Rate Variability)
+- RHR (Resting Heart Rate)
+
+**Future Expansion**: Additional fields (sleepQuality, energyLevel, stressLevel, recoveryScore) can be added in later phases for more advanced recovery tracking and scoring algorithms.
 
 **Fields**:
 ```dart
@@ -302,20 +309,10 @@ class Biomarkers extends Table {
   // Date (one record per day)
   DateTimeColumn get date => dateTime()();
   
-  // Sleep metrics
+  // Health metrics (Phase 2 MVP)
   IntColumn get sleepDuration => integer().nullable()(); // in minutes
-  RealColumn get sleepQuality => real().nullable()(); // 1-10 scale
-  
-  // Heart metrics
-  RealColumn get hrv => real().nullable()(); // Heart Rate Variability (ms)
+  RealColumn get hrv => real().nullable()(); // Heart Rate Variability SDNN (ms)
   IntColumn get rhr => integer().nullable()(); // Resting Heart Rate (bpm)
-  
-  // Subjective metrics (from check-ins)
-  RealColumn get energyLevel => real().nullable()(); // 1-10 scale
-  RealColumn get stressLevel => real().nullable()(); // 1-10 scale
-  
-  // Computed recovery score
-  RealColumn get recoveryScore => real().nullable()(); // 0-100
   
   // Metadata
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -328,11 +325,14 @@ class Biomarkers extends Table {
 
 **Constraints**:
 - `date` must be unique per user (one record per day)
-- Score fields range: 1-10 (nullable)
-- `recoveryScore` range: 0-100 (nullable)
+- All health metrics are nullable (user may have partial data)
 
 **Indexes**:
 - `userId, date` (composite for daily lookups)
+
+**Data Sources**:
+- **Android**: Health Connect API (SLEEP_ASLEEP, HEART_RATE_VARIABILITY_SDNN, RESTING_HEART_RATE)
+- **iOS**: HealthKit (HKCategoryTypeIdentifierSleepAnalysis, HKQuantityTypeIdentifierHeartRateVariabilitySDNN, HKQuantityTypeIdentifierRestingHeartRate)
 
 ---
 

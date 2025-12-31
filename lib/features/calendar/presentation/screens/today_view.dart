@@ -6,7 +6,7 @@ import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/presentation/widgets/ash_glass_card.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
 import '../providers/calendar_provider.dart';
-import '../widgets/recovery_widget.dart';
+import 'package:ash_trainer/features/dashboard/presentation/widgets/recovery_widget.dart';
 import 'package:intl/intl.dart';
 import 'workout_detail_screen.dart';
 import 'package:ash_trainer/features/dashboard/presentation/providers/dashboard_providers.dart';
@@ -131,7 +131,7 @@ class TodayView extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Ready to tackle today\'s easy run? How are you feeling?',
+            'Ready to tackle today? How are you feeling?',
             style: AppTextStyles.bodyMedium,
           ),
           const SizedBox(height: 20),

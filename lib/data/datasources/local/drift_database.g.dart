@@ -5397,6 +5397,428 @@ class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
   }
 }
 
+class $BiomarkersTable extends Biomarkers
+    with TableInfo<$BiomarkersTable, Biomarker> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BiomarkersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES users (id)'));
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _sleepDurationMeta =
+      const VerificationMeta('sleepDuration');
+  @override
+  late final GeneratedColumn<int> sleepDuration = GeneratedColumn<int>(
+      'sleep_duration', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _hrvMeta = const VerificationMeta('hrv');
+  @override
+  late final GeneratedColumn<double> hrv = GeneratedColumn<double>(
+      'hrv', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _rhrMeta = const VerificationMeta('rhr');
+  @override
+  late final GeneratedColumn<int> rhr = GeneratedColumn<int>(
+      'rhr', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, date, sleepDuration, hrv, rhr, createdAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'biomarkers';
+  @override
+  VerificationContext validateIntegrity(Insertable<Biomarker> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('sleep_duration')) {
+      context.handle(
+          _sleepDurationMeta,
+          sleepDuration.isAcceptableOrUnknown(
+              data['sleep_duration']!, _sleepDurationMeta));
+    }
+    if (data.containsKey('hrv')) {
+      context.handle(
+          _hrvMeta, hrv.isAcceptableOrUnknown(data['hrv']!, _hrvMeta));
+    }
+    if (data.containsKey('rhr')) {
+      context.handle(
+          _rhrMeta, rhr.isAcceptableOrUnknown(data['rhr']!, _rhrMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {userId, date},
+      ];
+  @override
+  Biomarker map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Biomarker(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      sleepDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sleep_duration']),
+      hrv: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}hrv']),
+      rhr: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}rhr']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $BiomarkersTable createAlias(String alias) {
+    return $BiomarkersTable(attachedDatabase, alias);
+  }
+}
+
+class Biomarker extends DataClass implements Insertable<Biomarker> {
+  final int id;
+  final int userId;
+
+  /// Date (one record per user per day)
+  final DateTime date;
+
+  /// Health metrics (Phase 2 MVP)
+  final int? sleepDuration;
+  final double? hrv;
+  final int? rhr;
+
+  /// Metadata
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Biomarker(
+      {required this.id,
+      required this.userId,
+      required this.date,
+      this.sleepDuration,
+      this.hrv,
+      this.rhr,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || sleepDuration != null) {
+      map['sleep_duration'] = Variable<int>(sleepDuration);
+    }
+    if (!nullToAbsent || hrv != null) {
+      map['hrv'] = Variable<double>(hrv);
+    }
+    if (!nullToAbsent || rhr != null) {
+      map['rhr'] = Variable<int>(rhr);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BiomarkersCompanion toCompanion(bool nullToAbsent) {
+    return BiomarkersCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      date: Value(date),
+      sleepDuration: sleepDuration == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sleepDuration),
+      hrv: hrv == null && nullToAbsent ? const Value.absent() : Value(hrv),
+      rhr: rhr == null && nullToAbsent ? const Value.absent() : Value(rhr),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Biomarker.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Biomarker(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      sleepDuration: serializer.fromJson<int?>(json['sleepDuration']),
+      hrv: serializer.fromJson<double?>(json['hrv']),
+      rhr: serializer.fromJson<int?>(json['rhr']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'date': serializer.toJson<DateTime>(date),
+      'sleepDuration': serializer.toJson<int?>(sleepDuration),
+      'hrv': serializer.toJson<double?>(hrv),
+      'rhr': serializer.toJson<int?>(rhr),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Biomarker copyWith(
+          {int? id,
+          int? userId,
+          DateTime? date,
+          Value<int?> sleepDuration = const Value.absent(),
+          Value<double?> hrv = const Value.absent(),
+          Value<int?> rhr = const Value.absent(),
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      Biomarker(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        date: date ?? this.date,
+        sleepDuration:
+            sleepDuration.present ? sleepDuration.value : this.sleepDuration,
+        hrv: hrv.present ? hrv.value : this.hrv,
+        rhr: rhr.present ? rhr.value : this.rhr,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  Biomarker copyWithCompanion(BiomarkersCompanion data) {
+    return Biomarker(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      date: data.date.present ? data.date.value : this.date,
+      sleepDuration: data.sleepDuration.present
+          ? data.sleepDuration.value
+          : this.sleepDuration,
+      hrv: data.hrv.present ? data.hrv.value : this.hrv,
+      rhr: data.rhr.present ? data.rhr.value : this.rhr,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Biomarker(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('sleepDuration: $sleepDuration, ')
+          ..write('hrv: $hrv, ')
+          ..write('rhr: $rhr, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, userId, date, sleepDuration, hrv, rhr, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Biomarker &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.date == this.date &&
+          other.sleepDuration == this.sleepDuration &&
+          other.hrv == this.hrv &&
+          other.rhr == this.rhr &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BiomarkersCompanion extends UpdateCompanion<Biomarker> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<DateTime> date;
+  final Value<int?> sleepDuration;
+  final Value<double?> hrv;
+  final Value<int?> rhr;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const BiomarkersCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.sleepDuration = const Value.absent(),
+    this.hrv = const Value.absent(),
+    this.rhr = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  BiomarkersCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required DateTime date,
+    this.sleepDuration = const Value.absent(),
+    this.hrv = const Value.absent(),
+    this.rhr = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  })  : userId = Value(userId),
+        date = Value(date);
+  static Insertable<Biomarker> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<DateTime>? date,
+    Expression<int>? sleepDuration,
+    Expression<double>? hrv,
+    Expression<int>? rhr,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (date != null) 'date': date,
+      if (sleepDuration != null) 'sleep_duration': sleepDuration,
+      if (hrv != null) 'hrv': hrv,
+      if (rhr != null) 'rhr': rhr,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  BiomarkersCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<DateTime>? date,
+      Value<int?>? sleepDuration,
+      Value<double?>? hrv,
+      Value<int?>? rhr,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
+    return BiomarkersCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      date: date ?? this.date,
+      sleepDuration: sleepDuration ?? this.sleepDuration,
+      hrv: hrv ?? this.hrv,
+      rhr: rhr ?? this.rhr,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (sleepDuration.present) {
+      map['sleep_duration'] = Variable<int>(sleepDuration.value);
+    }
+    if (hrv.present) {
+      map['hrv'] = Variable<double>(hrv.value);
+    }
+    if (rhr.present) {
+      map['rhr'] = Variable<int>(rhr.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BiomarkersCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('sleepDuration: $sleepDuration, ')
+          ..write('hrv: $hrv, ')
+          ..write('rhr: $rhr, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -5412,6 +5834,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $WorkoutsTable workouts = $WorkoutsTable(this);
   late final $PhasesTable phases = $PhasesTable(this);
   late final $TrainingBlocksTable trainingBlocks = $TrainingBlocksTable(this);
+  late final $BiomarkersTable biomarkers = $BiomarkersTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final ConversationDao conversationDao =
@@ -5420,6 +5843,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final WorkoutDao workoutDao = WorkoutDao(this as AppDatabase);
   late final TrainingPlanDao trainingPlanDao =
       TrainingPlanDao(this as AppDatabase);
+  late final BiomarkerDao biomarkerDao = BiomarkerDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -5433,7 +5857,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         mediumTermContext,
         workouts,
         phases,
-        trainingBlocks
+        trainingBlocks,
+        biomarkers
       ];
 }
 
@@ -5532,6 +5957,20 @@ final class $$UsersTableReferences
 
     final cache =
         $_typedResult.readTableOrNull(_mediumTermContextRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
+
+  static MultiTypedResultKey<$BiomarkersTable, List<Biomarker>>
+      _biomarkersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+          db.biomarkers,
+          aliasName: $_aliasNameGenerator(db.users.id, db.biomarkers.userId));
+
+  $$BiomarkersTableProcessedTableManager get biomarkersRefs {
+    final manager = $$BiomarkersTableTableManager($_db, $_db.biomarkers)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_biomarkersRefsTable($_db));
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
@@ -5664,6 +6103,27 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
             $$MediumTermContextTableFilterComposer(
               $db: $db,
               $table: $db.mediumTermContext,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
+
+  Expression<bool> biomarkersRefs(
+      Expression<bool> Function($$BiomarkersTableFilterComposer f) f) {
+    final $$BiomarkersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.biomarkers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BiomarkersTableFilterComposer(
+              $db: $db,
+              $table: $db.biomarkers,
               $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
               joinBuilder: joinBuilder,
               $removeJoinBuilderFromRootComposer:
@@ -5859,6 +6319,27 @@ class $$UsersTableAnnotationComposer
                 ));
     return f(composer);
   }
+
+  Expression<T> biomarkersRefs<T extends Object>(
+      Expression<T> Function($$BiomarkersTableAnnotationComposer a) f) {
+    final $$BiomarkersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.biomarkers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BiomarkersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.biomarkers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -5876,7 +6357,8 @@ class $$UsersTableTableManager extends RootTableManager<
         {bool goalsRefs,
         bool conversationsRefs,
         bool longTermContextRefs,
-        bool mediumTermContextRefs})> {
+        bool mediumTermContextRefs,
+        bool biomarkersRefs})> {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -5955,14 +6437,16 @@ class $$UsersTableTableManager extends RootTableManager<
               {goalsRefs = false,
               conversationsRefs = false,
               longTermContextRefs = false,
-              mediumTermContextRefs = false}) {
+              mediumTermContextRefs = false,
+              biomarkersRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (goalsRefs) db.goals,
                 if (conversationsRefs) db.conversations,
                 if (longTermContextRefs) db.longTermContext,
-                if (mediumTermContextRefs) db.mediumTermContext
+                if (mediumTermContextRefs) db.mediumTermContext,
+                if (biomarkersRefs) db.biomarkers
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -6016,6 +6500,18 @@ class $$UsersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (biomarkersRefs)
+                    await $_getPrefetchedData<UserDTO, $UsersTable, Biomarker>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._biomarkersRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .biomarkersRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
                         typedResults: items)
                 ];
               },
@@ -6039,7 +6535,8 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
         {bool goalsRefs,
         bool conversationsRefs,
         bool longTermContextRefs,
-        bool mediumTermContextRefs})>;
+        bool mediumTermContextRefs,
+        bool biomarkersRefs})>;
 typedef $$GoalsTableCreateCompanionBuilder = GoalsCompanion Function({
   Value<int> id,
   required int userId,
@@ -8965,6 +9462,318 @@ typedef $$TrainingBlocksTableProcessedTableManager = ProcessedTableManager<
     ),
     TrainingBlockDTO,
     PrefetchHooks Function()>;
+typedef $$BiomarkersTableCreateCompanionBuilder = BiomarkersCompanion Function({
+  Value<int> id,
+  required int userId,
+  required DateTime date,
+  Value<int?> sleepDuration,
+  Value<double?> hrv,
+  Value<int?> rhr,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+typedef $$BiomarkersTableUpdateCompanionBuilder = BiomarkersCompanion Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<DateTime> date,
+  Value<int?> sleepDuration,
+  Value<double?> hrv,
+  Value<int?> rhr,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+
+final class $$BiomarkersTableReferences
+    extends BaseReferences<_$AppDatabase, $BiomarkersTable, Biomarker> {
+  $$BiomarkersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users
+      .createAlias($_aliasNameGenerator(db.biomarkers.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$BiomarkersTableFilterComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get hrv => $composableBuilder(
+      column: $table.hrv, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rhr => $composableBuilder(
+      column: $table.rhr, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableOrderingComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get hrv => $composableBuilder(
+      column: $table.hrv, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rhr => $composableBuilder(
+      column: $table.rhr, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration, builder: (column) => column);
+
+  GeneratedColumn<double> get hrv =>
+      $composableBuilder(column: $table.hrv, builder: (column) => column);
+
+  GeneratedColumn<int> get rhr =>
+      $composableBuilder(column: $table.rhr, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BiomarkersTable,
+    Biomarker,
+    $$BiomarkersTableFilterComposer,
+    $$BiomarkersTableOrderingComposer,
+    $$BiomarkersTableAnnotationComposer,
+    $$BiomarkersTableCreateCompanionBuilder,
+    $$BiomarkersTableUpdateCompanionBuilder,
+    (Biomarker, $$BiomarkersTableReferences),
+    Biomarker,
+    PrefetchHooks Function({bool userId})> {
+  $$BiomarkersTableTableManager(_$AppDatabase db, $BiomarkersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BiomarkersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BiomarkersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BiomarkersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+            Value<int?> sleepDuration = const Value.absent(),
+            Value<double?> hrv = const Value.absent(),
+            Value<int?> rhr = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              BiomarkersCompanion(
+            id: id,
+            userId: userId,
+            date: date,
+            sleepDuration: sleepDuration,
+            hrv: hrv,
+            rhr: rhr,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            required DateTime date,
+            Value<int?> sleepDuration = const Value.absent(),
+            Value<double?> hrv = const Value.absent(),
+            Value<int?> rhr = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              BiomarkersCompanion.insert(
+            id: id,
+            userId: userId,
+            date: date,
+            sleepDuration: sleepDuration,
+            hrv: hrv,
+            rhr: rhr,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$BiomarkersTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$BiomarkersTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$BiomarkersTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$BiomarkersTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $BiomarkersTable,
+    Biomarker,
+    $$BiomarkersTableFilterComposer,
+    $$BiomarkersTableOrderingComposer,
+    $$BiomarkersTableAnnotationComposer,
+    $$BiomarkersTableCreateCompanionBuilder,
+    $$BiomarkersTableUpdateCompanionBuilder,
+    (Biomarker, $$BiomarkersTableReferences),
+    Biomarker,
+    PrefetchHooks Function({bool userId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -8987,4 +9796,6 @@ class $AppDatabaseManager {
       $$PhasesTableTableManager(_db, _db.phases);
   $$TrainingBlocksTableTableManager get trainingBlocks =>
       $$TrainingBlocksTableTableManager(_db, _db.trainingBlocks);
+  $$BiomarkersTableTableManager get biomarkers =>
+      $$BiomarkersTableTableManager(_db, _db.biomarkers);
 }

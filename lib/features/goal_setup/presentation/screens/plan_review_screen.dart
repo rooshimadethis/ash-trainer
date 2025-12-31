@@ -5,11 +5,11 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
-import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';
+import '../../../../core/constants/workout_types.dart';
 
 final week1WorkoutsProvider =
     FutureProvider.autoDispose<List<Workout>>((ref) async {
@@ -37,15 +37,7 @@ class PlanReviewScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Week 1 Ready! 🎉', style: AppTextStyles.h2),
-            const SizedBox(height: 16),
-            AshCard(
-              child: Column(children: [
-                Text('Confidence: ${(85.0).toStringAsFixed(0)}%',
-                    style: AppTextStyles.h1.copyWith(color: AppColors.primary)),
-                Text('Goal Probability', style: AppTextStyles.bodyMedium),
-              ]),
-            ),
+            Text('Ready! 🎉', style: AppTextStyles.h2),
             const SizedBox(height: 24),
             Expanded(
               child: workoutsAsync.when(
@@ -96,10 +88,15 @@ class _WorkoutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final dayFormat = DateFormat('E');
     final day = dayFormat.format(workout.scheduledDate);
+    final color = WorkoutTypes.getColor(workout.type);
+    final isRun = [
+      WorkoutTypes.easyRun,
+      WorkoutTypes.tempo,
+      WorkoutTypes.intervals,
+      WorkoutTypes.longRun
+    ].contains(workout.type);
 
-    // Simple logic for display
-    final isRest = workout.type.toLowerCase() == 'rest';
-    final distance = workout.plannedDistance != null
+    final distance = (isRun && workout.plannedDistance != null)
         ? '${workout.plannedDistance} km'
         : (workout.plannedDuration > 0
             ? '${(workout.plannedDuration / 60).toStringAsFixed(0)} min'
@@ -136,15 +133,11 @@ class _WorkoutTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: isRest
-                  ? Colors.grey.withValues(alpha: 0.2)
-                  : AppColors.primary.withValues(alpha: 0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(workout.type.toUpperCase(),
-                style: TextStyle(
-                    fontSize: 10,
-                    color: isRest ? Colors.grey : AppColors.primary)),
+            child: Text(WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
+                style: TextStyle(fontSize: 10, color: color)),
           ),
         ],
       ),
