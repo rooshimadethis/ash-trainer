@@ -106,4 +106,38 @@ class AISchemas {
     },
     "required": ["phases", "blocks", "workouts", "rationale"]
   };
+
+  static const Map<String, dynamic> adjustedWorkout = {
+    "type": "object",
+    "properties": {
+      "id": {"type": "string"},
+      "type": {"type": "string"},
+      "name": {"type": "string"},
+      "plannedDuration": {"type": "integer"},
+      "plannedDistance": {"type": "number"},
+      "intensity": {"type": "string"},
+      "description": {"type": "string"}
+    },
+    "required": [
+      "id",
+      "type",
+      "name",
+      "plannedDuration",
+      "intensity",
+      "description"
+    ]
+  };
+
+  static const Map<String, dynamic> rescheduleWorkouts = {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string"},
+        "scheduledDate": {"type": "string"},
+        "dayNumber": {"type": "integer"}
+      },
+      "required": ["id", "scheduledDate"]
+    }
+  };
 }

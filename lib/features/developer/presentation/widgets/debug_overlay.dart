@@ -85,6 +85,14 @@ class _DebugOverlayState extends ConsumerState<DebugOverlay> {
     }
   }
 
+  void _navigateToTestHub(int index) {
+    widget.navigatorKey.currentState?.push(
+      MaterialPageRoute(
+        builder: (_) => AITestScreen(initialIndex: index),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -113,23 +121,51 @@ class _DebugOverlayState extends ConsumerState<DebugOverlay> {
                 ),
                 if (_isExpanded) ...[
                   const SizedBox(width: 8),
-                  FloatingActionButton.small(
-                    heroTag: 'ai_test_btn',
-                    onPressed: () {
-                      widget.navigatorKey.currentState?.push(
-                        MaterialPageRoute(
-                          builder: (_) => const AITestScreen(),
-                        ),
-                      );
-                    },
-                    child: const Icon(Icons.psychology),
-                  ),
-                  const SizedBox(width: 8),
-                  FloatingActionButton.small(
-                    heroTag: 'clear_db_btn',
-                    backgroundColor: Colors.orange,
-                    onPressed: _clearDatabase,
-                    child: const Icon(Icons.delete_forever),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Plan Generator
+                      FloatingActionButton.extended(
+                        heroTag: 'ai_plan_btn',
+                        onPressed: () => _navigateToTestHub(0),
+                        label: const Text('AI: Plan'),
+                        icon: const Icon(Icons.calendar_month),
+                      ),
+                      const SizedBox(height: 8),
+                      // Adjuster
+                      FloatingActionButton.extended(
+                        heroTag: 'ai_adj_btn',
+                        onPressed: () => _navigateToTestHub(1),
+                        label: const Text('AI: Adjust'),
+                        icon: const Icon(Icons.tune),
+                      ),
+                      const SizedBox(height: 8),
+                      // Rescheduler
+                      FloatingActionButton.extended(
+                        heroTag: 'ai_res_btn',
+                        onPressed: () => _navigateToTestHub(2),
+                        label: const Text('AI: Resched'),
+                        icon: const Icon(Icons.edit_calendar),
+                      ),
+                      const SizedBox(height: 8),
+                      // Chat
+                      FloatingActionButton.extended(
+                        heroTag: 'ai_chat_btn',
+                        onPressed: () => _navigateToTestHub(3),
+                        label: const Text('AI: Chat'),
+                        icon: const Icon(Icons.chat),
+                      ),
+                      const SizedBox(height: 8),
+                      // Clear DB
+                      FloatingActionButton.extended(
+                        heroTag: 'clear_db_btn',
+                        backgroundColor: Colors.orange,
+                        onPressed: _clearDatabase,
+                        label: const Text('Clear DB'),
+                        icon: const Icon(Icons.delete_forever),
+                      ),
+                    ],
                   ),
                 ],
               ],

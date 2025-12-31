@@ -45,6 +45,10 @@ class AIServiceImpl implements AIService {
 
     final content = [gemini.Content.text(prompt)];
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Generate Plan) ---');
+    AppLogger.info(prompt);
+
     final response = await _model.generateContent(
       content,
       generationConfig: gemini.GenerationConfig(
@@ -109,6 +113,10 @@ class AIServiceImpl implements AIService {
 
     final content = [gemini.Content.text(prompt)];
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Adjust Workout) ---');
+    AppLogger.info(prompt);
+
     final response = await _model.generateContent(
       content,
       generationConfig: gemini.GenerationConfig(
@@ -119,6 +127,10 @@ class AIServiceImpl implements AIService {
     if (response.text == null) {
       throw Exception('Empty response from AI');
     }
+
+    // DEBUG: Log Raw Response
+    AppLogger.info('--- AI RESPONSE (Adjust Workout) ---');
+    AppLogger.info(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -162,6 +174,10 @@ class AIServiceImpl implements AIService {
 
     final content = [gemini.Content.text(prompt)];
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Reschedule Workouts) ---');
+    AppLogger.info(prompt);
+
     final response = await _model.generateContent(
       content,
       generationConfig: gemini.GenerationConfig(
@@ -172,6 +188,10 @@ class AIServiceImpl implements AIService {
     if (response.text == null) {
       throw Exception('Empty response from AI');
     }
+
+    // DEBUG: Log Raw Response
+    AppLogger.info('--- AI RESPONSE (Reschedule Workouts) ---');
+    AppLogger.info(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -219,8 +239,17 @@ class AIServiceImpl implements AIService {
     // We don't reuse chat session objects as we are stateless
     final chatSession = sessionModel.startChat(history: history);
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Chat) ---');
+    AppLogger.info('User: $userMessage');
+    AppLogger.info('System Instruction: $systemInstruction');
+
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
+
+    // DEBUG: Log Response
+    AppLogger.info('--- AI RESPONSE (Chat) ---');
+    AppLogger.info(response.text ?? '[No Text]');
 
     return AIResponse(
       data: response.text ?? '',
@@ -296,8 +325,21 @@ class AIServiceImpl implements AIService {
     );
 
     final chatSession = sessionModel.startChat(history: history);
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Chat w/ Tools) ---');
+    AppLogger.info('User: $userMessage');
+    AppLogger.info('Tools: ${tools.map((t) => t.name).join(', ')}');
+
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
+
+    // DEBUG: Log Response
+    AppLogger.info('--- AI RESPONSE (Chat w/ Tools) ---');
+    AppLogger.info(response.text ?? '[No Text]');
+    if (response.functionCalls.isNotEmpty) {
+      AppLogger.info(
+          'Function Call: ${response.functionCalls.first.name}(${response.functionCalls.first.args})');
+    }
 
     // Check for function call
     final functionCalls = response.functionCalls;

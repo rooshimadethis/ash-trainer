@@ -73,6 +73,20 @@ CRITICAL: Use the provided JSON schema.
     - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
 ''';
 
+  static const String adjustWorkoutTask = '''
+Adjust the following workout based on the user's feedback.
+Maintain the original intent if possible, but scale volume/intensity as requested.
+If feedback implies injury or fatigue, suggest a simpler/shorter alternative or Rest.
+Return the full modified workout object.
+''';
+
+  static const String rescheduleTask = '''
+Reschedule the provided workouts based on the user's constraints.
+Ensure adequate recovery between key sessions.
+Avoid prohibited stacking (e.g., Hard Run + Leg Strength).
+Return an array of objects with 'id' and new 'scheduledDate'.
+''';
+
   static const String coachingChatTask = '''
 Respond to the user's message as their running coach.
 Use the provided context (metrics, plan, history) to give personalized advice.
