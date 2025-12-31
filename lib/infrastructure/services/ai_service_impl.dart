@@ -8,6 +8,7 @@ import '../../features/shared/domain/entities/ai/training_plan_response.dart';
 import '../../features/shared/domain/entities/workout.dart';
 import '../../features/shared/domain/entities/ai/conversation.dart';
 import '../../core/constants/ai_constants.dart';
+import '../../core/config/ai_config.dart';
 import 'ai_service.dart';
 
 class AIServiceImpl implements AIService {
@@ -46,9 +47,7 @@ class AIServiceImpl implements AIService {
 
     final response = await _model.generateContent(
       content,
-      generationConfig: gemini.GenerationConfig(
-        responseMimeType: 'application/json',
-      ),
+      generationConfig: AIConfig.getConfig(AITaskType.planGeneration),
     );
 
     if (response.text == null) {
@@ -111,9 +110,7 @@ class AIServiceImpl implements AIService {
 
     final response = await _model.generateContent(
       content,
-      generationConfig: gemini.GenerationConfig(
-        responseMimeType: 'application/json',
-      ),
+      generationConfig: AIConfig.getConfig(AITaskType.workoutAdjustment),
     );
 
     if (response.text == null) {
@@ -164,9 +161,7 @@ class AIServiceImpl implements AIService {
 
     final response = await _model.generateContent(
       content,
-      generationConfig: gemini.GenerationConfig(
-        responseMimeType: 'application/json',
-      ),
+      generationConfig: AIConfig.getConfig(AITaskType.rescheduling),
     );
 
     if (response.text == null) {
@@ -214,6 +209,7 @@ class AIServiceImpl implements AIService {
       model: AIConstants.modelName,
       apiKey: _apiKey,
       systemInstruction: gemini.Content.system(systemInstruction),
+      generationConfig: AIConfig.getConfig(AITaskType.chat),
     );
 
     // We don't reuse chat session objects as we are stateless
@@ -246,6 +242,7 @@ class AIServiceImpl implements AIService {
       model: AIConstants.modelName,
       apiKey: _apiKey,
       systemInstruction: gemini.Content.system(systemInstruction),
+      generationConfig: AIConfig.getConfig(AITaskType.chat),
     );
 
     final chatSession = sessionModel.startChat(history: history);
@@ -293,6 +290,7 @@ class AIServiceImpl implements AIService {
       apiKey: _apiKey,
       systemInstruction: gemini.Content.system(systemInstruction),
       tools: sdkTools,
+      generationConfig: AIConfig.getConfig(AITaskType.functionCall),
     );
 
     final chatSession = sessionModel.startChat(history: history);
@@ -347,6 +345,7 @@ class AIServiceImpl implements AIService {
       apiKey: _apiKey,
       systemInstruction: gemini.Content.system(systemInstruction),
       tools: sdkTools,
+      generationConfig: AIConfig.getConfig(AITaskType.functionCall),
     );
 
     final chatSession = sessionModel.startChat(history: history);
