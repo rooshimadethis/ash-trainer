@@ -32,14 +32,15 @@ class AshCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20), // More modern, larger radius
           border: Border.all(
             color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.5)
+                ? Theme.of(context).primaryColor.withValues(alpha: 0.5)
                 : borderColor ?? AppColors.border,
             width: isSelected ? 2.0 : borderWidth,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.15),
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
                     blurRadius: 24,
                     spreadRadius: -4,
                   ),

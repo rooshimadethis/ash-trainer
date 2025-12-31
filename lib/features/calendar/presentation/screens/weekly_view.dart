@@ -82,7 +82,7 @@ class WeeklyView extends ConsumerWidget {
           child: weeklyWorkoutsAsync.when(
             data: (workouts) => weeklyBlocksAsync.when(
               data: (blocks) =>
-                  _buildWorkoutList(selectedDate, workouts, blocks),
+                  _buildWorkoutList(context, selectedDate, workouts, blocks),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
@@ -137,8 +137,8 @@ class WeeklyView extends ConsumerWidget {
     );
   }
 
-  Widget _buildWorkoutList(DateTime selectedDate, List<Workout> allWorkouts,
-      List<TrainingBlock> blocks) {
+  Widget _buildWorkoutList(BuildContext context, DateTime selectedDate,
+      List<Workout> allWorkouts, List<TrainingBlock> blocks) {
     final dayWorkouts = allWorkouts
         .where((w) => DateUtils.isSameDay(w.scheduledDate, selectedDate))
         .toList();
@@ -180,7 +180,7 @@ class WeeklyView extends ConsumerWidget {
                     Text(
                       '• Today',
                       style: AppTextStyles.label.copyWith(
-                        color: AppColors.primary,
+                        color: Theme.of(context).primaryColor,
                         fontSize: 14,
                       ),
                     ),
@@ -301,7 +301,7 @@ class _DayColumn extends ConsumerWidget {
     final Color blockTint =
         blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
     final Color baseBackground = isToday
-        ? AppColors.primary.withValues(alpha: 0.05)
+        ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
         : AppColors.surfaceLighter.withValues(alpha: 0.5);
 
     return GestureDetector(
@@ -316,7 +316,7 @@ class _DayColumn extends ConsumerWidget {
             color: isSelected
                 ? AppColors.white
                 : isToday
-                    ? AppColors.primary.withValues(alpha: 0.3)
+                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
                     : AppColors.border.withValues(alpha: 0.5),
             width: isSelected ? 2.0 : 1.0,
           ),
@@ -332,8 +332,9 @@ class _DayColumn extends ConsumerWidget {
                     Text(
                       DateFormat('E').format(day).toUpperCase(),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color:
-                            isToday ? AppColors.primary : AppColors.textMuted,
+                        color: isToday
+                            ? Theme.of(context).primaryColor
+                            : AppColors.textMuted,
                         fontSize: 9,
                         fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
                         letterSpacing: 0.5,
@@ -344,8 +345,9 @@ class _DayColumn extends ConsumerWidget {
                       day.day.toString(),
                       style: AppTextStyles.h4.copyWith(
                         fontSize: 16,
-                        color:
-                            isToday ? AppColors.primary : AppColors.textPrimary,
+                        color: isToday
+                            ? Theme.of(context).primaryColor
+                            : AppColors.textPrimary,
                         fontWeight: isToday ? FontWeight.w800 : FontWeight.w700,
                       ),
                     ),

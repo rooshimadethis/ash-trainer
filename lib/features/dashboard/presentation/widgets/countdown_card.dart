@@ -48,7 +48,7 @@ class CountdownCard extends StatelessWidget {
               Icon(
                 Icons.timer_outlined,
                 size: 16,
-                color: AppColors.primary.withValues(alpha: 0.8),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
               ),
             ],
           ),
@@ -60,7 +60,7 @@ class CountdownCard extends StatelessWidget {
               Text(
                 '${remaining > 0 ? remaining : 0}',
                 style: AppTextStyles.h1.copyWith(
-                  color: AppColors.primary,
+                  color: Theme.of(context).primaryColor,
                   fontSize: 48,
                   height: 1,
                 ),
@@ -83,7 +83,7 @@ class CountdownCard extends StatelessWidget {
               minHeight: 12,
               backgroundColor: AppColors.surfaceLighter,
               valueColor:
-                  const AlwaysStoppedAnimation<Color>(AppColors.primary),
+                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
             ),
           ),
           const SizedBox(height: 16),

@@ -114,7 +114,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               height: 3,
               width: isSelected ? 16 : 0,
               decoration: BoxDecoration(
-                color: AppColors.primary,
+                color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),

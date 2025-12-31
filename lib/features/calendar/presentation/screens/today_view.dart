@@ -50,7 +50,10 @@ class _TodayViewState extends ConsumerState<TodayView> {
                   children: [
                     Text(
                       'TODAY',
-                      style: AppTextStyles.label.copyWith(letterSpacing: 2),
+                      style: AppTextStyles.label.copyWith(
+                        letterSpacing: 2,
+                        color: Theme.of(context).primaryColor,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(

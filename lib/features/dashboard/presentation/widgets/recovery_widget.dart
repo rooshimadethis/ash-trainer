@@ -47,8 +47,8 @@ class RecoveryWidget extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.favorite_outline,
-                    color: AppColors.primary, size: 20),
+                Icon(Icons.favorite_outline,
+                    color: Theme.of(context).primaryColor, size: 20),
                 const SizedBox(width: 8),
                 Text('Recovery', style: AppTextStyles.h4),
                 const Spacer(),
@@ -107,7 +107,7 @@ class RecoveryWidget extends ConsumerWidget {
           Icon(
             isAuthorized ? Icons.hourglass_empty : Icons.health_and_safety,
             size: 48,
-            color: AppColors.primary,
+            color: Theme.of(context).primaryColor,
           ),
           const SizedBox(height: 16),
           Text(

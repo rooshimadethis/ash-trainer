@@ -102,7 +102,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
               // Planned Metrics Section
               Text('PLANNED TARGETS',
                   style: AppTextStyles.labelLarge
-                      .copyWith(color: AppColors.primary)),
+                      .copyWith(color: Theme.of(context).primaryColor)),
               const SizedBox(height: 16),
               Container(
                 padding: const EdgeInsets.all(20),
@@ -114,14 +114,14 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   spacing: 32,
                   runSpacing: 16,
                   children: [
-                    _metricItem(Icons.timer_outlined,
+                    _metricItem(context, Icons.timer_outlined,
                         _formatDuration(workout.plannedDuration), 'Duration'),
                     if (workout.plannedDistance != null)
-                      _metricItem(Icons.straighten_outlined,
+                      _metricItem(context, Icons.straighten_outlined,
                           '${workout.plannedDistance} km', 'Distance'),
                     if (workout.intensity != null)
-                      _metricItem(Icons.speed_outlined, workout.intensity!,
-                          'Intensity'),
+                      _metricItem(context, Icons.speed_outlined,
+                          workout.intensity!, 'Intensity'),
                   ],
                 ),
               ),
@@ -147,14 +147,15 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     runSpacing: 16,
                     children: [
                       _metricItem(
+                          context,
                           Icons.check_circle_outline,
                           _formatDuration(workout.actualDuration ?? 0),
                           'Actual Time'),
                       if (workout.actualDistance != null)
-                        _metricItem(Icons.straighten_outlined,
+                        _metricItem(context, Icons.straighten_outlined,
                             '${workout.actualDistance} km', 'Actual Distance'),
                       if (workout.rpe != null)
-                        _metricItem(Icons.psychology_outlined,
+                        _metricItem(context, Icons.psychology_outlined,
                             'RPE ${workout.rpe}', 'Effort'),
                     ],
                   ),
@@ -291,13 +292,14 @@ class WorkoutDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _metricItem(IconData icon, String value, String label) {
+  Widget _metricItem(
+      BuildContext context, IconData icon, String value, String label) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Row(
           children: [
-            Icon(icon, size: 16, color: AppColors.primary),
+            Icon(icon, size: 16, color: Theme.of(context).primaryColor),
             const SizedBox(width: 4),
             Text(label,
                 style: AppTextStyles.labelSmall

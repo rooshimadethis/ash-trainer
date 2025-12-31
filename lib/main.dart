@@ -1,7 +1,7 @@
 import 'package:ash_trainer/features/developer/presentation/widgets/debug_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ash_trainer/core/theme/app_theme.dart';
+import 'package:ash_trainer/core/theme/theme_provider.dart';
 import 'package:ash_trainer/core/routing/startup_router.dart';
 import 'package:ash_trainer/core/utils/logger.dart';
 import 'package:ash_trainer/core/utils/provider_logger.dart';
@@ -46,17 +46,19 @@ Future<void> main() async {
   ));
 }
 
-class AshTrainerApp extends StatelessWidget {
+class AshTrainerApp extends ConsumerWidget {
   AshTrainerApp({super.key});
 
   final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = ref.watch(appThemeProvider);
+
     return MaterialApp(
       navigatorKey: _navigatorKey,
       title: 'Ash Trainer',
-      theme: AppTheme.darkTheme,
+      theme: theme,
       home: const StartupRouter(),
       builder: (context, child) {
         // Wrap with DebugOverlay only in debug mode

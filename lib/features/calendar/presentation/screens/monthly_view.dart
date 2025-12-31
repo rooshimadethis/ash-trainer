@@ -37,12 +37,12 @@ class MonthlyView extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.calendar_month_rounded,
-                  color: AppColors.primary,
+                  color: Theme.of(context).primaryColor,
                   size: 20,
                 ),
               ),
@@ -70,7 +70,7 @@ class MonthlyView extends ConsumerWidget {
           child: monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
               data: (blocks) =>
-                  _buildWorkoutList(selectedDate, workouts, blocks),
+                  _buildWorkoutList(context, selectedDate, workouts, blocks),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
@@ -111,8 +111,8 @@ class MonthlyView extends ConsumerWidget {
     );
   }
 
-  Widget _buildWorkoutList(DateTime selectedDate, List<Workout> allWorkouts,
-      List<TrainingBlock> blocks) {
+  Widget _buildWorkoutList(BuildContext context, DateTime selectedDate,
+      List<Workout> allWorkouts, List<TrainingBlock> blocks) {
     final dayWorkouts = allWorkouts
         .where((w) => DateUtils.isSameDay(w.scheduledDate, selectedDate))
         .toList();
@@ -154,7 +154,7 @@ class MonthlyView extends ConsumerWidget {
                     Text(
                       '• Today',
                       style: AppTextStyles.label.copyWith(
-                        color: AppColors.primary,
+                        color: Theme.of(context).primaryColor,
                         fontSize: 14,
                       ),
                     ),
@@ -307,7 +307,7 @@ class _WeekRow extends StatelessWidget {
           final Color blockTint =
               blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
           final Color baseBackground = isToday
-              ? AppColors.primary.withValues(alpha: 0.05)
+              ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
               : AppColors.surfaceLighter.withValues(alpha: 0.5);
 
           return Expanded(
@@ -324,7 +324,9 @@ class _WeekRow extends StatelessWidget {
                     color: isSelected
                         ? AppColors.white
                         : isToday
-                            ? AppColors.primary.withValues(alpha: 0.3)
+                            ? Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.3)
                             : AppColors.border.withValues(alpha: 0.5),
                     width: isSelected ? 2.0 : 1.0,
                   ),
@@ -341,7 +343,7 @@ class _WeekRow extends StatelessWidget {
                               DateFormat('E').format(day).substring(0, 1),
                               style: AppTextStyles.labelSmall.copyWith(
                                 color: isToday
-                                    ? AppColors.primary
+                                    ? Theme.of(context).primaryColor
                                     : AppColors.textMuted,
                                 fontSize: 9,
                                 fontWeight:
@@ -353,7 +355,7 @@ class _WeekRow extends StatelessWidget {
                               day.day.toString(),
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: isToday
-                                    ? AppColors.primary
+                                    ? Theme.of(context).primaryColor
                                     : AppColors.textPrimary,
                                 fontWeight:
                                     isToday ? FontWeight.w800 : FontWeight.w700,

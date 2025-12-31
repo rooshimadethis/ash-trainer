@@ -3,15 +3,19 @@ import 'colors.dart';
 import 'text_styles.dart';
 
 class AppTheme {
-  static ThemeData get darkTheme {
+  static ThemeData darkTheme({Color? primaryColor}) {
+    final primary = primaryColor ?? AppColors.primary;
+    // Derive a lighter version for secondary/highlights
+    final primaryLight = primary.withValues(alpha: 0.8);
+
     return ThemeData(
       brightness: Brightness.dark,
-      primaryColor: AppColors.primary,
+      primaryColor: primary,
       scaffoldBackgroundColor: AppColors.background,
-      colorScheme: const ColorScheme.dark(
-        primary: AppColors.primary,
+      colorScheme: ColorScheme.dark(
+        primary: primary,
         onPrimary: AppColors.white,
-        secondary: AppColors.primaryLight,
+        secondary: primaryLight,
         onSecondary: AppColors.background,
         surface: AppColors.surface,
         onSurface: AppColors.textPrimary,
@@ -49,7 +53,7 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: primary,
           foregroundColor: AppColors.white,
           disabledBackgroundColor: AppColors.surfaceHighlight,
           disabledForegroundColor: AppColors.textSecondary,
@@ -108,33 +112,33 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.5),
+          borderSide: BorderSide(color: primary, width: 1.5),
         ),
         hintStyle:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
         contentPadding: const EdgeInsets.all(16),
       ),
       sliderTheme: SliderThemeData(
-        activeTrackColor: AppColors.primary,
+        activeTrackColor: primary,
         inactiveTrackColor: AppColors.border,
         thumbColor: AppColors.white,
-        overlayColor: AppColors.primary.withValues(alpha: 0.2),
+        overlayColor: primary.withValues(alpha: 0.2),
         trackHeight: 6,
         thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 10),
         overlayShape: const RoundSliderOverlayShape(overlayRadius: 20),
       ),
       navigationBarTheme: NavigationBarThemeData(
         backgroundColor: AppColors.surface,
-        indicatorColor: AppColors.primary.withValues(alpha: 0.1),
+        indicatorColor: primary.withValues(alpha: 0.1),
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return AppTextStyles.labelSmall.copyWith(color: AppColors.primary);
+            return AppTextStyles.labelSmall.copyWith(color: primary);
           }
           return AppTextStyles.labelSmall;
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           if (states.contains(WidgetState.selected)) {
-            return const IconThemeData(color: AppColors.primary);
+            return IconThemeData(color: primary);
           }
           return const IconThemeData(color: AppColors.textMuted);
         }),
