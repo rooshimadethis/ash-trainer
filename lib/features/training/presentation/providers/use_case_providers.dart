@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
-import '../../application/usecases/build_plan_generation_context.dart';
+import '../../application/usecases/build_planning_context.dart';
 import '../../application/usecases/generate_training_plan.dart';
 import '../../application/usecases/reschedule_workouts.dart';
 import '../../application/usecases/adjust_workout.dart';
@@ -9,9 +9,8 @@ import '../../application/usecases/apply_reschedule_matrix.dart';
 import '../../../../core/utils/training_plan_scheduler.dart';
 import '../../../../core/utils/grid_optimizer.dart';
 
-final buildPlanGenerationContextProvider =
-    Provider<BuildPlanGenerationContext>((ref) {
-  return BuildPlanGenerationContext(
+final buildPlanningContextProvider = Provider<BuildPlanningContext>((ref) {
+  return BuildPlanningContext(
     ref.watch(userRepositoryProvider),
     ref.watch(goalRepositoryProvider),
     ref.watch(workoutRepositoryProvider),
@@ -20,7 +19,7 @@ final buildPlanGenerationContextProvider =
 
 final generateTrainingPlanProvider = Provider<GenerateTrainingPlan>((ref) {
   return GenerateTrainingPlan(
-    ref.watch(buildPlanGenerationContextProvider),
+    ref.watch(buildPlanningContextProvider),
     ref.watch(aiServiceProvider),
     ref.watch(workoutRepositoryProvider),
     TrainingPlanScheduler(),

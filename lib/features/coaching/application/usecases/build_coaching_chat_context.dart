@@ -65,22 +65,10 @@ class BuildCoachingChatContext {
 
   LongTermContext _buildLongTerm(User user, Goal goal) {
     return LongTermContext(
-      user: UserContext(
-        age: user.age ?? 30,
-        gender: user.gender ?? 'unknown',
-        availableDays: user.availableDays,
-        timeConstraints: {},
-        injuryHistory: [],
-        // Note: For coaching chat, we don't have current metrics readily available
-        // These would need to be calculated from workout history if needed
-      ),
-      goal: GoalContext(
-        type: goal.type.name,
-        target: goal.name,
-        deadline: goal.targetDate ??
-            goal.endDate ??
-            DateTime.now().add(const Duration(days: 90)),
-        specialInstructions: [],
+      user: UserContext.fromEntity(user),
+      goal: GoalContext.fromEntity(
+        goal,
+        includeBaseline: true, // Useful for coaching to know starting point
       ),
       trainingPhilosophy: 'Balanced approach focusing on consistency.',
       overallAdherence: goal.adherenceScore,
@@ -120,8 +108,11 @@ class BuildCoachingChatContext {
     final hasTodayWorkout =
         upcomingWorkouts.any((w) => isSameDate(w.scheduledDate, today));
     final todayWorkoutSummary = hasTodayWorkout
-        ? _toSummary(upcomingWorkouts
-            .firstWhere((w) => isSameDate(w.scheduledDate, today)))
+        ? WorkoutSummary.fromEntity(
+            upcomingWorkouts
+                .firstWhere((w) => isSameDate(w.scheduledDate, today)),
+            now,
+          )
         : null;
 
     final messages = await _conversationRepo.getRecentMessages(
@@ -132,7 +123,9 @@ class BuildCoachingChatContext {
     return ShortTermContext(
       currentDate: now,
       todayWorkout: todayWorkoutSummary,
-      next7Days: upcomingWorkouts.map((w) => _toSummary(w)).toList(),
+      next7Days: upcomingWorkouts
+          .map((w) => WorkoutSummary.fromEntity(w, now))
+          .toList(),
       conversationHistory: messages.reversed.toList(),
       currentPainLevel: null,
       sleepQuality: null,
@@ -140,16 +133,7 @@ class BuildCoachingChatContext {
     );
   }
 
-  WorkoutSummary _toSummary(dynamic w) {
-    return WorkoutSummary(
-      date: w.scheduledDate,
-      type: w.type,
-      duration: w.actualDuration ?? w.plannedDuration,
-      distance: w.actualDistance ?? w.plannedDistance,
-      rpe: w.rpe,
-      completed: w.status == 'completed',
-    );
-  }
+  // Helper _toSummary removed in favor of WorkoutSummary.fromEntity
 
   bool isSameDate(DateTime a, DateTime b) {
     return a.year == b.year && a.month == b.month && a.day == b.day;

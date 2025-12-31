@@ -8,7 +8,7 @@ import '../../../../core/constants/prompts.dart';
 import 'dart:convert';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../shared/domain/entities/goal.dart';
-import '../../../training/application/usecases/build_plan_generation_context.dart';
+import '../../../training/application/usecases/build_planning_context.dart';
 import '../../../training/application/usecases/build_plan_philosophy.dart';
 import '../../../../core/utils/logger.dart';
 
@@ -77,21 +77,24 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
 
       setState(() => _output = 'Loading context...');
 
-      final builder = BuildPlanGenerationContext(
+      final builder = BuildPlanningContext(
         ref.read(userRepositoryProvider),
         ref.read(goalRepositoryProvider),
         ref.read(workoutRepositoryProvider),
       );
 
-      final contextData = await builder.execute(goalId: selectedGoal.id);
+      final contextData = await builder.execute(
+        goalId: selectedGoal.id,
+        mode: PlanningMode.initial,
+      );
 
       setState(() {
         // Populate Form - User fields
-        _age = contextData.user.age;
-        _gender = contextData.user.gender;
-        _trainingFrequency = contextData.user.weeklyTrainingFrequency ?? 4;
-        _weeklyVolume = contextData.user.weeklyVolume ?? 20.0;
+        _age = contextData.user.age ?? 30;
+        _gender = contextData.user.gender ?? 'unknown';
         _availableDays = contextData.user.availableDays;
+        // Approximation as these are no longer in context directly
+        _trainingFrequency = contextData.user.availableDays.length;
 
         // Populate Form - Goal fields
         _goalType = contextData.goal.type;
@@ -99,16 +102,18 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                 contextData.goal.target.replaceAll(RegExp(r'[^0-9.]'), '')) ??
             42.2;
         _isFirstTime = contextData.goal.isFirstTime ?? false;
-        _currentBestTime = contextData.goal.currentBestTime;
-        _eventName = contextData.goal.eventName;
-        _runningPriority = contextData.goal.runningPriority ?? 'high';
-        _strengthPriority = contextData.goal.strengthPriority ?? 'medium';
-        _mobilityPriority = contextData.goal.mobilityPriority ?? 'low';
+        _runningPriority = contextData.goal.priorities['running'] ?? 'high';
+        _strengthPriority = contextData.goal.priorities['strength'] ?? 'medium';
+        _mobilityPriority = contextData.goal.priorities['mobility'] ?? 'low';
+        _weeklyVolume = contextData.goal.initialWeeklyVolume ?? 20.0;
+
         _trainingPhilosophy = const JsonEncoder.withIndent('  ')
             .convert(contextData.philosophy.toJson());
 
-        // Calculate approx weeks from deadline
-        _goalWeeks = (contextData.goal.daysUntilGoal ?? 112) ~/ 7;
+        // Calculate approx weeks based on context deadline
+        final days =
+            contextData.goal.deadline.difference(DateTime.now()).inDays;
+        _goalWeeks = days ~/ 7;
 
         _output = 'Loaded context for Goal: ${selectedGoal.id}';
       });
@@ -132,18 +137,18 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
 
       // Calculate timeline
       final deadline = DateTime.now().add(Duration(days: _goalWeeks * 7));
-      final daysUntilGoal = deadline.difference(DateTime.now()).inDays;
 
       final context = PlanGenerationContext(
+        config: PlanningConfig(
+          mode: PlanningMode.initial,
+          startDate: DateTime.now(),
+          instruction: 'Create a plan from scratch',
+        ),
         user: UserContext(
           age: _age,
           gender: _gender,
           availableDays: _availableDays,
-          timeConstraints: {},
-          injuryHistory: [],
-          // Current training metrics
-          weeklyTrainingFrequency: _trainingFrequency,
-          weeklyVolume: _weeklyVolume,
+          constraints: null,
         ),
         goal: GoalContext(
           type: _goalType,
@@ -153,17 +158,14 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
                   ? 'Train for $_eventName'
                   : 'Run ${_selectedDistance}km'),
           deadline: deadline,
-          specialInstructions: [],
+          currentFitness: null, // Test screen assumption
+          initialWeeklyVolume: _weeklyVolume,
           isFirstTime: _isFirstTime,
-          // Timeline calculations
-          daysUntilGoal: daysUntilGoal,
-          // Goal-specific parameters
-          currentBestTime: _currentBestTime,
-          eventName: _eventName,
-          // Pillar priorities
-          runningPriority: _runningPriority,
-          strengthPriority: _strengthPriority,
-          mobilityPriority: _mobilityPriority,
+          priorities: {
+            'running': _runningPriority,
+            'strength': _strengthPriority,
+            'mobility': _mobilityPriority,
+          },
         ),
         trainingHistory: [],
         philosophy: buildPlanPhilosophy(
@@ -190,8 +192,8 @@ class _AITestScreenState extends ConsumerState<AITestScreen> {
       const systemPrompt = AIPrompts.ashPersona;
       const taskPrompt = AIPrompts.generatePlanTask;
 
-      final contextJson =
-          const JsonEncoder.withIndent('  ').convert(context.toJson());
+      final contextJson = const JsonEncoder.withIndent('  ')
+          .convert(PlanGenerationContext.activeToJson(context));
 
       setState(() {
         _inputJson = '''
@@ -207,7 +209,8 @@ $contextJson
       });
 
       final result = await service.generatePlan(
-        context: context,
+        context:
+            context, // Service handles toJson internally, but we simulate it above
         systemPrompt: systemPrompt,
         taskPrompt: taskPrompt,
         responseSchema: AISchemas.trainingPlan,

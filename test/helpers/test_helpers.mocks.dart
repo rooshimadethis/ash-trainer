@@ -5,6 +5,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
+import 'package:ash_trainer/features/shared/domain/entities/ai/context_models.dart'
+    as _i8;
 import 'package:ash_trainer/features/shared/domain/entities/goal.dart' as _i3;
 import 'package:ash_trainer/features/shared/domain/entities/user.dart' as _i2;
 import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.dart'
@@ -240,6 +242,7 @@ class MockGenerateTrainingPlan extends _i1.Mock
   _i5.Future<void> execute({
     required String? goalId,
     required String? userId,
+    _i8.PlanningMode? mode = _i8.PlanningMode.initial,
     DateTime? startDate,
   }) =>
       (super.noSuchMethod(
@@ -249,6 +252,7 @@ class MockGenerateTrainingPlan extends _i1.Mock
           {
             #goalId: goalId,
             #userId: userId,
+            #mode: mode,
             #startDate: startDate,
           },
         ),

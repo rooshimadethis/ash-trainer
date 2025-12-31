@@ -25,6 +25,7 @@ mixin _$PlanGenerationContext {
   GoalContext get goal => throw _privateConstructorUsedError;
   List<WorkoutSummary> get trainingHistory =>
       throw _privateConstructorUsedError;
+  PlanningConfig get config => throw _privateConstructorUsedError;
   PlanGenerationPhilosophy get philosophy => throw _privateConstructorUsedError;
 
   /// Serializes this PlanGenerationContext to a JSON map.
@@ -47,10 +48,12 @@ abstract class $PlanGenerationContextCopyWith<$Res> {
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
+      PlanningConfig config,
       PlanGenerationPhilosophy philosophy});
 
   $UserContextCopyWith<$Res> get user;
   $GoalContextCopyWith<$Res> get goal;
+  $PlanningConfigCopyWith<$Res> get config;
   $PlanGenerationPhilosophyCopyWith<$Res> get philosophy;
 }
 
@@ -73,6 +76,7 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
+    Object? config = null,
     Object? philosophy = null,
   }) {
     return _then(_value.copyWith(
@@ -88,6 +92,10 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
           ? _value.trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
+      config: null == config
+          ? _value.config
+          : config // ignore: cast_nullable_to_non_nullable
+              as PlanningConfig,
       philosophy: null == philosophy
           ? _value.philosophy
           : philosophy // ignore: cast_nullable_to_non_nullable
@@ -119,6 +127,16 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
   /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
+  $PlanningConfigCopyWith<$Res> get config {
+    return $PlanningConfigCopyWith<$Res>(_value.config, (value) {
+      return _then(_value.copyWith(config: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PlanGenerationContext
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
   $PlanGenerationPhilosophyCopyWith<$Res> get philosophy {
     return $PlanGenerationPhilosophyCopyWith<$Res>(_value.philosophy, (value) {
       return _then(_value.copyWith(philosophy: value) as $Val);
@@ -139,12 +157,15 @@ abstract class _$$PlanGenerationContextImplCopyWith<$Res>
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
+      PlanningConfig config,
       PlanGenerationPhilosophy philosophy});
 
   @override
   $UserContextCopyWith<$Res> get user;
   @override
   $GoalContextCopyWith<$Res> get goal;
+  @override
+  $PlanningConfigCopyWith<$Res> get config;
   @override
   $PlanGenerationPhilosophyCopyWith<$Res> get philosophy;
 }
@@ -166,6 +187,7 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
+    Object? config = null,
     Object? philosophy = null,
   }) {
     return _then(_$PlanGenerationContextImpl(
@@ -181,6 +203,10 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
           ? _value._trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
+      config: null == config
+          ? _value.config
+          : config // ignore: cast_nullable_to_non_nullable
+              as PlanningConfig,
       philosophy: null == philosophy
           ? _value.philosophy
           : philosophy // ignore: cast_nullable_to_non_nullable
@@ -196,6 +222,7 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
       {required this.user,
       required this.goal,
       required final List<WorkoutSummary> trainingHistory,
+      required this.config,
       required this.philosophy})
       : _trainingHistory = trainingHistory;
 
@@ -215,11 +242,13 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
   }
 
   @override
+  final PlanningConfig config;
+  @override
   final PlanGenerationPhilosophy philosophy;
 
   @override
   String toString() {
-    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, philosophy: $philosophy)';
+    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, config: $config, philosophy: $philosophy)';
   }
 
   @override
@@ -231,14 +260,20 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
             (identical(other.goal, goal) || other.goal == goal) &&
             const DeepCollectionEquality()
                 .equals(other._trainingHistory, _trainingHistory) &&
+            (identical(other.config, config) || other.config == config) &&
             (identical(other.philosophy, philosophy) ||
                 other.philosophy == philosophy));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, user, goal,
-      const DeepCollectionEquality().hash(_trainingHistory), philosophy);
+  int get hashCode => Object.hash(
+      runtimeType,
+      user,
+      goal,
+      const DeepCollectionEquality().hash(_trainingHistory),
+      config,
+      philosophy);
 
   /// Create a copy of PlanGenerationContext
   /// with the given fields replaced by the non-null parameter values.
@@ -262,6 +297,7 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
           {required final UserContext user,
           required final GoalContext goal,
           required final List<WorkoutSummary> trainingHistory,
+          required final PlanningConfig config,
           required final PlanGenerationPhilosophy philosophy}) =
       _$PlanGenerationContextImpl;
 
@@ -275,6 +311,8 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
   @override
   List<WorkoutSummary> get trainingHistory;
   @override
+  PlanningConfig get config;
+  @override
   PlanGenerationPhilosophy get philosophy;
 
   /// Create a copy of PlanGenerationContext
@@ -283,6 +321,194 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlanGenerationContextImplCopyWith<_$PlanGenerationContextImpl>
       get copyWith => throw _privateConstructorUsedError;
+}
+
+PlanningConfig _$PlanningConfigFromJson(Map<String, dynamic> json) {
+  return _PlanningConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PlanningConfig {
+  PlanningMode get mode => throw _privateConstructorUsedError;
+  DateTime get startDate => throw _privateConstructorUsedError;
+  String get instruction => throw _privateConstructorUsedError;
+
+  /// Serializes this PlanningConfig to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PlanningConfigCopyWith<PlanningConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PlanningConfigCopyWith<$Res> {
+  factory $PlanningConfigCopyWith(
+          PlanningConfig value, $Res Function(PlanningConfig) then) =
+      _$PlanningConfigCopyWithImpl<$Res, PlanningConfig>;
+  @useResult
+  $Res call({PlanningMode mode, DateTime startDate, String instruction});
+}
+
+/// @nodoc
+class _$PlanningConfigCopyWithImpl<$Res, $Val extends PlanningConfig>
+    implements $PlanningConfigCopyWith<$Res> {
+  _$PlanningConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mode = null,
+    Object? startDate = null,
+    Object? instruction = null,
+  }) {
+    return _then(_value.copyWith(
+      mode: null == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as PlanningMode,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      instruction: null == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PlanningConfigImplCopyWith<$Res>
+    implements $PlanningConfigCopyWith<$Res> {
+  factory _$$PlanningConfigImplCopyWith(_$PlanningConfigImpl value,
+          $Res Function(_$PlanningConfigImpl) then) =
+      __$$PlanningConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({PlanningMode mode, DateTime startDate, String instruction});
+}
+
+/// @nodoc
+class __$$PlanningConfigImplCopyWithImpl<$Res>
+    extends _$PlanningConfigCopyWithImpl<$Res, _$PlanningConfigImpl>
+    implements _$$PlanningConfigImplCopyWith<$Res> {
+  __$$PlanningConfigImplCopyWithImpl(
+      _$PlanningConfigImpl _value, $Res Function(_$PlanningConfigImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mode = null,
+    Object? startDate = null,
+    Object? instruction = null,
+  }) {
+    return _then(_$PlanningConfigImpl(
+      mode: null == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as PlanningMode,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      instruction: null == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PlanningConfigImpl implements _PlanningConfig {
+  const _$PlanningConfigImpl(
+      {required this.mode, required this.startDate, required this.instruction});
+
+  factory _$PlanningConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PlanningConfigImplFromJson(json);
+
+  @override
+  final PlanningMode mode;
+  @override
+  final DateTime startDate;
+  @override
+  final String instruction;
+
+  @override
+  String toString() {
+    return 'PlanningConfig(mode: $mode, startDate: $startDate, instruction: $instruction)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PlanningConfigImpl &&
+            (identical(other.mode, mode) || other.mode == mode) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.instruction, instruction) ||
+                other.instruction == instruction));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, mode, startDate, instruction);
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PlanningConfigImplCopyWith<_$PlanningConfigImpl> get copyWith =>
+      __$$PlanningConfigImplCopyWithImpl<_$PlanningConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PlanningConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PlanningConfig implements PlanningConfig {
+  const factory _PlanningConfig(
+      {required final PlanningMode mode,
+      required final DateTime startDate,
+      required final String instruction}) = _$PlanningConfigImpl;
+
+  factory _PlanningConfig.fromJson(Map<String, dynamic> json) =
+      _$PlanningConfigImpl.fromJson;
+
+  @override
+  PlanningMode get mode;
+  @override
+  DateTime get startDate;
+  @override
+  String get instruction;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PlanningConfigImplCopyWith<_$PlanningConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }
 
 PlanGenerationPhilosophy _$PlanGenerationPhilosophyFromJson(
@@ -1516,15 +1742,10 @@ UserContext _$UserContextFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$UserContext {
-  int get age => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
+  int? get age => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
   List<String> get availableDays => throw _privateConstructorUsedError;
-  Map<String, int> get timeConstraints => throw _privateConstructorUsedError;
-  List<String> get injuryHistory =>
-      throw _privateConstructorUsedError; // Current training metrics (from form on first plan, calculated from history on subsequent plans)
-  int? get weeklyTrainingFrequency =>
-      throw _privateConstructorUsedError; // sessions per week
-  double? get weeklyVolume => throw _privateConstructorUsedError;
+  String? get constraints => throw _privateConstructorUsedError;
 
   /// Serializes this UserContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1543,13 +1764,10 @@ abstract class $UserContextCopyWith<$Res> {
       _$UserContextCopyWithImpl<$Res, UserContext>;
   @useResult
   $Res call(
-      {int age,
-      String gender,
+      {int? age,
+      String? gender,
       List<String> availableDays,
-      Map<String, int> timeConstraints,
-      List<String> injuryHistory,
-      int? weeklyTrainingFrequency,
-      double? weeklyVolume});
+      String? constraints});
 }
 
 /// @nodoc
@@ -1567,43 +1785,28 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? age = null,
-    Object? gender = null,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? availableDays = null,
-    Object? timeConstraints = null,
-    Object? injuryHistory = null,
-    Object? weeklyTrainingFrequency = freezed,
-    Object? weeklyVolume = freezed,
+    Object? constraints = freezed,
   }) {
     return _then(_value.copyWith(
-      age: null == age
+      age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      gender: null == gender
+              as int?,
+      gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       availableDays: null == availableDays
           ? _value.availableDays
           : availableDays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      timeConstraints: null == timeConstraints
-          ? _value.timeConstraints
-          : timeConstraints // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      injuryHistory: null == injuryHistory
-          ? _value.injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      weeklyTrainingFrequency: freezed == weeklyTrainingFrequency
-          ? _value.weeklyTrainingFrequency
-          : weeklyTrainingFrequency // ignore: cast_nullable_to_non_nullable
-              as int?,
-      weeklyVolume: freezed == weeklyVolume
-          ? _value.weeklyVolume
-          : weeklyVolume // ignore: cast_nullable_to_non_nullable
-              as double?,
+      constraints: freezed == constraints
+          ? _value.constraints
+          : constraints // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -1617,13 +1820,10 @@ abstract class _$$UserContextImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int age,
-      String gender,
+      {int? age,
+      String? gender,
       List<String> availableDays,
-      Map<String, int> timeConstraints,
-      List<String> injuryHistory,
-      int? weeklyTrainingFrequency,
-      double? weeklyVolume});
+      String? constraints});
 }
 
 /// @nodoc
@@ -1639,43 +1839,28 @@ class __$$UserContextImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? age = null,
-    Object? gender = null,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? availableDays = null,
-    Object? timeConstraints = null,
-    Object? injuryHistory = null,
-    Object? weeklyTrainingFrequency = freezed,
-    Object? weeklyVolume = freezed,
+    Object? constraints = freezed,
   }) {
     return _then(_$UserContextImpl(
-      age: null == age
+      age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      gender: null == gender
+              as int?,
+      gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       availableDays: null == availableDays
           ? _value._availableDays
           : availableDays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      timeConstraints: null == timeConstraints
-          ? _value._timeConstraints
-          : timeConstraints // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      injuryHistory: null == injuryHistory
-          ? _value._injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      weeklyTrainingFrequency: freezed == weeklyTrainingFrequency
-          ? _value.weeklyTrainingFrequency
-          : weeklyTrainingFrequency // ignore: cast_nullable_to_non_nullable
-              as int?,
-      weeklyVolume: freezed == weeklyVolume
-          ? _value.weeklyVolume
-          : weeklyVolume // ignore: cast_nullable_to_non_nullable
-              as double?,
+      constraints: freezed == constraints
+          ? _value.constraints
+          : constraints // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -1684,24 +1869,19 @@ class __$$UserContextImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserContextImpl implements _UserContext {
   const _$UserContextImpl(
-      {required this.age,
-      required this.gender,
+      {this.age,
+      this.gender,
       required final List<String> availableDays,
-      required final Map<String, int> timeConstraints,
-      required final List<String> injuryHistory,
-      this.weeklyTrainingFrequency,
-      this.weeklyVolume})
-      : _availableDays = availableDays,
-        _timeConstraints = timeConstraints,
-        _injuryHistory = injuryHistory;
+      this.constraints})
+      : _availableDays = availableDays;
 
   factory _$UserContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserContextImplFromJson(json);
 
   @override
-  final int age;
+  final int? age;
   @override
-  final String gender;
+  final String? gender;
   final List<String> _availableDays;
   @override
   List<String> get availableDays {
@@ -1710,32 +1890,12 @@ class _$UserContextImpl implements _UserContext {
     return EqualUnmodifiableListView(_availableDays);
   }
 
-  final Map<String, int> _timeConstraints;
   @override
-  Map<String, int> get timeConstraints {
-    if (_timeConstraints is EqualUnmodifiableMapView) return _timeConstraints;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_timeConstraints);
-  }
-
-  final List<String> _injuryHistory;
-  @override
-  List<String> get injuryHistory {
-    if (_injuryHistory is EqualUnmodifiableListView) return _injuryHistory;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_injuryHistory);
-  }
-
-// Current training metrics (from form on first plan, calculated from history on subsequent plans)
-  @override
-  final int? weeklyTrainingFrequency;
-// sessions per week
-  @override
-  final double? weeklyVolume;
+  final String? constraints;
 
   @override
   String toString() {
-    return 'UserContext(age: $age, gender: $gender, availableDays: $availableDays, timeConstraints: $timeConstraints, injuryHistory: $injuryHistory, weeklyTrainingFrequency: $weeklyTrainingFrequency, weeklyVolume: $weeklyVolume)';
+    return 'UserContext(age: $age, gender: $gender, availableDays: $availableDays, constraints: $constraints)';
   }
 
   @override
@@ -1747,28 +1907,14 @@ class _$UserContextImpl implements _UserContext {
             (identical(other.gender, gender) || other.gender == gender) &&
             const DeepCollectionEquality()
                 .equals(other._availableDays, _availableDays) &&
-            const DeepCollectionEquality()
-                .equals(other._timeConstraints, _timeConstraints) &&
-            const DeepCollectionEquality()
-                .equals(other._injuryHistory, _injuryHistory) &&
-            (identical(
-                    other.weeklyTrainingFrequency, weeklyTrainingFrequency) ||
-                other.weeklyTrainingFrequency == weeklyTrainingFrequency) &&
-            (identical(other.weeklyVolume, weeklyVolume) ||
-                other.weeklyVolume == weeklyVolume));
+            (identical(other.constraints, constraints) ||
+                other.constraints == constraints));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      age,
-      gender,
-      const DeepCollectionEquality().hash(_availableDays),
-      const DeepCollectionEquality().hash(_timeConstraints),
-      const DeepCollectionEquality().hash(_injuryHistory),
-      weeklyTrainingFrequency,
-      weeklyVolume);
+  int get hashCode => Object.hash(runtimeType, age, gender,
+      const DeepCollectionEquality().hash(_availableDays), constraints);
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -1788,32 +1934,22 @@ class _$UserContextImpl implements _UserContext {
 
 abstract class _UserContext implements UserContext {
   const factory _UserContext(
-      {required final int age,
-      required final String gender,
+      {final int? age,
+      final String? gender,
       required final List<String> availableDays,
-      required final Map<String, int> timeConstraints,
-      required final List<String> injuryHistory,
-      final int? weeklyTrainingFrequency,
-      final double? weeklyVolume}) = _$UserContextImpl;
+      final String? constraints}) = _$UserContextImpl;
 
   factory _UserContext.fromJson(Map<String, dynamic> json) =
       _$UserContextImpl.fromJson;
 
   @override
-  int get age;
+  int? get age;
   @override
-  String get gender;
+  String? get gender;
   @override
   List<String> get availableDays;
   @override
-  Map<String, int> get timeConstraints;
-  @override
-  List<String>
-      get injuryHistory; // Current training metrics (from form on first plan, calculated from history on subsequent plans)
-  @override
-  int? get weeklyTrainingFrequency; // sessions per week
-  @override
-  double? get weeklyVolume;
+  String? get constraints;
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -1832,20 +1968,10 @@ mixin _$GoalContext {
   String get type => throw _privateConstructorUsedError;
   String get target => throw _privateConstructorUsedError;
   DateTime get deadline => throw _privateConstructorUsedError;
-  List<String> get specialInstructions => throw _privateConstructorUsedError;
-  String? get currentPace => throw _privateConstructorUsedError;
-  bool? get isFirstTime =>
-      throw _privateConstructorUsedError; // Timeline calculations
-  int? get daysUntilGoal =>
-      throw _privateConstructorUsedError; // Goal-specific parameters
-  int? get currentBestTime =>
-      throw _privateConstructorUsedError; // For time performance goals (seconds)
-  String? get eventName =>
-      throw _privateConstructorUsedError; // For event goals
-// Pillar priorities (goal-specific training focus)
-  String? get runningPriority => throw _privateConstructorUsedError;
-  String? get strengthPriority => throw _privateConstructorUsedError;
-  String? get mobilityPriority => throw _privateConstructorUsedError;
+  String? get currentFitness => throw _privateConstructorUsedError;
+  double? get initialWeeklyVolume => throw _privateConstructorUsedError;
+  bool? get isFirstTime => throw _privateConstructorUsedError;
+  Map<String, String?> get priorities => throw _privateConstructorUsedError;
 
   /// Serializes this GoalContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -1867,15 +1993,10 @@ abstract class $GoalContextCopyWith<$Res> {
       {String type,
       String target,
       DateTime deadline,
-      List<String> specialInstructions,
-      String? currentPace,
+      String? currentFitness,
+      double? initialWeeklyVolume,
       bool? isFirstTime,
-      int? daysUntilGoal,
-      int? currentBestTime,
-      String? eventName,
-      String? runningPriority,
-      String? strengthPriority,
-      String? mobilityPriority});
+      Map<String, String?> priorities});
 }
 
 /// @nodoc
@@ -1896,15 +2017,10 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
     Object? type = null,
     Object? target = null,
     Object? deadline = null,
-    Object? specialInstructions = null,
-    Object? currentPace = freezed,
+    Object? currentFitness = freezed,
+    Object? initialWeeklyVolume = freezed,
     Object? isFirstTime = freezed,
-    Object? daysUntilGoal = freezed,
-    Object? currentBestTime = freezed,
-    Object? eventName = freezed,
-    Object? runningPriority = freezed,
-    Object? strengthPriority = freezed,
-    Object? mobilityPriority = freezed,
+    Object? priorities = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -1919,42 +2035,22 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
           ? _value.deadline
           : deadline // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      specialInstructions: null == specialInstructions
-          ? _value.specialInstructions
-          : specialInstructions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentPace: freezed == currentPace
-          ? _value.currentPace
-          : currentPace // ignore: cast_nullable_to_non_nullable
+      currentFitness: freezed == currentFitness
+          ? _value.currentFitness
+          : currentFitness // ignore: cast_nullable_to_non_nullable
               as String?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
       isFirstTime: freezed == isFirstTime
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool?,
-      daysUntilGoal: freezed == daysUntilGoal
-          ? _value.daysUntilGoal
-          : daysUntilGoal // ignore: cast_nullable_to_non_nullable
-              as int?,
-      currentBestTime: freezed == currentBestTime
-          ? _value.currentBestTime
-          : currentBestTime // ignore: cast_nullable_to_non_nullable
-              as int?,
-      eventName: freezed == eventName
-          ? _value.eventName
-          : eventName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      runningPriority: freezed == runningPriority
-          ? _value.runningPriority
-          : runningPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
-      strengthPriority: freezed == strengthPriority
-          ? _value.strengthPriority
-          : strengthPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mobilityPriority: freezed == mobilityPriority
-          ? _value.mobilityPriority
-          : mobilityPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
+      priorities: null == priorities
+          ? _value.priorities
+          : priorities // ignore: cast_nullable_to_non_nullable
+              as Map<String, String?>,
     ) as $Val);
   }
 }
@@ -1971,15 +2067,10 @@ abstract class _$$GoalContextImplCopyWith<$Res>
       {String type,
       String target,
       DateTime deadline,
-      List<String> specialInstructions,
-      String? currentPace,
+      String? currentFitness,
+      double? initialWeeklyVolume,
       bool? isFirstTime,
-      int? daysUntilGoal,
-      int? currentBestTime,
-      String? eventName,
-      String? runningPriority,
-      String? strengthPriority,
-      String? mobilityPriority});
+      Map<String, String?> priorities});
 }
 
 /// @nodoc
@@ -1998,15 +2089,10 @@ class __$$GoalContextImplCopyWithImpl<$Res>
     Object? type = null,
     Object? target = null,
     Object? deadline = null,
-    Object? specialInstructions = null,
-    Object? currentPace = freezed,
+    Object? currentFitness = freezed,
+    Object? initialWeeklyVolume = freezed,
     Object? isFirstTime = freezed,
-    Object? daysUntilGoal = freezed,
-    Object? currentBestTime = freezed,
-    Object? eventName = freezed,
-    Object? runningPriority = freezed,
-    Object? strengthPriority = freezed,
-    Object? mobilityPriority = freezed,
+    Object? priorities = null,
   }) {
     return _then(_$GoalContextImpl(
       type: null == type
@@ -2021,42 +2107,22 @@ class __$$GoalContextImplCopyWithImpl<$Res>
           ? _value.deadline
           : deadline // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      specialInstructions: null == specialInstructions
-          ? _value._specialInstructions
-          : specialInstructions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentPace: freezed == currentPace
-          ? _value.currentPace
-          : currentPace // ignore: cast_nullable_to_non_nullable
+      currentFitness: freezed == currentFitness
+          ? _value.currentFitness
+          : currentFitness // ignore: cast_nullable_to_non_nullable
               as String?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
       isFirstTime: freezed == isFirstTime
           ? _value.isFirstTime
           : isFirstTime // ignore: cast_nullable_to_non_nullable
               as bool?,
-      daysUntilGoal: freezed == daysUntilGoal
-          ? _value.daysUntilGoal
-          : daysUntilGoal // ignore: cast_nullable_to_non_nullable
-              as int?,
-      currentBestTime: freezed == currentBestTime
-          ? _value.currentBestTime
-          : currentBestTime // ignore: cast_nullable_to_non_nullable
-              as int?,
-      eventName: freezed == eventName
-          ? _value.eventName
-          : eventName // ignore: cast_nullable_to_non_nullable
-              as String?,
-      runningPriority: freezed == runningPriority
-          ? _value.runningPriority
-          : runningPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
-      strengthPriority: freezed == strengthPriority
-          ? _value.strengthPriority
-          : strengthPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
-      mobilityPriority: freezed == mobilityPriority
-          ? _value.mobilityPriority
-          : mobilityPriority // ignore: cast_nullable_to_non_nullable
-              as String?,
+      priorities: null == priorities
+          ? _value._priorities
+          : priorities // ignore: cast_nullable_to_non_nullable
+              as Map<String, String?>,
     ));
   }
 }
@@ -2068,16 +2134,11 @@ class _$GoalContextImpl implements _GoalContext {
       {required this.type,
       required this.target,
       required this.deadline,
-      required final List<String> specialInstructions,
-      this.currentPace,
+      this.currentFitness,
+      this.initialWeeklyVolume,
       this.isFirstTime,
-      this.daysUntilGoal,
-      this.currentBestTime,
-      this.eventName,
-      this.runningPriority,
-      this.strengthPriority,
-      this.mobilityPriority})
-      : _specialInstructions = specialInstructions;
+      required final Map<String, String?> priorities})
+      : _priorities = priorities;
 
   factory _$GoalContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoalContextImplFromJson(json);
@@ -2088,40 +2149,23 @@ class _$GoalContextImpl implements _GoalContext {
   final String target;
   @override
   final DateTime deadline;
-  final List<String> _specialInstructions;
   @override
-  List<String> get specialInstructions {
-    if (_specialInstructions is EqualUnmodifiableListView)
-      return _specialInstructions;
+  final String? currentFitness;
+  @override
+  final double? initialWeeklyVolume;
+  @override
+  final bool? isFirstTime;
+  final Map<String, String?> _priorities;
+  @override
+  Map<String, String?> get priorities {
+    if (_priorities is EqualUnmodifiableMapView) return _priorities;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_specialInstructions);
+    return EqualUnmodifiableMapView(_priorities);
   }
 
   @override
-  final String? currentPace;
-  @override
-  final bool? isFirstTime;
-// Timeline calculations
-  @override
-  final int? daysUntilGoal;
-// Goal-specific parameters
-  @override
-  final int? currentBestTime;
-// For time performance goals (seconds)
-  @override
-  final String? eventName;
-// For event goals
-// Pillar priorities (goal-specific training focus)
-  @override
-  final String? runningPriority;
-  @override
-  final String? strengthPriority;
-  @override
-  final String? mobilityPriority;
-
-  @override
   String toString() {
-    return 'GoalContext(type: $type, target: $target, deadline: $deadline, specialInstructions: $specialInstructions, currentPace: $currentPace, isFirstTime: $isFirstTime, daysUntilGoal: $daysUntilGoal, currentBestTime: $currentBestTime, eventName: $eventName, runningPriority: $runningPriority, strengthPriority: $strengthPriority, mobilityPriority: $mobilityPriority)';
+    return 'GoalContext(type: $type, target: $target, deadline: $deadline, currentFitness: $currentFitness, initialWeeklyVolume: $initialWeeklyVolume, isFirstTime: $isFirstTime, priorities: $priorities)';
   }
 
   @override
@@ -2133,24 +2177,14 @@ class _$GoalContextImpl implements _GoalContext {
             (identical(other.target, target) || other.target == target) &&
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
-            const DeepCollectionEquality()
-                .equals(other._specialInstructions, _specialInstructions) &&
-            (identical(other.currentPace, currentPace) ||
-                other.currentPace == currentPace) &&
+            (identical(other.currentFitness, currentFitness) ||
+                other.currentFitness == currentFitness) &&
+            (identical(other.initialWeeklyVolume, initialWeeklyVolume) ||
+                other.initialWeeklyVolume == initialWeeklyVolume) &&
             (identical(other.isFirstTime, isFirstTime) ||
                 other.isFirstTime == isFirstTime) &&
-            (identical(other.daysUntilGoal, daysUntilGoal) ||
-                other.daysUntilGoal == daysUntilGoal) &&
-            (identical(other.currentBestTime, currentBestTime) ||
-                other.currentBestTime == currentBestTime) &&
-            (identical(other.eventName, eventName) ||
-                other.eventName == eventName) &&
-            (identical(other.runningPriority, runningPriority) ||
-                other.runningPriority == runningPriority) &&
-            (identical(other.strengthPriority, strengthPriority) ||
-                other.strengthPriority == strengthPriority) &&
-            (identical(other.mobilityPriority, mobilityPriority) ||
-                other.mobilityPriority == mobilityPriority));
+            const DeepCollectionEquality()
+                .equals(other._priorities, _priorities));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -2160,15 +2194,10 @@ class _$GoalContextImpl implements _GoalContext {
       type,
       target,
       deadline,
-      const DeepCollectionEquality().hash(_specialInstructions),
-      currentPace,
+      currentFitness,
+      initialWeeklyVolume,
       isFirstTime,
-      daysUntilGoal,
-      currentBestTime,
-      eventName,
-      runningPriority,
-      strengthPriority,
-      mobilityPriority);
+      const DeepCollectionEquality().hash(_priorities));
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -2191,15 +2220,10 @@ abstract class _GoalContext implements GoalContext {
       {required final String type,
       required final String target,
       required final DateTime deadline,
-      required final List<String> specialInstructions,
-      final String? currentPace,
+      final String? currentFitness,
+      final double? initialWeeklyVolume,
       final bool? isFirstTime,
-      final int? daysUntilGoal,
-      final int? currentBestTime,
-      final String? eventName,
-      final String? runningPriority,
-      final String? strengthPriority,
-      final String? mobilityPriority}) = _$GoalContextImpl;
+      required final Map<String, String?> priorities}) = _$GoalContextImpl;
 
   factory _GoalContext.fromJson(Map<String, dynamic> json) =
       _$GoalContextImpl.fromJson;
@@ -2211,24 +2235,13 @@ abstract class _GoalContext implements GoalContext {
   @override
   DateTime get deadline;
   @override
-  List<String> get specialInstructions;
+  String? get currentFitness;
   @override
-  String? get currentPace;
+  double? get initialWeeklyVolume;
   @override
-  bool? get isFirstTime; // Timeline calculations
+  bool? get isFirstTime;
   @override
-  int? get daysUntilGoal; // Goal-specific parameters
-  @override
-  int? get currentBestTime; // For time performance goals (seconds)
-  @override
-  String? get eventName; // For event goals
-// Pillar priorities (goal-specific training focus)
-  @override
-  String? get runningPriority;
-  @override
-  String? get strengthPriority;
-  @override
-  String? get mobilityPriority;
+  Map<String, String?> get priorities;
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -2244,12 +2257,16 @@ WorkoutSummary _$WorkoutSummaryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WorkoutSummary {
-  DateTime get date => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  int get daysAgo => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  int get duration => throw _privateConstructorUsedError;
-  double? get distance => throw _privateConstructorUsedError;
+  bool get isKey => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  int? get plannedDuration => throw _privateConstructorUsedError; // seconds
+  int? get actualDuration => throw _privateConstructorUsedError;
+  double? get plannedDistance => throw _privateConstructorUsedError; // km
+  double? get actualDistance => throw _privateConstructorUsedError;
   int? get rpe => throw _privateConstructorUsedError;
-  bool get completed => throw _privateConstructorUsedError;
 
   /// Serializes this WorkoutSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -2268,12 +2285,16 @@ abstract class $WorkoutSummaryCopyWith<$Res> {
       _$WorkoutSummaryCopyWithImpl<$Res, WorkoutSummary>;
   @useResult
   $Res call(
-      {DateTime date,
+      {String id,
+      int daysAgo,
       String type,
-      int duration,
-      double? distance,
-      int? rpe,
-      bool completed});
+      bool isKey,
+      String status,
+      int? plannedDuration,
+      int? actualDuration,
+      double? plannedDistance,
+      double? actualDistance,
+      int? rpe});
 }
 
 /// @nodoc
@@ -2291,38 +2312,58 @@ class _$WorkoutSummaryCopyWithImpl<$Res, $Val extends WorkoutSummary>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? id = null,
+    Object? daysAgo = null,
     Object? type = null,
-    Object? duration = null,
-    Object? distance = freezed,
+    Object? isKey = null,
+    Object? status = null,
+    Object? plannedDuration = freezed,
+    Object? actualDuration = freezed,
+    Object? plannedDistance = freezed,
+    Object? actualDistance = freezed,
     Object? rpe = freezed,
-    Object? completed = null,
   }) {
     return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      daysAgo: null == daysAgo
+          ? _value.daysAgo
+          : daysAgo // ignore: cast_nullable_to_non_nullable
+              as int,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as int,
-      distance: freezed == distance
-          ? _value.distance
-          : distance // ignore: cast_nullable_to_non_nullable
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      plannedDuration: freezed == plannedDuration
+          ? _value.plannedDuration
+          : plannedDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actualDuration: freezed == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      plannedDistance: freezed == plannedDistance
+          ? _value.plannedDistance
+          : plannedDistance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      actualDistance: freezed == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
               as double?,
       rpe: freezed == rpe
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -2336,12 +2377,16 @@ abstract class _$$WorkoutSummaryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime date,
+      {String id,
+      int daysAgo,
       String type,
-      int duration,
-      double? distance,
-      int? rpe,
-      bool completed});
+      bool isKey,
+      String status,
+      int? plannedDuration,
+      int? actualDuration,
+      double? plannedDistance,
+      double? actualDistance,
+      int? rpe});
 }
 
 /// @nodoc
@@ -2357,38 +2402,58 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? id = null,
+    Object? daysAgo = null,
     Object? type = null,
-    Object? duration = null,
-    Object? distance = freezed,
+    Object? isKey = null,
+    Object? status = null,
+    Object? plannedDuration = freezed,
+    Object? actualDuration = freezed,
+    Object? plannedDistance = freezed,
+    Object? actualDistance = freezed,
     Object? rpe = freezed,
-    Object? completed = null,
   }) {
     return _then(_$WorkoutSummaryImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      daysAgo: null == daysAgo
+          ? _value.daysAgo
+          : daysAgo // ignore: cast_nullable_to_non_nullable
+              as int,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as int,
-      distance: freezed == distance
-          ? _value.distance
-          : distance // ignore: cast_nullable_to_non_nullable
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      plannedDuration: freezed == plannedDuration
+          ? _value.plannedDuration
+          : plannedDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actualDuration: freezed == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      plannedDistance: freezed == plannedDistance
+          ? _value.plannedDistance
+          : plannedDistance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      actualDistance: freezed == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
               as double?,
       rpe: freezed == rpe
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -2397,32 +2462,46 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WorkoutSummaryImpl implements _WorkoutSummary {
   const _$WorkoutSummaryImpl(
-      {required this.date,
+      {required this.id,
+      required this.daysAgo,
       required this.type,
-      required this.duration,
-      this.distance,
-      this.rpe,
-      required this.completed});
+      required this.isKey,
+      required this.status,
+      this.plannedDuration,
+      this.actualDuration,
+      this.plannedDistance,
+      this.actualDistance,
+      this.rpe});
 
   factory _$WorkoutSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSummaryImplFromJson(json);
 
   @override
-  final DateTime date;
+  final String id;
+  @override
+  final int daysAgo;
   @override
   final String type;
   @override
-  final int duration;
+  final bool isKey;
   @override
-  final double? distance;
+  final String status;
+  @override
+  final int? plannedDuration;
+// seconds
+  @override
+  final int? actualDuration;
+  @override
+  final double? plannedDistance;
+// km
+  @override
+  final double? actualDistance;
   @override
   final int? rpe;
-  @override
-  final bool completed;
 
   @override
   String toString() {
-    return 'WorkoutSummary(date: $date, type: $type, duration: $duration, distance: $distance, rpe: $rpe, completed: $completed)';
+    return 'WorkoutSummary(id: $id, daysAgo: $daysAgo, type: $type, isKey: $isKey, status: $status, plannedDuration: $plannedDuration, actualDuration: $actualDuration, plannedDistance: $plannedDistance, actualDistance: $actualDistance, rpe: $rpe)';
   }
 
   @override
@@ -2430,21 +2509,26 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WorkoutSummaryImpl &&
-            (identical(other.date, date) || other.date == date) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.daysAgo, daysAgo) || other.daysAgo == daysAgo) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
-            (identical(other.distance, distance) ||
-                other.distance == distance) &&
-            (identical(other.rpe, rpe) || other.rpe == rpe) &&
-            (identical(other.completed, completed) ||
-                other.completed == completed));
+            (identical(other.isKey, isKey) || other.isKey == isKey) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.plannedDuration, plannedDuration) ||
+                other.plannedDuration == plannedDuration) &&
+            (identical(other.actualDuration, actualDuration) ||
+                other.actualDuration == actualDuration) &&
+            (identical(other.plannedDistance, plannedDistance) ||
+                other.plannedDistance == plannedDistance) &&
+            (identical(other.actualDistance, actualDistance) ||
+                other.actualDistance == actualDistance) &&
+            (identical(other.rpe, rpe) || other.rpe == rpe));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, type, duration, distance, rpe, completed);
+  int get hashCode => Object.hash(runtimeType, id, daysAgo, type, isKey, status,
+      plannedDuration, actualDuration, plannedDistance, actualDistance, rpe);
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.
@@ -2465,28 +2549,40 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
 
 abstract class _WorkoutSummary implements WorkoutSummary {
   const factory _WorkoutSummary(
-      {required final DateTime date,
+      {required final String id,
+      required final int daysAgo,
       required final String type,
-      required final int duration,
-      final double? distance,
-      final int? rpe,
-      required final bool completed}) = _$WorkoutSummaryImpl;
+      required final bool isKey,
+      required final String status,
+      final int? plannedDuration,
+      final int? actualDuration,
+      final double? plannedDistance,
+      final double? actualDistance,
+      final int? rpe}) = _$WorkoutSummaryImpl;
 
   factory _WorkoutSummary.fromJson(Map<String, dynamic> json) =
       _$WorkoutSummaryImpl.fromJson;
 
   @override
-  DateTime get date;
+  String get id;
+  @override
+  int get daysAgo;
   @override
   String get type;
   @override
-  int get duration;
+  bool get isKey;
   @override
-  double? get distance;
+  String get status;
+  @override
+  int? get plannedDuration; // seconds
+  @override
+  int? get actualDuration;
+  @override
+  double? get plannedDistance; // km
+  @override
+  double? get actualDistance;
   @override
   int? get rpe;
-  @override
-  bool get completed;
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.

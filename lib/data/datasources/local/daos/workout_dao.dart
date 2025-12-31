@@ -61,6 +61,38 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
     return (delete(workouts)..where((t) => t.goalId.equals(goalId))).go();
   }
 
+  Future<DateTime?> getLastScheduledWorkoutDate(int goalId) {
+    return (select(workouts)
+          ..where((t) => t.goalId.equals(goalId))
+          ..orderBy([
+            (t) => OrderingTerm(
+                expression: t.scheduledDate, mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .map((t) => t.scheduledDate)
+        .getSingleOrNull();
+  }
+
+  Future<void> deleteFutureWorkouts(int goalId, DateTime fromDate) {
+    return (delete(workouts)
+          ..where((t) =>
+              t.goalId.equals(goalId) &
+              t.scheduledDate.isBiggerThan(Variable(fromDate))))
+        .go();
+  }
+
+  Future<DateTime?> getLastCompletedWorkoutDate(int goalId) {
+    return (select(workouts)
+          ..where((t) => t.goalId.equals(goalId) & t.status.equals('completed'))
+          ..orderBy([
+            (t) => OrderingTerm(
+                expression: t.scheduledDate, mode: OrderingMode.desc)
+          ])
+          ..limit(1))
+        .map((t) => t.scheduledDate)
+        .getSingleOrNull();
+  }
+
   Future<({double distance, int duration})> getStatsForBlock(
       String blockId) async {
     final distanceQuery = selectOnly(workouts)

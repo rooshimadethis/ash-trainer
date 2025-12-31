@@ -162,4 +162,27 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
     final dtos = await _workoutDao.getWorkoutsForGoal(int.parse(goalId));
     return dtos.map((dto) => dto.toEntity()).toList();
   }
+
+  @override
+  Future<int> getConsecutiveMissedDays(String goalId) async {
+    final gId = int.parse(goalId);
+    final lastCompleted = await _workoutDao.getLastCompletedWorkoutDate(gId);
+    if (lastCompleted == null) return 0; // Assume new plan if no history
+
+    // If last completed was yesterday, diff is 1. Missed days = 0.
+    // If last completed was 2 days ago, diff is 2. Missed days = 1.
+    final diff = DateTime.now().difference(lastCompleted).inDays;
+    return (diff - 1).clamp(0, 9999);
+  }
+
+  @override
+  Future<DateTime?> getLastScheduledWorkoutDate(String goalId) {
+    return _workoutDao.getLastScheduledWorkoutDate(int.parse(goalId));
+  }
+
+  @override
+  Future<void> deleteFutureWorkouts(
+      {required String goalId, required DateTime fromDate}) {
+    return _workoutDao.deleteFutureWorkouts(int.parse(goalId), fromDate);
+  }
 }

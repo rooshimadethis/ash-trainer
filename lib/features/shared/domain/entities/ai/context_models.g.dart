@@ -14,6 +14,7 @@ _$PlanGenerationContextImpl _$$PlanGenerationContextImplFromJson(
       trainingHistory: (json['trainingHistory'] as List<dynamic>)
           .map((e) => WorkoutSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
+      config: PlanningConfig.fromJson(json['config'] as Map<String, dynamic>),
       philosophy: PlanGenerationPhilosophy.fromJson(
           json['philosophy'] as Map<String, dynamic>),
     );
@@ -24,8 +25,30 @@ Map<String, dynamic> _$$PlanGenerationContextImplToJson(
       'user': instance.user,
       'goal': instance.goal,
       'trainingHistory': instance.trainingHistory,
+      'config': instance.config,
       'philosophy': instance.philosophy,
     };
+
+_$PlanningConfigImpl _$$PlanningConfigImplFromJson(Map<String, dynamic> json) =>
+    _$PlanningConfigImpl(
+      mode: $enumDecode(_$PlanningModeEnumMap, json['mode']),
+      startDate: DateTime.parse(json['startDate'] as String),
+      instruction: json['instruction'] as String,
+    );
+
+Map<String, dynamic> _$$PlanningConfigImplToJson(
+        _$PlanningConfigImpl instance) =>
+    <String, dynamic>{
+      'mode': _$PlanningModeEnumMap[instance.mode]!,
+      'startDate': instance.startDate.toIso8601String(),
+      'instruction': instance.instruction,
+    };
+
+const _$PlanningModeEnumMap = {
+  PlanningMode.initial: 'initial',
+  PlanningMode.extend: 'extend',
+  PlanningMode.repair: 'repair',
+};
 
 _$PlanGenerationPhilosophyImpl _$$PlanGenerationPhilosophyImplFromJson(
         Map<String, dynamic> json) =>
@@ -143,18 +166,12 @@ Map<String, dynamic> _$$MobilityGuidanceImplToJson(
 
 _$UserContextImpl _$$UserContextImplFromJson(Map<String, dynamic> json) =>
     _$UserContextImpl(
-      age: (json['age'] as num).toInt(),
-      gender: json['gender'] as String,
+      age: (json['age'] as num?)?.toInt(),
+      gender: json['gender'] as String?,
       availableDays: (json['availableDays'] as List<dynamic>)
           .map((e) => e as String)
           .toList(),
-      timeConstraints: Map<String, int>.from(json['timeConstraints'] as Map),
-      injuryHistory: (json['injuryHistory'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      weeklyTrainingFrequency:
-          (json['weeklyTrainingFrequency'] as num?)?.toInt(),
-      weeklyVolume: (json['weeklyVolume'] as num?)?.toDouble(),
+      constraints: json['constraints'] as String?,
     );
 
 Map<String, dynamic> _$$UserContextImplToJson(_$UserContextImpl instance) =>
@@ -162,10 +179,7 @@ Map<String, dynamic> _$$UserContextImplToJson(_$UserContextImpl instance) =>
       'age': instance.age,
       'gender': instance.gender,
       'availableDays': instance.availableDays,
-      'timeConstraints': instance.timeConstraints,
-      'injuryHistory': instance.injuryHistory,
-      'weeklyTrainingFrequency': instance.weeklyTrainingFrequency,
-      'weeklyVolume': instance.weeklyVolume,
+      'constraints': instance.constraints,
     };
 
 _$GoalContextImpl _$$GoalContextImplFromJson(Map<String, dynamic> json) =>
@@ -173,17 +187,10 @@ _$GoalContextImpl _$$GoalContextImplFromJson(Map<String, dynamic> json) =>
       type: json['type'] as String,
       target: json['target'] as String,
       deadline: DateTime.parse(json['deadline'] as String),
-      specialInstructions: (json['specialInstructions'] as List<dynamic>)
-          .map((e) => e as String)
-          .toList(),
-      currentPace: json['currentPace'] as String?,
+      currentFitness: json['currentFitness'] as String?,
+      initialWeeklyVolume: (json['initialWeeklyVolume'] as num?)?.toDouble(),
       isFirstTime: json['isFirstTime'] as bool?,
-      daysUntilGoal: (json['daysUntilGoal'] as num?)?.toInt(),
-      currentBestTime: (json['currentBestTime'] as num?)?.toInt(),
-      eventName: json['eventName'] as String?,
-      runningPriority: json['runningPriority'] as String?,
-      strengthPriority: json['strengthPriority'] as String?,
-      mobilityPriority: json['mobilityPriority'] as String?,
+      priorities: Map<String, String?>.from(json['priorities'] as Map),
     );
 
 Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
@@ -191,36 +198,39 @@ Map<String, dynamic> _$$GoalContextImplToJson(_$GoalContextImpl instance) =>
       'type': instance.type,
       'target': instance.target,
       'deadline': instance.deadline.toIso8601String(),
-      'specialInstructions': instance.specialInstructions,
-      'currentPace': instance.currentPace,
+      'currentFitness': instance.currentFitness,
+      'initialWeeklyVolume': instance.initialWeeklyVolume,
       'isFirstTime': instance.isFirstTime,
-      'daysUntilGoal': instance.daysUntilGoal,
-      'currentBestTime': instance.currentBestTime,
-      'eventName': instance.eventName,
-      'runningPriority': instance.runningPriority,
-      'strengthPriority': instance.strengthPriority,
-      'mobilityPriority': instance.mobilityPriority,
+      'priorities': instance.priorities,
     };
 
 _$WorkoutSummaryImpl _$$WorkoutSummaryImplFromJson(Map<String, dynamic> json) =>
     _$WorkoutSummaryImpl(
-      date: DateTime.parse(json['date'] as String),
+      id: json['id'] as String,
+      daysAgo: (json['daysAgo'] as num).toInt(),
       type: json['type'] as String,
-      duration: (json['duration'] as num).toInt(),
-      distance: (json['distance'] as num?)?.toDouble(),
+      isKey: json['isKey'] as bool,
+      status: json['status'] as String,
+      plannedDuration: (json['plannedDuration'] as num?)?.toInt(),
+      actualDuration: (json['actualDuration'] as num?)?.toInt(),
+      plannedDistance: (json['plannedDistance'] as num?)?.toDouble(),
+      actualDistance: (json['actualDistance'] as num?)?.toDouble(),
       rpe: (json['rpe'] as num?)?.toInt(),
-      completed: json['completed'] as bool,
     );
 
 Map<String, dynamic> _$$WorkoutSummaryImplToJson(
         _$WorkoutSummaryImpl instance) =>
     <String, dynamic>{
-      'date': instance.date.toIso8601String(),
+      'id': instance.id,
+      'daysAgo': instance.daysAgo,
       'type': instance.type,
-      'duration': instance.duration,
-      'distance': instance.distance,
+      'isKey': instance.isKey,
+      'status': instance.status,
+      'plannedDuration': instance.plannedDuration,
+      'actualDuration': instance.actualDuration,
+      'plannedDistance': instance.plannedDistance,
+      'actualDistance': instance.actualDistance,
       'rpe': instance.rpe,
-      'completed': instance.completed,
     };
 
 _$CoachingChatContextImpl _$$CoachingChatContextImplFromJson(

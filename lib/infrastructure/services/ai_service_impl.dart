@@ -39,7 +39,7 @@ class AIServiceImpl implements AIService {
     final prompt = _buildPrompt(
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
-      context: context.toJson(),
+      context: PlanGenerationContext.activeToJson(context),
       responseSchema: responseSchema,
     );
 

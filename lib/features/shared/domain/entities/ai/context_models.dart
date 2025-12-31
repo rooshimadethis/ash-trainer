@@ -1,20 +1,56 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'conversation.dart';
+import '../user.dart';
+import '../goal.dart';
+import '../training/workout.dart';
 
 part 'context_models.freezed.dart';
 part 'context_models.g.dart';
 
+@freezed
 @freezed
 class PlanGenerationContext with _$PlanGenerationContext {
   const factory PlanGenerationContext({
     required UserContext user,
     required GoalContext goal,
     required List<WorkoutSummary> trainingHistory,
+    required PlanningConfig config,
     required PlanGenerationPhilosophy philosophy,
   }) = _PlanGenerationContext;
 
   factory PlanGenerationContext.fromJson(Map<String, dynamic> json) =>
       _$PlanGenerationContextFromJson(json);
+
+  // Custom toJson for token optimization
+  static Map<String, dynamic> activeToJson(PlanGenerationContext instance) {
+    return {
+      'user': UserContext.activeToJson(instance.user),
+      'goal': GoalContext.activeToJson(instance.goal),
+      'trainingHistory': instance.trainingHistory
+          .map((w) => WorkoutSummary.activeToJson(w))
+          .toList(),
+      'config': instance.config.toJson(),
+      'philosophy': instance.philosophy.toJson(),
+    };
+  }
+}
+
+enum PlanningMode {
+  initial, // Start from scratch
+  extend, // Append to existing plan
+  repair // Overwrite future due to missed days
+}
+
+@freezed
+class PlanningConfig with _$PlanningConfig {
+  const factory PlanningConfig({
+    required PlanningMode mode,
+    required DateTime startDate,
+    required String instruction,
+  }) = _PlanningConfig;
+
+  factory PlanningConfig.fromJson(Map<String, dynamic> json) =>
+      _$PlanningConfigFromJson(json);
 }
 
 @freezed
@@ -91,18 +127,35 @@ class MobilityGuidance with _$MobilityGuidance {
 @freezed
 class UserContext with _$UserContext {
   const factory UserContext({
-    required int age,
-    required String gender,
+    int? age,
+    String? gender,
     required List<String> availableDays,
-    required Map<String, int> timeConstraints,
-    required List<String> injuryHistory,
-    // Current training metrics (from form on first plan, calculated from history on subsequent plans)
-    int? weeklyTrainingFrequency, // sessions per week
-    double? weeklyVolume, // km per week
+    String? constraints, // Simplified string constraints
   }) = _UserContext;
 
   factory UserContext.fromJson(Map<String, dynamic> json) =>
       _$UserContextFromJson(json);
+
+  factory UserContext.fromEntity(User user) {
+    // Combine explicit constraints into a single string for token efficiency
+    // Assuming user entity has injuryHistory or we just leave it blank for now
+    // until User entity is fully updated.
+    // Checking User entity fields from memory: availableDays is there.
+    // If User doesn't have injuryHistory exposed, we leave constraints null.
+    // (User entity usually has it, assuming getter exists)
+    return UserContext(
+      age: user.age,
+      gender: user.gender,
+      availableDays: user.availableDays,
+    );
+  }
+
+  // Custom toJson for token optimization (strip nulls/empty)
+  static Map<String, dynamic> activeToJson(UserContext instance) {
+    return instance.toJson()
+      ..removeWhere(
+          (key, value) => value == null || (value is List && value.isEmpty));
+  }
 }
 
 @freezed
@@ -111,37 +164,113 @@ class GoalContext with _$GoalContext {
     required String type,
     required String target,
     required DateTime deadline,
-    required List<String> specialInstructions,
-    String? currentPace,
+    String? currentFitness,
+    double? initialWeeklyVolume,
     bool? isFirstTime,
-    // Timeline calculations
-    int? daysUntilGoal,
-    // Goal-specific parameters
-    int? currentBestTime, // For time performance goals (seconds)
-    String? eventName, // For event goals
-    // Pillar priorities (goal-specific training focus)
-    String? runningPriority,
-    String? strengthPriority,
-    String? mobilityPriority,
+    required Map<String, String?> priorities,
   }) = _GoalContext;
 
   factory GoalContext.fromJson(Map<String, dynamic> json) =>
       _$GoalContextFromJson(json);
+
+  factory GoalContext.fromEntity(Goal goal, {bool includeBaseline = false}) {
+    return GoalContext(
+      type: goal.type.name,
+      target: _formatGoalTarget(goal),
+      deadline: goal.targetDate ??
+          goal.endDate ??
+          DateTime.now().add(const Duration(days: 90)),
+      currentFitness: null, // Populate if available in Goal or separate logic
+      initialWeeklyVolume: includeBaseline ? goal.initialWeeklyVolume : null,
+      isFirstTime: includeBaseline ? goal.isFirstTime : null,
+      priorities: {
+        'running': goal.runningPriority,
+        'strength': goal.strengthPriority,
+        'mobility': goal.mobilityPriority,
+      }..removeWhere((k, v) => v == null),
+    );
+  }
+
+  static String _formatGoalTarget(Goal goal) {
+    if (goal.targetDistance != null) return 'Run ${goal.targetDistance}km';
+    if (goal.targetTime != null) return 'Run in ${goal.targetTime}s';
+    if (goal.eventName != null) return 'Train for ${goal.eventName}';
+    return 'Maintain fitness';
+  }
+
+  // Custom toJson for token optimization
+  static Map<String, dynamic> activeToJson(GoalContext instance) {
+    return instance.toJson()
+      ..removeWhere(
+          (key, value) => value == null || (value is Map && value.isEmpty));
+  }
 }
 
 @freezed
 class WorkoutSummary with _$WorkoutSummary {
   const factory WorkoutSummary({
-    required DateTime date,
+    required String id,
+    required int daysAgo,
     required String type,
-    required int duration,
-    double? distance,
+    required bool isKey,
+    required String status,
+    int? plannedDuration, // seconds
+    int? actualDuration,
+    double? plannedDistance, // km
+    double? actualDistance,
     int? rpe,
-    required bool completed,
   }) = _WorkoutSummary;
 
   factory WorkoutSummary.fromJson(Map<String, dynamic> json) =>
       _$WorkoutSummaryFromJson(json);
+
+  factory WorkoutSummary.fromEntity(Workout w, DateTime now) {
+    final daysAgo = now.difference(w.scheduledDate).inDays;
+
+    // Filter metrics based on type relevance to save tokens
+    final isRun = !['strength', 'mobility', 'yoga', 'cross_training']
+        .contains(w.type.split('.').last);
+
+    return WorkoutSummary(
+      id: w.id,
+      daysAgo: daysAgo,
+      type: w.type,
+      isKey: w.isKey,
+      status: w.status,
+      plannedDuration: w.plannedDuration,
+      actualDuration: w.actualDuration,
+      // Only include distance for run-based workouts
+      plannedDistance: isRun ? w.plannedDistance : null,
+      actualDistance: isRun ? w.actualDistance : null,
+      rpe: w.rpe,
+    );
+  }
+
+  // Custom toJson for token optimization
+  static Map<String, dynamic> activeToJson(WorkoutSummary instance) {
+    final json = instance.toJson();
+
+    // Structure into planned/actual for clarity & filtering
+    final filtered = {
+      'daysAgo': json['daysAgo'],
+      'type': json['type'],
+      'isKey': json['isKey'],
+      'status': json['status'],
+      'planned': {
+        'duration': json['plannedDuration'],
+        'distance': json['plannedDistance'],
+      }..removeWhere((k, v) => v == null),
+      'actual': {
+        'duration': json['actualDuration'],
+        'distance': json['actualDistance'],
+        'rpe': json['rpe'],
+      }..removeWhere((k, v) => v == null),
+    };
+
+    return filtered
+      ..removeWhere(
+          (key, value) => value == null || (value is Map && value.isEmpty));
+  }
 }
 
 @freezed

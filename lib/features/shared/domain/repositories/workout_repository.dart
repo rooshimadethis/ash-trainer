@@ -51,4 +51,16 @@ abstract class WorkoutRepository {
 
   /// Get all workouts for a specific goal
   Future<List<Workout>> getWorkoutsForGoal(String goalId);
+
+  /// Get the number of consecutive days without a COMPLETED workout (up to today)
+  Future<int> getConsecutiveMissedDays(String goalId);
+
+  /// Get the date of the very last workout scheduled for this goal (future or past)
+  Future<DateTime?> getLastScheduledWorkoutDate(String goalId);
+
+  /// Delete all workouts scheduled after [fromDate]
+  Future<void> deleteFutureWorkouts({
+    required String goalId,
+    required DateTime fromDate,
+  });
 }
