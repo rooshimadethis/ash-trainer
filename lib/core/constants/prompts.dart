@@ -41,6 +41,25 @@ PLANNING PRINCIPLES:
    - Schedule Mobility sessions as per `mobilityGuidance`.
    - Respect safety constraints (e.g., no hard leg strength before key runs).
 
+5. SAME-DAY WORKOUT STACKING:
+   Core Principle: "Hard Days Hard, Easy Days Easy"
+   
+   ALLOWED Stacks:
+   - Mobility can pair with ANY workout (enhances performance/recovery)
+   - Easy Run (≤60 min) + Light Strength (RPE ≤7) → Run first, avoid heavy legs
+   - Strength + Strength (if different muscle groups)
+   
+   PROHIBITED Stacks:
+   - NEVER 2x Running workouts (injury risk, excessive impact)
+   - NEVER Hard Run + Strength (compromises both quality)
+   - NEVER Heavy Leg Strength + Any Run (form degradation risk)
+   
+   Guidelines:
+   - Prefer separate days when schedule allows (cleaner recovery)
+   - Stack only when necessary to fit volume in available days
+   - Respect Recovery Blocks: passive mobility only
+   - If volume doesn't fit safely, suggest adding training days OR reducing duration
+
 CRITICAL: Use the provided JSON schema. 
 - Create 'Phases' (Base, Build, etc.) with weekly volume targets.
 - Create 'Blocks' (logical chunks of 3-10 days) within those phases.

@@ -27,49 +27,58 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AshScaffold(
-      body: SafeArea(
-        child: Column(
-          children: [
-            _buildHeader(),
-            Expanded(
-              child: PageView(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                children: const [
-                  TodayView(),
-                  WeeklyView(),
-                  MonthlyView(),
-                ],
-              ),
+      body: Column(
+        children: [
+          _buildHeader(),
+          Expanded(
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _currentPage = index;
+                });
+              },
+              children: const [
+                TodayView(),
+                WeeklyView(),
+                MonthlyView(),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        border: Border(
+          bottom: BorderSide(
+            color: AppColors.border.withValues(alpha: 0.5),
+            width: 1,
+          ),
+        ),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Row(
             children: [
               _headerTab('Today', 0),
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
               _headerTab('Weekly', 1),
-              const SizedBox(width: 16),
+              const SizedBox(width: 20),
               _headerTab('Monthly', 2),
             ],
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined,
-                color: AppColors.textSecondary),
+            icon: const Icon(
+              Icons.notifications_none_rounded,
+              color: AppColors.textSecondary,
+              size: 24,
+            ),
             onPressed: () {},
           ),
         ],
@@ -84,26 +93,33 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _pageController.animateToPage(
           index,
           duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+          curve: Curves.easeOutCubic, // Smoother curve
         );
       },
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: isSelected
-                ? AppTextStyles.h4.copyWith(color: AppColors.primary)
-                : AppTextStyles.h4.copyWith(color: AppColors.textSecondary),
-          ),
-          if (isSelected)
-            Container(
-              margin: const EdgeInsets.only(top: 4),
-              height: 2,
-              width: 20,
-              color: AppColors.primary,
+      child: AnimatedDefaultTextStyle(
+        duration: const Duration(milliseconds: 200),
+        style: AppTextStyles.h4.copyWith(
+          color: isSelected ? AppColors.textPrimary : AppColors.textMuted,
+          fontSize: 18,
+          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title),
+            const SizedBox(height: 4),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              height: 3,
+              width: isSelected ? 16 : 0,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-        ],
+          ],
+        ),
       ),
     );
   }

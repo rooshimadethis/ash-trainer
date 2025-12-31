@@ -21,59 +21,97 @@ class WorkoutCard extends StatelessWidget {
 
     return AshCard(
       onTap: onTap,
-      borderColor: typeColor.withValues(alpha: 0.3),
+      borderWidth: 1.0,
+      borderColor: AppColors.border,
+      backgroundColor: AppColors.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: typeColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(color: typeColor.withValues(alpha: 0.5)),
-                ),
-                child: Text(
-                  WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: typeColor,
-                    fontWeight: FontWeight.bold,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: typeColor.withValues(alpha: 0.2),
+                    width: 1,
                   ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      WorkoutTypes.getIcon(workout.type),
+                      size: 14,
+                      color: typeColor,
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
+                      style: AppTextStyles.labelSmall.copyWith(
+                        color: typeColor,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w800,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const Spacer(),
               if (workout.status == 'completed')
-                const Icon(Icons.check_circle, color: Colors.green, size: 16),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: AppColors.success.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Icon(
+                    Icons.check,
+                    color: AppColors.success,
+                    size: 14,
+                  ),
+                ),
             ],
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
           Text(
             workout.name,
-            style: AppTextStyles.h3,
+            style: AppTextStyles.h3.copyWith(height: 1.2),
           ),
-          const SizedBox(height: 8),
-          Row(
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 16,
+            runSpacing: 8,
             children: [
-              _infoTile(Icons.timer_outlined,
-                  _formatDuration(workout.plannedDuration)),
-              if (workout.plannedDistance != null) ...[
-                const SizedBox(width: 16),
+              _infoTile(
+                Icons.schedule_rounded,
+                _formatDuration(workout.plannedDuration),
+              ),
+              if (workout.plannedDistance != null)
                 _infoTile(
-                    Icons.straighten_outlined, '${workout.plannedDistance} km'),
-              ],
+                  Icons.route_rounded,
+                  '${workout.plannedDistance} km',
+                ),
+              if (workout.intensity != null)
+                _infoTile(
+                  Icons.bolt_rounded,
+                  workout.intensity!,
+                ),
             ],
           ),
-          if (workout.intensity != null) ...[
-            const SizedBox(height: 8),
-            _infoTile(Icons.speed_outlined, workout.intensity!),
-          ],
-          if (workout.description != null) ...[
-            const SizedBox(height: 12),
+          if (workout.description != null &&
+              workout.description!.isNotEmpty) ...[
+            const SizedBox(height: 16),
             Text(
               workout.description!,
-              style: AppTextStyles.bodyMedium
-                  .copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
             ),
@@ -85,6 +123,7 @@ class WorkoutCard extends StatelessWidget {
 
   Widget _infoTile(IconData icon, String text) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(icon, size: 16, color: AppColors.textSecondary),
         const SizedBox(width: 4),
@@ -101,6 +140,9 @@ class WorkoutCard extends StatelessWidget {
     final hours = totalSeconds ~/ 3600;
     final minutes = (totalSeconds % 3600) ~/ 60;
     final seconds = totalSeconds % 60;
-    return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    if (hours > 0) {
+      return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
+    }
+    return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 }

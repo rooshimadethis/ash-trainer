@@ -6,6 +6,8 @@ class AshCard extends StatelessWidget {
   final VoidCallback? onTap;
   final bool isSelected;
   final Color? borderColor;
+  final double borderWidth;
+  final Color? backgroundColor;
 
   const AshCard({
     super.key,
@@ -13,6 +15,8 @@ class AshCard extends StatelessWidget {
     this.onTap,
     this.isSelected = false,
     this.borderColor,
+    this.borderWidth = 1.0,
+    this.backgroundColor,
   });
 
   @override
@@ -20,28 +24,27 @@ class AshCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color:
-              isSelected ? AppColors.surfaceHighlight : AppColors.surfaceDark,
-          borderRadius: BorderRadius.circular(12),
+          color: backgroundColor ?? AppColors.surface,
+          borderRadius: BorderRadius.circular(20), // More modern, larger radius
           border: Border.all(
             color: isSelected
-                ? AppColors.primary
-                : (borderColor ?? AppColors.divider),
-            width: isSelected ? 2 : 1,
+                ? AppColors.primary.withValues(alpha: 0.5)
+                : borderColor ?? AppColors.border,
+            width: isSelected ? 2.0 : borderWidth,
           ),
           boxShadow: isSelected
               ? [
                   BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.1),
-                    blurRadius: 20,
-                    spreadRadius: 0,
+                    color: AppColors.primary.withValues(alpha: 0.15),
+                    blurRadius: 24,
+                    spreadRadius: -4,
                   ),
                 ]
-              : null,
+              : [],
         ),
         child: child,
       ),

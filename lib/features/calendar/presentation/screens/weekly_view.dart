@@ -28,39 +28,55 @@ class WeeklyView extends ConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               IconButton(
-                icon: const Icon(Icons.chevron_left, color: AppColors.primary),
+                icon: const Icon(Icons.chevron_left_rounded,
+                    color: AppColors.textPrimary),
                 onPressed: () => ref.read(selectedWeekProvider.notifier).state =
                     startOfWeek.subtract(const Duration(days: 7)),
               ),
-              Text(weekRangeStr, style: AppTextStyles.h4),
+              Column(
+                children: [
+                  Text(
+                    DateFormat('MMMM yyyy').format(startOfWeek),
+                    style: AppTextStyles.bodySmall.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: AppColors.textMuted,
+                    ),
+                  ),
+                  Text(weekRangeStr, style: AppTextStyles.h4),
+                ],
+              ),
               IconButton(
-                icon: const Icon(Icons.chevron_right, color: AppColors.primary),
+                icon: const Icon(Icons.chevron_right_rounded,
+                    color: AppColors.textPrimary),
                 onPressed: () => ref.read(selectedWeekProvider.notifier).state =
                     startOfWeek.add(const Duration(days: 7)),
               ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 12),
         SizedBox(
-          height: 120, // Height for the day columns
+          height: 130, // Increased height for better proportions
           child: weeklyWorkoutsAsync.when(
             data: (workouts) => weeklyBlocksAsync.when(
               data: (blocks) =>
                   _buildWeekGrid(startOfWeek, workouts, blocks, selectedDate),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error details: $err')),
+              error: (err, stack) => Center(child: Text('Error: $err')),
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error: $err')),
           ),
         ),
-        const Divider(color: Colors.white12, height: 32),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Divider(height: 48),
+        ),
         Expanded(
           child: weeklyWorkoutsAsync.when(
             data: (workouts) => weeklyBlocksAsync.when(
@@ -80,16 +96,13 @@ class WeeklyView extends ConsumerWidget {
   Widget _buildWeekGrid(DateTime startOfWeek, List<Workout> workouts,
       List<TrainingBlock> blocks, DateTime selectedDate) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: List.generate(7, (index) {
           final day = startOfWeek.add(Duration(days: index));
           final dayWorkouts = workouts
-              .where((w) =>
-                  w.scheduledDate.year == day.year &&
-                  w.scheduledDate.month == day.month &&
-                  w.scheduledDate.day == day.day)
+              .where((w) => DateUtils.isSameDay(w.scheduledDate, day))
               .toList();
 
           // Find block for this day
@@ -98,13 +111,11 @@ class WeeklyView extends ConsumerWidget {
               if (b == null || b.startDate == null || b.endDate == null) {
                 return false;
               }
-              // Check if day is within start/end (inclusive)
-              // Normalize dates to remove time for comparison
               final start = DateTime(
                   b.startDate!.year, b.startDate!.month, b.startDate!.day);
-              final end = DateTime(
-                      b.endDate!.year, b.endDate!.month, b.endDate!.day)
-                  .add(const Duration(days: 1)); // exclusive end for comparison
+              final end =
+                  DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
+                      .add(const Duration(days: 1));
               final d = DateTime(day.year, day.month, day.day);
               return (d.isAtSameMomentAs(start) || d.isAfter(start)) &&
                   d.isBefore(end);
@@ -131,7 +142,6 @@ class WeeklyView extends ConsumerWidget {
         .where((w) => DateUtils.isSameDay(w.scheduledDate, selectedDate))
         .toList();
 
-    // Find block for selected date to show context
     final dayBlock = blocks.cast<TrainingBlock?>().firstWhere(
       (b) {
         if (b == null || b.startDate == null || b.endDate == null) {
@@ -153,57 +163,96 @@ class WeeklyView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                DateFormat('EEEE, MMM d').format(selectedDate),
-                style: AppTextStyles.h4.copyWith(color: AppColors.primary),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    DateFormat('EEEE, MMM d').format(selectedDate),
+                    style: AppTextStyles.h3,
+                  ),
+                  if (DateUtils.isSameDay(selectedDate, DateTime.now())) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      '• Today',
+                      style: AppTextStyles.label.copyWith(
+                        color: AppColors.primary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ],
               ),
               if (dayBlock != null) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: 12),
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
                         .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: BlockUtils.getColorForIntent(
                               dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.3),
+                          .withValues(alpha: 0.2),
                     ),
                   ),
-                  child: Text(
-                    dayBlock.intent.toUpperCase(),
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: BlockUtils.getColorForIntent(
-                          dayBlock.intent, dayBlock.blockNumber),
-                      fontSize: 10,
-                      letterSpacing: 1.0,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.layers_rounded,
+                        size: 14,
+                        color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${dayBlock.intent.toUpperCase()} BLOCK',
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Expanded(
           child: dayWorkouts.isEmpty
-              ? const Center(
-                  child: Text('Rest Day',
-                      style: TextStyle(color: AppColors.textSecondary)))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.nightlight_round,
+                          size: 48,
+                          color: AppColors.textMuted.withValues(alpha: 0.5)),
+                      const SizedBox(height: 16),
+                      Text('No workouts scheduled',
+                          style: AppTextStyles.bodyLarge
+                              .copyWith(color: AppColors.textMuted)),
+                    ],
+                  ),
+                )
               : ListView.separated(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
                   itemCount: dayWorkouts.length,
                   itemBuilder: (context, index) =>
                       WorkoutCard(workout: dayWorkouts[index]),
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                 ),
         ),
       ],
@@ -227,98 +276,112 @@ class _DayColumn extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isToday = DateUtils.isSameDay(day, DateTime.now());
-    final blockColor =
-        BlockUtils.getColorForIntent(block?.intent, block?.blockNumber ?? 1);
+    final blockColor = block != null
+        ? BlockUtils.getColorForIntent(block!.intent, block!.blockNumber)
+        : null;
 
-    // Neutral Background Logic
-    Color backgroundColor = Colors.transparent;
-    if (isSelected) {
-      backgroundColor = AppColors.white.withValues(alpha: 0.1);
-    } else if (isToday) {
-      backgroundColor = AppColors.white.withValues(alpha: 0.05);
-    }
-
-    // Ribbon Logic
-    // We can't use non-uniform borders with borderRadius.
-    // Instead, we use a ClipRRect and a Column to render the ribbon at the bottom.
+    // Background tint logic for blocks (subtle)
+    final Color blockTint =
+        blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
+    final Color baseBackground = isToday
+        ? AppColors.primary.withValues(alpha: 0.05)
+        : AppColors.surfaceLighter.withValues(alpha: 0.5);
 
     return GestureDetector(
       onTap: () => ref.read(selectedDateProvider.notifier).state = day,
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 2),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8),
-          border: isSelected
-              ? Border.all(
-                  color: AppColors.white.withValues(alpha: 0.5), width: 1)
-              : Border.all(color: AppColors.divider, width: 1),
+          color: Color.alphaBlend(blockTint, baseBackground),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: isSelected
+                ? AppColors.white
+                : isToday
+                    ? AppColors.primary.withValues(alpha: 0.3)
+                    : AppColors.border.withValues(alpha: 0.5),
+            width: isSelected ? 2.0 : 1.0,
+          ),
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(11),
           child: Column(
             children: [
               Expanded(
                 child: Column(
                   children: [
-                    const SizedBox(height: 8),
+                    const SizedBox(height: 10),
                     Text(
                       DateFormat('E').format(day).toUpperCase(),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: isSelected || isToday
-                            ? AppColors.primary
-                            : AppColors.textSecondary,
-                        fontWeight: isSelected || isToday
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                        color:
+                            isToday ? AppColors.primary : AppColors.textMuted,
+                        fontSize: 9,
+                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
+                        letterSpacing: 0.5,
                       ),
                     ),
+                    const SizedBox(height: 2),
                     Text(
                       day.day.toString(),
-                      style: AppTextStyles.bodyMedium.copyWith(
-                        color: isSelected || isToday
-                            ? AppColors.primary
-                            : Colors.white,
-                        fontWeight: isSelected || isToday
-                            ? FontWeight.bold
-                            : FontWeight.normal,
+                      style: AppTextStyles.h4.copyWith(
+                        fontSize: 16,
+                        color:
+                            isToday ? AppColors.primary : AppColors.textPrimary,
+                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w700,
                       ),
                     ),
                     const SizedBox(height: 8),
                     Expanded(
-                      child: Column(
-                        children: workouts
-                            .map((w) => Padding(
-                                  padding: const EdgeInsets.only(bottom: 4),
-                                  child: Container(
-                                    padding: const EdgeInsets.all(4),
-                                    decoration: BoxDecoration(
-                                      color: WorkoutTypes.getColor(w.type)
-                                          .withValues(alpha: 0.1),
-                                      borderRadius: BorderRadius.circular(4),
-                                      border: Border.all(
+                      child: SingleChildScrollView(
+                        physics: const NeverScrollableScrollPhysics(),
+                        child: Column(
+                          children: workouts
+                              .map((w) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 4),
+                                    child: Container(
+                                      width: 20,
+                                      height: 20,
+                                      decoration: BoxDecoration(
                                         color: WorkoutTypes.getColor(w.type)
-                                            .withValues(alpha: 0.3),
+                                            .withValues(alpha: 0.15),
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: WorkoutTypes.getColor(w.type)
+                                              .withValues(alpha: 0.4),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Icon(
+                                          WorkoutTypes.getIcon(w.type),
+                                          size: 10,
+                                          color: WorkoutTypes.getColor(w.type),
+                                        ),
                                       ),
                                     ),
-                                    child: Icon(
-                                      WorkoutTypes.getIcon(w.type),
-                                      size: 10,
-                                      color: WorkoutTypes.getColor(w.type),
-                                    ),
-                                  ),
-                                ))
-                            .toList(),
+                                  ))
+                              .toList(),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-              if (block != null)
+              if (blockColor != null)
                 Container(
                   height: 4,
-                  color: blockColor,
-                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: blockColor,
+                    boxShadow: [
+                      BoxShadow(
+                        color: blockColor.withValues(alpha: 0.4),
+                        blurRadius: 4,
+                        offset: const Offset(0, -1),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),

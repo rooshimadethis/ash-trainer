@@ -160,9 +160,35 @@ Ash balances running, strength, and mobility based on your priority.
 
 ### Missed Workouts
 *   **Distance Milestone**: Skip entirely. Consistency > Perfection.
-*   **Time Performance**: Reschedule key workouts if fresh; skip easy runs. Never double up.
+*   **Time Performance**: Reschedule key workouts if fresh; skip easy runs. See stacking rules below.
 *   **Event (Race)**: Skip in Base; Attempt light version in Build/Peak if 48h to next hard session.
 *   **Maintenance**: Flexible - skip without guilt.
+
+### Same-Day Workout Stacking
+When schedule constraints require multiple workouts on the same day, follow these principles:
+
+**Core Principle**: "Hard Days Hard, Easy Days Easy" - stacking should enhance this, not violate it.
+
+#### ✅ Allowed Combinations
+*   **Mobility + Any Workout**: Mobility enhances performance and recovery, can pair with anything
+    *   Active mobility before runs/strength (5-10 min warmup)
+    *   Passive mobility after runs/strength (10-15 min cooldown/stretching)
+*   **Easy Run + Light Strength**: Safe if run ≤60 min and strength RPE ≤7
+    *   Order: Run first, then strength (glycogen-depleted strength is safer)
+    *   Avoid heavy leg exercises (squats, lunges, deadlifts) - use upper body or light core
+*   **Strength + Strength**: Only if targeting different muscle groups
+    *   Example: Upper body + Core, or Push + Pull
+
+#### ❌ Prohibited Combinations
+*   **2x Running Workouts**: Never schedule two runs on the same day (injury risk, excessive impact load)
+*   **Hard Run + Any Strength**: Compromises quality of both sessions, excessive fatigue
+*   **Heavy Leg Strength + Any Run**: Leg fatigue degrades running form and increases injury risk
+
+#### Guidelines
+*   **Prefer Separation**: When schedule allows, give each workout its own day for cleaner recovery
+*   **Stack When Necessary**: Use stacking to fit volume into available days, not as default
+*   **Recovery Day Protection**: During recovery blocks, only passive mobility (≤15 min) allowed
+*   **Volume Constraints**: If volume doesn't fit safely, add training days or reduce session duration - never compromise safety
 
 ### Return-to-Training Coefficients
 Applied to the first block back after a break to ensure a safe return.

@@ -19,7 +19,7 @@ class AshScaffold extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar,
-      backgroundColor: AppColors.surfaceDark,
+      backgroundColor: AppColors.background,
       body: SafeArea(child: body),
       bottomNavigationBar: bottomNavigationBar,
       floatingActionButton: floatingActionButton,

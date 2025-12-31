@@ -25,18 +25,31 @@ class MonthlyView extends ConsumerWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('MMMM yyyy').format(now),
-                  style: AppTextStyles.h2),
-              const Icon(Icons.calendar_month, color: AppColors.primary),
+              Text(
+                DateFormat('MMMM yyyy').format(now),
+                style: AppTextStyles.h2,
+              ),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: AppColors.primary.withValues(alpha: 0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.calendar_month_rounded,
+                  color: AppColors.primary,
+                  size: 20,
+                ),
+              ),
             ],
           ),
         ),
         SizedBox(
-          height: 380, // Adjust height to fit 4 weeks
+          height: 380,
           child: monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
               data: (blocks) => _build4WeekGrid(
@@ -48,7 +61,10 @@ class MonthlyView extends ConsumerWidget {
             error: (err, stack) => Center(child: Text('Error: $err')),
           ),
         ),
-        const Divider(color: Colors.white12, height: 32),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          child: Divider(height: 48),
+        ),
         Expanded(
           child: monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
@@ -77,9 +93,10 @@ class MonthlyView extends ConsumerWidget {
 
         final weekWorkouts = workouts
             .where((w) =>
-                w.scheduledDate
-                    .isAfter(weekStart.subtract(const Duration(seconds: 1))) &&
-                w.scheduledDate.isBefore(weekEnd.add(const Duration(days: 1))))
+                DateUtils.isSameDay(w.scheduledDate, weekStart) ||
+                (w.scheduledDate.isAfter(weekStart) &&
+                    w.scheduledDate
+                        .isBefore(weekEnd.add(const Duration(days: 1)))))
             .toList();
 
         return _WeekRow(
@@ -99,10 +116,11 @@ class MonthlyView extends ConsumerWidget {
         .where((w) => DateUtils.isSameDay(w.scheduledDate, selectedDate))
         .toList();
 
-    // Find block for selected date to show context
     final dayBlock = blocks.cast<TrainingBlock?>().firstWhere(
       (b) {
-        if (b == null || b.startDate == null || b.endDate == null) return false;
+        if (b == null || b.startDate == null || b.endDate == null) {
+          return false;
+        }
         final start =
             DateTime(b.startDate!.year, b.startDate!.month, b.startDate!.day);
         final end = DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
@@ -119,58 +137,96 @@ class MonthlyView extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                DateFormat('EEEE, MMM d').format(selectedDate),
-                style: AppTextStyles.h4.copyWith(color: AppColors.primary),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    DateFormat('EEEE, MMM d').format(selectedDate),
+                    style: AppTextStyles.h3,
+                  ),
+                  if (DateUtils.isSameDay(selectedDate, DateTime.now())) ...[
+                    const SizedBox(width: 8),
+                    Text(
+                      '• Today',
+                      style: AppTextStyles.label.copyWith(
+                        color: AppColors.primary,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ],
               ),
               if (dayBlock != null) ...[
-                const SizedBox(height: 4),
+                const SizedBox(height: 12),
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
                         .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(4),
+                    borderRadius: BorderRadius.circular(12),
                     border: Border.all(
                       color: BlockUtils.getColorForIntent(
                               dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.3),
+                          .withValues(alpha: 0.2),
                     ),
                   ),
-                  child: Text(
-                    dayBlock.intent.toUpperCase(),
-                    style: AppTextStyles.labelSmall.copyWith(
-                      color: BlockUtils.getColorForIntent(
-                          dayBlock.intent, dayBlock.blockNumber),
-                      fontSize: 10,
-                      letterSpacing: 1.0,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.layers_rounded,
+                        size: 14,
+                        color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '${dayBlock.intent.toUpperCase()} BLOCK',
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
             ],
           ),
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         Expanded(
           child: dayWorkouts.isEmpty
-              ? const Center(
-                  child: Text('Rest Day',
-                      style: TextStyle(color: AppColors.textSecondary)))
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.nightlight_round,
+                          size: 48,
+                          color: AppColors.textMuted.withValues(alpha: 0.5)),
+                      const SizedBox(height: 16),
+                      Text('No workouts scheduled',
+                          style: AppTextStyles.bodyLarge
+                              .copyWith(color: AppColors.textMuted)),
+                    ],
+                  ),
+                )
               : ListView.separated(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.all(20),
                   itemCount: dayWorkouts.length,
                   itemBuilder: (context, index) =>
                       WorkoutCard(workout: dayWorkouts[index]),
                   separatorBuilder: (context, index) =>
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 16),
                 ),
         ),
       ],
@@ -196,7 +252,7 @@ class _WeekRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (index) {
@@ -225,37 +281,39 @@ class _WeekRow extends StatelessWidget {
             orElse: () => null,
           );
 
-          final blockColor = BlockUtils.getColorForIntent(
-              dayBlock?.intent, dayBlock?.blockNumber ?? 1);
+          final blockColor = dayBlock != null
+              ? BlockUtils.getColorForIntent(
+                  dayBlock.intent, dayBlock.blockNumber)
+              : null;
 
-          // Neutral Background Logic
-          Color backgroundColor = AppColors.surfaceHighlight
-              .withValues(alpha: 0.3); // Default for monthly
-          if (isSelected) {
-            backgroundColor = AppColors.white.withValues(alpha: 0.15);
-          } else if (isToday) {
-            backgroundColor = AppColors.white.withValues(alpha: 0.1);
-          }
+          // Background tint logic
+          final Color blockTint =
+              blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
+          final Color baseBackground = isToday
+              ? AppColors.primary.withValues(alpha: 0.05)
+              : AppColors.surfaceLighter.withValues(alpha: 0.5);
 
           return Expanded(
             child: GestureDetector(
               onTap: () => ref.read(selectedDateProvider.notifier).state = day,
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 2),
-                height: 80,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                margin: const EdgeInsets.symmetric(horizontal: 3),
+                height: 85,
                 decoration: BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.circular(8),
-                  border: isSelected
-                      ? Border.all(
-                          color: AppColors.white.withValues(alpha: 0.5),
-                          width: 1)
-                      : Border.all(
-                          color: AppColors.divider,
-                          width: 1), // Default faint border
+                  color: Color.alphaBlend(blockTint, baseBackground),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: isSelected
+                        ? AppColors.white
+                        : isToday
+                            ? AppColors.primary.withValues(alpha: 0.3)
+                            : AppColors.border.withValues(alpha: 0.5),
+                    width: isSelected ? 2.0 : 1.0,
+                  ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(11),
                   child: Column(
                     children: [
                       Expanded(
@@ -265,38 +323,38 @@ class _WeekRow extends StatelessWidget {
                             Text(
                               DateFormat('E').format(day).substring(0, 1),
                               style: AppTextStyles.labelSmall.copyWith(
-                                color: isSelected || isToday
+                                color: isToday
                                     ? AppColors.primary
-                                    : AppColors.textSecondary,
-                                fontWeight: isSelected || isToday
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                    : AppColors.textMuted,
+                                fontSize: 9,
+                                fontWeight:
+                                    isToday ? FontWeight.w800 : FontWeight.w600,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 2),
                             Text(
                               day.day.toString(),
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: isSelected || isToday
+                                color: isToday
                                     ? AppColors.primary
-                                    : Colors.white,
-                                fontWeight: isSelected || isToday
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
+                                    : AppColors.textPrimary,
+                                fontWeight:
+                                    isToday ? FontWeight.w800 : FontWeight.w700,
                               ),
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: 6),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: dayWorkouts
                                   .take(3)
-                                  .map((w) => Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 1),
-                                        child: Icon(
-                                          WorkoutTypes.getIcon(w.type),
-                                          size: 10,
+                                  .map((w) => Container(
+                                        margin: const EdgeInsets.symmetric(
+                                            horizontal: 1.5),
+                                        width: 6,
+                                        height: 6,
+                                        decoration: BoxDecoration(
                                           color: WorkoutTypes.getColor(w.type),
+                                          shape: BoxShape.circle,
                                         ),
                                       ))
                                   .toList(),
@@ -304,10 +362,12 @@ class _WeekRow extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (dayBlock != null)
+                      if (blockColor != null)
                         Container(
-                          height: 4,
-                          color: blockColor,
+                          height: 3,
+                          decoration: BoxDecoration(
+                            color: blockColor,
+                          ),
                           width: double.infinity,
                         ),
                     ],
