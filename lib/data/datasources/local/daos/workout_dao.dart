@@ -35,6 +35,14 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
         .watchSingleOrNull();
   }
 
+  Stream<List<WorkoutDTO>> watchWorkoutsForGoal(int goalId) {
+    return (select(workouts)..where((t) => t.goalId.equals(goalId))).watch();
+  }
+
+  Future<List<WorkoutDTO>> getWorkoutsForGoal(int goalId) {
+    return (select(workouts)..where((t) => t.goalId.equals(goalId))).get();
+  }
+
   Future<void> insertWorkout(Insertable<WorkoutDTO> workout) {
     return into(workouts).insert(workout, mode: InsertMode.replace);
   }

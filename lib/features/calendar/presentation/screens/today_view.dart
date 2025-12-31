@@ -9,6 +9,8 @@ import '../providers/calendar_provider.dart';
 import '../widgets/recovery_widget.dart';
 import 'package:intl/intl.dart';
 import 'workout_detail_screen.dart';
+import 'package:ash_trainer/features/dashboard/presentation/providers/dashboard_providers.dart';
+import 'package:ash_trainer/features/dashboard/presentation/widgets/countdown_card.dart';
 
 class TodayView extends ConsumerWidget {
   const TodayView({super.key});
@@ -59,17 +61,7 @@ class TodayView extends ConsumerWidget {
           const SizedBox(height: 32),
           _checkInCard(),
           const SizedBox(height: 32),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Workout', style: AppTextStyles.h3),
-              Text(
-                'Plan: Madison Marathon',
-                style: AppTextStyles.labelSmall
-                    .copyWith(color: AppColors.textMuted),
-              ),
-            ],
-          ),
+          Text('Workout', style: AppTextStyles.h3),
           const SizedBox(height: 12),
           todayWorkoutAsync.when(
             data: (workout) {
@@ -98,7 +90,23 @@ class TodayView extends ConsumerWidget {
           const SizedBox(height: 32),
           Text('Progress', style: AppTextStyles.h3),
           const SizedBox(height: 12),
-          _goalProgressWidget(),
+          ref.watch(activeGoalProvider).when(
+                data: (goal) {
+                  if (goal == null || goal.targetDate == null) {
+                    return const SizedBox.shrink();
+                  }
+                  return CountdownCard(
+                    goalName: goal.name,
+                    targetDate: goal.targetDate!,
+                    createdAt: goal.createdAt,
+                  );
+                },
+                loading: () => const SizedBox(
+                  height: 100,
+                  child: Center(child: CircularProgressIndicator()),
+                ),
+                error: (_, __) => const SizedBox.shrink(),
+              ),
         ],
       ),
     );
@@ -133,52 +141,6 @@ class TodayView extends ConsumerWidget {
               onPressed: () {},
               child: const Text('Quick Check-In'),
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _goalProgressWidget() {
-    return AshCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '85% OF PHASE COMPLETE',
-                style: AppTextStyles.labelSmall.copyWith(letterSpacing: 1),
-              ),
-              Text(
-                '12 workouts to Peak',
-                style:
-                    AppTextStyles.labelSmall.copyWith(color: AppColors.primary),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: const LinearProgressIndicator(
-              value: 0.85,
-              minHeight: 12,
-              backgroundColor: AppColors.surfaceLighter,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
-            ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(Icons.flag_rounded, size: 14, color: AppColors.textMuted),
-              const SizedBox(width: 8),
-              Text(
-                'Milestone: First 20km run in 3 days',
-                style: AppTextStyles.bodySmall
-                    .copyWith(color: AppColors.textSecondary),
-              ),
-            ],
           ),
         ],
       ),

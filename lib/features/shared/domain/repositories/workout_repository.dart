@@ -45,4 +45,7 @@ abstract class WorkoutRepository {
 
   /// Delete workouts for a specific goal (e.g. before regenerating)
   Future<void> deleteWorkoutsForGoal(String goalId);
+
+  /// Get all workouts for a specific goal
+  Future<List<Workout>> getWorkoutsForGoal(String goalId);
 }

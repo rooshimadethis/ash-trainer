@@ -145,13 +145,12 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
     final gId = int.parse(goalId);
     await _workoutDao.deleteWorkoutsForGoal(gId);
     await _trainingPlanDao.deletePhasesForGoal(gId);
-    // Note: Blocks cascade delete? Or manual delete?
-    // Usually DB handles cascade if set up, otherwise we need to delete.
-    // For now, assume phases deletion is enough or blocks remain orphaned (bad).
-    // Given the strictness, I should probably delete blocks too. But deletePhasesForGoal needs to know block IDs?
-    // Or just clear all blocks for the goal? Blocks have phaseID, Phase has GoalID.
-    // I need deleteBlocksForPhase... iterate phases?
-    // Or add deleteBlocksForGoal (via join) to DAO.
-    // Let's stick to basics.
+    // Note: Blocks cascade delete if set up in DB
+  }
+
+  @override
+  Future<List<Workout>> getWorkoutsForGoal(String goalId) async {
+    final dtos = await _workoutDao.getWorkoutsForGoal(int.parse(goalId));
+    return dtos.map((dto) => dto.toEntity()).toList();
   }
 }
