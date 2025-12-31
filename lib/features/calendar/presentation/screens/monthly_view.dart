@@ -316,7 +316,7 @@ class _WeekRow extends StatelessWidget {
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 margin: const EdgeInsets.symmetric(horizontal: 3),
-                height: 85,
+                height: 72,
                 decoration: BoxDecoration(
                   color: Color.alphaBlend(blockTint, baseBackground),
                   borderRadius: BorderRadius.circular(12),

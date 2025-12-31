@@ -46,13 +46,12 @@ class AshButton extends StatelessWidget {
           disabledBackgroundColor: AppColors.surfaceHighlight,
           foregroundColor:
               isPrimary ? AppColors.white : AppColors.textSecondary,
-          disabledForegroundColor:
-              AppColors.textSecondary.withValues(alpha: 0.5),
+          disabledForegroundColor: AppColors.textSecondary,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-            side: isPrimary
-                ? BorderSide.none
-                : const BorderSide(color: AppColors.divider),
+            borderRadius: BorderRadius.circular(14),
+            side: !isEnabled || !isPrimary
+                ? const BorderSide(color: AppColors.divider)
+                : BorderSide.none,
           ),
           elevation: 0, // Shadow handled by Container
         ),
@@ -61,7 +60,9 @@ class AshButton extends StatelessWidget {
           children: [
             Text(label,
                 style: AppTextStyles.buttonText.copyWith(
-                  color: isPrimary ? AppColors.white : AppColors.textSecondary,
+                  color: isEnabled && isPrimary
+                      ? AppColors.white
+                      : AppColors.textSecondary,
                 )),
             if (icon != null) ...[
               const SizedBox(width: 8),

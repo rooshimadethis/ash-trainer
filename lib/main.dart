@@ -8,9 +8,19 @@ import 'package:ash_trainer/core/utils/provider_logger.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:io';
+import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  if (Platform.isAndroid) {
+    try {
+      await FlutterDisplayMode.setHighRefreshRate();
+    } catch (e) {
+      AppLogger.error('Failed to set high refresh rate', e, StackTrace.current);
+    }
+  }
 
   // Catch Flutter framework errors
   FlutterError.onError = (details) {

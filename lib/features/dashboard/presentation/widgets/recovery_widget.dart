@@ -24,7 +24,7 @@ class RecoveryWidget extends ConsumerWidget {
             if (biomarker == null) {
               return _buildConnectHealthPrompt(context, ref, isAuthorized);
             }
-            return _buildRecoveryCard(context, biomarker);
+            return _buildRecoveryCard(context, biomarker, ref);
           },
           loading: () => _buildLoadingSkeleton(),
           error: (_, __) => _buildErrorState(context),
@@ -35,47 +35,55 @@ class RecoveryWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecoveryCard(BuildContext context, biomarker) {
-    return AshGlassCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.favorite_outline,
-                  color: AppColors.primary, size: 20),
-              const SizedBox(width: 8),
-              Text('Recovery', style: AppTextStyles.h4),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _statItem(
-                biomarker.hrv?.toStringAsFixed(0) ?? '--',
-                'HRV',
-                Colors.green,
-              ),
-              _statItem(
-                biomarker.sleepDurationFormatted,
-                'Sleep',
-                Colors.blue,
-              ),
-              _statItem(
-                biomarker.rhr?.toString() ?? '--',
-                'RHR',
-                Colors.orange,
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'Health data synced via Health Connect.',
-            style: AppTextStyles.bodySmall
-                .copyWith(color: AppColors.textSecondary),
-          ),
-        ],
+  Widget _buildRecoveryCard(BuildContext context, biomarker, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        // Refresh health data on tap
+        ref.read(healthSyncProvider.notifier).refresh();
+      },
+      child: AshGlassCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.favorite_outline,
+                    color: AppColors.primary, size: 20),
+                const SizedBox(width: 8),
+                Text('Recovery', style: AppTextStyles.h4),
+                const Spacer(),
+                const Icon(Icons.refresh, color: AppColors.textMuted, size: 16),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _statItem(
+                  biomarker.hrv?.toStringAsFixed(0) ?? '--',
+                  'HRV',
+                  Colors.green,
+                ),
+                _statItem(
+                  biomarker.sleepDurationFormatted,
+                  'Sleep',
+                  Colors.blue,
+                ),
+                _statItem(
+                  biomarker.rhr?.toString() ?? '--',
+                  'RHR',
+                  Colors.orange,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Health data synced via Health Connect. Tap to refresh.',
+              style: AppTextStyles.bodySmall
+                  .copyWith(color: AppColors.textSecondary),
+            ),
+          ],
+        ),
       ),
     );
   }

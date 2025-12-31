@@ -109,20 +109,18 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   color: AppColors.surfaceDark,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Row(
+                child: Wrap(
+                  spacing: 32,
+                  runSpacing: 16,
                   children: [
                     _metricItem(Icons.timer_outlined,
                         _formatDuration(workout.plannedDuration), 'Duration'),
-                    if (workout.plannedDistance != null) ...[
-                      const SizedBox(width: 32),
+                    if (workout.plannedDistance != null)
                       _metricItem(Icons.straighten_outlined,
                           '${workout.plannedDistance} km', 'Distance'),
-                    ],
-                    if (workout.intensity != null) ...[
-                      const SizedBox(width: 32),
+                    if (workout.intensity != null)
                       _metricItem(Icons.speed_outlined, workout.intensity!,
                           'Intensity'),
-                    ],
                   ],
                 ),
               ),
@@ -143,22 +141,20 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     border: Border.all(
                         color: AppColors.success.withValues(alpha: 0.2)),
                   ),
-                  child: Row(
+                  child: Wrap(
+                    spacing: 32,
+                    runSpacing: 16,
                     children: [
                       _metricItem(
                           Icons.check_circle_outline,
                           _formatDuration(workout.actualDuration ?? 0),
                           'Actual Time'),
-                      if (workout.actualDistance != null) ...[
-                        const SizedBox(width: 32),
+                      if (workout.actualDistance != null)
                         _metricItem(Icons.straighten_outlined,
                             '${workout.actualDistance} km', 'Actual Distance'),
-                      ],
-                      if (workout.rpe != null) ...[
-                        const SizedBox(width: 32),
+                      if (workout.rpe != null)
                         _metricItem(Icons.psychology_outlined,
                             'RPE ${workout.rpe}', 'Effort'),
-                      ],
                     ],
                   ),
                 ),

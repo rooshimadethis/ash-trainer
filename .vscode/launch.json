@@ -20,10 +20,22 @@
             "preLaunchTask": "Launch Pixel 9 Pro Fold"
         },
         {
-            "name": "ash_trainer (Pixel Fold 2)",
+            "name": "ash_trainer (Pixel 9 Pro Fold (2))",
             "request": "launch",
             "type": "dart",
             "preLaunchTask": "Launch Pixel 9 Pro Fold (2)"
+        },
+        {
+            "name": "ash_trainer (CPH2551)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "e6600b0"
+        },
+        {
+            "name": "ash_trainer (macOS)",
+            "request": "launch",
+            "type": "dart",
+            "deviceId": "macos"
         },
         {
             "name": "ash_trainer (Chrome)",

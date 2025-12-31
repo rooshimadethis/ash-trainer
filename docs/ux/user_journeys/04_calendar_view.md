@@ -424,11 +424,11 @@ The calendar uses a **horizontal swipe navigation** with three views:
   - [ ] Integration with Journey #2 (Daily Check-In)
   - [ ] Conditional display (hide if already checked in)
 - [ ] **Recovery widget** (MVP: Display raw health data only)
-  - [ ] Display HRV (Heart Rate Variability)
-  - [ ] Display sleep duration
-  - [ ] Display RHR (Resting Heart Rate)
-  - [ ] Auto-update when health data syncs
-  - [ ] "Connect Health Connect" prompt if no permissions
+  - [x] Display HRV (Heart Rate Variability)
+  - [x] Display sleep duration
+  - [x] Display RHR (Resting Heart Rate)
+  - [x] Auto-update when health data syncs
+  - [x] "Connect Health Connect" prompt if no permissions
   
   **Implementation Details**: See [implementation_plan.md](file:///Users/rooshi/.gemini/antigravity/brain/447231aa-97e6-4495-9cc1-bd1d32f7ae60/implementation_plan.md)
   

@@ -51,22 +51,39 @@ class AppTheme {
         style: ElevatedButton.styleFrom(
           backgroundColor: AppColors.primary,
           foregroundColor: AppColors.white,
+          disabledBackgroundColor: AppColors.surfaceHighlight,
+          disabledForegroundColor: AppColors.textSecondary,
           textStyle: AppTextStyles.buttonText,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           elevation: 0,
+        ).copyWith(
+          side: WidgetStateProperty.resolveWith<BorderSide?>((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return const BorderSide(color: AppColors.border);
+            }
+            return null;
+          }),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.textPrimary,
+          disabledForegroundColor: AppColors.textSecondary,
           side: const BorderSide(color: AppColors.border),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        ).copyWith(
+          backgroundColor: WidgetStateProperty.resolveWith<Color?>((states) {
+            if (states.contains(WidgetState.disabled)) {
+              return AppColors.surfaceHighlight;
+            }
+            return null;
+          }),
         ),
       ),
       textButtonTheme: TextButtonThemeData(
