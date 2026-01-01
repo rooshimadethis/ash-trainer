@@ -381,22 +381,10 @@ class WorkoutDetailScreen extends ConsumerWidget {
       final skippedWorkout = workout.copyWith(status: 'skipped');
       await ref.read(workoutRepositoryProvider).saveWorkout(skippedWorkout);
 
-      // Trigger automation (rescheduling check) and log result
-      // We run this *after* the UI pop to keep it snappy, but we can't await it effectively
-      // if we want to log to debug console *here*.
-      // However, onWorkoutAction is void. Let's rely on global logger or check provider.
-      // Since the request is "log the outcome of the rescheduling", we need to hook into what `onWorkoutAction` does.
-      // `onWorkoutAction` calls `checkAndReschedule`.
-      // We can await it here essentially "fire and forget" regarding UI blocking, but we want the logs.
-
       print('DEBUG: Workout skipped. Triggering rescheduling check...');
       await ref.read(trainingAutomationProvider).onWorkoutAction();
       print('DEBUG: Rescheduling check complete.');
     } catch (e) {
-      // If it fails, we might want to show a snackbar, but since we popped,
-      // it handles gracefully in the background usually.
-      // For robustness we could keep the screen open until success,
-      // but 'Skip' is a low-risk action.
       print('DEBUG: Error skipping workout: $e');
     }
   }
