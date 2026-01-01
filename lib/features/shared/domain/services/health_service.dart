@@ -40,4 +40,30 @@ abstract class HealthService {
   /// Fetch today's health data (sleep, HRV, RHR)
   /// Returns null if no data available or permissions denied
   Future<HealthData?> fetchTodaysHealthData();
+
+  /// Fetch workouts recorded today from external sources
+  Future<List<ExternalWorkout>> fetchTodaysWorkouts();
+}
+
+/// Represents a workout synced from Health Connect / HealthKit
+class ExternalWorkout {
+  final String id;
+  final String type; // e.g. "Running", "Cycling"
+  final DateTime startTime;
+  final DateTime endTime;
+  final int durationSeconds;
+  final double? distanceKm;
+  final int? energryBurnedKcal;
+  final String sourceName; // e.g. "Apple Watch", "Garmin"
+
+  const ExternalWorkout({
+    required this.id,
+    required this.type,
+    required this.startTime,
+    required this.endTime,
+    required this.durationSeconds,
+    this.distanceKm,
+    this.energryBurnedKcal,
+    required this.sourceName,
+  });
 }

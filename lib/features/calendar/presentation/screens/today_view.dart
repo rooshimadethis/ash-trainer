@@ -13,6 +13,8 @@ import 'package:ash_trainer/features/dashboard/presentation/providers/dashboard_
 import 'package:ash_trainer/features/dashboard/presentation/widgets/countdown_card.dart';
 
 import 'package:ash_trainer/features/training/presentation/providers/automation_provider.dart';
+import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
+import '../../../shared/domain/services/health_service.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -126,8 +128,140 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 ),
                 error: (_, __) => const SizedBox.shrink(),
               ),
+          const SizedBox(height: 32),
+          // Also show at the bottom as requested
+          _detectedWorkoutsSection(ref),
         ],
       ),
+    );
+  }
+
+  void _onMatchWorkout(
+      BuildContext context, WidgetRef ref, ExternalWorkout extWorkout) async {
+    final todayWorkout = await ref.read(todayWorkoutProvider.future);
+
+    if (todayWorkout == null) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('No planned workout to match against today.')));
+      return;
+    }
+
+    if (!context.mounted) return;
+
+    // Show confirmation dialog
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Match Workout?'),
+        content: Text(
+            'Do you want to use data from your ${extWorkout.sourceName} workout for "${todayWorkout.name}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Match & Log'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && context.mounted) {
+      // Prepare workout with actuals
+      final filledWorkout = todayWorkout.copyWith(
+        actualDuration: extWorkout.durationSeconds,
+        actualDistance: extWorkout.distanceKm,
+        syncedFrom: extWorkout.sourceName,
+      );
+
+      if (!context.mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => WorkoutLoggingScreen(workout: filledWorkout),
+        ),
+      );
+    }
+  }
+
+  Widget _detectedWorkoutsSection(WidgetRef ref) {
+    final todayWorkout = ref.watch(todayWorkoutProvider).valueOrNull;
+
+    // If the workout is already completed, hide detected workouts to avoid confusion
+    if (todayWorkout != null && todayWorkout.status == 'completed') {
+      return const SizedBox.shrink();
+    }
+
+    final externalWorkoutsAsync = ref.watch(todaysExternalWorkoutsProvider);
+
+    return externalWorkoutsAsync.when(
+      data: (workouts) {
+        if (workouts.isEmpty) return const SizedBox.shrink();
+
+        // Filter out very short workouts (less than 5 mins) to avoid noise
+        // or handle deduplication locally if needed.
+        final validWorkouts =
+            workouts.where((w) => w.durationSeconds > 300).toList();
+
+        if (validWorkouts.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [
+              Icon(Icons.watch_rounded,
+                  color: Theme.of(ref.context).colorScheme.primary, size: 20),
+              const SizedBox(width: 8),
+              Text('Detected Workouts', style: AppTextStyles.h4),
+            ]),
+            const SizedBox(height: 12),
+            ...validWorkouts.map((w) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: AshCard(
+                    onTap: () => _onMatchWorkout(ref.context, ref, w),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: AppColors.success.withValues(alpha: 0.1),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(Icons.check_circle_outline,
+                                color: AppColors.success),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(w.type, style: AppTextStyles.bodyMedium),
+                                Text(
+                                  '${(w.durationSeconds / 60).round()} min • ${w.sourceName}',
+                                  style: AppTextStyles.bodySmall,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Icon(Icons.arrow_forward_ios,
+                              size: 16, color: AppColors.textSecondary),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
+            const SizedBox(height: 32),
+          ],
+        );
+      },
+      loading: () => const SizedBox.shrink(),
+      error: (e, s) => const SizedBox.shrink(),
     );
   }
 

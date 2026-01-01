@@ -37,8 +37,11 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
   @override
   void initState() {
     super.initState();
-    _durationMinutes = widget.workout.plannedDuration ~/ 60;
-    _distance = widget.workout.plannedDistance;
+    _durationMinutes = widget.workout.actualDuration != null
+        ? widget.workout.actualDuration! ~/ 60
+        : widget.workout.plannedDuration ~/ 60;
+
+    _distance = widget.workout.actualDistance ?? widget.workout.plannedDistance;
 
     _durationController =
         TextEditingController(text: _durationMinutes.toString());

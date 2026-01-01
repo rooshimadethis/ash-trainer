@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ash_trainer/features/shared/domain/entities/goal.dart';
 import 'package:ash_trainer/data/providers/repository_providers.dart';
+import '../../../shared/domain/services/health_service.dart';
+import '../../../../infrastructure/providers/service_providers.dart';
 
 /// Provider for the currently active goal
 final activeGoalProvider = FutureProvider<Goal?>((ref) async {
@@ -44,4 +46,19 @@ final goalStatsProvider = FutureProvider<GoalStats?>((ref) async {
     completedWorkouts: completed,
     progressPercentage: completed / workouts.length,
   );
+});
+
+/// Provider for workouts detected from external sources (Results from Health Connect) for TODAY
+final todaysExternalWorkoutsProvider =
+    FutureProvider<List<ExternalWorkout>>((ref) async {
+  final healthService = ref.watch(healthServiceProvider);
+
+  // Verify permissions first to avoid errors or prompting unexpectedly
+  if (!await healthService.hasPermissions()) {
+    // Optional: we can return empty, or try to request?
+    // For auto-detect, best to be silent if no permissions.
+    return [];
+  }
+
+  return healthService.fetchTodaysWorkouts();
 });
