@@ -114,117 +114,37 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
                   // Planned Metrics Section
                   Text('PLANNED TARGETS',
-                      style: Theme.of(context).textTheme.labelLarge),
+                      style: (Theme.of(context).textTheme.labelLarge ??
+                              const TextStyle())
+                          .copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.6),
+                        letterSpacing: 2.0,
+                      )),
                   const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFFFF4D8C)
-                            : Colors.black,
-                        width: 2.0,
-                      ),
-                      boxShadow: Theme.of(context).brightness == Brightness.dark
-                          ? AppShadows.retroDark
-                          : AppShadows.retro,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          spacing: 32,
-                          runSpacing: 16,
-                          children: [
-                            _metricItem(
-                                context,
-                                Icons.timer_outlined,
-                                _formatDuration(workout.plannedDuration),
-                                'Duration'),
-                            if (workout.plannedDistance != null &&
-                                workout.plannedDistance! > 0)
-                              _metricItem(
-                                  context,
-                                  Icons.straighten_outlined,
-                                  UnitConverter.formatDistance(
-                                      UnitConverter.convertDistanceFromKm(
-                                          workout.plannedDistance!,
-                                          preferredUnit),
-                                      preferredUnit),
-                                  'Distance'),
-                            if (workout.intensity != null)
-                              _metricItem(context, Icons.speed_outlined,
-                                  'RPE ${workout.intensity}', 'Intensity'),
-                          ],
-                        ),
-                        // Show pace for running workouts with distance
-                        if (isRunning &&
-                            workout.plannedDistance != null &&
-                            workout.plannedDistance! > 0) ...[
-                          const SizedBox(height: 12),
-                          const Divider(),
-                          _metricItem(
-                            context,
-                            Icons.speed,
-                            _formatPaceForWorkout(workout.plannedDuration,
-                                workout.plannedDistance!, preferredUnit),
-                            'Avg Pace',
-                          ),
-                        ],
-                      ],
-                    ),
-                  ),
+                  _buildStatsDashboard(
+                      context, workout, isRunning, preferredUnit),
 
                   const SizedBox(height: 32),
 
                   // Completion Status
-                  if (isCompleted) ...[
-                    Text('COMPLETED ACTUALS',
-                        style: Theme.of(context).textTheme.labelLarge),
+                  if (workout.status == 'completed') ...[
+                    Text('ACTUAL PERFORMANCE',
+                        style: (Theme.of(context).textTheme.labelLarge ??
+                                const TextStyle())
+                            .copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                          letterSpacing: 2.0,
+                        )),
                     const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.surface,
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? const Color(0xFFFF4D8C)
-                              : Colors.black,
-                          width: 2.0,
-                        ),
-                        boxShadow:
-                            Theme.of(context).brightness == Brightness.dark
-                                ? AppShadows.retroDark
-                                : AppShadows.retro,
-                      ),
-                      child: Wrap(
-                        spacing: 32,
-                        runSpacing: 16,
-                        children: [
-                          _metricItem(
-                              context,
-                              Icons.check_circle_outline,
-                              _formatDuration(workout.actualDuration ?? 0),
-                              'Actual Time'),
-                          if (workout.actualDistance != null &&
-                              workout.actualDistance! > 0)
-                            _metricItem(
-                                context,
-                                Icons.straighten_outlined,
-                                UnitConverter.formatDistance(
-                                    UnitConverter.convertDistanceFromKm(
-                                        workout.actualDistance!, preferredUnit),
-                                    preferredUnit),
-                                'Actual Distance'),
-                          if (workout.rpe != null)
-                            _metricItem(context, Icons.psychology_outlined,
-                                'RPE ${workout.rpe}', 'Effort'),
-                        ],
-                      ),
-                    ),
+                    _buildStatsDashboard(
+                        context, workout, isRunning, preferredUnit,
+                        isActual: true),
                   ] else if (workout.status == 'skipped') ...[
                     Text('STATUS',
                         style: Theme.of(context).textTheme.labelLarge),
@@ -365,23 +285,102 @@ class WorkoutDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _metricItem(
-      BuildContext context, IconData icon, String value, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
-            const SizedBox(width: 4),
-            Text(label,
-                style: AppTextStyles.labelSmall.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
-          ],
+  Widget _buildStatsDashboard(BuildContext context, Workout workout,
+      bool isRunning, String preferredUnit,
+      {bool isActual = false}) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    // Prepare the stats list
+    final stats = <_StatItem>[];
+
+    if (isActual) {
+      stats.add(_StatItem(
+          'Actual Time', _formatDuration(workout.actualDuration ?? 0)));
+      if (workout.actualDistance != null && workout.actualDistance! > 0) {
+        stats.add(_StatItem(
+            'Actual Distance',
+            UnitConverter.formatDistance(
+                UnitConverter.convertDistanceFromKm(
+                    workout.actualDistance!, preferredUnit),
+                preferredUnit)));
+      }
+      if (workout.rpe != null) {
+        stats.add(_StatItem('Final Effort', 'RPE ${workout.rpe}'));
+      }
+    } else {
+      stats
+          .add(_StatItem('Duration', _formatDuration(workout.plannedDuration)));
+      if (workout.plannedDistance != null && workout.plannedDistance! > 0) {
+        stats.add(_StatItem(
+            'Distance',
+            UnitConverter.formatDistance(
+                UnitConverter.convertDistanceFromKm(
+                    workout.plannedDistance!, preferredUnit),
+                preferredUnit)));
+      }
+      if (workout.intensity != null) {
+        stats.add(_StatItem('Intensity', 'RPE ${workout.intensity}'));
+      }
+      if (isRunning &&
+          workout.plannedDistance != null &&
+          workout.plannedDistance! > 0) {
+        stats.add(_StatItem(
+            'Avg Pace',
+            _formatPaceForWorkout(workout.plannedDuration,
+                workout.plannedDistance!, preferredUnit)));
+      }
+    }
+
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+          width: 2.0,
         ),
-        const SizedBox(height: 4),
-        Text(value, style: AppTextStyles.h4),
-      ],
+        boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
+      ),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 2.2, // Adjust for wide layout
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 24,
+        ),
+        itemCount: stats.length,
+        itemBuilder: (context, index) {
+          final item = stats[index];
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                item.label.toUpperCase(),
+                style: AppTextStyles.labelSmall.copyWith(
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  fontSize: 12, // Increased from 10
+                  letterSpacing: 1.0, // Increased for readability
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                item.value,
+                style: AppTextStyles.h2.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontSize: 24, // High glanceability
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 
@@ -474,4 +473,10 @@ class WorkoutDetailScreen extends ConsumerWidget {
     // Format for display
     return UnitConverter.formatPace(paceSeconds, preferredUnit);
   }
+}
+
+class _StatItem {
+  final String label;
+  final String value;
+  _StatItem(this.label, this.value);
 }
