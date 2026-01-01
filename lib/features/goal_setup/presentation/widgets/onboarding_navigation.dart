@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
+
 import '../../../shared/presentation/widgets/ash_button.dart';
 
 class OnboardingNavigation extends StatelessWidget {
@@ -19,7 +19,7 @@ class OnboardingNavigation extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.surfaceDark,
+      color: Colors.transparent,
       padding: const EdgeInsets.only(
         left: 24,
         right: 24,

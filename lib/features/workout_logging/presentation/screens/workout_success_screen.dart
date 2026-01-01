@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:confetti/confetti.dart';
 import 'dart:math';
 import '../../../shared/domain/entities/training/workout.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -49,7 +48,7 @@ class _WorkoutSuccessScreenState extends ConsumerState<WorkoutSuccessScreen> {
     return Theme(
       data: workoutTheme,
       child: Scaffold(
-        backgroundColor: AppColors.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Stack(
           children: [
             // Confetti
@@ -67,8 +66,8 @@ class _WorkoutSuccessScreenState extends ConsumerState<WorkoutSuccessScreen> {
                 colors: [
                   workoutColor,
                   workoutColor.withValues(alpha: 0.7),
-                  AppColors.primary,
-                  AppColors.white,
+                  Theme.of(context).primaryColor,
+                  Colors.white,
                 ],
               ),
             ),
@@ -108,8 +107,9 @@ class _WorkoutSuccessScreenState extends ConsumerState<WorkoutSuccessScreen> {
                     const SizedBox(height: 12),
                     Text(
                       'Workout logged successfully.',
-                      style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.textSecondary),
+                      style: AppTextStyles.bodyMedium.copyWith(
+                          color:
+                              Theme.of(context).colorScheme.onSurfaceVariant),
                     ),
 
                     const SizedBox(height: 48),
@@ -118,9 +118,10 @@ class _WorkoutSuccessScreenState extends ConsumerState<WorkoutSuccessScreen> {
                     Container(
                       padding: const EdgeInsets.all(24),
                       decoration: BoxDecoration(
-                        color: AppColors.surface,
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(24),
-                        border: Border.all(color: AppColors.border),
+                        border: Border.all(
+                            color: Theme.of(context).colorScheme.outline),
                       ),
                       child: Column(
                         children: [
@@ -162,7 +163,7 @@ class _WorkoutSuccessScreenState extends ConsumerState<WorkoutSuccessScreen> {
                       _getAshMotivation(),
                       style: AppTextStyles.bodyLarge.copyWith(
                         fontStyle: FontStyle.italic,
-                        color: AppColors.textPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                       textAlign: TextAlign.center,
                     ),

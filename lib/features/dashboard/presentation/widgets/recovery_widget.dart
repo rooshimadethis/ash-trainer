@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/presentation/widgets/ash_glass_card.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
@@ -52,7 +51,12 @@ class RecoveryWidget extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Text('Recovery', style: AppTextStyles.h4),
                 const Spacer(),
-                const Icon(Icons.refresh, color: AppColors.textMuted, size: 16),
+                Icon(Icons.refresh,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.3),
+                    size: 16),
               ],
             ),
             const SizedBox(height: 16),
@@ -60,16 +64,19 @@ class RecoveryWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _statItem(
+                  context,
                   biomarker.hrv?.toStringAsFixed(0) ?? '--',
                   'HRV',
                   Colors.green,
                 ),
                 _statItem(
+                  context,
                   biomarker.sleepDurationFormatted,
                   'Sleep',
                   Colors.blue,
                 ),
                 _statItem(
+                  context,
                   biomarker.rhr?.toString() ?? '--',
                   'RHR',
                   Colors.orange,
@@ -79,8 +86,8 @@ class RecoveryWidget extends ConsumerWidget {
             const SizedBox(height: 12),
             Text(
               'Health data synced via Health Connect. Tap to refresh.',
-              style: AppTextStyles.bodySmall
-                  .copyWith(color: AppColors.textSecondary),
+              style: AppTextStyles.bodySmall.copyWith(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant),
             ),
           ],
         ),
@@ -88,13 +95,14 @@ class RecoveryWidget extends ConsumerWidget {
     );
   }
 
-  Widget _statItem(String value, String label, Color color) {
+  Widget _statItem(
+      BuildContext context, String value, String label, Color color) {
     return Column(
       children: [
         Text(value, style: AppTextStyles.h3.copyWith(color: color)),
         Text(label,
-            style: AppTextStyles.labelSmall
-                .copyWith(color: AppColors.textSecondary)),
+            style: AppTextStyles.labelSmall.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant)),
       ],
     );
   }
@@ -121,7 +129,7 @@ class RecoveryWidget extends ConsumerWidget {
                 : 'Connect Health Connect to track your recovery metrics',
             textAlign: TextAlign.center,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
           ),
           const SizedBox(height: 20),
@@ -155,10 +163,10 @@ class RecoveryWidget extends ConsumerWidget {
     return AshGlassCard(
       child: Column(
         children: [
-          const Icon(
+          Icon(
             Icons.error_outline,
             size: 48,
-            color: AppColors.error,
+            color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(height: 16),
           Text(

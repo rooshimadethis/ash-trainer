@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
 
@@ -69,7 +68,7 @@ class CountdownCard extends StatelessWidget {
               Text(
                 remaining == 1 ? 'DAY TO GO' : 'DAYS TO GO',
                 style: AppTextStyles.h4.copyWith(
-                  color: AppColors.textSecondary,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
                   letterSpacing: 0.5,
                 ),
               ),
@@ -81,7 +80,8 @@ class CountdownCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 12,
-              backgroundColor: AppColors.surfaceLighter,
+              backgroundColor:
+                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
               valueColor:
                   AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
             ),
@@ -90,7 +90,10 @@ class CountdownCard extends StatelessWidget {
           Text(
             goalName,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: AppColors.textMuted,
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.5),
               fontWeight: FontWeight.w500,
             ),
           ),

@@ -345,9 +345,9 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          border: Border.all(color: AppColors.divider),
+          border: Border.all(color: Theme.of(context).colorScheme.outline),
           borderRadius: BorderRadius.circular(12),
-          color: AppColors.surfaceHighlight,
+          color: Theme.of(context).colorScheme.surface,
         ),
         child: Row(
           children: [
@@ -358,7 +358,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
               _selectedDate == null
                   ? 'Select Date'
                   : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-              style: AppTextStyles.body.copyWith(color: AppColors.white),
+              style: AppTextStyles.body,
             ),
           ],
         ),
@@ -375,9 +375,9 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceHighlight,
+        color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<T>(
@@ -385,8 +385,8 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
           items: items,
           onChanged: onChanged,
           hint: Text(hint, style: TextStyle(color: AppColors.textSecondary)),
-          dropdownColor: AppColors.surfaceHighlight,
-          style: AppTextStyles.body.copyWith(color: AppColors.white),
+          dropdownColor: Theme.of(context).colorScheme.surface,
+          style: AppTextStyles.body,
           isExpanded: true,
         ),
       ),

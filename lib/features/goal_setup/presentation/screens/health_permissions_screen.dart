@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
@@ -45,12 +44,14 @@ class HealthPermissionsScreen extends ConsumerWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 32),
-                _buildBenefitRow(Icons.auto_awesome, 'No manual logging'),
+                _buildBenefitRow(
+                    context, Icons.auto_awesome, 'No manual logging'),
                 const SizedBox(height: 12),
                 _buildBenefitRow(
-                    Icons.speed, 'Track heart rate, pace & distance'),
+                    context, Icons.speed, 'Track heart rate, pace & distance'),
                 const SizedBox(height: 12),
-                _buildBenefitRow(Icons.bed, 'Monitor recovery from sleep'),
+                _buildBenefitRow(
+                    context, Icons.bed, 'Monitor recovery from sleep'),
               ],
             ),
           ),
@@ -71,7 +72,10 @@ class HealthPermissionsScreen extends ConsumerWidget {
                   child: Text(
                     'Skip for now',
                     style: AppTextStyles.bodyMedium.copyWith(
-                      color: AppColors.textSecondary,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.6),
                     ),
                   ),
                 ),
@@ -98,15 +102,18 @@ class HealthPermissionsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBenefitRow(IconData icon, String text) {
+  Widget _buildBenefitRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: AppColors.accentBlue),
+        Icon(icon, size: 20, color: Theme.of(context).primaryColor),
         const SizedBox(width: 12),
         Text(
           text,
-          style:
-              AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium.copyWith(
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7)),
         ),
       ],
     );

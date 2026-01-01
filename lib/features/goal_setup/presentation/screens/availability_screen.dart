@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
@@ -95,7 +94,7 @@ class AvailabilityScreen extends ConsumerWidget {
                     child: Text(
                       '⚠ Only 1 training day available. We recommend at least 2-3.',
                       style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.accentBlue),
+                          .copyWith(color: Theme.of(context).primaryColor),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -147,10 +146,14 @@ class _DaySelector extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : AppColors.surfaceHighlight,
+          color: isSelected
+              ? Theme.of(context).primaryColor
+              : Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: isSelected ? AppColors.primary : AppColors.divider,
+            color: isSelected
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).colorScheme.outline,
             width: 1,
           ),
         ),
@@ -161,12 +164,13 @@ class _DaySelector extends StatelessWidget {
                 day,
                 style: AppTextStyles.body.copyWith(
                   fontWeight: FontWeight.bold,
-                  color: isSelected ? AppColors.white : AppColors.textSecondary,
+                  color: isSelected
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
-            if (isSelected)
-              const Icon(Icons.check_circle, color: AppColors.white),
+            if (isSelected) const Icon(Icons.check_circle, color: Colors.white),
           ],
         ),
       ),

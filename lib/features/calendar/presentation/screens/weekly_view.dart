@@ -309,7 +309,10 @@ class _DayColumn extends ConsumerWidget {
         blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
     final Color baseBackground = isToday
         ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-        : AppColors.surfaceLighter.withValues(alpha: 0.5);
+        : Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withValues(alpha: 0.5);
 
     return GestureDetector(
       onTap: () => ref.read(selectedDateProvider.notifier).state = day,
@@ -321,11 +324,14 @@ class _DayColumn extends ConsumerWidget {
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? AppColors.white
+                ? Theme.of(context).primaryColor
                 : isToday
                     ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                    : AppColors.border.withValues(alpha: 0.5),
-            width: isSelected ? 2.0 : 1.0,
+                    : Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.5),
+            width: isSelected ? 1.5 : 1.0,
           ),
         ),
         child: ClipRRect(
@@ -341,7 +347,10 @@ class _DayColumn extends ConsumerWidget {
                       style: AppTextStyles.labelSmall.copyWith(
                         color: isToday
                             ? Theme.of(context).primaryColor
-                            : AppColors.textMuted,
+                            : Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.5),
                         fontSize: 9,
                         fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
                         letterSpacing: 0.5,
@@ -354,7 +363,7 @@ class _DayColumn extends ConsumerWidget {
                         fontSize: 16,
                         color: isToday
                             ? Theme.of(context).primaryColor
-                            : AppColors.textPrimary,
+                            : Theme.of(context).colorScheme.onSurface,
                         fontWeight: isToday ? FontWeight.w800 : FontWeight.w700,
                       ),
                     ),

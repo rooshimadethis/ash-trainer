@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
@@ -39,7 +38,7 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const CircularProgressIndicator(color: AppColors.primary),
+            CircularProgressIndicator(color: Theme.of(context).primaryColor),
             const SizedBox(height: 32),
             Text('Building your plan...', style: AppTextStyles.h2),
             const SizedBox(height: 16),

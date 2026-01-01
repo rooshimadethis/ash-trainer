@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
@@ -49,17 +48,18 @@ class WorkoutDetailScreen extends ConsumerWidget {
       data: workoutTheme,
       child: Builder(
         builder: (context) => Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+              icon: Icon(Icons.arrow_back,
+                  color: Theme.of(context).colorScheme.onSurface),
               onPressed: () => Navigator.pop(context),
             ),
             title: Text(
               'Workout Detail',
-              style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+              style: AppTextStyles.h3,
             ),
           ),
           body: SingleChildScrollView(
@@ -92,8 +92,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
                       ),
                       Text(
                         DateFormat('EEEE, MMM d').format(workout.scheduledDate),
-                        style: AppTextStyles.bodyMedium
-                            .copyWith(color: AppColors.textSecondary),
+                        style: AppTextStyles.bodyMedium.copyWith(
+                            color:
+                                Theme.of(context).colorScheme.onSurfaceVariant),
                       ),
                     ],
                   ),
@@ -105,8 +106,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   Text(
                     workout.description ??
                         'No description provided for this workout.',
-                    style: AppTextStyles.bodyLarge
-                        .copyWith(color: AppColors.textSecondary),
+                    style: AppTextStyles.bodyLarge.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant),
                   ),
 
                   const SizedBox(height: 32),
@@ -118,7 +119,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: AppColors.surfaceDark,
+                      color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Column(
@@ -154,7 +155,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
                             workout.plannedDistance != null &&
                             workout.plannedDistance! > 0) ...[
                           const SizedBox(height: 12),
-                          const Divider(color: AppColors.divider),
+                          const Divider(),
                           _metricItem(
                             context,
                             Icons.speed,
@@ -177,10 +178,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: AppColors.success.withValues(alpha: 0.05),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: AppColors.success.withValues(alpha: 0.2)),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.2)),
                       ),
                       child: Wrap(
                         spacing: 32,
@@ -215,19 +222,24 @@ class WorkoutDetailScreen extends ConsumerWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: AppColors.error.withValues(alpha: 0.05),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .error
+                            .withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: AppColors.error.withValues(alpha: 0.2)),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .error
+                                .withValues(alpha: 0.2)),
                       ),
                       child: Row(
                         children: [
-                          const Icon(Icons.block, color: AppColors.error),
+                          const Icon(Icons.block, color: Colors.red),
                           const SizedBox(width: 12),
                           Text(
                             'Workout Skipped',
-                            style: AppTextStyles.h4
-                                .copyWith(color: AppColors.error),
+                            style: AppTextStyles.h4.copyWith(color: Colors.red),
                           ),
                         ],
                       ),
@@ -310,13 +322,14 @@ class WorkoutDetailScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text('Undo Completion?',
-            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+            style: AppTextStyles.h3
+                .copyWith(color: Theme.of(context).colorScheme.onSurface)),
         content: Text(
           'This will remove your actual stats and mark the workout as incomplete.',
-          style:
-              AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium
+              .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         actions: [
           TextButton(
@@ -333,8 +346,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   .unlogWorkout(workout.id);
             },
             child: Text('Undo',
-                style:
-                    AppTextStyles.buttonText.copyWith(color: AppColors.error)),
+                style: AppTextStyles.buttonText
+                    .copyWith(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),
@@ -351,8 +364,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
             Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 4),
             Text(label,
-                style: AppTextStyles.labelSmall
-                    .copyWith(color: AppColors.textSecondary)),
+                style: AppTextStyles.labelSmall.copyWith(
+                    color: Theme.of(context).colorScheme.onSurfaceVariant)),
           ],
         ),
         const SizedBox(height: 4),
@@ -383,26 +396,27 @@ class WorkoutDetailScreen extends ConsumerWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text('Skip Workout?',
-            style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary)),
+            style: AppTextStyles.h3
+                .copyWith(color: Theme.of(context).colorScheme.onSurface)),
         content: Text(
           'This will mark the workout as skipped.',
-          style:
-              AppTextStyles.bodyMedium.copyWith(color: AppColors.textSecondary),
+          style: AppTextStyles.bodyMedium
+              .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
             child: Text('Cancel',
-                style:
-                    AppTextStyles.buttonText.copyWith(color: AppColors.white)),
+                style: AppTextStyles.buttonText
+                    .copyWith(color: Theme.of(context).colorScheme.primary)),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             child: Text('Skip',
-                style:
-                    AppTextStyles.buttonText.copyWith(color: AppColors.error)),
+                style: AppTextStyles.buttonText
+                    .copyWith(color: Theme.of(context).colorScheme.error)),
           ),
         ],
       ),

@@ -379,7 +379,10 @@ class _WeekRow extends StatelessWidget {
               blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
           final Color baseBackground = isToday
               ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-              : AppColors.surfaceLighter.withValues(alpha: 0.5);
+              : Theme.of(context)
+                  .colorScheme
+                  .surfaceContainerHighest
+                  .withValues(alpha: 0.5);
 
           return Expanded(
             child: GestureDetector(
@@ -393,13 +396,16 @@ class _WeekRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? AppColors.white
+                        ? Theme.of(context).primaryColor
                         : isToday
                             ? Theme.of(context)
                                 .primaryColor
                                 .withValues(alpha: 0.3)
-                            : AppColors.border.withValues(alpha: 0.5),
-                    width: isSelected ? 2.0 : 1.0,
+                            : Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withValues(alpha: 0.5),
+                    width: isSelected ? 1.5 : 1.0,
                   ),
                 ),
                 child: ClipRRect(
@@ -415,7 +421,10 @@ class _WeekRow extends StatelessWidget {
                               style: AppTextStyles.labelSmall.copyWith(
                                 color: isToday
                                     ? Theme.of(context).primaryColor
-                                    : AppColors.textMuted,
+                                    : Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.5),
                                 fontSize: 9,
                                 fontWeight:
                                     isToday ? FontWeight.w800 : FontWeight.w600,
@@ -427,7 +436,7 @@ class _WeekRow extends StatelessWidget {
                               style: AppTextStyles.bodyMedium.copyWith(
                                 color: isToday
                                     ? Theme.of(context).primaryColor
-                                    : AppColors.textPrimary,
+                                    : Theme.of(context).colorScheme.onSurface,
                                 fontWeight:
                                     isToday ? FontWeight.w800 : FontWeight.w700,
                               ),
@@ -453,7 +462,7 @@ class _WeekRow extends StatelessWidget {
                                           child: Icon(
                                             Icons.check,
                                             size: 6,
-                                            color: AppColors.white,
+                                            color: Colors.white,
                                           ),
                                         )
                                       : null,
@@ -499,15 +508,18 @@ class _MonthNavButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: AppColors.surfaceLighter.withValues(alpha: 0.5),
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withValues(alpha: 0.5),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: AppColors.border.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
           ),
         ),
         child: Icon(
           icon,
-          color: AppColors.textPrimary,
+          color: Theme.of(context).colorScheme.onSurface,
           size: 20,
         ),
       ),

@@ -32,12 +32,12 @@ class AshSelectionTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                  : AppColors.backgroundDark.withValues(alpha: 0.3),
+                  : Theme.of(context).colorScheme.surfaceContainerHighest,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
                     ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                    : AppColors.divider,
+                    : Theme.of(context).colorScheme.outline,
               ),
             ),
             child: Center(child: leading),
@@ -51,20 +51,13 @@ class AshSelectionTile extends StatelessWidget {
                   title,
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: isSelected
-                        ? AppColors.white
-                        : AppColors.white.withValues(alpha: 0.9),
                   ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
                   Text(
                     subtitle!,
-                    style: AppTextStyles.bodyMedium.copyWith(
-                      color: isSelected
-                          ? AppColors.white.withValues(alpha: 0.7)
-                          : AppColors.textSecondary,
-                    ),
+                    style: AppTextStyles.bodyMedium,
                   ),
                 ],
               ],
@@ -86,8 +79,8 @@ class AshSelectionTile extends StatelessWidget {
               ),
             ),
             child: isSelected
-                ? const Icon(Icons.check,
-                    size: 16, color: AppColors.backgroundDark)
+                ? Icon(Icons.check,
+                    size: 16, color: Theme.of(context).colorScheme.onPrimary)
                 : null,
           ),
         ],

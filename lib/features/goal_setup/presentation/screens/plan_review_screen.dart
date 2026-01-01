@@ -144,8 +144,9 @@ class _WorkoutTile extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceHighlight,
-        borderRadius: BorderRadius.circular(12),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
       child: Row(
         children: [
@@ -159,12 +160,9 @@ class _WorkoutTile extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(workout.name,
-                    style: const TextStyle(
-                        color: Colors.white, fontWeight: FontWeight.bold)),
+                    style: const TextStyle(fontWeight: FontWeight.bold)),
                 if (distance != null)
-                  Text(distance,
-                      style: const TextStyle(
-                          color: AppColors.textSecondary, fontSize: 12)),
+                  Text(distance, style: AppTextStyles.bodySmall),
               ],
             ),
           ),
@@ -205,28 +203,29 @@ class _RationaleSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        _buildRationaleCard(
-            'Overall Approach', goal.rationaleOverallApproach, Icons.flag),
-        _buildRationaleCard('Intensity Distribution',
+        _buildRationaleCard(context, 'Overall Approach',
+            goal.rationaleOverallApproach, Icons.flag),
+        _buildRationaleCard(context, 'Intensity Distribution',
             goal.rationaleIntensityDistribution, Icons.bar_chart),
         _buildRationaleCard(
-            'Key Workouts', goal.rationaleKeyWorkouts, Icons.star),
-        _buildRationaleCard('Recovery Strategy', goal.rationaleRecoveryStrategy,
-            Icons.battery_charging_full),
+            context, 'Key Workouts', goal.rationaleKeyWorkouts, Icons.star),
+        _buildRationaleCard(context, 'Recovery Strategy',
+            goal.rationaleRecoveryStrategy, Icons.battery_charging_full),
         const SizedBox(height: 12),
       ],
     );
   }
 
-  Widget _buildRationaleCard(String label, String? content, IconData icon) {
+  Widget _buildRationaleCard(
+      BuildContext context, String label, String? content, IconData icon) {
     if (content == null) return const SizedBox.shrink();
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surfaceHighlight,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
+        color: Theme.of(context).colorScheme.surface,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Theme.of(context).colorScheme.outline),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -244,9 +243,7 @@ class _RationaleSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 8),
-          Text(content,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 13, height: 1.4)),
+          Text(content, style: const TextStyle(fontSize: 13, height: 1.4)),
         ],
       ),
     );

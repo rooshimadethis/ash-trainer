@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ash_trainer/core/theme/colors.dart';
 import 'package:ash_trainer/core/theme/text_styles.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_button.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_scaffold.dart';
@@ -32,23 +31,26 @@ class WelcomeScreen extends ConsumerWidget {
 
               Text(
                 'Hey there! I\'m Ash, your AI running coach 👋',
-                style: AppTextStyles.h1.copyWith(color: AppColors.white),
+                style: AppTextStyles.h1,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 48),
 
               // Value Propositions
               _buildValueProp(
+                context: context,
                 icon: Icons.auto_awesome,
                 text: 'Personalized training plans that adapt to YOU',
               ),
               const SizedBox(height: 16),
               _buildValueProp(
+                context: context,
                 icon: Icons.school,
                 text: 'Smart coaching that learns from every run',
               ),
               const SizedBox(height: 16),
               _buildValueProp(
+                context: context,
                 icon: Icons.calendar_today,
                 text: 'Your goals, your schedule, your pace',
               ),
@@ -73,23 +75,25 @@ class WelcomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildValueProp({required IconData icon, required String text}) {
+  Widget _buildValueProp(
+      {required BuildContext context,
+      required IconData icon,
+      required String text}) {
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha: 0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: AppColors.primary, size: 24),
+          child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
         ),
         const SizedBox(width: 16),
         Expanded(
           child: Text(
             text,
-            style: AppTextStyles.bodyLarge
-                .copyWith(color: AppColors.textSecondary),
+            style: AppTextStyles.bodyLarge,
           ),
         ),
       ],

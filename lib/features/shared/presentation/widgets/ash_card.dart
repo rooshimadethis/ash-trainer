@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/haptics.dart';
 
 class AshCard extends StatelessWidget {
@@ -34,12 +33,12 @@ class AshCard extends StatelessWidget {
         curve: Curves.easeOutCubic,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: backgroundColor ?? AppColors.surface,
+          color: backgroundColor ?? Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(28), // More modern, larger radius
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).primaryColor.withValues(alpha: 0.5)
-                : borderColor ?? AppColors.border,
+                : borderColor ?? Theme.of(context).colorScheme.outline,
             width: isSelected ? 2.0 : borderWidth,
           ),
           boxShadow: isSelected

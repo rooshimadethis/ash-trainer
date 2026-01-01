@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/training/workout.dart';
 import 'ash_card.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -29,11 +28,12 @@ class WorkoutCard extends ConsumerWidget {
     return AshCard(
       onTap: onTap,
       borderWidth: 1.0,
-      borderColor:
-          useWorkoutColor ? typeColor.withValues(alpha: 0.3) : AppColors.border,
+      borderColor: useWorkoutColor
+          ? typeColor.withValues(alpha: 0.3)
+          : Theme.of(context).colorScheme.outline,
       backgroundColor: useWorkoutColor
           ? typeColor.withValues(alpha: 0.1)
-          : AppColors.surface,
+          : Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -85,20 +85,23 @@ class WorkoutCard extends ConsumerWidget {
                     color: workout.status == 'completed' ||
                             workout.status == 'skipped'
                         ? typeColor
-                        : AppColors.textSecondary.withValues(alpha: 0.3),
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.3),
                     width: 2,
                   ),
                 ),
                 child: workout.status == 'completed'
                     ? const Icon(
                         Icons.check,
-                        color: AppColors.backgroundDark,
+                        color: Colors.white,
                         size: 16,
                       )
                     : workout.status == 'skipped'
                         ? const Icon(
                             Icons.close,
-                            color: AppColors.backgroundDark,
+                            color: Colors.white,
                             size: 16,
                           )
                         : null,
@@ -116,12 +119,14 @@ class WorkoutCard extends ConsumerWidget {
             runSpacing: 8,
             children: [
               _infoTile(
+                context,
                 Icons.schedule_rounded,
                 _formatDuration(workout.plannedDuration),
               ),
               if (workout.plannedDistance != null &&
                   workout.plannedDistance! > 0)
                 _infoTile(
+                  context,
                   Icons.route_rounded,
                   UnitConverter.formatDistance(
                       UnitConverter.convertDistanceFromKm(
@@ -130,6 +135,7 @@ class WorkoutCard extends ConsumerWidget {
                 ),
               if (workout.intensity != null)
                 _infoTile(
+                  context,
                   Icons.bolt_rounded,
                   'RPE ${workout.intensity}',
                 ),
@@ -141,7 +147,7 @@ class WorkoutCard extends ConsumerWidget {
             Text(
               workout.description!,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: AppColors.textSecondary,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.5,
               ),
               maxLines: 2,
@@ -153,16 +159,17 @@ class WorkoutCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoTile(IconData icon, String text) {
+  Widget _infoTile(BuildContext context, IconData icon, String text) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon, size: 16, color: AppColors.textSecondary),
+        Icon(icon,
+            size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
         const SizedBox(width: 4),
         Text(
           text,
-          style:
-              AppTextStyles.bodySmall.copyWith(color: AppColors.textSecondary),
+          style: AppTextStyles.bodySmall
+              .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       ],
     );

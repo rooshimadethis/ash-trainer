@@ -111,14 +111,15 @@ class _TodayViewState extends ConsumerState<TodayView> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: AppColors.surfaceLighter,
+                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   shape: BoxShape.circle,
-                  border: Border.all(color: AppColors.border),
+                  border:
+                      Border.all(color: Theme.of(context).colorScheme.outline),
                 ),
-                child: const IconButton(
+                child: IconButton(
                   onPressed: null, // Open profile or settings
                   icon: Icon(Icons.person_outline_rounded,
-                      color: AppColors.textPrimary),
+                      color: Theme.of(context).colorScheme.onSurface),
                 ),
               ),
             ],
@@ -274,11 +275,14 @@ class _TodayViewState extends ConsumerState<TodayView> {
                           Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: AppColors.success.withValues(alpha: 0.1),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .primary
+                                  .withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: const Icon(Icons.check_circle_outline,
-                                color: AppColors.success),
+                            child: Icon(Icons.check_circle_outline,
+                                color: Theme.of(context).colorScheme.primary),
                           ),
                           const SizedBox(width: 16),
                           Expanded(
@@ -293,8 +297,12 @@ class _TodayViewState extends ConsumerState<TodayView> {
                               ],
                             ),
                           ),
-                          const Icon(Icons.arrow_forward_ios,
-                              size: 16, color: AppColors.textSecondary),
+                          Icon(Icons.arrow_forward_ios,
+                              size: 16,
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.3)),
                         ],
                       ),
                     ),
@@ -323,8 +331,10 @@ class _TodayViewState extends ConsumerState<TodayView> {
             Expanded(
               child: AshCard(
                 onTap: () {},
-                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
-                borderColor: AppColors.primary.withValues(alpha: 0.2),
+                backgroundColor:
+                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                borderColor:
+                    Theme.of(context).primaryColor.withValues(alpha: 0.2),
                 child: Center(
                   child: Text(
                     'Quick Check-In',

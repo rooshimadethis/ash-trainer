@@ -149,8 +149,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
-                          style: AppTextStyles.bodyLarge
-                              .copyWith(color: AppColors.white),
+                          style: AppTextStyles.bodyLarge,
                           decoration:
                               _buildInputDecoration('How many candle-blows?'),
                         ),
@@ -183,8 +182,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                                   FilteringTextInputFormatter.allow(
                                       RegExp(r'^\d*\.?\d*')),
                                 ],
-                                style: AppTextStyles.bodyLarge
-                                    .copyWith(color: AppColors.white),
+                                style: AppTextStyles.bodyLarge,
                                 decoration:
                                     _buildInputDecoration('Current weight'),
                               ),
@@ -222,8 +220,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                                         FilteringTextInputFormatter.allow(
                                             RegExp(r'^\d*\.?\d*')),
                                       ],
-                                      style: AppTextStyles.bodyLarge
-                                          .copyWith(color: AppColors.white),
+                                      style: AppTextStyles.bodyLarge,
                                       decoration:
                                           _buildInputDecoration('Your height'),
                                     )
@@ -237,9 +234,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                                               FilteringTextInputFormatter
                                                   .digitsOnly
                                             ],
-                                            style: AppTextStyles.bodyLarge
-                                                .copyWith(
-                                                    color: AppColors.white),
+                                            style: AppTextStyles.bodyLarge,
                                             decoration:
                                                 _buildInputDecoration('Feet')
                                                     .copyWith(suffixText: "ft"),
@@ -256,9 +251,7 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                                               FilteringTextInputFormatter.allow(
                                                   RegExp(r'^\d*\.?\d*')),
                                             ],
-                                            style: AppTextStyles.bodyLarge
-                                                .copyWith(
-                                                    color: AppColors.white),
+                                            style: AppTextStyles.bodyLarge,
                                             decoration:
                                                 _buildInputDecoration('Inches')
                                                     .copyWith(suffixText: "in"),
@@ -345,21 +338,22 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
   InputDecoration _buildInputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle:
-          TextStyle(color: AppColors.textSecondary.withValues(alpha: 0.5)),
+      hintStyle: TextStyle(
+          color:
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
       filled: true,
-      fillColor: AppColors.surfaceHighlight,
+      fillColor: Theme.of(context).inputDecorationTheme.fillColor,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.divider),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.divider),
+        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(12),
-        borderSide: const BorderSide(color: AppColors.primary, width: 2),
+        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
       ),
     );
   }
@@ -372,17 +366,23 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : AppColors.surfaceHighlight,
+            color: isSelected
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.divider,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Theme.of(context).colorScheme.outline,
             ),
           ),
           child: Center(
             child: Text(
               label,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: isSelected ? AppColors.white : AppColors.textSecondary,
+                color: isSelected
+                    ? Colors.white
+                    : Theme.of(context).colorScheme.onSurface,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),
@@ -399,13 +399,16 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.transparent,
+          color:
+              isSelected ? Theme.of(context).primaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
           unit,
           style: AppTextStyles.bodySmall.copyWith(
-            color: isSelected ? AppColors.white : AppColors.textSecondary,
+            color: isSelected
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),
@@ -421,13 +424,16 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? AppColors.primary : Colors.transparent,
+          color:
+              isSelected ? Theme.of(context).primaryColor : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Text(
           unit,
           style: AppTextStyles.bodySmall.copyWith(
-            color: isSelected ? AppColors.white : AppColors.textSecondary,
+            color: isSelected
+                ? Colors.white
+                : Theme.of(context).colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),
         ),

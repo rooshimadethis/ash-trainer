@@ -19,6 +19,15 @@ class AshChatBubble extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isAsh = sender == ChatBubbleSender.ash;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final ashBubbleColor =
+        isDark ? AppColors.ashMessageDark : AppColors.ashMessageLight;
+    final userBubbleColor = AppColors.userMessage;
+
+    final ashTextColor =
+        isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight;
+    final userTextColor = AppColors.white;
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
@@ -33,7 +42,7 @@ class AshChatBubble extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
-                color: isAsh ? AppColors.ashMessage : AppColors.userMessage,
+                color: isAsh ? ashBubbleColor : userBubbleColor,
                 borderRadius: BorderRadius.only(
                   topLeft: const Radius.circular(24),
                   topRight: const Radius.circular(24),
@@ -41,13 +50,17 @@ class AshChatBubble extends StatelessWidget {
                   bottomRight: Radius.circular(isAsh ? 24 : 4),
                 ),
                 border: isAsh
-                    ? Border.all(color: AppColors.border, width: 1)
+                    ? Border.all(
+                        color:
+                            isDark ? AppColors.border : AppColors.borderLight,
+                        width: 1,
+                      )
                     : null,
               ),
               child: Text(
                 text,
                 style: AppTextStyles.bodyMedium.copyWith(
-                  color: isAsh ? AppColors.textPrimary : AppColors.white,
+                  color: isAsh ? ashTextColor : userTextColor,
                 ),
               ),
             ),

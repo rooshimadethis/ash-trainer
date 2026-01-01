@@ -7,61 +7,69 @@ class AppColors {
   static const Color primaryDark = Color(0xFF4F46E5);
 
   // --- Background & Surfaces ---
-  // Using a softer, warmer slate-indigo background
+  // Dark (current)
   static const Color background = Color(0xFF0F172A); // Slate 900
   static const Color surface = Color(0xFF1E293B); // Slate 800
   static const Color surfaceLighter = Color(0xFF334155); // Slate 700
   static const Color surfaceHighlight = Color(0xFF475569); // Slate 600
 
+  // Light (new)
+  static const Color backgroundLight = Color(0xFFF8FAFC); // Slate 50
+  static const Color surfaceLight = Color(0xFFFFFFFF);
+  static const Color surfaceLightSecondary = Color(0xFFF1F5F9); // Slate 100
+  static const Color surfaceLightHighlight = Color(0xFFE2E8F0); // Slate 200
+
   // --- Chat Bubbles ---
-  static const Color ashMessage = Color(0xFF1E293B); // Surface color
-  static const Color userMessage = Color(0xFF6366F1); // Primary color
+  static const Color ashMessageDark = Color(0xFF1E293B);
+  static const Color ashMessageLight = Color(0xFFF1F5F9);
+  static const Color userMessage = Color(0xFF6366F1); // Indigo 500
 
   // --- Borders & Dividers ---
   static const Color border = Color(0xFF27272A); // Zinc 800
-  static const Color borderLight = Color(0xFF3F3F46); // Zinc 700
+  static const Color borderLight =
+      Color(0xFFE2E8F0); // Slate 200 (for light mode)
 
   // --- Text Colors ---
-  static const Color textPrimary = Color(0xFFFAFAFA); // Zinc 50
-  static const Color textSecondary = Color(0xFFA1A1AA); // Zinc 400
-  static const Color textMuted = Color(0xFF71717A); // Zinc 500
+  static const Color textPrimaryDark = Color(0xFFFAFAFA); // Zinc 50
+  static const Color textSecondaryDark = Color(0xFFA1A1AA); // Zinc 400
+  static const Color textPrimaryLight = Color(0xFF0F172A); // Slate 900
+  static const Color textSecondaryLight = Color(0xFF475569); // Slate 600
+  static const Color textMuted = Color(0xFF94A3B8); // Slate 400
 
   // --- Semantic Colors (Workouts) ---
-  static const Color runEasy = Color(0xFF10B981); // Emerald 500
-  static const Color runLong = Color(0xFF3B82F6); // Blue 500
-  static const Color runTempo = Color(0xFFF59E0B); // Amber 500
-  static const Color runIntervals = Color(0xFFEF4444); // Red 500
-  static const Color strength = Color(0xFF8B5CF6); // Violet 500
-  static const Color mobility = Color(0xFF06B6D4); // Cyan 500
-  static const Color rest = Color(0xFF71717A); // Zinc 500
-  static const Color race = Color(0xFFFACC15); // Yellow 400
+  // Softened to 400-level shades for a "friendlier" look
+  static const Color runEasy = Color(0xFF34D399); // Emerald 400
+  static const Color runLong = Color(0xFF60A5FA); // Blue 400
+  static const Color runTempo = Color(0xFFFBBF24); // Amber 400
+  static const Color runIntervals = Color(0xFFF87171); // Red 400
+  static const Color strength = Color(0xFFA78BFA); // Violet 400
+  static const Color mobility = Color(0xFF22D3EE); // Cyan 400
+  static const Color rest = Color(0xFFA1A1AA); // Zinc 400
+  static const Color race = Color(0xFFFDE047); // Yellow 300
 
-  // --- Training Block Colors (Principles from calendar_block_visualization.md) ---
-  static const Color blockBase =
-      Color(0xFF0D9488); // Teal 600 - Foundation/Stability
-  static const Color blockBuild = Color(
-      0xFF8B5CF6); // Changed to Violet for Build to contrast with Blue brand
-  static const Color blockPeak =
-      Color(0xFFE11D48); // Rose 600 - Maximum Intensity
-  static const Color blockTaper =
-      Color(0xFF6366F1); // Indigo 500 - Recovery/Sharpness
-  static const Color blockRecovery =
-      Color(0xFF10B981); // Emerald 500 - Active Rest
-  static const Color blockRace = Color(0xFFF59E0B); // Amber 500 - The Big Event
+  // --- Training Block Colors ---
+  static const Color blockBase = Color(0xFF2DD4BF); // Teal 400
+  static const Color blockBuild = Color(0xFFA78BFA); // Violet 400
+  static const Color blockPeak = Color(0xFFFB7185); // Rose 400
+  static const Color blockTaper = Color(0xFF818CF8); // Indigo 400
+  static const Color blockRecovery = Color(0xFF34D399); // Emerald 400
+  static const Color blockRace = Color(0xFFFBBF24); // Amber 400
 
-  // --- Status & Utility ---
-  static const Color success = Color(0xFF22C55E);
-  static const Color error = Color(0xFFEF4444);
-  static const Color warning = Color(0xFFF59E0B);
-  static const Color info = Color(0xFF3B82F6);
+  static const Color success = Color(0xFF4ADE80); // Green 400
+  static const Color error = Color(0xFFF87171); // Red 400
+  static const Color warning = Color(0xFFFBBF24); // Amber 400
 
   static const Color white = Colors.white;
   static const Color black = Colors.black;
 
   // Helpers
-  static const Color backgroundLight = Color(0xFFF8FAFC);
   static const Color backgroundDark = background;
   static const Color surfaceDark = surface;
+  static const Color textPrimary = textPrimaryDark; // Legacy fallback
+  static const Color textSecondary = textSecondaryDark; // Legacy fallback
   static const Color divider = border;
   static const Color accentBlue = primaryLight;
+
+  // Dynamic aliases (can be updated based on theme)
+  static const Color ashMessage = ashMessageDark;
 }

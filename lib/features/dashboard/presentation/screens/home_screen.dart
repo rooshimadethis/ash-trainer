@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../calendar/presentation/screens/today_view.dart';
@@ -56,7 +55,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: AppColors.border.withValues(alpha: 0.5),
+            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
             width: 1,
           ),
         ),
@@ -74,9 +73,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ],
           ),
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.notifications_none_rounded,
-              color: AppColors.textSecondary,
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
               size: 24,
             ),
             onPressed: () {},
@@ -99,7 +98,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 200),
         style: AppTextStyles.h4.copyWith(
-          color: isSelected ? AppColors.textPrimary : AppColors.textMuted,
+          color: isSelected
+              ? Theme.of(context).colorScheme.onSurface
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
           fontSize: 18,
           fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
         ),

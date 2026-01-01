@@ -43,13 +43,13 @@ class AshTextField extends StatelessWidget {
           onChanged: onChanged,
           maxLines: maxLines,
           inputFormatters: inputFormatters,
-          style: AppTextStyles.bodyLarge.copyWith(color: AppColors.white),
+          style: AppTextStyles.bodyLarge,
           decoration: InputDecoration(
             hintText: placeholder,
             hintStyle: TextStyle(
                 color: AppColors.textSecondary.withValues(alpha: 0.5)),
             filled: true,
-            fillColor: AppColors.surfaceHighlight,
+            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
             suffixIcon: suffix, // Using suffixIcon for the widget
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -57,7 +57,8 @@ class AshTextField extends StatelessWidget {
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
-              borderSide: const BorderSide(color: AppColors.divider),
+              borderSide:
+                  BorderSide(color: Theme.of(context).colorScheme.outline),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),

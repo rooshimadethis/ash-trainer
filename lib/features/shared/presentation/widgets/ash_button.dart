@@ -52,15 +52,18 @@ class AshButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary
               ? Theme.of(context).colorScheme.primary
-              : AppColors.surfaceHighlight,
-          disabledBackgroundColor: AppColors.surfaceHighlight,
-          foregroundColor:
-              isPrimary ? AppColors.white : AppColors.textSecondary,
-          disabledForegroundColor: AppColors.textSecondary,
+              : Theme.of(context).colorScheme.surfaceContainerHighest,
+          disabledBackgroundColor:
+              Theme.of(context).colorScheme.surfaceContainerHighest,
+          foregroundColor: isPrimary
+              ? AppColors.white
+              : Theme.of(context).colorScheme.onSurface,
+          disabledForegroundColor:
+              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(20), // Upgraded radius
             side: !isEnabled || !isPrimary
-                ? const BorderSide(color: AppColors.divider)
+                ? BorderSide(color: Theme.of(context).colorScheme.outline)
                 : BorderSide.none,
           ),
           elevation: 0, // Shadow handled by Container
@@ -71,8 +74,13 @@ class AshButton extends StatelessWidget {
             Text(label,
                 style: AppTextStyles.buttonText.copyWith(
                   color: isEnabled
-                      ? (isPrimary ? AppColors.white : AppColors.textPrimary)
-                      : AppColors.textSecondary,
+                      ? (isPrimary
+                          ? AppColors.white
+                          : Theme.of(context).colorScheme.onSurface)
+                      : Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withValues(alpha: 0.38),
                 )),
             if (icon != null) ...[
               const SizedBox(width: 8),

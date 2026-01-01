@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
 
 class OnboardingProgress extends StatefulWidget {
   final int currentStep;
@@ -58,8 +57,11 @@ class _OnboardingProgressState extends State<OnboardingProgress>
                   height: 6,
                   decoration: BoxDecoration(
                     color: isCompleted || isActive
-                        ? AppColors.primary
-                        : AppColors.divider.withValues(alpha: 0.3),
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(3),
                   ),
                   child: isActive
@@ -69,7 +71,7 @@ class _OnboardingProgressState extends State<OnboardingProgress>
                             return Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(3),
-                                color: AppColors.white.withValues(
+                                color: Colors.white.withValues(
                                   alpha: 0.2 * _pulseController.value,
                                 ),
                               ),

@@ -3,7 +3,6 @@ import 'workout_success_screen.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/domain/entities/training/workout.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/utils/logger.dart';
@@ -75,12 +74,12 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
       data: workoutTheme,
       child: Builder(
         builder: (context) => Scaffold(
-          backgroundColor: AppColors.background,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           appBar: AppBar(
             backgroundColor: Colors.transparent,
             elevation: 0,
             leading: IconButton(
-              icon: const Icon(Icons.close, color: AppColors.textPrimary),
+              icon: const Icon(Icons.close),
               onPressed: () => Navigator.pop(context),
             ),
             title: Text('Log Workout', style: AppTextStyles.h3),
@@ -94,8 +93,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   'How did it go? Enter your actuals below.',
-                  style: AppTextStyles.bodyMedium
-                      .copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 32),
 
@@ -147,17 +146,15 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                 const SizedBox(height: 8),
                 Text(
                   _getRpeDescription(_rpe),
-                  style: AppTextStyles.bodySmall
-                      .copyWith(color: AppColors.textSecondary),
+                  style: AppTextStyles.bodySmall.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 16),
                 Slider(
                   value: _rpe.toDouble(),
                   min: 1,
                   max: 10,
-                  divisions: 9,
-                  activeColor: Theme.of(context).colorScheme.primary,
-                  inactiveColor: AppColors.surfaceDark,
+                  divisions: 9, // Keep snapping, SliderTheme hides marks
                   onChanged: (val) {
                     final roundedVal = val.round();
                     if (roundedVal != _rpe) {
