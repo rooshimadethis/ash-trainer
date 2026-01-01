@@ -6,11 +6,15 @@ class AppTheme {
   static ThemeData lightTheme({Color? primaryColor}) {
     final primary = primaryColor ?? AppColors.primary;
     final primaryContainer = primary.withValues(alpha: 0.1);
+    final scaffoldBackground = Color.alphaBlend(
+      primary.withValues(alpha: 0.04),
+      AppColors.backgroundLight,
+    );
 
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: primary,
-      scaffoldBackgroundColor: AppColors.backgroundLight,
+      scaffoldBackgroundColor: scaffoldBackground,
       colorScheme: ColorScheme.light(
         primary: primary,
         onPrimary: AppColors.white,
@@ -26,7 +30,7 @@ class AppTheme {
       fontFamily: AppTextStyles.display.fontFamily,
       textTheme: _buildTextTheme(primary, isDark: false),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.backgroundLight.withValues(alpha: 0.8),
+        backgroundColor: scaffoldBackground.withValues(alpha: 0.8),
         elevation: 0,
         centerTitle: false,
         titleTextStyle:
@@ -51,11 +55,15 @@ class AppTheme {
   static ThemeData darkTheme({Color? primaryColor}) {
     final primary = primaryColor ?? AppColors.primary;
     final primaryContainer = primary.withValues(alpha: 0.15);
+    final scaffoldBackground = Color.alphaBlend(
+      primary.withValues(alpha: 0.06),
+      AppColors.background,
+    );
 
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: primary,
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: scaffoldBackground,
       colorScheme: ColorScheme.dark(
         primary: primary,
         onPrimary: AppColors.white,
@@ -71,7 +79,7 @@ class AppTheme {
       fontFamily: AppTextStyles.display.fontFamily,
       textTheme: _buildTextTheme(primary, isDark: true),
       appBarTheme: AppBarTheme(
-        backgroundColor: AppColors.background.withValues(alpha: 0.8),
+        backgroundColor: scaffoldBackground.withValues(alpha: 0.8),
         elevation: 0,
         centerTitle: false,
         titleTextStyle:

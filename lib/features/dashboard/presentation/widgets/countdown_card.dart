@@ -44,10 +44,10 @@ class CountdownCard extends StatelessWidget {
                 'COUNTDOWN',
                 style: AppTextStyles.labelSmall.copyWith(letterSpacing: 1),
               ),
-              Icon(
+              const Icon(
                 Icons.timer_outlined,
                 size: 16,
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                color: Color(0xFFFBBF24), // Amber 400
               ),
             ],
           ),
@@ -59,7 +59,7 @@ class CountdownCard extends StatelessWidget {
               Text(
                 '${remaining > 0 ? remaining : 0}',
                 style: AppTextStyles.h1.copyWith(
-                  color: Theme.of(context).primaryColor,
+                  color: const Color(0xFFFBBF24), // Amber 400
                   fontSize: 48,
                   height: 1,
                 ),
@@ -80,10 +80,9 @@ class CountdownCard extends StatelessWidget {
             child: LinearProgressIndicator(
               value: progress,
               minHeight: 12,
-              backgroundColor:
-                  Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              backgroundColor: const Color(0xFFFBBF24).withValues(alpha: 0.1),
               valueColor:
-                  AlwaysStoppedAnimation<Color>(Theme.of(context).primaryColor),
+                  const AlwaysStoppedAnimation<Color>(Color(0xFFFBBF24)),
             ),
           ),
           const SizedBox(height: 16),

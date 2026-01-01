@@ -47,8 +47,8 @@ class RecoveryWidget extends ConsumerWidget {
           children: [
             Row(
               children: [
-                Icon(Icons.favorite_outline,
-                    color: Theme.of(context).primaryColor, size: 20),
+                const Icon(Icons.favorite_outline,
+                    color: Color(0xFFA78BFA), size: 20), // Violet 400
                 const SizedBox(width: 8),
                 Text('Recovery', style: AppTextStyles.h4),
                 const Spacer(),
@@ -124,7 +124,7 @@ class RecoveryWidget extends ConsumerWidget {
           Icon(
             isAuthorized ? Icons.hourglass_empty : Icons.health_and_safety,
             size: 48,
-            color: Theme.of(context).primaryColor,
+            color: const Color(0xFFA78BFA), // Violet 400
           ),
           const SizedBox(height: 16),
           Text(
@@ -148,6 +148,7 @@ class RecoveryWidget extends ConsumerWidget {
                 : _requestPermissions(ref),
             icon: isAuthorized ? Icons.refresh : Icons.link,
             label: isAuthorized ? 'Refresh' : 'Connect',
+            backgroundColor: const Color(0xFFA78BFA), // Violet 400
           ),
         ],
       ),

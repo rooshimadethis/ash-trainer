@@ -10,6 +10,7 @@ class AshButton extends StatefulWidget {
   final VoidCallback? onPressed;
   final IconData? icon;
   final AshButtonVariant variant;
+  final Color? backgroundColor;
 
   const AshButton({
     super.key,
@@ -17,6 +18,7 @@ class AshButton extends StatefulWidget {
     this.onPressed,
     this.icon,
     this.variant = AshButtonVariant.primary,
+    this.backgroundColor,
   });
 
   @override
@@ -55,9 +57,10 @@ class _AshButtonState extends State<AshButton> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(100),
           color: isEnabled
-              ? (isPrimary
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.surfaceContainerHighest)
+              ? (widget.backgroundColor ??
+                  (isPrimary
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.surfaceContainerHighest))
               : theme.colorScheme.surfaceContainerHighest
                   .withValues(alpha: 0.5),
           border: Border.all(
