@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // --- Brand Colors ---
-  static const Color primary = Color(0xFF3B82F6); // Modern Blue
-  static const Color primaryLight = Color(0xFF60A5FA);
-  static const Color primaryDark = Color(0xFF2563EB);
+  static const Color primary = Color(0xFF6366F1); // Indigo 500 - Friendlier
+  static const Color primaryLight = Color(0xFF818CF8);
+  static const Color primaryDark = Color(0xFF4F46E5);
 
   // --- Background & Surfaces ---
-  // Using a deep, modern charcoal/slate palette
-  static const Color background = Color(0xFF0C0C0E); // Very dark charcoal
-  static const Color surface =
-      Color(0xFF161618); // Slightly lighter card surface
-  static const Color surfaceLighter = Color(0xFF232326);
-  static const Color surfaceHighlight = Color(0xFF2C2C2E);
+  // Using a softer, warmer slate-indigo background
+  static const Color background = Color(0xFF0F172A); // Slate 900
+  static const Color surface = Color(0xFF1E293B); // Slate 800
+  static const Color surfaceLighter = Color(0xFF334155); // Slate 700
+  static const Color surfaceHighlight = Color(0xFF475569); // Slate 600
+
+  // --- Chat Bubbles ---
+  static const Color ashMessage = Color(0xFF1E293B); // Surface color
+  static const Color userMessage = Color(0xFF6366F1); // Primary color
 
   // --- Borders & Dividers ---
   static const Color border = Color(0xFF27272A); // Zinc 800

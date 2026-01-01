@@ -60,7 +60,7 @@ class AppTheme {
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(28), // Larger, friendlier radius
           side: const BorderSide(color: AppColors.border, width: 1),
         ),
         margin: const EdgeInsets.only(bottom: 16),
@@ -73,7 +73,7 @@ class AppTheme {
           disabledForegroundColor: AppColors.textSecondary,
           textStyle: AppTextStyles.buttonText,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
           elevation: 0,
@@ -92,7 +92,7 @@ class AppTheme {
           disabledForegroundColor: AppColors.textSecondary,
           side: const BorderSide(color: AppColors.border),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(20),
           ),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
         ).copyWith(
@@ -117,15 +117,15 @@ class AppTheme {
         filled: true,
         fillColor: AppColors.surfaceLighter,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide.none,
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(20),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(20),
           borderSide: BorderSide(color: primary, width: 1.5),
         ),
         labelStyle: AppTextStyles.bodyMedium.copyWith(color: primary),

@@ -35,7 +35,7 @@ class AshCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor ?? AppColors.surface,
-          borderRadius: BorderRadius.circular(20), // More modern, larger radius
+          borderRadius: BorderRadius.circular(28), // More modern, larger radius
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).primaryColor.withValues(alpha: 0.5)

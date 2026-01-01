@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
-import '../../../shared/presentation/widgets/ash_glass_card.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
 import '../providers/calendar_provider.dart';
 import 'package:ash_trainer/features/dashboard/presentation/widgets/recovery_widget.dart';
@@ -14,6 +13,7 @@ import 'package:ash_trainer/features/dashboard/presentation/widgets/countdown_ca
 
 import 'package:ash_trainer/features/training/presentation/providers/automation_provider.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
+import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../../../shared/domain/services/health_service.dart';
 import '../../../developer/presentation/widgets/debug_overlay.dart';
 
@@ -310,72 +310,43 @@ class _TodayViewState extends ConsumerState<TodayView> {
   }
 
   Widget _checkInCard() {
-    return AshGlassCard(
-      padding: const EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.wb_sunny_rounded,
-                  color: AppColors.warning, size: 20),
-              const SizedBox(width: 10),
-              Text(
-                'Good morning!',
-                style: AppTextStyles.h4,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const AshChatBubble(
+          text: 'Good morning! Ready to tackle today? How are you feeling?',
+        ),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            const SizedBox(width: 52), // Offset for Ash's avatar
+            Expanded(
+              child: AshCard(
+                onTap: () {},
+                backgroundColor: AppColors.primary.withValues(alpha: 0.1),
+                borderColor: AppColors.primary.withValues(alpha: 0.2),
+                child: Center(
+                  child: Text(
+                    'Quick Check-In',
+                    style: AppTextStyles.h4.copyWith(color: AppColors.primary),
+                  ),
+                ),
               ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Ready to tackle today? How are you feeling?',
-            style: AppTextStyles.bodyMedium,
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {},
-              child: const Text('Quick Check-In'),
             ),
-          ),
-        ],
-      ),
+          ],
+        ),
+      ],
     );
   }
 
   Widget _restDayCard() {
-    return AshCard(
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.mobility.withValues(alpha: 0.1),
-              shape: BoxShape.circle,
-            ),
-            child: const Icon(
-              Icons.self_improvement_rounded,
-              size: 28,
-              color: AppColors.mobility,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Rest Day', style: AppTextStyles.h3),
-                const SizedBox(height: 4),
-                Text(
-                  'Listen to your body. Focus on mobility and hydration.',
-                  style: AppTextStyles.bodyMedium,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
+    return const Column(
+      children: [
+        AshChatBubble(
+          text:
+              "It's a Rest Day! 🧘\nListen to your body. Focus on mobility and hydration today.",
+        ),
+      ],
     );
   }
 }

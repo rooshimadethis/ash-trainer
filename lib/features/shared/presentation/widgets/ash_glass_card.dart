@@ -19,7 +19,7 @@ class AshGlassCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white.withValues(alpha: 0.03),
         borderRadius:
-            borderRadius ?? BorderRadius.circular(20), // Larger radius
+            borderRadius ?? BorderRadius.circular(28), // Larger radius
         border: Border.all(
           color: Colors.white.withAlpha(15), // Subtle edge highlight
           width: 1,
