@@ -26,60 +26,62 @@ class WeeklyView extends ConsumerWidget {
     final weekRangeStr =
         '${DateFormat('MMM d').format(startOfWeek)} - ${DateFormat('MMM d').format(endOfWeek)}';
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.chevron_left_rounded,
-                    color: AppColors.textPrimary),
-                onPressed: () => ref.read(selectedWeekProvider.notifier).state =
-                    startOfWeek.subtract(const Duration(days: 7)),
-              ),
-              Column(
-                children: [
-                  Text(
-                    DateFormat('MMMM yyyy').format(startOfWeek),
-                    style: AppTextStyles.bodySmall.copyWith(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.textMuted,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.chevron_left_rounded,
+                      color: AppColors.textPrimary),
+                  onPressed: () => ref
+                      .read(selectedWeekProvider.notifier)
+                      .state = startOfWeek.subtract(const Duration(days: 7)),
+                ),
+                Column(
+                  children: [
+                    Text(
+                      DateFormat('MMMM yyyy').format(startOfWeek),
+                      style: AppTextStyles.bodySmall.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.textMuted,
+                      ),
                     ),
-                  ),
-                  Text(weekRangeStr, style: AppTextStyles.h4),
-                ],
-              ),
-              IconButton(
-                icon: const Icon(Icons.chevron_right_rounded,
-                    color: AppColors.textPrimary),
-                onPressed: () => ref.read(selectedWeekProvider.notifier).state =
-                    startOfWeek.add(const Duration(days: 7)),
-              ),
-            ],
+                    Text(weekRangeStr, style: AppTextStyles.h4),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right_rounded,
+                      color: AppColors.textPrimary),
+                  onPressed: () => ref
+                      .read(selectedWeekProvider.notifier)
+                      .state = startOfWeek.add(const Duration(days: 7)),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 130, // Increased height for better proportions
-          child: weeklyWorkoutsAsync.when(
-            data: (workouts) => weeklyBlocksAsync.when(
-              data: (blocks) =>
-                  _buildWeekGrid(startOfWeek, workouts, blocks, selectedDate),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 130, // Increased height for better proportions
+            child: weeklyWorkoutsAsync.when(
+              data: (workouts) => weeklyBlocksAsync.when(
+                data: (blocks) =>
+                    _buildWeekGrid(startOfWeek, workouts, blocks, selectedDate),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Divider(height: 48),
-        ),
-        Expanded(
-          child: weeklyWorkoutsAsync.when(
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: Divider(height: 48),
+          ),
+          weeklyWorkoutsAsync.when(
             data: (workouts) => weeklyBlocksAsync.when(
               data: (blocks) =>
                   _buildWorkoutList(context, selectedDate, workouts, blocks),
@@ -89,8 +91,9 @@ class WeeklyView extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error: $err')),
           ),
-        ),
-      ],
+          const SizedBox(height: 32), // Add padding for bottom
+        ],
+      ),
     );
   }
 
@@ -233,9 +236,10 @@ class WeeklyView extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Expanded(
-          child: dayWorkouts.isEmpty
-              ? Center(
+        dayWorkouts.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48),
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -248,30 +252,33 @@ class WeeklyView extends ConsumerWidget {
                               .copyWith(color: AppColors.textMuted)),
                     ],
                   ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: dayWorkouts.length,
-                  itemBuilder: (context, index) {
-                    final workout = dayWorkouts[index];
-                    return WorkoutCard(
-                      workout: workout,
-                      useWorkoutColor: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WorkoutDetailScreen(workout: workout),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
                 ),
-        ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: List.generate(dayWorkouts.length, (index) {
+                    final workout = dayWorkouts[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          bottom: index == dayWorkouts.length - 1 ? 0 : 16),
+                      child: WorkoutCard(
+                        workout: workout,
+                        useWorkoutColor: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkoutDetailScreen(workout: workout),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                ),
+              ),
       ],
     );
   }

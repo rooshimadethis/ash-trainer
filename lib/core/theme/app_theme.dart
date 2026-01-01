@@ -5,8 +5,12 @@ import 'text_styles.dart';
 class AppTheme {
   static ThemeData darkTheme({Color? primaryColor}) {
     final primary = primaryColor ?? AppColors.primary;
-    // Derive a lighter version for secondary/highlights
+
+    // Derive color variations for a cohesive theme
     final primaryLight = primary.withValues(alpha: 0.8);
+    final primaryDark = Color.lerp(primary, Colors.black, 0.3)!;
+    final primaryContainer = primary.withValues(alpha: 0.15);
+    final onPrimaryContainer = primary.withValues(alpha: 0.9);
 
     return ThemeData(
       brightness: Brightness.dark,
@@ -15,11 +19,19 @@ class AppTheme {
       colorScheme: ColorScheme.dark(
         primary: primary,
         onPrimary: AppColors.white,
+        primaryContainer: primaryContainer,
+        onPrimaryContainer: onPrimaryContainer,
         secondary: primaryLight,
         onSecondary: AppColors.background,
+        secondaryContainer: primary.withValues(alpha: 0.1),
+        onSecondaryContainer: primaryLight,
+        tertiary: primaryDark,
+        onTertiary: AppColors.white,
         surface: AppColors.surface,
         onSurface: AppColors.textPrimary,
+        surfaceContainerHighest: primary.withValues(alpha: 0.05),
         outline: AppColors.border,
+        outlineVariant: primary.withValues(alpha: 0.3),
         error: AppColors.error,
       ),
       fontFamily: AppTextStyles.display.fontFamily,
@@ -33,7 +45,9 @@ class AppTheme {
         bodyLarge: AppTextStyles.bodyLarge,
         bodyMedium: AppTextStyles.bodyMedium,
         bodySmall: AppTextStyles.bodySmall,
-        labelLarge: AppTextStyles.label,
+        labelLarge: AppTextStyles.labelLarge.copyWith(color: primary),
+        labelMedium: AppTextStyles.label.copyWith(color: primary),
+        labelSmall: AppTextStyles.labelSmall,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.background.withValues(alpha: 0.8),
@@ -114,6 +128,8 @@ class AppTheme {
           borderRadius: BorderRadius.circular(14),
           borderSide: BorderSide(color: primary, width: 1.5),
         ),
+        labelStyle: AppTextStyles.bodyMedium.copyWith(color: primary),
+        floatingLabelStyle: AppTextStyles.bodyMedium.copyWith(color: primary),
         hintStyle:
             AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
         contentPadding: const EdgeInsets.all(16),

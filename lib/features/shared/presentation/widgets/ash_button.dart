@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
 
@@ -30,7 +31,10 @@ class AshButton extends StatelessWidget {
         boxShadow: isEnabled && isPrimary
             ? [
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.25),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.25),
                   offset: const Offset(0, 4),
                   blurRadius: 20,
                   spreadRadius: 0,
@@ -39,10 +43,15 @@ class AshButton extends StatelessWidget {
             : [],
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onPressed != null
+            ? () {
+                AshHaptics.mediumImpact();
+                onPressed!();
+              }
+            : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary
-              ? Theme.of(context).primaryColor
+              ? Theme.of(context).colorScheme.primary
               : AppColors.surfaceHighlight,
           disabledBackgroundColor: AppColors.surfaceHighlight,
           foregroundColor:

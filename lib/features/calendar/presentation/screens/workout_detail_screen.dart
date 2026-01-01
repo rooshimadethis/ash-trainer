@@ -4,12 +4,15 @@ import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
+import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
 import '../providers/calendar_provider.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
+import '../../../shared/presentation/providers/user_provider.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final Workout workout;
@@ -36,220 +39,266 @@ class WorkoutDetailScreen extends ConsumerWidget {
     final typeColor = WorkoutTypes.getColor(workout.type);
     final isToday = _isToday(workout.scheduledDate);
     final isCompleted = workout.status == 'completed';
+    final isRunning = workout.type.contains('run');
+    // Use workout-specific theme
+    final workoutTheme = ref.watch(workoutThemeProvider(workout));
+    // Get user's preferred distance unit
+    final preferredUnit = ref.watch(preferredDistanceUnitProvider);
 
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          'Workout Detail',
-          style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Badge & Date
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Theme(
+      data: workoutTheme,
+      child: Builder(
+        builder: (context) => Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back, color: AppColors.textPrimary),
+              onPressed: () => Navigator.pop(context),
+            ),
+            title: Text(
+              'Workout Detail',
+              style: AppTextStyles.h3.copyWith(color: AppColors.textPrimary),
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: typeColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(8),
-                      border:
-                          Border.all(color: typeColor.withValues(alpha: 0.5)),
-                    ),
-                    child: Text(
-                      WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: typeColor,
-                        fontWeight: FontWeight.bold,
+                  // Badge & Date
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: typeColor.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                              color: typeColor.withValues(alpha: 0.5)),
+                        ),
+                        child: Text(
+                          WorkoutTypes.getDisplayName(workout.type)
+                              .toUpperCase(),
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: typeColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
+                      Text(
+                        DateFormat('EEEE, MMM d').format(workout.scheduledDate),
+                        style: AppTextStyles.bodyMedium
+                            .copyWith(color: AppColors.textSecondary),
+                      ),
+                    ],
                   ),
+                  const SizedBox(height: 16),
+
+                  // Title & Description
+                  Text(workout.name, style: AppTextStyles.h1),
+                  const SizedBox(height: 12),
                   Text(
-                    DateFormat('EEEE, MMM d').format(workout.scheduledDate),
-                    style: AppTextStyles.bodyMedium
+                    workout.description ??
+                        'No description provided for this workout.',
+                    style: AppTextStyles.bodyLarge
                         .copyWith(color: AppColors.textSecondary),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
 
-              // Title & Description
-              Text(workout.name, style: AppTextStyles.h1),
-              const SizedBox(height: 12),
-              Text(
-                workout.description ??
-                    'No description provided for this workout.',
-                style: AppTextStyles.bodyLarge
-                    .copyWith(color: AppColors.textSecondary),
-              ),
+                  const SizedBox(height: 32),
 
-              const SizedBox(height: 32),
+                  // Planned Metrics Section
+                  Text('PLANNED TARGETS',
+                      style: Theme.of(context).textTheme.labelLarge),
+                  const SizedBox(height: 16),
+                  Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: AppColors.surfaceDark,
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          spacing: 32,
+                          runSpacing: 16,
+                          children: [
+                            _metricItem(
+                                context,
+                                Icons.timer_outlined,
+                                _formatDuration(workout.plannedDuration),
+                                'Duration'),
+                            if (workout.plannedDistance != null &&
+                                workout.plannedDistance! > 0)
+                              _metricItem(
+                                  context,
+                                  Icons.straighten_outlined,
+                                  UnitConverter.formatDistance(
+                                      UnitConverter.convertDistanceFromKm(
+                                          workout.plannedDistance!,
+                                          preferredUnit),
+                                      preferredUnit),
+                                  'Distance'),
+                            if (workout.intensity != null)
+                              _metricItem(context, Icons.speed_outlined,
+                                  workout.intensity!, 'Intensity'),
+                          ],
+                        ),
+                        // Show pace for running workouts with distance
+                        if (isRunning &&
+                            workout.plannedDistance != null &&
+                            workout.plannedDistance! > 0) ...[
+                          const SizedBox(height: 12),
+                          const Divider(color: AppColors.divider),
+                          _metricItem(
+                            context,
+                            Icons.speed,
+                            _formatPaceForWorkout(workout.plannedDuration,
+                                workout.plannedDistance!, preferredUnit),
+                            'Avg Pace',
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
 
-              // Planned Metrics Section
-              Text('PLANNED TARGETS',
-                  style: AppTextStyles.labelLarge
-                      .copyWith(color: Theme.of(context).primaryColor)),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: AppColors.surfaceDark,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Wrap(
-                  spacing: 32,
-                  runSpacing: 16,
-                  children: [
-                    _metricItem(context, Icons.timer_outlined,
-                        _formatDuration(workout.plannedDuration), 'Duration'),
-                    if (workout.plannedDistance != null)
-                      _metricItem(context, Icons.straighten_outlined,
-                          '${workout.plannedDistance} km', 'Distance'),
-                    if (workout.intensity != null)
-                      _metricItem(context, Icons.speed_outlined,
-                          workout.intensity!, 'Intensity'),
+                  const SizedBox(height: 32),
+
+                  // Completion Status
+                  if (isCompleted) ...[
+                    Text('COMPLETED ACTUALS',
+                        style: Theme.of(context).textTheme.labelLarge),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.success.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                            color: AppColors.success.withValues(alpha: 0.2)),
+                      ),
+                      child: Wrap(
+                        spacing: 32,
+                        runSpacing: 16,
+                        children: [
+                          _metricItem(
+                              context,
+                              Icons.check_circle_outline,
+                              _formatDuration(workout.actualDuration ?? 0),
+                              'Actual Time'),
+                          if (workout.actualDistance != null &&
+                              workout.actualDistance! > 0)
+                            _metricItem(
+                                context,
+                                Icons.straighten_outlined,
+                                UnitConverter.formatDistance(
+                                    UnitConverter.convertDistanceFromKm(
+                                        workout.actualDistance!, preferredUnit),
+                                    preferredUnit),
+                                'Actual Distance'),
+                          if (workout.rpe != null)
+                            _metricItem(context, Icons.psychology_outlined,
+                                'RPE ${workout.rpe}', 'Effort'),
+                        ],
+                      ),
+                    ),
+                  ] else if (workout.status == 'skipped') ...[
+                    Text('STATUS',
+                        style: Theme.of(context).textTheme.labelLarge),
+                    const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: AppColors.error.withValues(alpha: 0.05),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                            color: AppColors.error.withValues(alpha: 0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.block, color: AppColors.error),
+                          const SizedBox(width: 12),
+                          Text(
+                            'Workout Skipped',
+                            style: AppTextStyles.h4
+                                .copyWith(color: AppColors.error),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                ),
+
+                  const SizedBox(height: 48),
+                ],
               ),
-
-              const SizedBox(height: 32),
-
-              // Completion Status
-              if (isCompleted) ...[
-                Text('COMPLETED ACTUALS',
-                    style: AppTextStyles.labelLarge
-                        .copyWith(color: AppColors.success)),
-                const SizedBox(height: 16),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.success.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                        color: AppColors.success.withValues(alpha: 0.2)),
-                  ),
-                  child: Wrap(
-                    spacing: 32,
-                    runSpacing: 16,
-                    children: [
-                      _metricItem(
-                          context,
-                          Icons.check_circle_outline,
-                          _formatDuration(workout.actualDuration ?? 0),
-                          'Actual Time'),
-                      if (workout.actualDistance != null)
-                        _metricItem(context, Icons.straighten_outlined,
-                            '${workout.actualDistance} km', 'Actual Distance'),
-                      if (workout.rpe != null)
-                        _metricItem(context, Icons.psychology_outlined,
-                            'RPE ${workout.rpe}', 'Effort'),
-                    ],
-                  ),
-                ),
-              ] else if (workout.status == 'skipped') ...[
-                Text('STATUS',
-                    style: AppTextStyles.labelLarge
-                        .copyWith(color: AppColors.error)),
-                const SizedBox(height: 16),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: AppColors.error.withValues(alpha: 0.05),
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                        color: AppColors.error.withValues(alpha: 0.2)),
-                  ),
-                  child: Row(
-                    children: [
-                      const Icon(Icons.block, color: AppColors.error),
-                      const SizedBox(width: 12),
-                      Text(
-                        'Workout Skipped',
-                        style:
-                            AppTextStyles.h4.copyWith(color: AppColors.error),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-
-              const SizedBox(height: 48),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              if (workout.status == 'skipped')
-                AshButton(
-                  label: 'Unskip',
-                  variant: AshButtonVariant.secondary,
-                  onPressed: () => _unskipWorkout(context, ref, workout),
-                )
-              else if (isToday && !isCompleted)
-                AshButton(
-                  label: 'Log Workout',
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            WorkoutLoggingScreen(workout: workout),
-                      ),
-                    );
-                  },
-                )
-              else if (isCompleted)
-                AshButton(
-                  label: 'Undo Log',
-                  variant: AshButtonVariant.secondary,
-                  onPressed: () => _showUndoConfirmation(context, ref, workout),
-                )
-              else
-                AshButton(
-                  label: 'Start Workout',
-                  onPressed: null, // Only enabled for today in future
-                ),
-              const SizedBox(height: 12),
-              Row(
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: AshButton(
-                      label: 'Adjust',
+                  if (workout.status == 'skipped')
+                    AshButton(
+                      label: 'Unskip',
                       variant: AshButtonVariant.secondary,
-                      onPressed: null,
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: AshButton(
-                      label: 'Skip',
+                      onPressed: () => _unskipWorkout(context, ref, workout),
+                    )
+                  else if (!isCompleted)
+                    AshButton(
+                      label: 'Log Workout',
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                WorkoutLoggingScreen(workout: workout),
+                          ),
+                        );
+                      },
+                    )
+                  else if (isCompleted)
+                    AshButton(
+                      label: 'Undo Log',
                       variant: AshButtonVariant.secondary,
-                      onPressed: () => _skipWorkout(context, ref, workout),
+                      onPressed: () =>
+                          _showUndoConfirmation(context, ref, workout),
+                    )
+                  else
+                    AshButton(
+                      label: 'Start Workout',
+                      onPressed: null, // Only enabled for today in future
                     ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: AshButton(
+                          label: 'Adjust',
+                          variant: AshButtonVariant.secondary,
+                          onPressed: null,
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: AshButton(
+                          label: 'Skip',
+                          variant: AshButtonVariant.secondary,
+                          onPressed: () => _skipWorkout(context, ref, workout),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -274,7 +323,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(context),
             child: Text('Cancel',
                 style: AppTextStyles.buttonText
-                    .copyWith(color: AppColors.primary)),
+                    .copyWith(color: Theme.of(context).colorScheme.primary)),
           ),
           TextButton(
             onPressed: () async {
@@ -299,7 +348,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
       children: [
         Row(
           children: [
-            Icon(icon, size: 16, color: Theme.of(context).primaryColor),
+            Icon(icon, size: 16, color: Theme.of(context).colorScheme.primary),
             const SizedBox(width: 4),
             Text(label,
                 style: AppTextStyles.labelSmall
@@ -368,22 +417,10 @@ class WorkoutDetailScreen extends ConsumerWidget {
       final skippedWorkout = workout.copyWith(status: 'skipped');
       await ref.read(workoutRepositoryProvider).saveWorkout(skippedWorkout);
 
-      // Trigger automation (rescheduling check) and log result
-      // We run this *after* the UI pop to keep it snappy, but we can't await it effectively
-      // if we want to log to debug console *here*.
-      // However, onWorkoutAction is void. Let's rely on global logger or check provider.
-      // Since the request is "log the outcome of the rescheduling", we need to hook into what `onWorkoutAction` does.
-      // `onWorkoutAction` calls `checkAndReschedule`.
-      // We can await it here essentially "fire and forget" regarding UI blocking, but we want the logs.
-
       print('DEBUG: Workout skipped. Triggering rescheduling check...');
       await ref.read(trainingAutomationProvider).onWorkoutAction();
       print('DEBUG: Rescheduling check complete.');
     } catch (e) {
-      // If it fails, we might want to show a snackbar, but since we popped,
-      // it handles gracefully in the background usually.
-      // For robustness we could keep the screen open until success,
-      // but 'Skip' is a low-risk action.
       print('DEBUG: Error skipping workout: $e');
     }
   }
@@ -400,5 +437,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
     } catch (e) {
       print('DEBUG: Error unskipping workout: $e');
     }
+  }
+
+  String _formatPaceForWorkout(
+      int durationSeconds, double distanceKm, String preferredUnit) {
+    // Convert distance to user's preferred unit
+    final distance =
+        UnitConverter.convertDistanceFromKm(distanceKm, preferredUnit);
+    // Calculate pace in seconds per unit
+    final paceSeconds = UnitConverter.calculatePace(durationSeconds, distance);
+    // Format for display
+    return UnitConverter.formatPace(paceSeconds, preferredUnit);
   }
 }

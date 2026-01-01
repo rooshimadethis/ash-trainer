@@ -56,13 +56,20 @@ final weeklyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
   );
 });
 
-/// Provider for the monthly/4-week overview
-final monthlyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
+/// Provider for the month being viewed in Monthly View
+final monthlyMonthProvider = StateProvider<DateTime>((ref) {
   final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  // Last week + Current week + Next 2 weeks = 28 days
-  final start = today.subtract(Duration(days: today.weekday - 1 + 7));
-  final end = start.add(const Duration(days: 28));
+  return DateTime(now.year, now.month, 1);
+});
+
+/// Provider for the monthly grid overview
+final monthlyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
+  final focusedMonth = ref.watch(monthlyMonthProvider);
+
+  // Calculate start of range: Monday of the week containing the first of the month
+  final start = focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
+  // Standard calendars can span up to 6 weeks
+  final end = start.add(const Duration(days: 42));
 
   final workoutRepository = ref.watch(workoutRepositoryProvider);
   return workoutRepository.watchWorkoutsForDateRange(
@@ -90,13 +97,11 @@ final weeklyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
   return ref.watch(blocksForRangeProvider((startOfWeek, endOfWeek)).future);
 });
 
-/// Provider for the monthly/4-week overview blocks
+/// Provider for the monthly grid overview blocks
 final monthlyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  // Last week + Current week + Next 2 weeks = 28 days
-  final start = today.subtract(Duration(days: today.weekday - 1 + 7));
-  final end = start.add(const Duration(days: 28));
+  final focusedMonth = ref.watch(monthlyMonthProvider);
+  final start = focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
+  final end = start.add(const Duration(days: 42));
 
   return ref.watch(blocksForRangeProvider((start, end)).future);
 });

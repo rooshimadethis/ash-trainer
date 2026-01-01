@@ -64,4 +64,46 @@ class UnitConverter {
     }
     return '${value.toStringAsFixed(1)} $unit';
   }
+
+  // Distance conversions
+  static const double kmToMiFactor = 0.621371;
+  static const double miToKmFactor = 1.60934;
+
+  /// Convert distance from KM to the specified unit
+  static double convertDistanceFromKm(double km, String unit) {
+    if (unit == 'mi') {
+      return km * kmToMiFactor;
+    }
+    return km; // Already in KM
+  }
+
+  /// Convert distance to KM from the specified unit
+  static double convertDistanceToKm(double value, String unit) {
+    if (unit == 'mi') {
+      return value * miToKmFactor;
+    }
+    return value; // Already in KM
+  }
+
+  /// Format distance for display with proper precision
+  static String formatDistance(double value, String unit) {
+    return '${value.toStringAsFixed(2)} $unit';
+  }
+
+  /// Calculate pace (min/unit) from duration in seconds and distance
+  /// Returns pace in seconds per unit (km or mi)
+  static double calculatePace(int durationSeconds, double distance) {
+    if (distance <= 0) return 0;
+    return durationSeconds / distance;
+  }
+
+  /// Format pace for display (e.g., "5:30/km" or "8:45/mi")
+  static String formatPace(double paceSecondsPerUnit, String unit) {
+    if (paceSecondsPerUnit <= 0) return '--:--/$unit';
+
+    final minutes = (paceSecondsPerUnit / 60).floor();
+    final seconds = (paceSecondsPerUnit % 60).round();
+
+    return '$minutes:${seconds.toString().padLeft(2, '0')}/$unit';
+  }
 }

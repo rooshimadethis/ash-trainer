@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/training/workout.dart';
 import 'ash_card.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/constants/workout_types.dart';
+import '../../../../core/utils/unit_converter.dart';
+import '../providers/user_provider.dart';
 
-class WorkoutCard extends StatelessWidget {
+class WorkoutCard extends ConsumerWidget {
   final Workout workout;
   final VoidCallback? onTap;
   final bool useWorkoutColor;
@@ -18,8 +21,10 @@ class WorkoutCard extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final typeColor = WorkoutTypes.getColor(workout.type);
+    // Get user's preferred distance unit
+    final preferredUnit = ref.watch(preferredDistanceUnitProvider);
 
     return AshCard(
       onTap: onTap,
@@ -114,10 +119,14 @@ class WorkoutCard extends StatelessWidget {
                 Icons.schedule_rounded,
                 _formatDuration(workout.plannedDuration),
               ),
-              if (workout.plannedDistance != null)
+              if (workout.plannedDistance != null &&
+                  workout.plannedDistance! > 0)
                 _infoTile(
                   Icons.route_rounded,
-                  '${workout.plannedDistance} km',
+                  UnitConverter.formatDistance(
+                      UnitConverter.convertDistanceFromKm(
+                          workout.plannedDistance!, preferredUnit),
+                      preferredUnit),
                 ),
               if (workout.intensity != null)
                 _infoTile(
