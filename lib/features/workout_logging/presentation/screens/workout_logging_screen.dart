@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'workout_success_screen.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/colors.dart';
@@ -64,9 +67,6 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
           UnitConverter.convertDistanceFromKm(_distance!, preferredUnit);
       _distanceController.text = convertedDistance.toStringAsFixed(2);
     }
-
-    print(
-        'DEBUG: Workout logging screen theme primary: ${workoutTheme.colorScheme.primary}');
 
     return Theme(
       data: workoutTheme,
@@ -217,6 +217,9 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
   Future<void> _submit() async {
     setState(() => _isSubmitting = true);
 
+    // Trigger light haptic feedback on button press
+    HapticFeedback.mediumImpact();
+
     // Get user's preferred unit for conversion
     final preferredUnit = ref.read(preferredDistanceUnitProvider);
     // Convert distance from user's unit to km for storage
@@ -236,12 +239,19 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
     try {
       await ref.read(workoutRepositoryProvider).logWorkout(updatedWorkout);
 
+      // Trigger heavy haptic feedback on success
+      HapticFeedback.heavyImpact();
+
       // Trigger automation
       await ref.read(trainingAutomationProvider).onWorkoutAction();
 
       if (mounted) {
-        Navigator.pop(context); // Close logging screen
-        Navigator.pop(context); // Close detail screen to show updated status
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => WorkoutSuccessScreen(workout: updatedWorkout),
+          ),
+        );
       }
     } catch (e, stack) {
       AppLogger.error('Failed to log workout', e, stack);

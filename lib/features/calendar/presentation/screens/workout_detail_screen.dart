@@ -251,7 +251,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
                       variant: AshButtonVariant.secondary,
                       onPressed: () => _unskipWorkout(context, ref, workout),
                     )
-                  else if (!isToday && !isCompleted)
+                  else if (!isCompleted)
                     AshButton(
                       label: 'Log Workout',
                       onPressed: () {
