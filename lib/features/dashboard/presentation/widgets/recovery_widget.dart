@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/widgets/ash_glass_card.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
@@ -25,14 +25,15 @@ class RecoveryWidget extends ConsumerWidget {
             }
             return _buildRecoveryCard(context, biomarker, ref);
           },
-          loading: () => _buildLoadingSkeleton(),
+          loading: () => _buildLoadingSkeleton(context),
           error: (_, __) => _buildErrorState(context),
         );
       },
-      loading: () => _buildLoadingSkeleton(),
+      loading: () => _buildLoadingSkeleton(context),
       error: (_, __) => _buildErrorState(context),
     );
   }
+// ... (rest of file) ...
 
   Widget _buildRecoveryCard(BuildContext context, biomarker, WidgetRef ref) {
     return GestureDetector(
@@ -40,7 +41,9 @@ class RecoveryWidget extends ConsumerWidget {
         // Refresh health data on tap
         ref.read(healthSyncProvider.notifier).refresh();
       },
-      child: AshGlassCard(
+      child: AshCard(
+        backgroundColor:
+            Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -128,7 +131,9 @@ class RecoveryWidget extends ConsumerWidget {
 
   Widget _buildConnectHealthPrompt(
       BuildContext context, WidgetRef ref, bool isAuthorized) {
-    return AshGlassCard(
+    return AshCard(
+      backgroundColor:
+          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         children: [
           Icon(
@@ -160,20 +165,25 @@ class RecoveryWidget extends ConsumerWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: [
+                  // Standard depth shadow (same as AshCard)
                   BoxShadow(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                    offset: const Offset(0, 4),
-                    blurRadius: 12,
-                    spreadRadius: -2,
+                    color: Colors.black.withValues(alpha: 0.15),
+                    offset: const Offset(0, 8),
+                    blurRadius: 16,
+                    spreadRadius: -4,
                   ),
+                  // Subtle inner glow/highlight for 3D feel
                   BoxShadow(
-                    color: Colors.white.withValues(alpha: 0.15),
+                    color: Colors.white.withValues(
+                        alpha: Theme.of(context).brightness == Brightness.dark
+                            ? 0.03
+                            : 0.5),
                     offset: const Offset(0, 1),
                     blurRadius: 0,
+                    spreadRadius: 0,
                   ),
                 ],
               ),
@@ -181,12 +191,12 @@ class RecoveryWidget extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(isAuthorized ? Icons.refresh : Icons.link,
-                      color: Colors.white, size: 18),
+                      color: Theme.of(context).primaryColor, size: 18),
                   const SizedBox(width: 8),
                   Text(
                     isAuthorized ? 'Refresh' : 'Connect',
                     style: AppTextStyles.buttonText.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.5,
                     ),
@@ -200,8 +210,10 @@ class RecoveryWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildLoadingSkeleton() {
-    return const AshGlassCard(
+  Widget _buildLoadingSkeleton(BuildContext context) {
+    return AshCard(
+      backgroundColor:
+          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: SizedBox(
         height: 120,
         child: Center(
@@ -212,7 +224,9 @@ class RecoveryWidget extends ConsumerWidget {
   }
 
   Widget _buildErrorState(BuildContext context) {
-    return AshGlassCard(
+    return AshCard(
+      backgroundColor:
+          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         children: [
           Icon(

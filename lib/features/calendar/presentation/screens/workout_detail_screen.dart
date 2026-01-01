@@ -37,7 +37,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
   Widget _buildContent(BuildContext context, WidgetRef ref, Workout workout) {
     final typeColor = WorkoutTypes.getColor(workout.type);
-    final isToday = _isToday(workout.scheduledDate);
+    // final isToday = _isToday(workout.scheduledDate);
     final isCompleted = workout.status == 'completed';
     final isRunning = workout.type.contains('run');
     // Use workout-specific theme
@@ -116,51 +116,45 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   Text('PLANNED TARGETS',
                       style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 16),
-                  AshCard(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          spacing: 32,
-                          runSpacing: 16,
-                          children: [
-                            _metricItem(
-                                context,
-                                Icons.timer_outlined,
-                                _formatDuration(workout.plannedDuration),
-                                'Duration'),
-                            if (workout.plannedDistance != null &&
-                                workout.plannedDistance! > 0)
-                              _metricItem(
-                                  context,
-                                  Icons.straighten_outlined,
-                                  UnitConverter.formatDistance(
-                                      UnitConverter.convertDistanceFromKm(
-                                          workout.plannedDistance!,
-                                          preferredUnit),
-                                      preferredUnit),
-                                  'Distance'),
-                            if (workout.intensity != null)
-                              _metricItem(context, Icons.speed_outlined,
-                                  'RPE ${workout.intensity}', 'Intensity'),
-                          ],
+                  Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      _buildTargetPill(
+                        context,
+                        Icons.timer_outlined,
+                        _formatDuration(workout.plannedDuration),
+                        'Duration',
+                      ),
+                      if (workout.plannedDistance != null &&
+                          workout.plannedDistance! > 0)
+                        _buildTargetPill(
+                          context,
+                          Icons.straighten_outlined,
+                          UnitConverter.formatDistance(
+                              UnitConverter.convertDistanceFromKm(
+                                  workout.plannedDistance!, preferredUnit),
+                              preferredUnit),
+                          'Distance',
                         ),
-                        if (isRunning &&
-                            workout.plannedDistance != null &&
-                            workout.plannedDistance! > 0) ...[
-                          const SizedBox(height: 12),
-                          const Divider(),
-                          _metricItem(
-                            context,
-                            Icons.speed,
-                            _formatPaceForWorkout(workout.plannedDuration,
-                                workout.plannedDistance!, preferredUnit),
-                            'Avg Pace',
-                          ),
-                        ],
-                      ],
-                    ),
+                      if (workout.intensity != null)
+                        _buildTargetPill(
+                          context,
+                          Icons.speed_outlined,
+                          'RPE ${workout.intensity}',
+                          'Intensity',
+                        ),
+                      if (isRunning &&
+                          workout.plannedDistance != null &&
+                          workout.plannedDistance! > 0)
+                        _buildTargetPill(
+                          context,
+                          Icons.speed,
+                          _formatPaceForWorkout(workout.plannedDuration,
+                              workout.plannedDistance!, preferredUnit),
+                          'Avg Pace',
+                        ),
+                    ],
                   ),
 
                   const SizedBox(height: 32),
@@ -327,6 +321,61 @@ class WorkoutDetailScreen extends ConsumerWidget {
     );
   }
 
+  Widget _buildTargetPill(
+      BuildContext context, IconData icon, String value, String label) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(
+          color: Theme.of(context)
+              .colorScheme
+              .outlineVariant
+              .withValues(alpha: 0.3),
+        ),
+        boxShadow: [
+          // Standard depth shadow (same as AshCard/AshButton)
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.15),
+            offset: const Offset(0, 8),
+            blurRadius: 16,
+            spreadRadius: -4,
+          ),
+          // Subtle inner glow/highlight for 3D feel
+          BoxShadow(
+            color: Colors.white.withValues(
+                alpha: Theme.of(context).brightness == Brightness.dark
+                    ? 0.03
+                    : 0.5),
+            offset: const Offset(0, 1),
+            blurRadius: 0,
+            spreadRadius: 0,
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 20, color: Theme.of(context).colorScheme.primary),
+          const SizedBox(width: 12),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label.toUpperCase(),
+                  style: AppTextStyles.labelSmall.copyWith(
+                      fontSize: 10,
+                      letterSpacing: 1.0,
+                      color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              Text(value, style: AppTextStyles.h4.copyWith(fontSize: 16)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _metricItem(
       BuildContext context, IconData icon, String value, String label) {
     return Column(
@@ -355,13 +404,6 @@ class WorkoutDetailScreen extends ConsumerWidget {
       return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     }
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  bool _isToday(DateTime date) {
-    final now = DateTime.now();
-    return date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
   }
 
   Future<void> _skipWorkout(
