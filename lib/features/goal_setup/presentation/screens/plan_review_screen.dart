@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/domain/entities/training/workout.dart';
@@ -11,6 +12,7 @@ import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';
 import '../../../../core/constants/workout_types.dart';
+import '../../../shared/presentation/providers/user_provider.dart';
 
 final week1WorkoutsProvider =
     FutureProvider.autoDispose<List<Workout>>((ref) async {
@@ -107,13 +109,13 @@ class PlanReviewScreen extends ConsumerWidget {
   }
 }
 
-class _WorkoutTile extends StatelessWidget {
+class _WorkoutTile extends ConsumerWidget {
   final Workout workout;
 
   const _WorkoutTile({required this.workout});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final dayFormat = DateFormat('E');
     final day = dayFormat.format(workout.scheduledDate);
     final color = WorkoutTypes.getColor(workout.type);
@@ -124,8 +126,14 @@ class _WorkoutTile extends StatelessWidget {
       WorkoutTypes.longRun
     ].contains(workout.type);
 
+    // Get user's preferred distance unit
+    final preferredUnit = ref.watch(preferredDistanceUnitProvider);
+
     final distance = (isRun && workout.plannedDistance != null)
-        ? '${workout.plannedDistance} km'
+        ? UnitConverter.formatDistance(
+            UnitConverter.convertDistanceFromKm(
+                workout.plannedDistance!, preferredUnit),
+            preferredUnit)
         : (workout.plannedDuration > 0
             ? '${(workout.plannedDuration / 60).toStringAsFixed(0)} min'
             : null);

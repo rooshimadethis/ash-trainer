@@ -5,9 +5,11 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
+import '../../../shared/presentation/providers/user_provider.dart';
 
 class WorkoutLoggingScreen extends ConsumerStatefulWidget {
   final Workout workout;
@@ -37,8 +39,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
 
     _durationController =
         TextEditingController(text: _durationMinutes.toString());
-    _distanceController =
-        TextEditingController(text: _distance?.toString() ?? '');
+    // Distance controller will be initialized with converted value in build
+    _distanceController = TextEditingController();
   }
 
   @override
@@ -53,6 +55,16 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
     final isRunning = widget.workout.type.contains('run');
     // Use workout-specific theme instead of global app theme
     final workoutTheme = ref.watch(workoutThemeProvider(widget.workout));
+    // Get user's preferred distance unit
+    final preferredUnit = ref.watch(preferredDistanceUnitProvider);
+
+    // Initialize distance controller with converted value
+    if (_distance != null && _distanceController.text.isEmpty) {
+      final convertedDistance =
+          UnitConverter.convertDistanceFromKm(_distance!, preferredUnit);
+      _distanceController.text = convertedDistance.toStringAsFixed(2);
+    }
+
     print(
         'DEBUG: Workout logging screen theme primary: ${workoutTheme.colorScheme.primary}');
 
@@ -106,7 +118,7 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
 
                 // Distance Input (Conditional)
                 if (isRunning) ...[
-                  Text('DISTANCE (KM)',
+                  Text('DISTANCE (${preferredUnit.toUpperCase()})',
                       style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 12),
                   TextField(
@@ -115,9 +127,9 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                         const TextInputType.numberWithOptions(decimal: true),
                     style: AppTextStyles.h1
                         .copyWith(color: Theme.of(context).colorScheme.primary),
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText: '0.0',
-                      suffixText: 'km',
+                      suffixText: preferredUnit,
                     ),
                     onChanged: (val) {
                       setState(() => _distance = double.tryParse(val));
@@ -205,10 +217,17 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
   Future<void> _submit() async {
     setState(() => _isSubmitting = true);
 
+    // Get user's preferred unit for conversion
+    final preferredUnit = ref.read(preferredDistanceUnitProvider);
+    // Convert distance from user's unit to km for storage
+    final distanceInKm = _distance != null
+        ? UnitConverter.convertDistanceToKm(_distance!, preferredUnit)
+        : null;
+
     final updatedWorkout = widget.workout.copyWith(
       status: 'completed',
       actualDuration: _durationMinutes * 60,
-      actualDistance: _distance,
+      actualDistance: distanceInKm,
       rpe: _rpe,
       completedAt: DateTime.now(),
       syncedFrom: 'manual',

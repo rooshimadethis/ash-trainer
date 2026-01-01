@@ -6,11 +6,13 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
+import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
 import '../providers/calendar_provider.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
+import '../../../shared/presentation/providers/user_provider.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final Workout workout;
@@ -37,8 +39,11 @@ class WorkoutDetailScreen extends ConsumerWidget {
     final typeColor = WorkoutTypes.getColor(workout.type);
     final isToday = _isToday(workout.scheduledDate);
     final isCompleted = workout.status == 'completed';
+    final isRunning = workout.type.contains('run');
     // Use workout-specific theme
     final workoutTheme = ref.watch(workoutThemeProvider(workout));
+    // Get user's preferred distance unit
+    final preferredUnit = ref.watch(preferredDistanceUnitProvider);
 
     return Theme(
       data: workoutTheme,
@@ -116,21 +121,47 @@ class WorkoutDetailScreen extends ConsumerWidget {
                       color: AppColors.surfaceDark,
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    child: Wrap(
-                      spacing: 32,
-                      runSpacing: 16,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _metricItem(
+                        Wrap(
+                          spacing: 32,
+                          runSpacing: 16,
+                          children: [
+                            _metricItem(
+                                context,
+                                Icons.timer_outlined,
+                                _formatDuration(workout.plannedDuration),
+                                'Duration'),
+                            if (workout.plannedDistance != null)
+                              _metricItem(
+                                  context,
+                                  Icons.straighten_outlined,
+                                  UnitConverter.formatDistance(
+                                      UnitConverter.convertDistanceFromKm(
+                                          workout.plannedDistance!,
+                                          preferredUnit),
+                                      preferredUnit),
+                                  'Distance'),
+                            if (workout.intensity != null)
+                              _metricItem(context, Icons.speed_outlined,
+                                  workout.intensity!, 'Intensity'),
+                          ],
+                        ),
+                        // Show pace for running workouts with distance
+                        if (isRunning &&
+                            workout.plannedDistance != null &&
+                            workout.plannedDistance! > 0) ...[
+                          const SizedBox(height: 12),
+                          const Divider(color: AppColors.divider),
+                          _metricItem(
                             context,
-                            Icons.timer_outlined,
-                            _formatDuration(workout.plannedDuration),
-                            'Duration'),
-                        if (workout.plannedDistance != null)
-                          _metricItem(context, Icons.straighten_outlined,
-                              '${workout.plannedDistance} km', 'Distance'),
-                        if (workout.intensity != null)
-                          _metricItem(context, Icons.speed_outlined,
-                              workout.intensity!, 'Intensity'),
+                            Icons.speed,
+                            _formatPaceForWorkout(workout.plannedDuration,
+                                workout.plannedDistance!, preferredUnit),
+                            'Avg Pace',
+                          ),
+                        ],
                       ],
                     ),
                   ),
@@ -163,7 +194,10 @@ class WorkoutDetailScreen extends ConsumerWidget {
                             _metricItem(
                                 context,
                                 Icons.straighten_outlined,
-                                '${workout.actualDistance} km',
+                                UnitConverter.formatDistance(
+                                    UnitConverter.convertDistanceFromKm(
+                                        workout.actualDistance!, preferredUnit),
+                                    preferredUnit),
                                 'Actual Distance'),
                           if (workout.rpe != null)
                             _metricItem(context, Icons.psychology_outlined,
@@ -401,5 +435,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
     } catch (e) {
       print('DEBUG: Error unskipping workout: $e');
     }
+  }
+
+  String _formatPaceForWorkout(
+      int durationSeconds, double distanceKm, String preferredUnit) {
+    // Convert distance to user's preferred unit
+    final distance =
+        UnitConverter.convertDistanceFromKm(distanceKm, preferredUnit);
+    // Calculate pace in seconds per unit
+    final paceSeconds = UnitConverter.calculatePace(durationSeconds, distance);
+    // Format for display
+    return UnitConverter.formatPace(paceSeconds, preferredUnit);
   }
 }
