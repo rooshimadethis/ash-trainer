@@ -129,7 +129,9 @@ class _WorkoutTile extends ConsumerWidget {
     // Get user's preferred distance unit
     final preferredUnit = ref.watch(preferredDistanceUnitProvider);
 
-    final distance = (isRun && workout.plannedDistance != null)
+    final distance = (isRun &&
+            workout.plannedDistance != null &&
+            workout.plannedDistance! > 0)
         ? UnitConverter.formatDistance(
             UnitConverter.convertDistanceFromKm(
                 workout.plannedDistance!, preferredUnit),

@@ -133,7 +133,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                                 Icons.timer_outlined,
                                 _formatDuration(workout.plannedDuration),
                                 'Duration'),
-                            if (workout.plannedDistance != null)
+                            if (workout.plannedDistance != null &&
+                                workout.plannedDistance! > 0)
                               _metricItem(
                                   context,
                                   Icons.straighten_outlined,
@@ -190,7 +191,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                               Icons.check_circle_outline,
                               _formatDuration(workout.actualDuration ?? 0),
                               'Actual Time'),
-                          if (workout.actualDistance != null)
+                          if (workout.actualDistance != null &&
+                              workout.actualDistance! > 0)
                             _metricItem(
                                 context,
                                 Icons.straighten_outlined,

@@ -86,6 +86,13 @@ class TrainingPlanScheduler {
           final workoutDate = currentBlockStart
               .add(Duration(days: workoutSkeleton.dayNumber - 1));
 
+          // Sanitize plannedDistance: if it's 0 or very small, treat as null
+          // This prevents "0.00 km" from showing for strength/mobility workouts
+          final sanitizedDistance = workoutSkeleton.plannedDistance != null &&
+                  workoutSkeleton.plannedDistance! > 0.01
+              ? workoutSkeleton.plannedDistance
+              : null;
+
           final workout = Workout(
             id: const Uuid().v4(),
             userId: userId,
@@ -96,7 +103,7 @@ class TrainingPlanScheduler {
             type: workoutSkeleton.type,
             name: workoutSkeleton.name,
             plannedDuration: workoutSkeleton.plannedDuration,
-            plannedDistance: workoutSkeleton.plannedDistance,
+            plannedDistance: sanitizedDistance,
             intensity: workoutSkeleton.intensity,
             description: workoutSkeleton.description,
             status: 'planned',
