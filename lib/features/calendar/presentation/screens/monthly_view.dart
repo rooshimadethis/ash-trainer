@@ -18,56 +18,97 @@ class MonthlyView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final monthlyWorkoutsAsync = ref.watch(monthlyWorkoutsProvider);
     final monthlyBlocksAsync = ref.watch(monthlyBlocksProvider);
+    final focusedMonth = ref.watch(monthlyMonthProvider);
     final selectedDate = ref.watch(selectedDateProvider);
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final startOfRange = today.subtract(Duration(days: today.weekday - 1 + 7));
 
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                DateFormat('MMMM yyyy').format(now),
-                style: AppTextStyles.h2,
-              ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                  shape: BoxShape.circle,
+    // Calculate start of range: Monday of the week containing the first of the month
+    final startOfRange =
+        focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
+
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      DateFormat('MMMM yyyy').format(focusedMonth),
+                      style: AppTextStyles.h2,
+                    ),
+                    const SizedBox(width: 8),
+                    if (!DateUtils.isSameMonth(focusedMonth, DateTime.now()))
+                      TextButton(
+                        onPressed: () {
+                          final now = DateTime.now();
+                          ref.read(monthlyMonthProvider.notifier).state =
+                              DateTime(now.year, now.month, 1);
+                        },
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          minimumSize: Size.zero,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        ),
+                        child: Text(
+                          'TODAY',
+                          style: AppTextStyles.label.copyWith(
+                            color: Theme.of(context).primaryColor,
+                            fontSize: 12,
+                            letterSpacing: 1.2,
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
-                child: Icon(
-                  Icons.calendar_month_rounded,
-                  color: Theme.of(context).primaryColor,
-                  size: 20,
+                Row(
+                  children: [
+                    _MonthNavButton(
+                      icon: Icons.chevron_left_rounded,
+                      onTap: () {
+                        ref.read(monthlyMonthProvider.notifier).update(
+                            (date) => DateTime(date.year, date.month - 1, 1));
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    _MonthNavButton(
+                      icon: Icons.chevron_right_rounded,
+                      onTap: () {
+                        ref.read(monthlyMonthProvider.notifier).update(
+                            (date) => DateTime(date.year, date.month + 1, 1));
+                      },
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 380,
-          child: monthlyWorkoutsAsync.when(
-            data: (workouts) => monthlyBlocksAsync.when(
-              data: (blocks) => _build4WeekGrid(
-                  startOfRange, workouts, blocks, selectedDate, ref),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
+              ],
             ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
           ),
-        ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Divider(height: 48),
-        ),
-        Expanded(
-          child: monthlyWorkoutsAsync.when(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: monthlyWorkoutsAsync.when(
+              data: (workouts) => monthlyBlocksAsync.when(
+                data: (blocks) => _buildMonthlyGrid(startOfRange, focusedMonth,
+                    workouts, blocks, selectedDate, ref),
+                loading: () => const SizedBox(
+                    height: 200,
+                    child: Center(child: CircularProgressIndicator())),
+                error: (err, stack) => SizedBox(
+                    height: 200, child: Center(child: Text('Error: $err'))),
+              ),
+              loading: () => const SizedBox(
+                  height: 200,
+                  child: Center(child: CircularProgressIndicator())),
+              error: (err, stack) => SizedBox(
+                  height: 200, child: Center(child: Text('Error: $err'))),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Divider(height: 48),
+          ),
+          monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
               data: (blocks) =>
                   _buildWorkoutList(context, selectedDate, workouts, blocks),
@@ -77,37 +118,50 @@ class MonthlyView extends ConsumerWidget {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error: $err')),
           ),
-        ),
-      ],
+          const SizedBox(height: 32), // Bottom padding for scrollability
+        ],
+      ),
     );
   }
 
-  Widget _build4WeekGrid(DateTime startOfRange, List<Workout> workouts,
-      List<TrainingBlock> blocks, DateTime selectedDate, WidgetRef ref) {
-    return ListView.builder(
+  Widget _buildMonthlyGrid(
+      DateTime startOfRange,
+      DateTime focusedMonth,
+      List<Workout> workouts,
+      List<TrainingBlock> blocks,
+      DateTime selectedDate,
+      WidgetRef ref) {
+    // Calculate total weeks needed for this month
+    final lastDay = DateTime(focusedMonth.year, focusedMonth.month + 1, 0).day;
+    final offset = focusedMonth.weekday - 1;
+    final totalWeeks = ((offset + lastDay) / 7).ceil();
+
+    return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: 4,
-      itemBuilder: (context, weekIndex) {
-        final weekStart = startOfRange.add(Duration(days: weekIndex * 7));
-        final weekEnd = weekStart.add(const Duration(days: 6));
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: List.generate(totalWeeks, (weekIndex) {
+          final weekStart = startOfRange.add(Duration(days: weekIndex * 7));
+          final weekEnd = weekStart.add(const Duration(days: 6));
 
-        final weekWorkouts = workouts
-            .where((w) =>
-                DateUtils.isSameDay(w.scheduledDate, weekStart) ||
-                (w.scheduledDate.isAfter(weekStart) &&
-                    w.scheduledDate
-                        .isBefore(weekEnd.add(const Duration(days: 1)))))
-            .toList();
+          final weekWorkouts = workouts
+              .where((w) =>
+                  DateUtils.isSameDay(w.scheduledDate, weekStart) ||
+                  (w.scheduledDate.isAfter(weekStart) &&
+                      w.scheduledDate
+                          .isBefore(weekEnd.add(const Duration(days: 1)))))
+              .toList();
 
-        return _WeekRow(
-          weekStart: weekStart,
-          workouts: weekWorkouts,
-          blocks: blocks,
-          selectedDate: selectedDate,
-          ref: ref,
-        );
-      },
+          return _WeekRow(
+            weekStart: weekStart,
+            focusedMonth: focusedMonth,
+            workouts: weekWorkouts,
+            blocks: blocks,
+            selectedDate: selectedDate,
+            ref: ref,
+          );
+        }),
+      ),
     );
   }
 
@@ -207,9 +261,10 @@ class MonthlyView extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Expanded(
-          child: dayWorkouts.isEmpty
-              ? Center(
+        dayWorkouts.isEmpty
+            ? Padding(
+                padding: const EdgeInsets.symmetric(vertical: 48),
+                child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -222,30 +277,33 @@ class MonthlyView extends ConsumerWidget {
                               .copyWith(color: AppColors.textMuted)),
                     ],
                   ),
-                )
-              : ListView.separated(
-                  padding: const EdgeInsets.all(20),
-                  itemCount: dayWorkouts.length,
-                  itemBuilder: (context, index) {
-                    final workout = dayWorkouts[index];
-                    return WorkoutCard(
-                      workout: workout,
-                      useWorkoutColor: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WorkoutDetailScreen(workout: workout),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                  separatorBuilder: (context, index) =>
-                      const SizedBox(height: 16),
                 ),
-        ),
+              )
+            : Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: List.generate(dayWorkouts.length, (index) {
+                    final workout = dayWorkouts[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                          bottom: index == dayWorkouts.length - 1 ? 0 : 16),
+                      child: WorkoutCard(
+                        workout: workout,
+                        useWorkoutColor: true,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  WorkoutDetailScreen(workout: workout),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                ),
+              ),
       ],
     );
   }
@@ -253,6 +311,7 @@ class MonthlyView extends ConsumerWidget {
 
 class _WeekRow extends StatelessWidget {
   final DateTime weekStart;
+  final DateTime focusedMonth;
   final List<Workout> workouts;
   final List<TrainingBlock> blocks;
   final DateTime selectedDate;
@@ -260,6 +319,7 @@ class _WeekRow extends StatelessWidget {
 
   const _WeekRow({
     required this.weekStart,
+    required this.focusedMonth,
     required this.workouts,
     required this.blocks,
     required this.selectedDate,
@@ -274,6 +334,17 @@ class _WeekRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: List.generate(7, (index) {
           final day = weekStart.add(Duration(days: index));
+          final isSameMonth = day.month == focusedMonth.month;
+
+          if (!isSameMonth) {
+            return const Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 3),
+                child: SizedBox(height: 72),
+              ),
+            );
+          }
+
           final dayWorkouts = workouts
               .where((w) => DateUtils.isSameDay(w.scheduledDate, day))
               .toList();
@@ -407,6 +478,38 @@ class _WeekRow extends StatelessWidget {
             ),
           );
         }),
+      ),
+    );
+  }
+}
+
+class _MonthNavButton extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _MonthNavButton({
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: AppColors.surfaceLighter.withValues(alpha: 0.5),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: AppColors.border.withValues(alpha: 0.5),
+          ),
+        ),
+        child: Icon(
+          icon,
+          color: AppColors.textPrimary,
+          size: 20,
+        ),
       ),
     );
   }
