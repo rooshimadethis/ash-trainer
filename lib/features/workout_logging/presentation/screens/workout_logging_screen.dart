@@ -102,18 +102,52 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                 Text('DURATION (MINUTES)',
                     style: Theme.of(context).textTheme.labelLarge),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: _durationController,
-                  keyboardType: TextInputType.number,
-                  style: AppTextStyles.h1
-                      .copyWith(color: Theme.of(context).colorScheme.primary),
-                  decoration: const InputDecoration(
-                    hintText: '0',
-                    suffixText: 'min',
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(32),
+                    boxShadow: [
+                      // Standard depth shadow (same as AshCard)
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        offset: const Offset(0, 8),
+                        blurRadius: 16,
+                        spreadRadius: -4,
+                      ),
+                      // Subtle inner glow/highlight for 3D feel
+                      BoxShadow(
+                        color: Colors.white.withValues(
+                            alpha:
+                                Theme.of(context).brightness == Brightness.dark
+                                    ? 0.03
+                                    : 0.5),
+                        offset: const Offset(0, 1),
+                        blurRadius: 0,
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
-                  onChanged: (val) {
-                    setState(() => _durationMinutes = int.tryParse(val) ?? 0);
-                  },
+                  child: TextField(
+                    controller: _durationController,
+                    keyboardType: TextInputType.number,
+                    style: AppTextStyles.h1
+                        .copyWith(color: Theme.of(context).colorScheme.primary),
+                    decoration: const InputDecoration(
+                      hintText: '0',
+                      suffixText: 'min',
+                      filled: false,
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      contentPadding: EdgeInsets.symmetric(vertical: 16),
+                    ),
+                    onChanged: (val) {
+                      setState(() => _durationMinutes = int.tryParse(val) ?? 0);
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 32),
@@ -123,19 +157,55 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                   Text('DISTANCE (${preferredUnit.toUpperCase()})',
                       style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 12),
-                  TextField(
-                    controller: _distanceController,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    style: AppTextStyles.h1
-                        .copyWith(color: Theme.of(context).colorScheme.primary),
-                    decoration: InputDecoration(
-                      hintText: '0.0',
-                      suffixText: preferredUnit,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .primaryColor
+                          .withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(32),
+                      boxShadow: [
+                        // Standard depth shadow (same as AshCard)
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.15),
+                          offset: const Offset(0, 8),
+                          blurRadius: 16,
+                          spreadRadius: -4,
+                        ),
+                        // Subtle inner glow/highlight for 3D feel
+                        BoxShadow(
+                          color: Colors.white.withValues(
+                              alpha: Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? 0.03
+                                  : 0.5),
+                          offset: const Offset(0, 1),
+                          blurRadius: 0,
+                          spreadRadius: 0,
+                        ),
+                      ],
                     ),
-                    onChanged: (val) {
-                      setState(() => _distance = double.tryParse(val));
-                    },
+                    child: TextField(
+                      controller: _distanceController,
+                      keyboardType:
+                          const TextInputType.numberWithOptions(decimal: true),
+                      style: AppTextStyles.h1.copyWith(
+                          color: Theme.of(context).colorScheme.primary),
+                      decoration: InputDecoration(
+                        hintText: '0.0',
+                        suffixText: preferredUnit,
+                        filled: false,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        focusedBorder: InputBorder.none,
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 16),
+                      ),
+                      onChanged: (val) {
+                        setState(() => _distance = double.tryParse(val));
+                      },
+                    ),
                   ),
                   const SizedBox(height: 32),
                 ],
@@ -150,18 +220,39 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                       color: Theme.of(context).colorScheme.onSurfaceVariant),
                 ),
                 const SizedBox(height: 16),
-                Slider(
-                  value: _rpe.toDouble(),
-                  min: 1,
-                  max: 10,
-                  divisions: 9, // Keep snapping, SliderTheme hides marks
-                  onChanged: (val) {
-                    final roundedVal = val.round();
-                    if (roundedVal != _rpe) {
-                      AshHaptics.lightImpact();
-                      setState(() => _rpe = roundedVal);
-                    }
-                  },
+                SliderTheme(
+                  data: SliderTheme.of(context).copyWith(
+                    activeTrackColor:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                    inactiveTrackColor:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.05),
+                    thumbColor:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.8),
+                    overlayColor:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    trackHeight: 8,
+                    thumbShape: const RoundSliderThumbShape(
+                      enabledThumbRadius: 16,
+                      elevation: 4,
+                    ),
+                    overlayShape: const RoundSliderOverlayShape(
+                      overlayRadius: 28,
+                    ),
+                    tickMarkShape: SliderTickMarkShape.noTickMark,
+                  ),
+                  child: Slider(
+                    value: _rpe.toDouble(),
+                    min: 1,
+                    max: 10,
+                    divisions: 9,
+                    onChanged: (val) {
+                      final roundedVal = val.round();
+                      if (roundedVal != _rpe) {
+                        AshHaptics.lightImpact();
+                        setState(() => _rpe = roundedVal);
+                      }
+                    },
+                  ),
                 ),
                 // Slider labels - using Stack for precise alignment
                 SizedBox(
@@ -189,14 +280,16 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                     ),
                   ),
                 ),
-
-                const SizedBox(height: 48),
-
-                AshButton(
-                  label: _isSubmitting ? 'Saving...' : 'Complete Workout',
-                  onPressed: _isSubmitting ? null : _submit,
-                ),
               ],
+            ),
+          ),
+          bottomNavigationBar: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: AshButton(
+                label: _isSubmitting ? 'Saving...' : 'Complete Workout',
+                onPressed: _isSubmitting ? null : _submit,
+              ),
             ),
           ),
         ),

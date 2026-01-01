@@ -34,8 +34,6 @@ class CountdownCard extends StatelessWidget {
     }
 
     return AshCard(
-      backgroundColor:
-          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

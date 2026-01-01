@@ -42,8 +42,6 @@ class RecoveryWidget extends ConsumerWidget {
         ref.read(healthSyncProvider.notifier).refresh();
       },
       child: AshCard(
-        backgroundColor:
-            Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -132,8 +130,6 @@ class RecoveryWidget extends ConsumerWidget {
   Widget _buildConnectHealthPrompt(
       BuildContext context, WidgetRef ref, bool isAuthorized) {
     return AshCard(
-      backgroundColor:
-          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         children: [
           Icon(
@@ -212,8 +208,6 @@ class RecoveryWidget extends ConsumerWidget {
 
   Widget _buildLoadingSkeleton(BuildContext context) {
     return AshCard(
-      backgroundColor:
-          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: SizedBox(
         height: 120,
         child: Center(
@@ -225,8 +219,6 @@ class RecoveryWidget extends ConsumerWidget {
 
   Widget _buildErrorState(BuildContext context) {
     return AshCard(
-      backgroundColor:
-          Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
       child: Column(
         children: [
           Icon(

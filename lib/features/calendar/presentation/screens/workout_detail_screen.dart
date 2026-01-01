@@ -328,12 +328,6 @@ class WorkoutDetailScreen extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(
-          color: Theme.of(context)
-              .colorScheme
-              .outlineVariant
-              .withValues(alpha: 0.3),
-        ),
         boxShadow: [
           // Standard depth shadow (same as AshCard/AshButton)
           BoxShadow(
