@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/utils/block_utils.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
 import '../../../shared/domain/entities/training/workout.dart';
@@ -317,22 +318,31 @@ class _DayColumn extends ConsumerWidget {
     return GestureDetector(
       onTap: () => ref.read(selectedDateProvider.notifier).state = day,
       child: AnimatedContainer(
+        padding: const EdgeInsets.symmetric(vertical: 8),
         duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
-          color: Color.alphaBlend(blockTint, baseBackground),
+          color: Color.alphaBlend(blockTint, baseBackground)
+              .withValues(alpha: 1.0),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isSelected
-                ? Theme.of(context).primaryColor
-                : isToday
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
+                ? (Theme.of(context).brightness == Brightness.dark
+                    ? const Color(0xFFFF4D8C)
+                    : Colors.black)
+                : (isToday
+                    ? Theme.of(context).primaryColor.withValues(alpha: 0.5)
                     : Theme.of(context)
                         .colorScheme
                         .outline
-                        .withValues(alpha: 0.5),
-            width: isSelected ? 1.5 : 1.0,
+                        .withValues(alpha: 0.3)),
+            width: isSelected ? 2.0 : 1.0,
           ),
+          boxShadow: isSelected
+              ? (Theme.of(context).brightness == Brightness.dark
+                  ? AppShadows.retroDark
+                  : AppShadows.retro)
+              : [],
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(11),

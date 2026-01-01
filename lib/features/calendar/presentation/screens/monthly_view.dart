@@ -9,6 +9,7 @@ import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
 import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 import 'workout_detail_screen.dart';
 
 class MonthlyView extends ConsumerWidget {
@@ -503,23 +504,23 @@ class _MonthNavButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          shape: BoxShape.circle,
           border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
+            color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+            width: 2.0,
           ),
+          boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
         ),
         child: Icon(
           icon,
-          color: Theme.of(context).colorScheme.onSurface,
+          color: Colors.black,
           size: 20,
         ),
       ),

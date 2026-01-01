@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/text_styles.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -76,17 +77,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: typeColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: typeColor.withValues(alpha: 0.5)),
+                          color: typeColor,
+                          borderRadius: BorderRadius.circular(100),
+                          border: Border.all(color: Colors.black, width: 2),
                         ),
                         child: Text(
                           WorkoutTypes.getDisplayName(workout.type)
                               .toUpperCase(),
                           style: AppTextStyles.labelSmall.copyWith(
-                            color: typeColor,
-                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
                           ),
                         ),
                       ),
@@ -121,6 +121,15 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.surface,
                       borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFFFF4D8C)
+                            : Colors.black,
+                        width: 2.0,
+                      ),
+                      boxShadow: Theme.of(context).brightness == Brightness.dark
+                          ? AppShadows.retroDark
+                          : AppShadows.retro,
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,16 +187,18 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     Container(
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.05),
+                        color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.2)),
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? const Color(0xFFFF4D8C)
+                              : Colors.black,
+                          width: 2.0,
+                        ),
+                        boxShadow:
+                            Theme.of(context).brightness == Brightness.dark
+                                ? AppShadows.retroDark
+                                : AppShadows.retro,
                       ),
                       child: Wrap(
                         spacing: 32,

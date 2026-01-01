@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import 'ash_card.dart';
 
@@ -21,9 +20,15 @@ class AshSelectionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final primaryColor = Theme.of(context).primaryColor;
+
     return AshCard(
       isSelected: isSelected,
       onTap: onTap,
+      backgroundColor: isSelected
+          ? primaryColor.withValues(alpha: 0.1)
+          : Theme.of(context).colorScheme.surface,
       child: Row(
         children: [
           Container(
@@ -31,16 +36,24 @@ class AshSelectionTile extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: isSelected
-                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
+                  ? primaryColor
+                  : Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(100),
               border: Border.all(
-                color: isSelected
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                    : Theme.of(context).colorScheme.outline,
+                color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+                width: 2.0,
               ),
             ),
-            child: Center(child: leading),
+            child: Center(
+              child: IconTheme(
+                data: IconThemeData(
+                  color: isSelected
+                      ? (isDark ? Colors.black : Colors.white)
+                      : null,
+                ),
+                child: leading,
+              ),
+            ),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -50,37 +63,36 @@ class AshSelectionTile extends StatelessWidget {
                 Text(
                   title,
                   style: AppTextStyles.bodyLarge.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
                 if (subtitle != null) ...[
                   const SizedBox(height: 2),
                   Text(
                     subtitle!,
-                    style: AppTextStyles.bodyMedium,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ],
               ],
             ),
           ),
           Container(
-            width: 24,
-            height: 24,
+            width: 28,
+            height: 28,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isSelected
-                  ? Theme.of(context).primaryColor
-                  : Colors.transparent,
+                  ? (isDark ? const Color(0xFFFF4D8C) : Colors.black)
+                  : Colors.white,
               border: Border.all(
-                color: isSelected
-                    ? Theme.of(context).primaryColor
-                    : AppColors.textSecondary.withValues(alpha: 0.3),
+                color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
                 width: 2,
               ),
             ),
             child: isSelected
-                ? Icon(Icons.check,
-                    size: 16, color: Theme.of(context).colorScheme.onPrimary)
+                ? const Icon(Icons.check, size: 18, color: Colors.white)
                 : null,
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:ash_trainer/core/theme/shadows.dart';
 import 'package:flutter/material.dart';
 
 class AshGlassCard extends StatelessWidget {
@@ -14,30 +15,20 @@ class AshGlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final radius = borderRadius ?? BorderRadius.circular(24);
+
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: isDark
-            ? Colors.white.withValues(alpha: 0.03)
-            : Theme.of(context).colorScheme.surface,
-        borderRadius:
-            borderRadius ?? BorderRadius.circular(28), // Larger radius
+        color: theme.colorScheme.surface.withValues(alpha: 1.0),
+        borderRadius: radius,
         border: Border.all(
-          color: isDark
-              ? Colors.white.withAlpha(15)
-              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-          width: 1,
+          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+          width: 2.0,
         ),
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
       ),
       child: child,
     );

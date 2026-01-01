@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/shadows.dart';
 import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
 
-class AshButton extends StatelessWidget {
+class AshButton extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
@@ -20,73 +20,84 @@ class AshButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final isEnabled = onPressed != null;
-    final isPrimary = variant == AshButtonVariant.primary;
+  State<AshButton> createState() => _AshButtonState();
+}
 
-    return Container(
-      width: double.infinity,
-      height: 56,
-      decoration: BoxDecoration(
-        boxShadow: isEnabled && isPrimary
-            ? [
-                BoxShadow(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primary
-                      .withValues(alpha: 0.25),
-                  offset: const Offset(0, 4),
-                  blurRadius: 20,
-                  spreadRadius: 0,
-                ),
-              ]
-            : [],
-      ),
-      child: ElevatedButton(
-        onPressed: onPressed != null
-            ? () {
-                AshHaptics.mediumImpact();
-                onPressed!();
-              }
-            : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: isPrimary
-              ? Theme.of(context).colorScheme.primary
-              : Theme.of(context).colorScheme.surfaceContainerHighest,
-          disabledBackgroundColor:
-              Theme.of(context).colorScheme.surfaceContainerHighest,
-          foregroundColor: isPrimary
-              ? AppColors.white
-              : Theme.of(context).colorScheme.onSurface,
-          disabledForegroundColor:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.38),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // Upgraded radius
-            side: !isEnabled || !isPrimary
-                ? BorderSide(color: Theme.of(context).colorScheme.outline)
-                : BorderSide.none,
-          ),
-          elevation: 0, // Shadow handled by Container
+class _AshButtonState extends State<AshButton> {
+  bool _isPressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isEnabled = widget.onPressed != null;
+    final isPrimary = widget.variant == AshButtonVariant.primary;
+    final isDark = theme.brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTapDown: isEnabled ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: isEnabled ? (_) => setState(() => _isPressed = false) : null,
+      onTapCancel: isEnabled ? () => setState(() => _isPressed = false) : null,
+      onTap: widget.onPressed != null
+          ? () {
+              AshHaptics.mediumImpact();
+              widget.onPressed!();
+            }
+          : null,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        width: double.infinity,
+        height: 56,
+        transform: Matrix4.translationValues(
+          _isPressed ? 2.0 : 0.0,
+          _isPressed ? 2.0 : 0.0,
+          0.0,
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(label,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(100),
+          color: isEnabled
+              ? (isPrimary
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.surfaceContainerHighest)
+              : theme.colorScheme.surfaceContainerHighest
+                  .withValues(alpha: 0.5),
+          border: Border.all(
+            color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+            width: 2.0,
+          ),
+          boxShadow: isEnabled
+              ? (_isPressed
+                  ? AppShadows.retroHover
+                  : (isDark ? AppShadows.retroDark : AppShadows.retro))
+              : [],
+        ),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                widget.label,
                 style: AppTextStyles.buttonText.copyWith(
                   color: isEnabled
                       ? (isPrimary
-                          ? AppColors.white
-                          : Theme.of(context).colorScheme.onSurface)
-                      : Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withValues(alpha: 0.38),
-                )),
-            if (icon != null) ...[
-              const SizedBox(width: 8),
-              Icon(icon, size: 20),
+                          ? Colors.black // High contrast black on bright colors
+                          : theme.colorScheme.onSurface)
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+                ),
+              ),
+              if (widget.icon != null) ...[
+                const SizedBox(width: 8),
+                Icon(
+                  widget.icon,
+                  size: 20,
+                  color: isEnabled
+                      ? (isPrimary
+                          ? Colors.black // High contrast black on bright colors
+                          : theme.colorScheme.onSurface)
+                      : theme.colorScheme.onSurface.withValues(alpha: 0.38),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

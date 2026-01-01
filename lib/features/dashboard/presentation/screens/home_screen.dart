@@ -97,12 +97,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       },
       child: AnimatedDefaultTextStyle(
         duration: const Duration(milliseconds: 200),
-        style: AppTextStyles.h4.copyWith(
+        style: AppTextStyles.h3.copyWith(
+          // Using h3 for punchier tabs
           color: isSelected
               ? Theme.of(context).colorScheme.onSurface
-              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
-          fontSize: 18,
-          fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
+              : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4),
+          fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -112,11 +112,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             const SizedBox(height: 4),
             AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              height: 3,
-              width: isSelected ? 16 : 0,
+              height: 4, // Thicker indicator
+              width: isSelected ? 20 : 0,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
-                borderRadius: BorderRadius.circular(2),
+                borderRadius: BorderRadius.circular(100), // Pill indicator
+                border: isSelected
+                    ? Border.all(color: Colors.black, width: 1)
+                    : null,
               ),
             ),
           ],

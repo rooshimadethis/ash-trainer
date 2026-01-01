@@ -43,12 +43,9 @@ class WorkoutCard extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: typeColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: typeColor.withValues(alpha: 0.2),
-                    width: 1,
-                  ),
+                  color: typeColor,
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.black, width: 2),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -56,13 +53,13 @@ class WorkoutCard extends ConsumerWidget {
                     Icon(
                       WorkoutTypes.getIcon(workout.type),
                       size: 14,
-                      color: typeColor,
+                      color: Colors.white,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
                       style: AppTextStyles.labelSmall.copyWith(
-                        color: typeColor,
+                        color: Colors.white,
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                         letterSpacing: 0.5,
@@ -73,36 +70,30 @@ class WorkoutCard extends ConsumerWidget {
               ),
               const Spacer(),
               Container(
-                width: 24,
-                height: 24,
+                width: 28,
+                height: 28,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: workout.status == 'completed' ||
                           workout.status == 'skipped'
                       ? typeColor
-                      : Colors.transparent,
+                      : Colors.white,
                   border: Border.all(
-                    color: workout.status == 'completed' ||
-                            workout.status == 'skipped'
-                        ? typeColor
-                        : Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.3),
+                    color: Colors.black,
                     width: 2,
                   ),
                 ),
                 child: workout.status == 'completed'
                     ? const Icon(
-                        Icons.check,
+                        Icons.check_rounded,
                         color: Colors.white,
-                        size: 16,
+                        size: 18,
                       )
                     : workout.status == 'skipped'
                         ? const Icon(
-                            Icons.close,
+                            Icons.close_rounded,
                             color: Colors.white,
-                            size: 16,
+                            size: 18,
                           )
                         : null,
               ),
@@ -147,8 +138,11 @@ class WorkoutCard extends ConsumerWidget {
             Text(
               workout.description!,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                color: useWorkoutColor
+                    ? Colors.black.withValues(alpha: 0.7)
+                    : Theme.of(context).colorScheme.onSurfaceVariant,
                 height: 1.5,
+                fontWeight: useWorkoutColor ? FontWeight.w600 : FontWeight.w500,
               ),
               maxLines: 2,
               overflow: TextOverflow.ellipsis,

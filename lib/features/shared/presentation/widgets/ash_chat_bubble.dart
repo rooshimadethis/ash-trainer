@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 
 enum ChatBubbleSender { ash, user }
 
@@ -36,31 +37,31 @@ class AshChatBubble extends StatelessWidget {
             isAsh ? MainAxisAlignment.start : MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (isAsh) _buildAvatar(),
+          if (isAsh) _buildAvatar(context),
           const SizedBox(width: 12),
           Flexible(
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
               decoration: BoxDecoration(
-                color: isAsh ? ashBubbleColor : userBubbleColor,
+                color: (isAsh ? ashBubbleColor : userBubbleColor)
+                    .withValues(alpha: 1.0),
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(24),
-                  topRight: const Radius.circular(24),
-                  bottomLeft: Radius.circular(isAsh ? 4 : 24),
-                  bottomRight: Radius.circular(isAsh ? 24 : 4),
+                  topLeft: const Radius.circular(20),
+                  topRight: const Radius.circular(20),
+                  bottomLeft: Radius.circular(isAsh ? 4 : 20),
+                  bottomRight: Radius.circular(isAsh ? 20 : 4),
                 ),
-                border: isAsh
-                    ? Border.all(
-                        color:
-                            isDark ? AppColors.border : AppColors.borderLight,
-                        width: 1,
-                      )
-                    : null,
+                border: Border.all(
+                  color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+                  width: 2.0,
+                ),
+                boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
               ),
               child: Text(
                 text,
                 style: AppTextStyles.bodyMedium.copyWith(
                   color: isAsh ? ashTextColor : userTextColor,
+                  fontWeight: isAsh ? FontWeight.w500 : FontWeight.w600,
                 ),
               ),
             ),
@@ -72,21 +73,27 @@ class AshChatBubble extends StatelessWidget {
     );
   }
 
-  Widget _buildAvatar() {
+  Widget _buildAvatar(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.1),
+        color: Theme.of(context).colorScheme.primary,
         shape: BoxShape.circle,
-        border: Border.all(color: AppColors.primary.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+          width: 2,
+        ),
+        boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
       ),
       child: Center(
         child: Text(
           'A',
           style: AppTextStyles.label.copyWith(
-            color: AppColors.primary,
-            fontWeight: FontWeight.bold,
+            color: Colors.black, // Always black for that retro stamp look
+            fontWeight: FontWeight.w900,
+            fontSize: 16, // Slightly larger
           ),
         ),
       ),

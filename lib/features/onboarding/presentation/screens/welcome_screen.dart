@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ash_trainer/core/theme/text_styles.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_button.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_scaffold.dart';
 import 'package:ash_trainer/features/goal_setup/presentation/providers/goal_setup_provider.dart';
@@ -79,15 +80,25 @@ class WelcomeScreen extends ConsumerWidget {
       {required BuildContext context,
       required IconData icon,
       required String text}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       children: [
         Container(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
+            color: Theme.of(context).primaryColor,
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(
+              color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+              width: 2.0,
+            ),
+            boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
           ),
-          child: Icon(icon, color: Theme.of(context).primaryColor, size: 24),
+          child: Icon(
+            icon,
+            color: isDark ? Colors.black : Colors.white,
+            size: 24,
+          ),
         ),
         const SizedBox(width: 16),
         Expanded(

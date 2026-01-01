@@ -16,6 +16,7 @@ import '../../../workout_logging/presentation/screens/workout_logging_screen.dar
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../../../shared/domain/services/health_service.dart';
 import '../../../developer/presentation/widgets/debug_overlay.dart';
+import 'package:ash_trainer/core/theme/shadows.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -54,8 +55,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
                     Text(
                       'TODAY',
                       style: AppTextStyles.label.copyWith(
-                        letterSpacing: 2,
+                        letterSpacing: 2.5,
                         color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w900,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -69,18 +71,24 @@ class _TodayViewState extends ConsumerState<TodayView> {
               // Debug button (only in debug mode)
               Builder(
                 builder: (context) {
+                  final isDark =
+                      Theme.of(context).brightness == Brightness.dark;
                   Widget? debugButton;
                   assert(() {
                     debugButton = Container(
                       decoration: BoxDecoration(
-                        color: Colors.redAccent.withValues(alpha: 0.1),
+                        color: Colors.white,
                         shape: BoxShape.circle,
                         border: Border.all(
-                            color: Colors.redAccent.withValues(alpha: 0.3)),
+                          color:
+                              isDark ? const Color(0xFFFF4D8C) : Colors.black,
+                          width: 2.0,
+                        ),
+                        boxShadow:
+                            isDark ? AppShadows.retroDark : AppShadows.retro,
                       ),
                       child: IconButton(
                         onPressed: () {
-                          // Get the navigator key from the root MaterialApp
                           final navigatorKey =
                               Navigator.of(context, rootNavigator: true)
                                   .widget
@@ -111,10 +119,17 @@ class _TodayViewState extends ConsumerState<TodayView> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  color: Colors.white,
                   shape: BoxShape.circle,
-                  border:
-                      Border.all(color: Theme.of(context).colorScheme.outline),
+                  border: Border.all(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFFFF4D8C)
+                        : Colors.black,
+                    width: 2.0,
+                  ),
+                  boxShadow: Theme.of(context).brightness == Brightness.dark
+                      ? AppShadows.retroDark
+                      : AppShadows.retro,
                 ),
                 child: IconButton(
                   onPressed: null, // Open profile or settings

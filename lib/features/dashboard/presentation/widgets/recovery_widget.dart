@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/presentation/widgets/ash_glass_card.dart';
+import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
@@ -99,9 +100,17 @@ class RecoveryWidget extends ConsumerWidget {
       BuildContext context, String value, String label, Color color) {
     return Column(
       children: [
-        Text(value, style: AppTextStyles.h3.copyWith(color: color)),
+        Text(
+          value,
+          style: AppTextStyles.h2.copyWith(
+            color: color,
+            fontWeight: FontWeight.w900,
+            fontSize: 28,
+          ),
+        ),
         Text(label,
             style: AppTextStyles.labelSmall.copyWith(
+                fontWeight: FontWeight.w700,
                 color: Theme.of(context).colorScheme.onSurfaceVariant)),
       ],
     );
@@ -133,15 +142,12 @@ class RecoveryWidget extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => isAuthorized
-                  ? ref.read(healthSyncProvider.notifier).refresh()
-                  : _requestPermissions(ref),
-              icon: Icon(isAuthorized ? Icons.refresh : Icons.link),
-              label: Text(isAuthorized ? 'Refresh' : 'Connect'),
-            ),
+          AshButton(
+            onPressed: () => isAuthorized
+                ? ref.read(healthSyncProvider.notifier).refresh()
+                : _requestPermissions(ref),
+            icon: isAuthorized ? Icons.refresh : Icons.link,
+            label: isAuthorized ? 'Refresh' : 'Connect',
           ),
         ],
       ),
