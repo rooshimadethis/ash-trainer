@@ -8,14 +8,14 @@ part of 'training_plan_response.dart';
 
 _$TrainingPlanImpl _$$TrainingPlanImplFromJson(Map<String, dynamic> json) =>
     _$TrainingPlanImpl(
-      mesocycles: (json['mesocycles'] as List<dynamic>)
-          .map((e) => Mesocycle.fromJson(e as Map<String, dynamic>))
+      phases: (json['phases'] as List<dynamic>)
+          .map((e) => PhaseSkeleton.fromJson(e as Map<String, dynamic>))
           .toList(),
-      microcycles: (json['microcycles'] as List<dynamic>)
-          .map((e) => Microcycle.fromJson(e as Map<String, dynamic>))
+      blocks: (json['blocks'] as List<dynamic>)
+          .map((e) => TrainingBlockSkeleton.fromJson(e as Map<String, dynamic>))
           .toList(),
       workouts: (json['workouts'] as List<dynamic>)
-          .map((e) => Workout.fromJson(e as Map<String, dynamic>))
+          .map((e) => WorkoutSkeleton.fromJson(e as Map<String, dynamic>))
           .toList(),
       rationale:
           PlanRationale.fromJson(json['rationale'] as Map<String, dynamic>),
@@ -23,46 +23,84 @@ _$TrainingPlanImpl _$$TrainingPlanImplFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$$TrainingPlanImplToJson(_$TrainingPlanImpl instance) =>
     <String, dynamic>{
-      'mesocycles': instance.mesocycles,
-      'microcycles': instance.microcycles,
+      'phases': instance.phases,
+      'blocks': instance.blocks,
       'workouts': instance.workouts,
       'rationale': instance.rationale,
     };
 
-_$MesocycleImpl _$$MesocycleImplFromJson(Map<String, dynamic> json) =>
-    _$MesocycleImpl(
+_$PhaseSkeletonImpl _$$PhaseSkeletonImplFromJson(Map<String, dynamic> json) =>
+    _$PhaseSkeletonImpl(
       id: json['id'] as String,
-      name: json['name'] as String,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      emphasis: json['emphasis'] as String,
+      phaseNumber: (json['phaseNumber'] as num).toInt(),
+      phaseType: json['phaseType'] as String,
+      durationWeeks: (json['durationWeeks'] as num).toInt(),
+      targetWeeklyVolume: json['targetWeeklyVolume'] as String,
+      targetWeeklyDuration: json['targetWeeklyDuration'] as String,
+      description: json['description'] as String?,
     );
 
-Map<String, dynamic> _$$MesocycleImplToJson(_$MesocycleImpl instance) =>
+Map<String, dynamic> _$$PhaseSkeletonImplToJson(_$PhaseSkeletonImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
-      'emphasis': instance.emphasis,
+      'phaseNumber': instance.phaseNumber,
+      'phaseType': instance.phaseType,
+      'durationWeeks': instance.durationWeeks,
+      'targetWeeklyVolume': instance.targetWeeklyVolume,
+      'targetWeeklyDuration': instance.targetWeeklyDuration,
+      'description': instance.description,
     };
 
-_$MicrocycleImpl _$$MicrocycleImplFromJson(Map<String, dynamic> json) =>
-    _$MicrocycleImpl(
+_$TrainingBlockSkeletonImpl _$$TrainingBlockSkeletonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TrainingBlockSkeletonImpl(
       id: json['id'] as String,
-      weekNumber: (json['weekNumber'] as num).toInt(),
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
-      emphasis: json['emphasis'] as String,
+      phaseId: json['phaseId'] as String,
+      blockNumber: (json['blockNumber'] as num).toInt(),
+      intent: json['intent'] as String,
+      durationDays: (json['durationDays'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$MicrocycleImplToJson(_$MicrocycleImpl instance) =>
+Map<String, dynamic> _$$TrainingBlockSkeletonImplToJson(
+        _$TrainingBlockSkeletonImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'weekNumber': instance.weekNumber,
-      'startDate': instance.startDate.toIso8601String(),
-      'endDate': instance.endDate.toIso8601String(),
-      'emphasis': instance.emphasis,
+      'phaseId': instance.phaseId,
+      'blockNumber': instance.blockNumber,
+      'intent': instance.intent,
+      'durationDays': instance.durationDays,
+    };
+
+_$WorkoutSkeletonImpl _$$WorkoutSkeletonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$WorkoutSkeletonImpl(
+      id: json['id'] as String,
+      phaseId: json['phaseId'] as String,
+      blockId: json['blockId'] as String,
+      dayNumber: (json['dayNumber'] as num).toInt(),
+      type: json['type'] as String,
+      name: json['name'] as String,
+      plannedDuration: (json['plannedDuration'] as num).toInt(),
+      plannedDistance: (json['plannedDistance'] as num?)?.toDouble(),
+      intensity: json['intensity'] as String,
+      description: json['description'] as String,
+      isKey: json['isKey'] as bool? ?? false,
+    );
+
+Map<String, dynamic> _$$WorkoutSkeletonImplToJson(
+        _$WorkoutSkeletonImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'phaseId': instance.phaseId,
+      'blockId': instance.blockId,
+      'dayNumber': instance.dayNumber,
+      'type': instance.type,
+      'name': instance.name,
+      'plannedDuration': instance.plannedDuration,
+      'plannedDistance': instance.plannedDistance,
+      'intensity': instance.intensity,
+      'description': instance.description,
+      'isKey': instance.isKey,
     };
 
 _$PlanRationaleImpl _$$PlanRationaleImplFromJson(Map<String, dynamic> json) =>

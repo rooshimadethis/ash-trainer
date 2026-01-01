@@ -5,11 +5,12 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
-import '../../../shared/presentation/widgets/ash_card.dart';
-import '../../../shared/domain/entities/workout.dart';
+import '../../../shared/domain/entities/training/workout.dart';
+import '../../../shared/domain/entities/goal.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';
+import '../../../../core/constants/workout_types.dart';
 
 final week1WorkoutsProvider =
     FutureProvider.autoDispose<List<Workout>>((ref) async {
@@ -20,6 +21,13 @@ final week1WorkoutsProvider =
     endDate:
         DateTime(now.year, now.month, now.day).add(const Duration(days: 7)),
   );
+});
+
+final activeGoalProvider = FutureProvider.autoDispose<Goal>((ref) async {
+  final repo = ref.watch(goalRepositoryProvider);
+  final goal = await repo.getActiveGoal();
+  if (goal == null) throw Exception('No active goal found');
+  return goal;
 });
 
 class PlanReviewScreen extends ConsumerWidget {
@@ -37,38 +45,50 @@ class PlanReviewScreen extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Week 1 Ready! 🎉', style: AppTextStyles.h2),
-            const SizedBox(height: 16),
-            AshCard(
-              child: Column(children: [
-                Text('Confidence: ${(85.0).toStringAsFixed(0)}%',
-                    style: AppTextStyles.h1.copyWith(color: AppColors.primary)),
-                Text('Goal Probability', style: AppTextStyles.bodyMedium),
-              ]),
-            ),
-            const SizedBox(height: 24),
             Expanded(
-              child: workoutsAsync.when(
-                data: (workouts) {
-                  if (workouts.isEmpty) {
-                    return Center(
-                        child: Text('No workouts found',
-                            style: AppTextStyles.bodyLarge));
-                  }
-                  return ListView.builder(
-                    itemCount: workouts.length,
-                    itemBuilder: (context, index) {
-                      final workout = workouts[index];
-                      return _WorkoutTile(workout: workout);
-                    },
-                  );
-                },
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(
-                    child: Text('Error: $err',
-                        style: const TextStyle(color: Colors.red))),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Text('Ready! 🎉', style: AppTextStyles.h2),
+                    const SizedBox(height: 24),
+                    Consumer(builder: (context, ref, _) {
+                      final goalAsync = ref.watch(activeGoalProvider);
+                      return goalAsync.maybeWhen(
+                        data: (goal) => _RationaleSection(goal: goal),
+                        orElse: () => const SizedBox.shrink(),
+                      );
+                    }),
+                    Text('Week 1 Preview', style: AppTextStyles.h3),
+                    const SizedBox(height: 12),
+                    workoutsAsync.when(
+                      data: (workouts) {
+                        if (workouts.isEmpty) {
+                          return Center(
+                              child: Text('No workouts found',
+                                  style: AppTextStyles.bodyLarge));
+                        }
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: workouts.length,
+                          itemBuilder: (context, index) {
+                            final workout = workouts[index];
+                            return _WorkoutTile(workout: workout);
+                          },
+                        );
+                      },
+                      loading: () =>
+                          const Center(child: CircularProgressIndicator()),
+                      error: (err, stack) => Center(
+                          child: Text('Error: $err',
+                              style: const TextStyle(color: Colors.red))),
+                    ),
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 16),
             AshButton(
               label: 'Looks Good!',
               onPressed: () {
@@ -96,10 +116,15 @@ class _WorkoutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final dayFormat = DateFormat('E');
     final day = dayFormat.format(workout.scheduledDate);
+    final color = WorkoutTypes.getColor(workout.type);
+    final isRun = [
+      WorkoutTypes.easyRun,
+      WorkoutTypes.tempo,
+      WorkoutTypes.intervals,
+      WorkoutTypes.longRun
+    ].contains(workout.type);
 
-    // Simple logic for display
-    final isRest = workout.type.toLowerCase() == 'rest';
-    final distance = workout.plannedDistance != null
+    final distance = (isRun && workout.plannedDistance != null)
         ? '${workout.plannedDistance} km'
         : (workout.plannedDuration > 0
             ? '${(workout.plannedDuration / 60).toStringAsFixed(0)} min'
@@ -136,16 +161,82 @@ class _WorkoutTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: isRest
-                  ? Colors.grey.withValues(alpha: 0.2)
-                  : AppColors.primary.withValues(alpha: 0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
-            child: Text(workout.type.toUpperCase(),
-                style: TextStyle(
-                    fontSize: 10,
-                    color: isRest ? Colors.grey : AppColors.primary)),
+            child: Text(WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
+                style: TextStyle(fontSize: 10, color: color)),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RationaleSection extends StatelessWidget {
+  final Goal goal;
+
+  const _RationaleSection({required this.goal});
+
+  @override
+  Widget build(BuildContext context) {
+    if (goal.rationaleOverallApproach == null) return const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Icon(Icons.lightbulb_outline,
+                color: AppColors.accentBlue, size: 20),
+            const SizedBox(width: 8),
+            Text('The Strategy',
+                style: AppTextStyles.h3.copyWith(color: AppColors.accentBlue)),
+          ],
+        ),
+        const SizedBox(height: 12),
+        _buildRationaleCard(
+            'Overall Approach', goal.rationaleOverallApproach, Icons.flag),
+        _buildRationaleCard('Intensity Distribution',
+            goal.rationaleIntensityDistribution, Icons.bar_chart),
+        _buildRationaleCard(
+            'Key Workouts', goal.rationaleKeyWorkouts, Icons.star),
+        _buildRationaleCard('Recovery Strategy', goal.rationaleRecoveryStrategy,
+            Icons.battery_charging_full),
+        const SizedBox(height: 12),
+      ],
+    );
+  }
+
+  Widget _buildRationaleCard(String label, String? content, IconData icon) {
+    if (content == null) return const SizedBox.shrink();
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.surfaceHighlight,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, size: 16, color: AppColors.textSecondary),
+              const SizedBox(width: 8),
+              Text(label.toUpperCase(),
+                  style: const TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.0)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(content,
+              style: const TextStyle(
+                  color: Colors.white, fontSize: 13, height: 1.4)),
         ],
       ),
     );

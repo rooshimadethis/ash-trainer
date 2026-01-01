@@ -524,32 +524,32 @@ final rescheduleWorkouts = FunctionDeclaration(
 
 ### TrainingPlan
 
-**Purpose**: Complete training plan returned by AI
+**Purpose**: Complete training plan skeleton returned by AI
 
 ```dart
 class TrainingPlan {
-  final List<Mesocycle> mesocycles;
-  final List<Microcycle> microcycles;
-  final List<Workout> workouts;
+  final List<PhaseSkeleton> phases;
+  final List<TrainingBlockSkeleton> blocks;
+  final List<WorkoutSkeleton> workouts;
   final PlanRationale rationale;
   
   const TrainingPlan({
-    required this.mesocycles,
-    required this.microcycles,
+    required this.phases,
+    required this.blocks,
     required this.workouts,
     required this.rationale,
   });
   
   factory TrainingPlan.fromJson(Map<String, dynamic> json) {
     return TrainingPlan(
-      mesocycles: (json['mesocycles'] as List)
-          .map((m) => Mesocycle.fromJson(m))
+      phases: (json['phases'] as List)
+          .map((m) => PhaseSkeleton.fromJson(m))
           .toList(),
-      microcycles: (json['microcycles'] as List)
-          .map((m) => Microcycle.fromJson(m))
+      blocks: (json['blocks'] as List)
+          .map((m) => TrainingBlockSkeleton.fromJson(m))
           .toList(),
       workouts: (json['workouts'] as List)
-          .map((w) => Workout.fromJson(w))
+          .map((w) => WorkoutSkeleton.fromJson(w))
           .toList(),
       rationale: PlanRationale.fromJson(json['rationale']),
     );
@@ -557,7 +557,7 @@ class TrainingPlan {
 }
 ```
 
-**Note**: `Mesocycle`, `Microcycle`, and `Workout` are core domain entities defined in `entities.md`. `PlanRationale` is AI-specific.
+**Note**: AI returns "Skeletons" with relative offsets and durations. The App "hydrates" these into the core domain entities with absolute dates.
 
 ---
 

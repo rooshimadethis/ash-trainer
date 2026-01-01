@@ -14,11 +14,19 @@ class Goals extends Table {
   DateTimeColumn get targetDate => dateTime().nullable()();
   IntColumn get targetTime => integer().nullable()();
   IntColumn get currentBestTime => integer().nullable()();
+  BoolColumn get isFirstTime => boolean().nullable()();
   TextColumn get eventName => text().nullable()();
   DateTimeColumn get eventDate => dateTime().nullable()();
   IntColumn get maintenanceFrequency => integer().nullable()();
   IntColumn get maintenanceDuration => integer().nullable()();
   DateTimeColumn get endDate => dateTime().nullable()();
+
+  // Initial Context
+  IntColumn get initialTrainingFrequency => integer().nullable()();
+  RealColumn get initialWeeklyVolume => real().nullable()(); // In km
+  TextColumn get runningPriority => text().nullable()();
+  TextColumn get strengthPriority => text().nullable()();
+  TextColumn get mobilityPriority => text().nullable()();
 
   // Progress metrics
   RealColumn get confidence => real().withDefault(const Constant(0.0))();
@@ -26,6 +34,12 @@ class Goals extends Table {
   RealColumn get qualityScore => real().withDefault(const Constant(0.0))();
   RealColumn get consistencyScore => real().withDefault(const Constant(0.0))();
   RealColumn get recoveryScore => real().withDefault(const Constant(0.0))();
+
+  // Rationale configuration
+  TextColumn get rationaleOverallApproach => text().nullable()();
+  TextColumn get rationaleIntensityDistribution => text().nullable()();
+  TextColumn get rationaleKeyWorkouts => text().nullable()();
+  TextColumn get rationaleRecoveryStrategy => text().nullable()();
 
   DateTimeColumn get createdAt => dateTime()();
   DateTimeColumn get updatedAt => dateTime()();

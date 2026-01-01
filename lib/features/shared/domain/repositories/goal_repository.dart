@@ -26,6 +26,17 @@ abstract class GoalRepository {
     required double recoveryScore,
   });
 
+  /// Updates rationale
+  Future<void> updateRationale({
+    required String goalId,
+    required String overallApproach,
+    required String intensityDistribution,
+    required String keyWorkouts,
+    required String recoveryStrategy,
+  });
+
+  /// Deactivates a goal
+
   /// Deactivates a goal
   Future<void> deactivateGoal(String goalId);
 

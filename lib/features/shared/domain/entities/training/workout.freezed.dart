@@ -24,8 +24,8 @@ mixin _$Workout {
       throw _privateConstructorUsedError; // Domain ID (usually matches DB ID, but string)
   String get userId => throw _privateConstructorUsedError;
   String get goalId => throw _privateConstructorUsedError;
-  String? get mesocycleId => throw _privateConstructorUsedError;
-  String? get microcycleId => throw _privateConstructorUsedError;
+  String? get phaseId => throw _privateConstructorUsedError;
+  String? get blockId => throw _privateConstructorUsedError;
   DateTime get scheduledDate => throw _privateConstructorUsedError;
   String get type =>
       throw _privateConstructorUsedError; // 'easy_run', 'tempo', etc.
@@ -40,6 +40,8 @@ mixin _$Workout {
   double? get actualDistance => throw _privateConstructorUsedError;
   double? get actualPace => throw _privateConstructorUsedError;
   int? get rpe => throw _privateConstructorUsedError;
+  String? get syncedFrom => throw _privateConstructorUsedError;
+  bool get isKey => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
 
   /// Serializes this Workout to a JSON map.
@@ -60,8 +62,8 @@ abstract class $WorkoutCopyWith<$Res> {
       {String id,
       String userId,
       String goalId,
-      String? mesocycleId,
-      String? microcycleId,
+      String? phaseId,
+      String? blockId,
       DateTime scheduledDate,
       String type,
       String name,
@@ -74,6 +76,8 @@ abstract class $WorkoutCopyWith<$Res> {
       double? actualDistance,
       double? actualPace,
       int? rpe,
+      String? syncedFrom,
+      bool isKey,
       DateTime? completedAt});
 }
 
@@ -95,8 +99,8 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
     Object? id = null,
     Object? userId = null,
     Object? goalId = null,
-    Object? mesocycleId = freezed,
-    Object? microcycleId = freezed,
+    Object? phaseId = freezed,
+    Object? blockId = freezed,
     Object? scheduledDate = null,
     Object? type = null,
     Object? name = null,
@@ -109,6 +113,8 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
     Object? actualDistance = freezed,
     Object? actualPace = freezed,
     Object? rpe = freezed,
+    Object? syncedFrom = freezed,
+    Object? isKey = null,
     Object? completedAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -124,13 +130,13 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
           ? _value.goalId
           : goalId // ignore: cast_nullable_to_non_nullable
               as String,
-      mesocycleId: freezed == mesocycleId
-          ? _value.mesocycleId
-          : mesocycleId // ignore: cast_nullable_to_non_nullable
+      phaseId: freezed == phaseId
+          ? _value.phaseId
+          : phaseId // ignore: cast_nullable_to_non_nullable
               as String?,
-      microcycleId: freezed == microcycleId
-          ? _value.microcycleId
-          : microcycleId // ignore: cast_nullable_to_non_nullable
+      blockId: freezed == blockId
+          ? _value.blockId
+          : blockId // ignore: cast_nullable_to_non_nullable
               as String?,
       scheduledDate: null == scheduledDate
           ? _value.scheduledDate
@@ -180,6 +186,14 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
+      syncedFrom: freezed == syncedFrom
+          ? _value.syncedFrom
+          : syncedFrom // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -199,8 +213,8 @@ abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
       {String id,
       String userId,
       String goalId,
-      String? mesocycleId,
-      String? microcycleId,
+      String? phaseId,
+      String? blockId,
       DateTime scheduledDate,
       String type,
       String name,
@@ -213,6 +227,8 @@ abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
       double? actualDistance,
       double? actualPace,
       int? rpe,
+      String? syncedFrom,
+      bool isKey,
       DateTime? completedAt});
 }
 
@@ -232,8 +248,8 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     Object? id = null,
     Object? userId = null,
     Object? goalId = null,
-    Object? mesocycleId = freezed,
-    Object? microcycleId = freezed,
+    Object? phaseId = freezed,
+    Object? blockId = freezed,
     Object? scheduledDate = null,
     Object? type = null,
     Object? name = null,
@@ -246,6 +262,8 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     Object? actualDistance = freezed,
     Object? actualPace = freezed,
     Object? rpe = freezed,
+    Object? syncedFrom = freezed,
+    Object? isKey = null,
     Object? completedAt = freezed,
   }) {
     return _then(_$WorkoutImpl(
@@ -261,13 +279,13 @@ class __$$WorkoutImplCopyWithImpl<$Res>
           ? _value.goalId
           : goalId // ignore: cast_nullable_to_non_nullable
               as String,
-      mesocycleId: freezed == mesocycleId
-          ? _value.mesocycleId
-          : mesocycleId // ignore: cast_nullable_to_non_nullable
+      phaseId: freezed == phaseId
+          ? _value.phaseId
+          : phaseId // ignore: cast_nullable_to_non_nullable
               as String?,
-      microcycleId: freezed == microcycleId
-          ? _value.microcycleId
-          : microcycleId // ignore: cast_nullable_to_non_nullable
+      blockId: freezed == blockId
+          ? _value.blockId
+          : blockId // ignore: cast_nullable_to_non_nullable
               as String?,
       scheduledDate: null == scheduledDate
           ? _value.scheduledDate
@@ -317,6 +335,14 @@ class __$$WorkoutImplCopyWithImpl<$Res>
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
+      syncedFrom: freezed == syncedFrom
+          ? _value.syncedFrom
+          : syncedFrom // ignore: cast_nullable_to_non_nullable
+              as String?,
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
       completedAt: freezed == completedAt
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
@@ -332,8 +358,8 @@ class _$WorkoutImpl implements _Workout {
       {required this.id,
       required this.userId,
       required this.goalId,
-      this.mesocycleId,
-      this.microcycleId,
+      this.phaseId,
+      this.blockId,
       required this.scheduledDate,
       required this.type,
       required this.name,
@@ -346,6 +372,8 @@ class _$WorkoutImpl implements _Workout {
       this.actualDistance,
       this.actualPace,
       this.rpe,
+      this.syncedFrom,
+      this.isKey = false,
       this.completedAt});
 
   factory _$WorkoutImpl.fromJson(Map<String, dynamic> json) =>
@@ -359,9 +387,9 @@ class _$WorkoutImpl implements _Workout {
   @override
   final String goalId;
   @override
-  final String? mesocycleId;
+  final String? phaseId;
   @override
-  final String? microcycleId;
+  final String? blockId;
   @override
   final DateTime scheduledDate;
   @override
@@ -391,11 +419,16 @@ class _$WorkoutImpl implements _Workout {
   @override
   final int? rpe;
   @override
+  final String? syncedFrom;
+  @override
+  @JsonKey()
+  final bool isKey;
+  @override
   final DateTime? completedAt;
 
   @override
   String toString() {
-    return 'Workout(id: $id, userId: $userId, goalId: $goalId, mesocycleId: $mesocycleId, microcycleId: $microcycleId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, completedAt: $completedAt)';
+    return 'Workout(id: $id, userId: $userId, goalId: $goalId, phaseId: $phaseId, blockId: $blockId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, syncedFrom: $syncedFrom, isKey: $isKey, completedAt: $completedAt)';
   }
 
   @override
@@ -406,10 +439,8 @@ class _$WorkoutImpl implements _Workout {
             (identical(other.id, id) || other.id == id) &&
             (identical(other.userId, userId) || other.userId == userId) &&
             (identical(other.goalId, goalId) || other.goalId == goalId) &&
-            (identical(other.mesocycleId, mesocycleId) ||
-                other.mesocycleId == mesocycleId) &&
-            (identical(other.microcycleId, microcycleId) ||
-                other.microcycleId == microcycleId) &&
+            (identical(other.phaseId, phaseId) || other.phaseId == phaseId) &&
+            (identical(other.blockId, blockId) || other.blockId == blockId) &&
             (identical(other.scheduledDate, scheduledDate) ||
                 other.scheduledDate == scheduledDate) &&
             (identical(other.type, type) || other.type == type) &&
@@ -430,32 +461,38 @@ class _$WorkoutImpl implements _Workout {
             (identical(other.actualPace, actualPace) ||
                 other.actualPace == actualPace) &&
             (identical(other.rpe, rpe) || other.rpe == rpe) &&
+            (identical(other.syncedFrom, syncedFrom) ||
+                other.syncedFrom == syncedFrom) &&
+            (identical(other.isKey, isKey) || other.isKey == isKey) &&
             (identical(other.completedAt, completedAt) ||
                 other.completedAt == completedAt));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      userId,
-      goalId,
-      mesocycleId,
-      microcycleId,
-      scheduledDate,
-      type,
-      name,
-      plannedDuration,
-      plannedDistance,
-      intensity,
-      description,
-      status,
-      actualDuration,
-      actualDistance,
-      actualPace,
-      rpe,
-      completedAt);
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        id,
+        userId,
+        goalId,
+        phaseId,
+        blockId,
+        scheduledDate,
+        type,
+        name,
+        plannedDuration,
+        plannedDistance,
+        intensity,
+        description,
+        status,
+        actualDuration,
+        actualDistance,
+        actualPace,
+        rpe,
+        syncedFrom,
+        isKey,
+        completedAt
+      ]);
 
   /// Create a copy of Workout
   /// with the given fields replaced by the non-null parameter values.
@@ -478,8 +515,8 @@ abstract class _Workout implements Workout {
       {required final String id,
       required final String userId,
       required final String goalId,
-      final String? mesocycleId,
-      final String? microcycleId,
+      final String? phaseId,
+      final String? blockId,
       required final DateTime scheduledDate,
       required final String type,
       required final String name,
@@ -492,6 +529,8 @@ abstract class _Workout implements Workout {
       final double? actualDistance,
       final double? actualPace,
       final int? rpe,
+      final String? syncedFrom,
+      final bool isKey,
       final DateTime? completedAt}) = _$WorkoutImpl;
 
   factory _Workout.fromJson(Map<String, dynamic> json) = _$WorkoutImpl.fromJson;
@@ -503,9 +542,9 @@ abstract class _Workout implements Workout {
   @override
   String get goalId;
   @override
-  String? get mesocycleId;
+  String? get phaseId;
   @override
-  String? get microcycleId;
+  String? get blockId;
   @override
   DateTime get scheduledDate;
   @override
@@ -531,6 +570,10 @@ abstract class _Workout implements Workout {
   double? get actualPace;
   @override
   int? get rpe;
+  @override
+  String? get syncedFrom;
+  @override
+  bool get isKey;
   @override
   DateTime? get completedAt;
 

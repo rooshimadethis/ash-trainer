@@ -18,6 +18,7 @@ _$GoalImpl _$$GoalImplFromJson(Map<String, dynamic> json) => _$GoalImpl(
           : DateTime.parse(json['targetDate'] as String),
       targetTime: (json['targetTime'] as num?)?.toInt(),
       currentBestTime: (json['currentBestTime'] as num?)?.toInt(),
+      isFirstTime: json['isFirstTime'] as bool?,
       eventName: json['eventName'] as String?,
       eventDate: json['eventDate'] == null
           ? null
@@ -27,11 +28,22 @@ _$GoalImpl _$$GoalImplFromJson(Map<String, dynamic> json) => _$GoalImpl(
       endDate: json['endDate'] == null
           ? null
           : DateTime.parse(json['endDate'] as String),
+      initialTrainingFrequency:
+          (json['initialTrainingFrequency'] as num?)?.toInt(),
+      initialWeeklyVolume: (json['initialWeeklyVolume'] as num?)?.toDouble(),
+      runningPriority: json['runningPriority'] as String?,
+      strengthPriority: json['strengthPriority'] as String?,
+      mobilityPriority: json['mobilityPriority'] as String?,
       confidence: (json['confidence'] as num?)?.toDouble() ?? 0.0,
       adherenceScore: (json['adherenceScore'] as num?)?.toDouble() ?? 0.0,
       qualityScore: (json['qualityScore'] as num?)?.toDouble() ?? 0.0,
       consistencyScore: (json['consistencyScore'] as num?)?.toDouble() ?? 0.0,
       recoveryScore: (json['recoveryScore'] as num?)?.toDouble() ?? 0.0,
+      rationaleOverallApproach: json['rationaleOverallApproach'] as String?,
+      rationaleIntensityDistribution:
+          json['rationaleIntensityDistribution'] as String?,
+      rationaleKeyWorkouts: json['rationaleKeyWorkouts'] as String?,
+      rationaleRecoveryStrategy: json['rationaleRecoveryStrategy'] as String?,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
@@ -47,16 +59,26 @@ Map<String, dynamic> _$$GoalImplToJson(_$GoalImpl instance) =>
       'targetDate': instance.targetDate?.toIso8601String(),
       'targetTime': instance.targetTime,
       'currentBestTime': instance.currentBestTime,
+      'isFirstTime': instance.isFirstTime,
       'eventName': instance.eventName,
       'eventDate': instance.eventDate?.toIso8601String(),
       'maintenanceFrequency': instance.maintenanceFrequency,
       'maintenanceDuration': instance.maintenanceDuration,
       'endDate': instance.endDate?.toIso8601String(),
+      'initialTrainingFrequency': instance.initialTrainingFrequency,
+      'initialWeeklyVolume': instance.initialWeeklyVolume,
+      'runningPriority': instance.runningPriority,
+      'strengthPriority': instance.strengthPriority,
+      'mobilityPriority': instance.mobilityPriority,
       'confidence': instance.confidence,
       'adherenceScore': instance.adherenceScore,
       'qualityScore': instance.qualityScore,
       'consistencyScore': instance.consistencyScore,
       'recoveryScore': instance.recoveryScore,
+      'rationaleOverallApproach': instance.rationaleOverallApproach,
+      'rationaleIntensityDistribution': instance.rationaleIntensityDistribution,
+      'rationaleKeyWorkouts': instance.rationaleKeyWorkouts,
+      'rationaleRecoveryStrategy': instance.rationaleRecoveryStrategy,
       'createdAt': instance.createdAt.toIso8601String(),
       'updatedAt': instance.updatedAt.toIso8601String(),
     };

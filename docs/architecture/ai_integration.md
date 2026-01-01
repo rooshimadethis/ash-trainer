@@ -57,9 +57,10 @@ Every AI call costs money. Design patterns that minimize unnecessary calls:
 
 | Feature | AI Responsibility | Trigger |
 |---------|------------------|---------|
-| **Training Plan Generation** | Generate mesocycles, microcycles, and workouts | Goal creation, major replanning |
+| **Training Plan Generation** | Generate Phases, Training Blocks, and Workouts | Goal creation, major replanning |
 | **Workout Adjustments** | Modify individual workouts based on feedback | User requests change, pain/fatigue signals |
-| **Workout Rescheduling** | Move workouts within/across micro/mesocycles | Schedule conflicts, injury recovery, time off |
+| **Strategic Repair** | Re-balance remaining Phases/Blocks after major disruption | Disruptions >3 days, or Phase boundary overlap |
+| **The Honesty Protocol** | Downgrade goals if consistency is too low | Low ACWR/Adherence detected |
 | **Coaching Chat** | Daily check-ins, motivational messages, Q&A | User initiates chat, daily notification |
 
 
@@ -71,9 +72,11 @@ Every AI call costs money. Design patterns that minimize unnecessary calls:
 | **Confidence Explanations** | Generate natural language explanation of score changes | Template-based, no AI needed |
 | **Context Aggregation** | Build aggregated context data for AI calls | Deterministic data transformation |
 | **Workout Logging** | Record completion, RPE, distance, pace | Simple CRUD, offline-first |
-| **Calendar Display** | Render workouts, handle date navigation | UI logic, no intelligence needed |
+| **Phase Hydration** | Map logical durations (weeks/offsets) to calendar dates | Post-AI generation logic |
 | **Load Management** | Calculate ACWR, detect overtraining | Sports science formulas, deterministic |
-| **Taper Logic** | Apply volume reduction protocols | Rule-based (see [training_plans.md](../ux/product_spec/training/running/training_plans.md)) |
+
+| **The Sliding Rule** | Automatically move missed sessions forward (<3 days) | Deterministic scheduling, no AI needed |
+| **Taper Logic** | Apply volume reduction protocols | Rule-based (see [training_philosophy.md](../ux/training_philosophy.md)) |
 
 ---
 
@@ -191,57 +194,153 @@ Use Case → Context Builder → AI Service → Gemini API
 4. **Include training philosophy** (content from `training_plans.md`)
 5. **Format for AI consumption** (JSON, markdown, etc.)
 
-### Example: Plan Generation Context Builder
+### Current Implementation (As of Codebase)
+
+The current system uses a dedicated use case `BuildPlanGenerationContext` that aggregates data and constructs a `PlanGenerationContext`.
+
+**Key Characteristics:**
+- **Fixed History**: Looks back exactly **28 days** (4 weeks).
+- **Philosophy Builder**: Dynamically builds `PlanGenerationPhilosophy` using `buildPlanPhilosophy(goal, volume)`.
+- **Metrics Calculation**: Calculates current volume/frequency from the last 7 days of history.
 
 ```dart
-class BuildPlanGenerationContext {
-  final UserRepository _userRepo;
-  final GoalRepository _goalRepo;
-  final WorkoutRepository _workoutRepo;
+// features/training/application/usecases/build_plan_generation_context.dart
+
+Future<PlanGenerationContext> execute({required String goalId}) async {
+  // 1. Fetch User & Goal
+  final user = await _userRepo.getCurrentUser();
+  final goal = await _goalRepo.getGoal(goalId);
+
+  // 2. Fetch Fixed History (28 Days)
+  // We currently look back 28 days (4 weeks) to establish recent consistency.
+  final historyStartDate = DateTime.now().subtract(const Duration(days: 28));
+  final historyWorkouts = await _workoutRepo.getWorkoutsForDateRange(
+    startDate: historyStartDate,
+    endDate: DateTime.now(),
+  );
+
+  // 3. Build Philosophy
+  // Logic exists in build_plan_philosophy.dart
+  final philosophy = buildPlanPhilosophy(
+    goal: goal,
+    weeklyVolume: currentVolume, // Calculated from recent history
+  );
+
+  return PlanGenerationContext(
+    user: UserContext.fromEntity(user),
+    goal: GoalContext.fromEntity(goal),
+    trainingHistory: historyWorkouts.map((w) => WorkoutSummary.fromEntity(w)).toList(),
+    philosophy: philosophy,
+  );
+}
+```
+
+---
+
+### Proposed Enhancements: Adaptive Planning Engine
+
+To support efficient **Horizon Extension** and **Strategic Repair**, we will upgrade the context builder to be "Mode-Aware" and "Token-Optimized".
+This unified engine handles all planning scenarios with a single, adaptable code path.
+
+#### 1. Unified Planning Mode
+
+We introduce a `PlanningMode` enum to dictate the strategy:
+
+```dart
+enum PlanningMode {
+  initial, // Start from scratch (New Goal)
+  extend,  // Append to existing plan (Horizon Filling)
+  repair   // Overwrite future due to missed days (Strategic Repair)
+}
+```
+
+#### 2. Dynamic History Window (Token Optimization)
+
+Instead of a fixed 28-day window, we adapt the lookback period based on the mode to save input tokens:
+
+```dart
+  // Proposed Update in BuildPlanningContext
+  Duration historyDuration;
+  int missedDays = 0;
+
+  switch (mode) {
+    case PlanningMode.initial:
+      // 45 days: Establish baseline fitness/consistency for new plan
+      historyDuration = Duration(days: 45); 
+      break;
+
+    case PlanningMode.extend:
+      // 30 days: Recent trend is sufficient to maintain progression
+      historyDuration = Duration(days: 30); 
+      break;
+
+    case PlanningMode.repair:
+      // Dynamic: Look back enough to cover the break + 2 weeks of training
+      // This ensures we always see "pre-injury" fitness levels.
+      missedDays = await _workoutRepo.getConsecutiveMissedDays(goalId);
+      historyDuration = Duration(days: missedDays + 14);
+      break;
+  }
+```
+
+#### 3. Optimized Context Models
+
+We will enforce stricter filtering on context objects to reduce token usage.
+
+**UserContext**:
+- **Proposed**: Filter out PII and internal settings. Add specific `constraints` string.
+
+**GoalContext**:
+- **Proposed**: Conditionally include `initialWeeklyVolume` only for `PlanningMode.initial`. For `extend`/`repair`, the AI should rely on real history, so we suppress baseline stats to avoid context conflicts.
+
+**WorkoutSummary**:
+- **Proposed**: Ensure we strip all descriptive text, instructions, and internal flags. Only send `date`, `type`, `status`, `duration`, `distance`, `rpe`.
+
+#### 4. Revised Context Structure (Proposed)
+
+```dart
+class BuildPlanningContext {
+  // ... repos ...
   
   Future<PlanGenerationContext> execute({
     required String goalId,
+    required PlanningMode mode,
   }) async {
-    final goal = await _goalRepo.getGoal(goalId);
-    final user = await _userRepo.getCurrentUser();
-    final trainingHistory = await _workoutRepo.getWorkoutsForDateRange(
-      startDate: DateTime.now().subtract(Duration(days: 90)),
-      endDate: DateTime.now(),
-    );
+    // ... fetch logic with dynamic history ...
     
-    // Aggregate data
-    return PlanGenerationContext(
-      user: UserContext(
-        age: user.age,
-        experienceLevel: user.experienceLevel,
-        availableDays: user.availableDays,
-        timeConstraints: user.timeConstraints,
-        injuryHistory: user.injuryHistory,
-      ),
-      goal: GoalContext(
-        type: goal.type,
-        target: goal.target,
-        deadline: goal.deadline,
-        specialInstructions: [
-          "First workout MUST be a 20min benchmark run for calibration",
-        ],
-      ),
-      trainingHistory: _summarizeWorkouts(trainingHistory),
-      trainingPhilosophy: _getTrainingPhilosophy(goal.type),
-    );
-  }
-  
-  String _getTrainingPhilosophy(GoalType type) {
-    // Load content from training_plans.md based on goal type
-    switch (type) {
-      case GoalType.distanceMilestone:
-        return '''Time-based workouts, pyramidal intensity (75-80% easy),
-                  high flexibility, minimal taper (7-10 days)...''';
-      case GoalType.timePerformance:
-        return '''Distance-based workouts, polarized 80/20,
-                  medium flexibility, 1-2 week taper...''';
-      // etc.
+    // Mode-Specific Instructions
+    String? specialInstruction;
+    DateTime? startDate;
+
+    switch (mode) {
+      case PlanningMode.initial:
+        startDate = DateTime.now();
+        specialInstruction = "Create a full plan from scratch.";
+        break;
+
+      case PlanningMode.extend:
+        final lastDate = await _workoutRepo.getLastScheduledWorkoutDate(goalId);
+        startDate = lastDate!.add(Duration(days: 1));
+        specialInstruction = "Extend existing plan. Last workout was on $lastDate. Maintain progression.";
+        break;
+
+      case PlanningMode.repair:
+        startDate = DateTime.now().add(Duration(days: 1)); 
+        specialInstruction = "User missed $missedDays days. Create a 'Return to Training' bridge block.";
+        break;
     }
+
+    return PlanGenerationContext(
+      user: UserContext.fromEntity(user),
+      goal: GoalContext.fromEntity(goal, includeBaseline: mode == PlanningMode.initial),
+      trainingHistory: _summarizeWorkouts(history),
+      config: PlanningConfig(
+        mode: mode,
+        startDate: startDate,
+        instruction: specialInstruction,
+      ),
+      philosophy: philosophy, // Existing logic
+    );
   }
 }
 ```
@@ -253,30 +352,148 @@ class PlanGenerationContext {
   final UserContext user;
   final GoalContext goal;
   final List<WorkoutSummary> trainingHistory;
-  final String trainingPhilosophy;
+  final PlanningConfig config; // Added for Adaptive Planning
   
   // Convert to JSON for AI consumption
   Map<String, dynamic> toJson() => {
     'user': user.toJson(),
     'goal': goal.toJson(),
     'trainingHistory': trainingHistory.map((w) => w.toJson()).toList(),
-    'trainingPhilosophy': trainingPhilosophy,
+    'config': config.toJson(),
+  };
+}
+
+class PlanningConfig {
+  final PlanningMode mode;
+  final DateTime startDate;
+  final String instruction; // Special instruction for this specific run
+  
+  Map<String, dynamic> toJson() => {
+    'mode': mode.toString(),
+    'startDate': startDate.toIso8601String(),
+    'instruction': instruction,
   };
 }
 
 class UserContext {
-  final int age;
-  final String experienceLevel;
+  final int? age;
+  final String? gender;
   final List<String> availableDays;
-  final Map<String, int> timeConstraints;
-  final List<String> injuryHistory;
+  final String? constraints; // Placeholder for time/injury constraints (e.g. "Max 45 mins", "No jumping")
+
+  // Token Optimization: Filter domain entity to strictly relevant fields
+  factory UserContext.fromEntity(User user) {
+    return UserContext(
+      age: user.age,
+      gender: user.gender,
+      availableDays: user.availableDays,
+      constraints: user.constraints,
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'age': age,
+    'gender': gender,
+    'availableDays': availableDays,
+    'constraints': constraints,
+  }..removeWhere((key, value) => value == null || (value is List && value.isEmpty));
 }
 
 class GoalContext {
   final GoalType type;
   final String target;
   final DateTime deadline;
-  final List<String> specialInstructions;
+  final String? currentFitness;
+  final double? initialWeeklyVolume; // Only for initial plans
+  final bool? isFirstTime;
+  final Map<String, String?> priorities;
+
+  factory GoalContext.fromEntity(Goal goal, {bool includeBaseline = false}) {
+    return GoalContext(
+      type: goal.type,
+      target: _formatTarget(goal), // Helper to format "Run 5k" etc.
+      deadline: goal.targetDate ?? goal.endDate!,
+      currentFitness: goal.currentBestTime != null ? "${goal.currentBestTime}s" : null,
+      initialWeeklyVolume: includeBaseline ? goal.initialWeeklyVolume : null,
+      isFirstTime: goal.isFirstTime,
+      priorities: {
+        'running': goal.runningPriority,
+        'strength': goal.strengthPriority,
+        'mobility': goal.mobilityPriority,
+      }..removeWhere((k, v) => v == null),
+    );
+  }
+
+  // ... helper _formatTarget would live here or in extension ...
+
+  Map<String, dynamic> toJson() => {
+    'type': type.toString(),
+    'target': target,
+    'deadline': deadline.toIso8601String(),
+    'currentFitness': currentFitness,
+    'initialWeeklyVolume': initialWeeklyVolume,
+    'isFirstTime': isFirstTime,
+    'priorities': priorities,
+  }..removeWhere((key, value) => value == null || (value is Map && value.isEmpty));
+}
+
+class WorkoutSummary {
+  final String id;
+  final int daysAgo; // Relative dating for easier AI reasoning
+  final String type; // e.g. "long_run", "tempo", "strength"
+  final bool isKey;
+  final String status;
+  
+  // Planned vs Actuals for Adherence
+  final int? plannedDuration;
+  final int? actualDuration;
+  final double? plannedDistance;
+  final double? actualDistance;
+  // Pace removed: AI can calculate from distance/duration if needed
+  final int? rpe;
+  
+  // Token Optimization: 
+  // 1. Strip description/instructions
+  // 2. Filter irrelevant fields (no distance for strength)
+  factory WorkoutSummary.fromEntity(Workout workout, DateTime now) {
+    return WorkoutSummary(
+      id: workout.id,
+      daysAgo: now.difference(workout.scheduledDate).inDays,
+      type: workout.type.toString().split('.').last,
+      isKey: workout.isKey,
+      status: workout.status.toString().split('.').last.replaceAll('WorkoutStatus.', ''),
+      
+      plannedDuration: workout.plannedDuration,
+      actualDuration: workout.actualDuration,
+      
+      // Only include distance for running-based types
+      plannedDistance: _isDistanceRelevant(workout.type) ? workout.plannedDistance : null,
+      actualDistance: _isDistanceRelevant(workout.type) ? workout.actualDistance : null,
+      
+      rpe: workout.rpe,
+    );
+  }
+
+  static bool _isDistanceRelevant(String type) {
+    // Basic heuristic: strength/mobility/yoga don't need distance
+    return !['strength', 'mobility', 'yoga', 'cross_training'].contains(type.toString().split('.').last);
+  }
+
+  Map<String, dynamic> toJson() => {
+    'daysAgo': daysAgo, // Integers are better for AI math than dates
+    'type': type,
+    'isKey': isKey,
+    'status': status,
+    'planned': {
+        'duration': plannedDuration,
+        'distance': plannedDistance,
+    }..removeWhere((k, v) => v == null),
+    'actual': {
+        'duration': actualDuration,
+        'distance': actualDistance,
+        'rpe': rpe,
+    }..removeWhere((k, v) => v == null),
+  }..removeWhere((key, value) => value == null || (value is Map && value.isEmpty));
 }
 ```
 
@@ -327,7 +544,7 @@ abstract class AIService {
     required Map<String, dynamic> responseSchema,
   });
   
-  /// Reschedule workouts within/across micro/mesocycles
+  /// Reschedule workouts within/across Phases/Blocks
   /// Context is pre-built by BuildRescheduleContext use case
   Future<List<Workout>> rescheduleWorkouts({
     required String systemPrompt,
@@ -1092,7 +1309,7 @@ Use Case: GenerateTrainingPlan
 AI Service: generatePlan()
   ├─ Input: Goal, User, Training History
   ├─ Context: Long-Term (cached) + Medium-Term
-  ├─ Output: Full plan (mesocycles, microcycles, workouts)
+  ├─ Output: Full plan (phases, blocks, workouts)
   ↓
 Repository: Save all workouts to DB
   ↓
@@ -1447,7 +1664,7 @@ test('AIService generates valid training plan', () async {
   );
   
   expect(plan.workouts.length, greaterThan(0));
-  expect(plan.mesocycles.length, greaterThan(0));
+  expect(plan.phases.length, greaterThan(0));
 });
 ```
 

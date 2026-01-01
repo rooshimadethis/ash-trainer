@@ -9,8 +9,8 @@ class Workout with _$Workout {
     required String id, // Domain ID (usually matches DB ID, but string)
     required String userId,
     required String goalId,
-    String? mesocycleId,
-    String? microcycleId,
+    String? phaseId,
+    String? blockId,
     required DateTime scheduledDate,
     required String type, // 'easy_run', 'tempo', etc.
     required String name,
@@ -24,6 +24,8 @@ class Workout with _$Workout {
     double? actualDistance,
     double? actualPace,
     int? rpe,
+    String? syncedFrom,
+    @Default(false) bool isKey,
     DateTime? completedAt,
   }) = _Workout;
 

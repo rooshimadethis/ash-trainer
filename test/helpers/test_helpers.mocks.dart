@@ -5,12 +5,16 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'dart:async' as _i5;
 
+import 'package:ash_trainer/features/shared/domain/entities/ai/context_models.dart'
+    as _i8;
 import 'package:ash_trainer/features/shared/domain/entities/goal.dart' as _i3;
 import 'package:ash_trainer/features/shared/domain/entities/user.dart' as _i2;
 import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.dart'
     as _i6;
 import 'package:ash_trainer/features/shared/domain/repositories/user_repository.dart'
     as _i4;
+import 'package:ash_trainer/features/training/application/usecases/generate_training_plan.dart'
+    as _i7;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -205,6 +209,30 @@ class MockGoalRepository extends _i1.Mock implements _i6.GoalRepository {
       ) as _i5.Future<void>);
 
   @override
+  _i5.Future<void> updateRationale({
+    required String? goalId,
+    required String? overallApproach,
+    required String? intensityDistribution,
+    required String? keyWorkouts,
+    required String? recoveryStrategy,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #updateRationale,
+          [],
+          {
+            #goalId: goalId,
+            #overallApproach: overallApproach,
+            #intensityDistribution: intensityDistribution,
+            #keyWorkouts: keyWorkouts,
+            #recoveryStrategy: recoveryStrategy,
+          },
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+
+  @override
   _i5.Future<void> deactivateGoal(String? goalId) => (super.noSuchMethod(
         Invocation.method(
           #deactivateGoal,
@@ -219,6 +247,38 @@ class MockGoalRepository extends _i1.Mock implements _i6.GoalRepository {
         Invocation.method(
           #deleteGoal,
           [goalId],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+}
+
+/// A class which mocks [GenerateTrainingPlan].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockGenerateTrainingPlan extends _i1.Mock
+    implements _i7.GenerateTrainingPlan {
+  MockGenerateTrainingPlan() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i5.Future<void> execute({
+    required String? goalId,
+    required String? userId,
+    _i8.PlanningMode? mode = _i8.PlanningMode.initial,
+    DateTime? startDate,
+  }) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #execute,
+          [],
+          {
+            #goalId: goalId,
+            #userId: userId,
+            #mode: mode,
+            #startDate: startDate,
+          },
         ),
         returnValue: _i5.Future<void>.value(),
         returnValueForMissingStub: _i5.Future<void>.value(),

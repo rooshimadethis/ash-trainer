@@ -17,12 +17,20 @@ class GoalSetupState {
   final String preferredHeightUnit;
   final List<String> unavailableDays;
   final String? constraints;
+
+  final int? trainingFrequency;
+  final double? currentWeeklyVolume;
+  final String preferredDistanceUnit; // 'km' or 'mi'
+  final String? runningPriority;
+  final String? strengthPriority;
+  final String? mobilityPriority;
   final GoalType? selectedGoalType;
   // Goal details
   final double? targetDistance;
   final DateTime? targetDate;
   final int? targetTime; // in seconds
   final int? currentBestTime; // in seconds
+  final bool? isFirstTime;
   final String? eventName;
   final DateTime? eventDate;
   final int? maintenanceFrequency;
@@ -41,13 +49,20 @@ class GoalSetupState {
     this.preferredWeightUnit = 'kg',
     this.height,
     this.preferredHeightUnit = 'cm',
+    this.preferredDistanceUnit = 'km',
     this.unavailableDays = const [],
     this.constraints,
+    this.trainingFrequency,
+    this.currentWeeklyVolume,
+    this.runningPriority,
+    this.strengthPriority,
+    this.mobilityPriority,
     this.selectedGoalType,
     this.targetDistance,
     this.targetDate,
     this.targetTime,
     this.currentBestTime,
+    this.isFirstTime,
     this.eventName,
     this.eventDate,
     this.maintenanceFrequency,
@@ -68,11 +83,18 @@ class GoalSetupState {
     String? preferredHeightUnit,
     List<String>? unavailableDays,
     String? constraints,
+    int? trainingFrequency,
+    double? currentWeeklyVolume,
+    String? preferredDistanceUnit,
+    String? runningPriority,
+    String? strengthPriority,
+    String? mobilityPriority,
     GoalType? selectedGoalType,
     double? targetDistance,
     DateTime? targetDate,
     int? targetTime,
     int? currentBestTime,
+    bool? isFirstTime,
     String? eventName,
     DateTime? eventDate,
     int? maintenanceFrequency,
@@ -92,11 +114,19 @@ class GoalSetupState {
       preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
       unavailableDays: unavailableDays ?? this.unavailableDays,
       constraints: constraints ?? this.constraints,
+      trainingFrequency: trainingFrequency ?? this.trainingFrequency,
+      currentWeeklyVolume: currentWeeklyVolume ?? this.currentWeeklyVolume,
+      preferredDistanceUnit:
+          preferredDistanceUnit ?? this.preferredDistanceUnit,
+      runningPriority: runningPriority ?? this.runningPriority,
+      strengthPriority: strengthPriority ?? this.strengthPriority,
+      mobilityPriority: mobilityPriority ?? this.mobilityPriority,
       selectedGoalType: selectedGoalType ?? this.selectedGoalType,
       targetDistance: targetDistance ?? this.targetDistance,
       targetDate: targetDate ?? this.targetDate,
       targetTime: targetTime ?? this.targetTime,
       currentBestTime: currentBestTime ?? this.currentBestTime,
+      isFirstTime: isFirstTime ?? this.isFirstTime,
       eventName: eventName ?? this.eventName,
       eventDate: eventDate ?? this.eventDate,
       maintenanceFrequency: maintenanceFrequency ?? this.maintenanceFrequency,
@@ -151,13 +181,44 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
     state = state.copyWith(constraints: constraints);
   }
 
+  void setTrainingContext({
+    int? frequency,
+    double? volume,
+    String? distanceUnit,
+  }) {
+    state = state.copyWith(
+      trainingFrequency: frequency,
+      currentWeeklyVolume: volume,
+      preferredDistanceUnit: distanceUnit,
+    );
+  }
+
+  void setPillarPriorities({
+    String? running,
+    String? strength,
+    String? mobility,
+  }) {
+    // Enforce logic: Only 1 High priority allowed.
+    // However, the UI should handle the interaction logic primarily.
+    // Here we just save what is passed, assuming UI did the validation logic
+    // or we can enforce it here too deeply.
+    // For now, simple setter.
+    state = state.copyWith(
+      runningPriority: running,
+      strengthPriority: strength,
+      mobilityPriority: mobility,
+    );
+  }
+
   void setGoalType(GoalType type) {
     state = state.copyWith(selectedGoalType: type);
   }
 
   // Specific goal detail setters
-  void setDistanceMilestoneDetails({double? distance, DateTime? date}) {
-    state = state.copyWith(targetDistance: distance, targetDate: date);
+  void setDistanceMilestoneDetails(
+      {double? distance, DateTime? date, bool? isFirstTime}) {
+    state = state.copyWith(
+        targetDistance: distance, targetDate: date, isFirstTime: isFirstTime);
   }
 
   void setTimePerformanceDetails(
@@ -224,6 +285,8 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
         preferredWeightUnit: state.preferredWeightUnit,
         height: state.height,
         preferredHeightUnit: state.preferredHeightUnit,
+
+        preferredDistanceUnit: state.preferredDistanceUnit,
         availableDays: availableDays,
         constraints: state.constraints,
         healthPermissionsGranted: state.healthPermissionsGranted,
@@ -247,11 +310,18 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
         targetDate: state.targetDate,
         targetTime: state.targetTime,
         currentBestTime: state.currentBestTime,
+        isFirstTime: state.isFirstTime,
         eventName: state.eventName,
         eventDate: state.eventDate,
         maintenanceFrequency: state.maintenanceFrequency,
         maintenanceDuration: state.maintenanceDuration,
         endDate: state.endDate,
+        // Initial Context
+        initialTrainingFrequency: state.trainingFrequency,
+        initialWeeklyVolume: _convertVolumeToKm(),
+        runningPriority: state.runningPriority,
+        strengthPriority: state.strengthPriority,
+        mobilityPriority: state.mobilityPriority,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         // Defaults
@@ -288,6 +358,15 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
       default:
         return 'Training Goal';
     }
+  }
+
+  double? _convertVolumeToKm() {
+    if (state.currentWeeklyVolume == null) return null;
+    if (state.preferredDistanceUnit == 'mi') {
+      // 1 mile = 1.60934 km
+      return state.currentWeeklyVolume! * 1.60934;
+    }
+    return state.currentWeeklyVolume;
   }
 }
 

@@ -28,6 +28,7 @@ class Users extends Table {
   TextColumn get preferredWeightUnit => text().withDefault(const Constant('kg'))(); // UI display preference: 'kg' or 'lb'
   RealColumn get height => real().nullable()(); // Always stored in CM
   TextColumn get preferredHeightUnit => text().withDefault(const Constant('cm'))(); // UI display preference: 'cm' or 'in'
+  TextColumn get preferredDistanceUnit => text().withDefault(const Constant('km'))(); // UI display preference: 'km' or 'mi'
   
   // Onboarding data (Journey #1)
   TextColumn get trainingHistory => text()(); // 'beginner' | 'casual' | 'regular' | 'advanced'
@@ -53,9 +54,10 @@ class Users extends Table {
 - `availableDays` stored as JSON array for flexibility
 - `trainingHistory` field is deprecated - fitness level will be inferred from baseline workout (see Journey #1 feedback)
 - **Weight/Height Storage**: Always stored in metric units (KG/CM) for consistency in calculations
-- **Preferred Units**: `preferredWeightUnit` and `preferredHeightUnit` are UI display preferences only
+- **Preferred Units**: `preferredWeightUnit`, `preferredHeightUnit`, and `preferredDistanceUnit` are UI display preferences only
   - Weight: 'kg' or 'lb' (Health Connect uses KG, HealthKit supports both)
   - Height: 'cm' or 'in' (Health Connect uses CM, HealthKit supports both)
+  - Distance: 'km' or 'mi' (used for weekly volume input in Training Context)
 - When syncing from HealthKit, values are converted to KG/CM for storage
 
 **Constraints**:
@@ -98,6 +100,14 @@ class Goals extends Table {
   IntColumn get maintenanceDuration => integer().nullable()(); // minutes per run
   DateTimeColumn get endDate => dateTime().nullable()();
   
+  // Training Context (from onboarding Step 4)
+  IntColumn get initialTrainingFrequency => integer().nullable()(); // days per week
+  RealColumn get initialWeeklyVolume => real().nullable()(); // in km
+  BoolColumn get isFirstTime => boolean().nullable()(); // For distance milestone goals
+  TextColumn get runningPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  TextColumn get strengthPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  TextColumn get mobilityPriority => text().nullable()(); // 'Low' | 'Medium' | 'High'
+  
   // Confidence tracking (Journey #5)
   RealColumn get confidence => real().withDefault(const Constant(85.0))(); // 0-100
   RealColumn get adherenceScore => real().withDefault(const Constant(8.0))(); // 0-10
@@ -113,7 +123,7 @@ class Goals extends Table {
 
 **Relationships**:
 - Many goals belong to one user (N:1)
-- One goal has many mesocycles (1:N)
+- One goal has many phases (1:N)
 - One goal has many confidence history records (1:N)
 
 **Constraints**:
@@ -121,54 +131,57 @@ class Goals extends Table {
 - Only one goal can have `isActive = true` at a time (enforced in application layer)
 - `confidence` range: 0-100
 - Score fields range: 0-10
+- Pillar priorities must be one of: `Low`, `Medium`, `High` (nullable)
+- Only one pillar should be set to `High` at a time (enforced in UI)
 
 ---
 
-#### Table: `mesocycles`
-
-**Purpose**: Store 3-4 week training blocks that define periodization phases (Base/Build/Peak/Taper).
-
-**Fields**:
-```dart
-class Mesocycles extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get goalId => integer().references(Goals, #id)();
-  
-  // Mesocycle identification
-  IntColumn get mesocycleNumber => integer()(); // 1, 2, 3, etc.
-  DateTimeColumn get startDate => dateTime()();
-  DateTimeColumn get endDate => dateTime()();
-  
-  // Periodization phase
-  TextColumn get phase => text()(); // 'base' | 'build' | 'peak' | 'taper' | 'recovery'
-  
-  // Training distribution strategy
-  TextColumn get intensityDistribution => text()(); // 'pyramidal' | 'polarized' | 'threshold'
-  
-  // Volume targets
-  RealColumn get targetWeeklyVolume => real()(); // in km, average for this mesocycle
-  IntColumn get targetWeeklyDuration => integer()(); // in seconds, average for this mesocycle
-  
-  // Computed stats (updated by application layer)
-  RealColumn get actualVolume => real().withDefault(const Constant(0.0))(); // in km
-  IntColumn get actualDuration => integer().withDefault(const Constant(0))(); // in seconds
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**Relationships**:
-- Many mesocycles belong to one goal (N:1)
-- One mesocycle has many microcycles (1:N, typically 3-4 weeks)
-
-**Constraints**:
-- `phase` must be one of: `base`, `build`, `peak`, `taper`, `recovery`
-- `intensityDistribution` must be one of: `pyramidal`, `polarized`, `threshold`
-- `mesocycleNumber` must be unique per goal (enforced in application layer)
-- `endDate` must be after `startDate`
-- Typical duration: 3-4 weeks (21-28 days)
+#### Table: `phases`
+ 
+ **Purpose**: Store high-level training phases (Base/Build/Peak/Taper) that define the goal journey.
+ 
+ **Fields**:
+ ```dart
+ class Phases extends Table {
+   IntColumn get id => integer().autoIncrement()();
+   IntColumn get goalId => integer().references(Goals, #id)();
+   
+   // Phase identification
+   IntColumn get phaseNumber => integer()(); // 1, 2, 3, etc.
+   DateTimeColumn get startDate => dateTime().nullable()(); // Populated by App (Hydration)
+   DateTimeColumn get endDate => dateTime().nullable()(); // Populated by App (Hydration)
+   
+   // AI-provided duration
+   IntColumn get durationWeeks => integer()(); 
+   
+   // Periodization phase
+   TextColumn get phaseType => text()(); // 'base' | 'build' | 'peak' | 'taper' | 'recovery'
+   
+   // Training distribution strategy
+   TextColumn get intensityDistribution => text()(); // 'pyramidal' | 'polarized' | 'threshold'
+   
+   // Volume targets
+   RealColumn get targetWeeklyVolume => real()(); // in km
+   IntColumn get targetWeeklyDuration => integer()(); // in seconds
+   
+   // Computed stats
+   RealColumn get actualVolume => real().withDefault(const Constant(0.0))(); 
+   IntColumn get actualDuration => integer().withDefault(const Constant(0))(); 
+   
+   // Metadata
+   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+ }
+ ```
+ 
+ **Relationships**:
+ - Many phases belong to one goal (N:1)
+ - One phase has many training blocks (1:N)
+ 
+ **Constraints**:
+ - `phaseType` must be one of: `base`, `build`, `peak`, `taper`, `recovery`
+ - `intensityDistribution` must be one of: `pyramidal`, `polarized`, `threshold`
+ - `phaseNumber` must be unique per goal
 
 **Phase Definitions** (from product spec):
 - **Base**: 4-8 weeks of aerobic foundation building (75-80% easy running)
@@ -189,8 +202,8 @@ class Workouts extends Table {
   IntColumn get id => integer().autoIncrement()();
   IntColumn get userId => integer().references(Users, #id)();
   IntColumn get goalId => integer().references(Goals, #id)();
-  IntColumn get mesocycleId => integer().nullable().references(Mesocycles, #id)();
-  IntColumn get microcycleId => integer().nullable().references(Microcycles, #id)();
+  IntColumn get phaseId => integer().nullable().references(Phases, #id)();
+  IntColumn get blockId => integer().nullable().references(TrainingBlocks, #id)();
   
   // Scheduling
   DateTimeColumn get scheduledDate => dateTime()();
@@ -209,6 +222,7 @@ class Workouts extends Table {
   RealColumn get actualDistance => real().nullable()(); // in km
   RealColumn get actualPace => real().nullable()(); // min/km
   IntColumn get rpe => integer().nullable()(); // 1-10
+  TextColumn get syncedFrom => text().nullable()(); // 'manual' | 'health_api' | 'screenshot'
   DateTimeColumn get completedAt => dateTime().nullable()();
   
   // Metadata
@@ -220,8 +234,8 @@ class Workouts extends Table {
 **Relationships**:
 - Many workouts belong to one user (N:1)
 - Many workouts belong to one goal (N:1)
-- Many workouts belong to one mesocycle (N:1, optional)
-- Many workouts belong to one microcycle (N:1, optional)
+- Many workouts belong to one phase (N:1, optional)
+- Many workouts belong to one training block (N:1, optional)
 
 **Constraints**:
 - `type` must be one of: `easy_run`, `tempo`, `intervals`, `long_run`, `rest`, `strength`, `mobility`
@@ -235,39 +249,41 @@ class Workouts extends Table {
 
 ---
 
-#### Table: `microcycles`
-
-**Purpose**: Store individual training weeks within a mesocycle.
-
-**Fields**:
-```dart
-class Microcycles extends Table {
-  IntColumn get id => integer().autoIncrement()();
-  IntColumn get mesocycleId => integer().references(Mesocycles, #id)();
-  
-  // Week identification
-  IntColumn get weekNumber => integer()(); // 1, 2, 3, etc. (within mesocycle)
-  DateTimeColumn get startDate => dateTime()();
-  DateTimeColumn get endDate => dateTime()();
-  
-  // Computed stats (updated by application layer)
-  RealColumn get totalVolume => real().withDefault(const Constant(0.0))(); // in km
-  IntColumn get totalDuration => integer().withDefault(const Constant(0))(); // in seconds
-  RealColumn get adherencePercentage => real().withDefault(const Constant(0.0))(); // 0-100
-  
-  // Metadata
-  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
-  DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
-}
-```
-
-**Relationships**:
-- Many microcycles belong to one mesocycle (N:1)
-- One microcycle has many workouts (1:N)
-
-**Constraints**:
-- `weekNumber` must be unique per mesocycle (enforced in application layer)
-- `endDate` must be after `startDate`
+#### Table: `training_blocks`
+ 
+ **Purpose**: Store logical clusters of workouts (3-10 days) within a phase.
+ 
+ **Fields**:
+ ```dart
+ class TrainingBlocks extends Table {
+   IntColumn get id => integer().autoIncrement()();
+   IntColumn get phaseId => integer().references(Phases, #id)();
+   
+   // Block identification
+   IntColumn get blockNumber => integer()(); // 1, 2, 3, etc.
+   DateTimeColumn get startDate => dateTime().nullable()(); // Populated by App
+   DateTimeColumn get endDate => dateTime().nullable()(); // Populated by App
+   
+   // AI-provided intent
+   TextColumn get intent => text()(); // 'intro' | 'progression' | 'peak' | 'recovery'
+   
+   // Computed stats
+   RealColumn get totalVolume => real().withDefault(const Constant(0.0))(); 
+   IntColumn get totalDuration => integer().withDefault(const Constant(0))(); 
+   RealColumn get adherencePercentage => real().withDefault(const Constant(0.0))(); 
+   
+   // Metadata
+   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+   DateTimeColumn get updatedAt => dateTime().withDefault(currentDateAndTime)();
+ }
+ ```
+ 
+ **Relationships**:
+ - Many training blocks belong to one phase (N:1)
+ - One training block has many workouts (1:N)
+ 
+ **Constraints**:
+ - `blockNumber` must be unique per phase
 
 ---
 
@@ -275,7 +291,14 @@ class Microcycles extends Table {
 
 #### Table: `biomarkers`
 
-**Purpose**: Store daily health metrics from Health Connect/HealthKit.
+**Purpose**: Store daily health metrics from Health Connect/HealthKit for the recovery widget.
+
+**Phase 2 MVP Scope**: Only three metrics are displayed in the recovery widget:
+- Sleep duration (formatted as "7h 30m")
+- HRV (Heart Rate Variability)
+- RHR (Resting Heart Rate)
+
+**Future Expansion**: Additional fields (sleepQuality, energyLevel, stressLevel, recoveryScore) can be added in later phases for more advanced recovery tracking and scoring algorithms.
 
 **Fields**:
 ```dart
@@ -286,20 +309,10 @@ class Biomarkers extends Table {
   // Date (one record per day)
   DateTimeColumn get date => dateTime()();
   
-  // Sleep metrics
+  // Health metrics (Phase 2 MVP)
   IntColumn get sleepDuration => integer().nullable()(); // in minutes
-  RealColumn get sleepQuality => real().nullable()(); // 1-10 scale
-  
-  // Heart metrics
-  RealColumn get hrv => real().nullable()(); // Heart Rate Variability (ms)
+  RealColumn get hrv => real().nullable()(); // Heart Rate Variability SDNN (ms)
   IntColumn get rhr => integer().nullable()(); // Resting Heart Rate (bpm)
-  
-  // Subjective metrics (from check-ins)
-  RealColumn get energyLevel => real().nullable()(); // 1-10 scale
-  RealColumn get stressLevel => real().nullable()(); // 1-10 scale
-  
-  // Computed recovery score
-  RealColumn get recoveryScore => real().nullable()(); // 0-100
   
   // Metadata
   DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
@@ -312,11 +325,14 @@ class Biomarkers extends Table {
 
 **Constraints**:
 - `date` must be unique per user (one record per day)
-- Score fields range: 1-10 (nullable)
-- `recoveryScore` range: 0-100 (nullable)
+- All health metrics are nullable (user may have partial data)
 
 **Indexes**:
 - `userId, date` (composite for daily lookups)
+
+**Data Sources**:
+- **Android**: Health Connect API (SLEEP_ASLEEP, HEART_RATE_VARIABILITY_SDNN, RESTING_HEART_RATE)
+- **iOS**: HealthKit (HKCategoryTypeIdentifierSleepAnalysis, HKQuantityTypeIdentifierHeartRateVariabilitySDNN, HKQuantityTypeIdentifierRestingHeartRate)
 
 ---
 
@@ -439,4 +455,4 @@ class GoalConfidenceHistory extends Table {
 
 ---
 
-**Last Updated**: 2025-12-29
+**Last Updated**: 2025-12-30 (Added Training Context fields)

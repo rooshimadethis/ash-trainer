@@ -25,7 +25,8 @@ mixin _$PlanGenerationContext {
   GoalContext get goal => throw _privateConstructorUsedError;
   List<WorkoutSummary> get trainingHistory =>
       throw _privateConstructorUsedError;
-  String get trainingPhilosophy => throw _privateConstructorUsedError;
+  PlanningConfig get config => throw _privateConstructorUsedError;
+  PlanGenerationPhilosophy get philosophy => throw _privateConstructorUsedError;
 
   /// Serializes this PlanGenerationContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -47,10 +48,13 @@ abstract class $PlanGenerationContextCopyWith<$Res> {
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
-      String trainingPhilosophy});
+      PlanningConfig config,
+      PlanGenerationPhilosophy philosophy});
 
   $UserContextCopyWith<$Res> get user;
   $GoalContextCopyWith<$Res> get goal;
+  $PlanningConfigCopyWith<$Res> get config;
+  $PlanGenerationPhilosophyCopyWith<$Res> get philosophy;
 }
 
 /// @nodoc
@@ -72,7 +76,8 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
-    Object? trainingPhilosophy = null,
+    Object? config = null,
+    Object? philosophy = null,
   }) {
     return _then(_value.copyWith(
       user: null == user
@@ -87,10 +92,14 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
           ? _value.trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
-      trainingPhilosophy: null == trainingPhilosophy
-          ? _value.trainingPhilosophy
-          : trainingPhilosophy // ignore: cast_nullable_to_non_nullable
-              as String,
+      config: null == config
+          ? _value.config
+          : config // ignore: cast_nullable_to_non_nullable
+              as PlanningConfig,
+      philosophy: null == philosophy
+          ? _value.philosophy
+          : philosophy // ignore: cast_nullable_to_non_nullable
+              as PlanGenerationPhilosophy,
     ) as $Val);
   }
 
@@ -113,6 +122,26 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
       return _then(_value.copyWith(goal: value) as $Val);
     });
   }
+
+  /// Create a copy of PlanGenerationContext
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PlanningConfigCopyWith<$Res> get config {
+    return $PlanningConfigCopyWith<$Res>(_value.config, (value) {
+      return _then(_value.copyWith(config: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PlanGenerationContext
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PlanGenerationPhilosophyCopyWith<$Res> get philosophy {
+    return $PlanGenerationPhilosophyCopyWith<$Res>(_value.philosophy, (value) {
+      return _then(_value.copyWith(philosophy: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -128,12 +157,17 @@ abstract class _$$PlanGenerationContextImplCopyWith<$Res>
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
-      String trainingPhilosophy});
+      PlanningConfig config,
+      PlanGenerationPhilosophy philosophy});
 
   @override
   $UserContextCopyWith<$Res> get user;
   @override
   $GoalContextCopyWith<$Res> get goal;
+  @override
+  $PlanningConfigCopyWith<$Res> get config;
+  @override
+  $PlanGenerationPhilosophyCopyWith<$Res> get philosophy;
 }
 
 /// @nodoc
@@ -153,7 +187,8 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
-    Object? trainingPhilosophy = null,
+    Object? config = null,
+    Object? philosophy = null,
   }) {
     return _then(_$PlanGenerationContextImpl(
       user: null == user
@@ -168,10 +203,14 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
           ? _value._trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
-      trainingPhilosophy: null == trainingPhilosophy
-          ? _value.trainingPhilosophy
-          : trainingPhilosophy // ignore: cast_nullable_to_non_nullable
-              as String,
+      config: null == config
+          ? _value.config
+          : config // ignore: cast_nullable_to_non_nullable
+              as PlanningConfig,
+      philosophy: null == philosophy
+          ? _value.philosophy
+          : philosophy // ignore: cast_nullable_to_non_nullable
+              as PlanGenerationPhilosophy,
     ));
   }
 }
@@ -183,7 +222,8 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
       {required this.user,
       required this.goal,
       required final List<WorkoutSummary> trainingHistory,
-      required this.trainingPhilosophy})
+      required this.config,
+      required this.philosophy})
       : _trainingHistory = trainingHistory;
 
   factory _$PlanGenerationContextImpl.fromJson(Map<String, dynamic> json) =>
@@ -202,11 +242,13 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
   }
 
   @override
-  final String trainingPhilosophy;
+  final PlanningConfig config;
+  @override
+  final PlanGenerationPhilosophy philosophy;
 
   @override
   String toString() {
-    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, trainingPhilosophy: $trainingPhilosophy)';
+    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, config: $config, philosophy: $philosophy)';
   }
 
   @override
@@ -218,8 +260,9 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
             (identical(other.goal, goal) || other.goal == goal) &&
             const DeepCollectionEquality()
                 .equals(other._trainingHistory, _trainingHistory) &&
-            (identical(other.trainingPhilosophy, trainingPhilosophy) ||
-                other.trainingPhilosophy == trainingPhilosophy));
+            (identical(other.config, config) || other.config == config) &&
+            (identical(other.philosophy, philosophy) ||
+                other.philosophy == philosophy));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -229,7 +272,8 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
       user,
       goal,
       const DeepCollectionEquality().hash(_trainingHistory),
-      trainingPhilosophy);
+      config,
+      philosophy);
 
   /// Create a copy of PlanGenerationContext
   /// with the given fields replaced by the non-null parameter values.
@@ -250,10 +294,12 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
 
 abstract class _PlanGenerationContext implements PlanGenerationContext {
   const factory _PlanGenerationContext(
-      {required final UserContext user,
-      required final GoalContext goal,
-      required final List<WorkoutSummary> trainingHistory,
-      required final String trainingPhilosophy}) = _$PlanGenerationContextImpl;
+          {required final UserContext user,
+          required final GoalContext goal,
+          required final List<WorkoutSummary> trainingHistory,
+          required final PlanningConfig config,
+          required final PlanGenerationPhilosophy philosophy}) =
+      _$PlanGenerationContextImpl;
 
   factory _PlanGenerationContext.fromJson(Map<String, dynamic> json) =
       _$PlanGenerationContextImpl.fromJson;
@@ -265,7 +311,9 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
   @override
   List<WorkoutSummary> get trainingHistory;
   @override
-  String get trainingPhilosophy;
+  PlanningConfig get config;
+  @override
+  PlanGenerationPhilosophy get philosophy;
 
   /// Create a copy of PlanGenerationContext
   /// with the given fields replaced by the non-null parameter values.
@@ -275,19 +323,1469 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
       get copyWith => throw _privateConstructorUsedError;
 }
 
+PlanningConfig _$PlanningConfigFromJson(Map<String, dynamic> json) {
+  return _PlanningConfig.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PlanningConfig {
+  PlanningMode get mode => throw _privateConstructorUsedError;
+  DateTime get startDate => throw _privateConstructorUsedError;
+  List<String> get upcomingWeekdays =>
+      throw _privateConstructorUsedError; // Lookup list for AI (Index 0 = Day 1)
+  String get instruction => throw _privateConstructorUsedError;
+
+  /// Serializes this PlanningConfig to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PlanningConfigCopyWith<PlanningConfig> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PlanningConfigCopyWith<$Res> {
+  factory $PlanningConfigCopyWith(
+          PlanningConfig value, $Res Function(PlanningConfig) then) =
+      _$PlanningConfigCopyWithImpl<$Res, PlanningConfig>;
+  @useResult
+  $Res call(
+      {PlanningMode mode,
+      DateTime startDate,
+      List<String> upcomingWeekdays,
+      String instruction});
+}
+
+/// @nodoc
+class _$PlanningConfigCopyWithImpl<$Res, $Val extends PlanningConfig>
+    implements $PlanningConfigCopyWith<$Res> {
+  _$PlanningConfigCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mode = null,
+    Object? startDate = null,
+    Object? upcomingWeekdays = null,
+    Object? instruction = null,
+  }) {
+    return _then(_value.copyWith(
+      mode: null == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as PlanningMode,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      upcomingWeekdays: null == upcomingWeekdays
+          ? _value.upcomingWeekdays
+          : upcomingWeekdays // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      instruction: null == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$PlanningConfigImplCopyWith<$Res>
+    implements $PlanningConfigCopyWith<$Res> {
+  factory _$$PlanningConfigImplCopyWith(_$PlanningConfigImpl value,
+          $Res Function(_$PlanningConfigImpl) then) =
+      __$$PlanningConfigImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {PlanningMode mode,
+      DateTime startDate,
+      List<String> upcomingWeekdays,
+      String instruction});
+}
+
+/// @nodoc
+class __$$PlanningConfigImplCopyWithImpl<$Res>
+    extends _$PlanningConfigCopyWithImpl<$Res, _$PlanningConfigImpl>
+    implements _$$PlanningConfigImplCopyWith<$Res> {
+  __$$PlanningConfigImplCopyWithImpl(
+      _$PlanningConfigImpl _value, $Res Function(_$PlanningConfigImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? mode = null,
+    Object? startDate = null,
+    Object? upcomingWeekdays = null,
+    Object? instruction = null,
+  }) {
+    return _then(_$PlanningConfigImpl(
+      mode: null == mode
+          ? _value.mode
+          : mode // ignore: cast_nullable_to_non_nullable
+              as PlanningMode,
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      upcomingWeekdays: null == upcomingWeekdays
+          ? _value._upcomingWeekdays
+          : upcomingWeekdays // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      instruction: null == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PlanningConfigImpl implements _PlanningConfig {
+  const _$PlanningConfigImpl(
+      {required this.mode,
+      required this.startDate,
+      required final List<String> upcomingWeekdays,
+      required this.instruction})
+      : _upcomingWeekdays = upcomingWeekdays;
+
+  factory _$PlanningConfigImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PlanningConfigImplFromJson(json);
+
+  @override
+  final PlanningMode mode;
+  @override
+  final DateTime startDate;
+  final List<String> _upcomingWeekdays;
+  @override
+  List<String> get upcomingWeekdays {
+    if (_upcomingWeekdays is EqualUnmodifiableListView)
+      return _upcomingWeekdays;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_upcomingWeekdays);
+  }
+
+// Lookup list for AI (Index 0 = Day 1)
+  @override
+  final String instruction;
+
+  @override
+  String toString() {
+    return 'PlanningConfig(mode: $mode, startDate: $startDate, upcomingWeekdays: $upcomingWeekdays, instruction: $instruction)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PlanningConfigImpl &&
+            (identical(other.mode, mode) || other.mode == mode) &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            const DeepCollectionEquality()
+                .equals(other._upcomingWeekdays, _upcomingWeekdays) &&
+            (identical(other.instruction, instruction) ||
+                other.instruction == instruction));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, mode, startDate,
+      const DeepCollectionEquality().hash(_upcomingWeekdays), instruction);
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PlanningConfigImplCopyWith<_$PlanningConfigImpl> get copyWith =>
+      __$$PlanningConfigImplCopyWithImpl<_$PlanningConfigImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PlanningConfigImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PlanningConfig implements PlanningConfig {
+  const factory _PlanningConfig(
+      {required final PlanningMode mode,
+      required final DateTime startDate,
+      required final List<String> upcomingWeekdays,
+      required final String instruction}) = _$PlanningConfigImpl;
+
+  factory _PlanningConfig.fromJson(Map<String, dynamic> json) =
+      _$PlanningConfigImpl.fromJson;
+
+  @override
+  PlanningMode get mode;
+  @override
+  DateTime get startDate;
+  @override
+  List<String> get upcomingWeekdays; // Lookup list for AI (Index 0 = Day 1)
+  @override
+  String get instruction;
+
+  /// Create a copy of PlanningConfig
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PlanningConfigImplCopyWith<_$PlanningConfigImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+PlanGenerationPhilosophy _$PlanGenerationPhilosophyFromJson(
+    Map<String, dynamic> json) {
+  return _PlanGenerationPhilosophy.fromJson(json);
+}
+
+/// @nodoc
+mixin _$PlanGenerationPhilosophy {
+// RUNNING GUIDANCE
+  IntensityStrategy get intensityStrategy => throw _privateConstructorUsedError;
+  Map<String, double> get intensityBreakdown =>
+      throw _privateConstructorUsedError;
+  double get maxWeeklyVolumeIncrease =>
+      throw _privateConstructorUsedError; // 0.10 = max 10% increase
+  int get minWeeksBetweenRecovery =>
+      throw _privateConstructorUsedError; // 3 = at least 3 weeks
+  int get maxWeeksBetweenRecovery =>
+      throw _privateConstructorUsedError; // 5 = at most 5 weeks
+  double get recoveryVolumeReduction =>
+      throw _privateConstructorUsedError; // 0.25 = 25% reduction
+  List<String> get pillarConstraints => throw _privateConstructorUsedError;
+  TaperGuidance? get taperGuidance => throw _privateConstructorUsedError;
+  String get trainingFocus => throw _privateConstructorUsedError;
+  String get workoutStyle => throw _privateConstructorUsedError;
+  String get flexibilityLevel =>
+      throw _privateConstructorUsedError; // STRENGTH GUIDANCE (Phase 1 - MVP)
+  StrengthGuidance get strengthGuidance =>
+      throw _privateConstructorUsedError; // MOBILITY GUIDANCE (Phase 1 - MVP)
+  MobilityGuidance get mobilityGuidance => throw _privateConstructorUsedError;
+
+  /// Serializes this PlanGenerationPhilosophy to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $PlanGenerationPhilosophyCopyWith<PlanGenerationPhilosophy> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $PlanGenerationPhilosophyCopyWith<$Res> {
+  factory $PlanGenerationPhilosophyCopyWith(PlanGenerationPhilosophy value,
+          $Res Function(PlanGenerationPhilosophy) then) =
+      _$PlanGenerationPhilosophyCopyWithImpl<$Res, PlanGenerationPhilosophy>;
+  @useResult
+  $Res call(
+      {IntensityStrategy intensityStrategy,
+      Map<String, double> intensityBreakdown,
+      double maxWeeklyVolumeIncrease,
+      int minWeeksBetweenRecovery,
+      int maxWeeksBetweenRecovery,
+      double recoveryVolumeReduction,
+      List<String> pillarConstraints,
+      TaperGuidance? taperGuidance,
+      String trainingFocus,
+      String workoutStyle,
+      String flexibilityLevel,
+      StrengthGuidance strengthGuidance,
+      MobilityGuidance mobilityGuidance});
+
+  $TaperGuidanceCopyWith<$Res>? get taperGuidance;
+  $StrengthGuidanceCopyWith<$Res> get strengthGuidance;
+  $MobilityGuidanceCopyWith<$Res> get mobilityGuidance;
+}
+
+/// @nodoc
+class _$PlanGenerationPhilosophyCopyWithImpl<$Res,
+        $Val extends PlanGenerationPhilosophy>
+    implements $PlanGenerationPhilosophyCopyWith<$Res> {
+  _$PlanGenerationPhilosophyCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? intensityStrategy = null,
+    Object? intensityBreakdown = null,
+    Object? maxWeeklyVolumeIncrease = null,
+    Object? minWeeksBetweenRecovery = null,
+    Object? maxWeeksBetweenRecovery = null,
+    Object? recoveryVolumeReduction = null,
+    Object? pillarConstraints = null,
+    Object? taperGuidance = freezed,
+    Object? trainingFocus = null,
+    Object? workoutStyle = null,
+    Object? flexibilityLevel = null,
+    Object? strengthGuidance = null,
+    Object? mobilityGuidance = null,
+  }) {
+    return _then(_value.copyWith(
+      intensityStrategy: null == intensityStrategy
+          ? _value.intensityStrategy
+          : intensityStrategy // ignore: cast_nullable_to_non_nullable
+              as IntensityStrategy,
+      intensityBreakdown: null == intensityBreakdown
+          ? _value.intensityBreakdown
+          : intensityBreakdown // ignore: cast_nullable_to_non_nullable
+              as Map<String, double>,
+      maxWeeklyVolumeIncrease: null == maxWeeklyVolumeIncrease
+          ? _value.maxWeeklyVolumeIncrease
+          : maxWeeklyVolumeIncrease // ignore: cast_nullable_to_non_nullable
+              as double,
+      minWeeksBetweenRecovery: null == minWeeksBetweenRecovery
+          ? _value.minWeeksBetweenRecovery
+          : minWeeksBetweenRecovery // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxWeeksBetweenRecovery: null == maxWeeksBetweenRecovery
+          ? _value.maxWeeksBetweenRecovery
+          : maxWeeksBetweenRecovery // ignore: cast_nullable_to_non_nullable
+              as int,
+      recoveryVolumeReduction: null == recoveryVolumeReduction
+          ? _value.recoveryVolumeReduction
+          : recoveryVolumeReduction // ignore: cast_nullable_to_non_nullable
+              as double,
+      pillarConstraints: null == pillarConstraints
+          ? _value.pillarConstraints
+          : pillarConstraints // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      taperGuidance: freezed == taperGuidance
+          ? _value.taperGuidance
+          : taperGuidance // ignore: cast_nullable_to_non_nullable
+              as TaperGuidance?,
+      trainingFocus: null == trainingFocus
+          ? _value.trainingFocus
+          : trainingFocus // ignore: cast_nullable_to_non_nullable
+              as String,
+      workoutStyle: null == workoutStyle
+          ? _value.workoutStyle
+          : workoutStyle // ignore: cast_nullable_to_non_nullable
+              as String,
+      flexibilityLevel: null == flexibilityLevel
+          ? _value.flexibilityLevel
+          : flexibilityLevel // ignore: cast_nullable_to_non_nullable
+              as String,
+      strengthGuidance: null == strengthGuidance
+          ? _value.strengthGuidance
+          : strengthGuidance // ignore: cast_nullable_to_non_nullable
+              as StrengthGuidance,
+      mobilityGuidance: null == mobilityGuidance
+          ? _value.mobilityGuidance
+          : mobilityGuidance // ignore: cast_nullable_to_non_nullable
+              as MobilityGuidance,
+    ) as $Val);
+  }
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $TaperGuidanceCopyWith<$Res>? get taperGuidance {
+    if (_value.taperGuidance == null) {
+      return null;
+    }
+
+    return $TaperGuidanceCopyWith<$Res>(_value.taperGuidance!, (value) {
+      return _then(_value.copyWith(taperGuidance: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $StrengthGuidanceCopyWith<$Res> get strengthGuidance {
+    return $StrengthGuidanceCopyWith<$Res>(_value.strengthGuidance, (value) {
+      return _then(_value.copyWith(strengthGuidance: value) as $Val);
+    });
+  }
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $MobilityGuidanceCopyWith<$Res> get mobilityGuidance {
+    return $MobilityGuidanceCopyWith<$Res>(_value.mobilityGuidance, (value) {
+      return _then(_value.copyWith(mobilityGuidance: value) as $Val);
+    });
+  }
+}
+
+/// @nodoc
+abstract class _$$PlanGenerationPhilosophyImplCopyWith<$Res>
+    implements $PlanGenerationPhilosophyCopyWith<$Res> {
+  factory _$$PlanGenerationPhilosophyImplCopyWith(
+          _$PlanGenerationPhilosophyImpl value,
+          $Res Function(_$PlanGenerationPhilosophyImpl) then) =
+      __$$PlanGenerationPhilosophyImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {IntensityStrategy intensityStrategy,
+      Map<String, double> intensityBreakdown,
+      double maxWeeklyVolumeIncrease,
+      int minWeeksBetweenRecovery,
+      int maxWeeksBetweenRecovery,
+      double recoveryVolumeReduction,
+      List<String> pillarConstraints,
+      TaperGuidance? taperGuidance,
+      String trainingFocus,
+      String workoutStyle,
+      String flexibilityLevel,
+      StrengthGuidance strengthGuidance,
+      MobilityGuidance mobilityGuidance});
+
+  @override
+  $TaperGuidanceCopyWith<$Res>? get taperGuidance;
+  @override
+  $StrengthGuidanceCopyWith<$Res> get strengthGuidance;
+  @override
+  $MobilityGuidanceCopyWith<$Res> get mobilityGuidance;
+}
+
+/// @nodoc
+class __$$PlanGenerationPhilosophyImplCopyWithImpl<$Res>
+    extends _$PlanGenerationPhilosophyCopyWithImpl<$Res,
+        _$PlanGenerationPhilosophyImpl>
+    implements _$$PlanGenerationPhilosophyImplCopyWith<$Res> {
+  __$$PlanGenerationPhilosophyImplCopyWithImpl(
+      _$PlanGenerationPhilosophyImpl _value,
+      $Res Function(_$PlanGenerationPhilosophyImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? intensityStrategy = null,
+    Object? intensityBreakdown = null,
+    Object? maxWeeklyVolumeIncrease = null,
+    Object? minWeeksBetweenRecovery = null,
+    Object? maxWeeksBetweenRecovery = null,
+    Object? recoveryVolumeReduction = null,
+    Object? pillarConstraints = null,
+    Object? taperGuidance = freezed,
+    Object? trainingFocus = null,
+    Object? workoutStyle = null,
+    Object? flexibilityLevel = null,
+    Object? strengthGuidance = null,
+    Object? mobilityGuidance = null,
+  }) {
+    return _then(_$PlanGenerationPhilosophyImpl(
+      intensityStrategy: null == intensityStrategy
+          ? _value.intensityStrategy
+          : intensityStrategy // ignore: cast_nullable_to_non_nullable
+              as IntensityStrategy,
+      intensityBreakdown: null == intensityBreakdown
+          ? _value._intensityBreakdown
+          : intensityBreakdown // ignore: cast_nullable_to_non_nullable
+              as Map<String, double>,
+      maxWeeklyVolumeIncrease: null == maxWeeklyVolumeIncrease
+          ? _value.maxWeeklyVolumeIncrease
+          : maxWeeklyVolumeIncrease // ignore: cast_nullable_to_non_nullable
+              as double,
+      minWeeksBetweenRecovery: null == minWeeksBetweenRecovery
+          ? _value.minWeeksBetweenRecovery
+          : minWeeksBetweenRecovery // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxWeeksBetweenRecovery: null == maxWeeksBetweenRecovery
+          ? _value.maxWeeksBetweenRecovery
+          : maxWeeksBetweenRecovery // ignore: cast_nullable_to_non_nullable
+              as int,
+      recoveryVolumeReduction: null == recoveryVolumeReduction
+          ? _value.recoveryVolumeReduction
+          : recoveryVolumeReduction // ignore: cast_nullable_to_non_nullable
+              as double,
+      pillarConstraints: null == pillarConstraints
+          ? _value._pillarConstraints
+          : pillarConstraints // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      taperGuidance: freezed == taperGuidance
+          ? _value.taperGuidance
+          : taperGuidance // ignore: cast_nullable_to_non_nullable
+              as TaperGuidance?,
+      trainingFocus: null == trainingFocus
+          ? _value.trainingFocus
+          : trainingFocus // ignore: cast_nullable_to_non_nullable
+              as String,
+      workoutStyle: null == workoutStyle
+          ? _value.workoutStyle
+          : workoutStyle // ignore: cast_nullable_to_non_nullable
+              as String,
+      flexibilityLevel: null == flexibilityLevel
+          ? _value.flexibilityLevel
+          : flexibilityLevel // ignore: cast_nullable_to_non_nullable
+              as String,
+      strengthGuidance: null == strengthGuidance
+          ? _value.strengthGuidance
+          : strengthGuidance // ignore: cast_nullable_to_non_nullable
+              as StrengthGuidance,
+      mobilityGuidance: null == mobilityGuidance
+          ? _value.mobilityGuidance
+          : mobilityGuidance // ignore: cast_nullable_to_non_nullable
+              as MobilityGuidance,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$PlanGenerationPhilosophyImpl implements _PlanGenerationPhilosophy {
+  const _$PlanGenerationPhilosophyImpl(
+      {required this.intensityStrategy,
+      required final Map<String, double> intensityBreakdown,
+      required this.maxWeeklyVolumeIncrease,
+      required this.minWeeksBetweenRecovery,
+      required this.maxWeeksBetweenRecovery,
+      required this.recoveryVolumeReduction,
+      required final List<String> pillarConstraints,
+      this.taperGuidance,
+      required this.trainingFocus,
+      required this.workoutStyle,
+      required this.flexibilityLevel,
+      required this.strengthGuidance,
+      required this.mobilityGuidance})
+      : _intensityBreakdown = intensityBreakdown,
+        _pillarConstraints = pillarConstraints;
+
+  factory _$PlanGenerationPhilosophyImpl.fromJson(Map<String, dynamic> json) =>
+      _$$PlanGenerationPhilosophyImplFromJson(json);
+
+// RUNNING GUIDANCE
+  @override
+  final IntensityStrategy intensityStrategy;
+  final Map<String, double> _intensityBreakdown;
+  @override
+  Map<String, double> get intensityBreakdown {
+    if (_intensityBreakdown is EqualUnmodifiableMapView)
+      return _intensityBreakdown;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableMapView(_intensityBreakdown);
+  }
+
+  @override
+  final double maxWeeklyVolumeIncrease;
+// 0.10 = max 10% increase
+  @override
+  final int minWeeksBetweenRecovery;
+// 3 = at least 3 weeks
+  @override
+  final int maxWeeksBetweenRecovery;
+// 5 = at most 5 weeks
+  @override
+  final double recoveryVolumeReduction;
+// 0.25 = 25% reduction
+  final List<String> _pillarConstraints;
+// 0.25 = 25% reduction
+  @override
+  List<String> get pillarConstraints {
+    if (_pillarConstraints is EqualUnmodifiableListView)
+      return _pillarConstraints;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_pillarConstraints);
+  }
+
+  @override
+  final TaperGuidance? taperGuidance;
+  @override
+  final String trainingFocus;
+  @override
+  final String workoutStyle;
+  @override
+  final String flexibilityLevel;
+// STRENGTH GUIDANCE (Phase 1 - MVP)
+  @override
+  final StrengthGuidance strengthGuidance;
+// MOBILITY GUIDANCE (Phase 1 - MVP)
+  @override
+  final MobilityGuidance mobilityGuidance;
+
+  @override
+  String toString() {
+    return 'PlanGenerationPhilosophy(intensityStrategy: $intensityStrategy, intensityBreakdown: $intensityBreakdown, maxWeeklyVolumeIncrease: $maxWeeklyVolumeIncrease, minWeeksBetweenRecovery: $minWeeksBetweenRecovery, maxWeeksBetweenRecovery: $maxWeeksBetweenRecovery, recoveryVolumeReduction: $recoveryVolumeReduction, pillarConstraints: $pillarConstraints, taperGuidance: $taperGuidance, trainingFocus: $trainingFocus, workoutStyle: $workoutStyle, flexibilityLevel: $flexibilityLevel, strengthGuidance: $strengthGuidance, mobilityGuidance: $mobilityGuidance)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$PlanGenerationPhilosophyImpl &&
+            (identical(other.intensityStrategy, intensityStrategy) ||
+                other.intensityStrategy == intensityStrategy) &&
+            const DeepCollectionEquality()
+                .equals(other._intensityBreakdown, _intensityBreakdown) &&
+            (identical(
+                    other.maxWeeklyVolumeIncrease, maxWeeklyVolumeIncrease) ||
+                other.maxWeeklyVolumeIncrease == maxWeeklyVolumeIncrease) &&
+            (identical(
+                    other.minWeeksBetweenRecovery, minWeeksBetweenRecovery) ||
+                other.minWeeksBetweenRecovery == minWeeksBetweenRecovery) &&
+            (identical(
+                    other.maxWeeksBetweenRecovery, maxWeeksBetweenRecovery) ||
+                other.maxWeeksBetweenRecovery == maxWeeksBetweenRecovery) &&
+            (identical(
+                    other.recoveryVolumeReduction, recoveryVolumeReduction) ||
+                other.recoveryVolumeReduction == recoveryVolumeReduction) &&
+            const DeepCollectionEquality()
+                .equals(other._pillarConstraints, _pillarConstraints) &&
+            (identical(other.taperGuidance, taperGuidance) ||
+                other.taperGuidance == taperGuidance) &&
+            (identical(other.trainingFocus, trainingFocus) ||
+                other.trainingFocus == trainingFocus) &&
+            (identical(other.workoutStyle, workoutStyle) ||
+                other.workoutStyle == workoutStyle) &&
+            (identical(other.flexibilityLevel, flexibilityLevel) ||
+                other.flexibilityLevel == flexibilityLevel) &&
+            (identical(other.strengthGuidance, strengthGuidance) ||
+                other.strengthGuidance == strengthGuidance) &&
+            (identical(other.mobilityGuidance, mobilityGuidance) ||
+                other.mobilityGuidance == mobilityGuidance));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      intensityStrategy,
+      const DeepCollectionEquality().hash(_intensityBreakdown),
+      maxWeeklyVolumeIncrease,
+      minWeeksBetweenRecovery,
+      maxWeeksBetweenRecovery,
+      recoveryVolumeReduction,
+      const DeepCollectionEquality().hash(_pillarConstraints),
+      taperGuidance,
+      trainingFocus,
+      workoutStyle,
+      flexibilityLevel,
+      strengthGuidance,
+      mobilityGuidance);
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$PlanGenerationPhilosophyImplCopyWith<_$PlanGenerationPhilosophyImpl>
+      get copyWith => __$$PlanGenerationPhilosophyImplCopyWithImpl<
+          _$PlanGenerationPhilosophyImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$PlanGenerationPhilosophyImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _PlanGenerationPhilosophy implements PlanGenerationPhilosophy {
+  const factory _PlanGenerationPhilosophy(
+          {required final IntensityStrategy intensityStrategy,
+          required final Map<String, double> intensityBreakdown,
+          required final double maxWeeklyVolumeIncrease,
+          required final int minWeeksBetweenRecovery,
+          required final int maxWeeksBetweenRecovery,
+          required final double recoveryVolumeReduction,
+          required final List<String> pillarConstraints,
+          final TaperGuidance? taperGuidance,
+          required final String trainingFocus,
+          required final String workoutStyle,
+          required final String flexibilityLevel,
+          required final StrengthGuidance strengthGuidance,
+          required final MobilityGuidance mobilityGuidance}) =
+      _$PlanGenerationPhilosophyImpl;
+
+  factory _PlanGenerationPhilosophy.fromJson(Map<String, dynamic> json) =
+      _$PlanGenerationPhilosophyImpl.fromJson;
+
+// RUNNING GUIDANCE
+  @override
+  IntensityStrategy get intensityStrategy;
+  @override
+  Map<String, double> get intensityBreakdown;
+  @override
+  double get maxWeeklyVolumeIncrease; // 0.10 = max 10% increase
+  @override
+  int get minWeeksBetweenRecovery; // 3 = at least 3 weeks
+  @override
+  int get maxWeeksBetweenRecovery; // 5 = at most 5 weeks
+  @override
+  double get recoveryVolumeReduction; // 0.25 = 25% reduction
+  @override
+  List<String> get pillarConstraints;
+  @override
+  TaperGuidance? get taperGuidance;
+  @override
+  String get trainingFocus;
+  @override
+  String get workoutStyle;
+  @override
+  String get flexibilityLevel; // STRENGTH GUIDANCE (Phase 1 - MVP)
+  @override
+  StrengthGuidance get strengthGuidance; // MOBILITY GUIDANCE (Phase 1 - MVP)
+  @override
+  MobilityGuidance get mobilityGuidance;
+
+  /// Create a copy of PlanGenerationPhilosophy
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$PlanGenerationPhilosophyImplCopyWith<_$PlanGenerationPhilosophyImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+TaperGuidance _$TaperGuidanceFromJson(Map<String, dynamic> json) {
+  return _TaperGuidance.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TaperGuidance {
+  String get strategy =>
+      throw _privateConstructorUsedError; // "progressive_volume_reduction"
+  int get minDurationDays => throw _privateConstructorUsedError;
+  int get maxDurationDays => throw _privateConstructorUsedError;
+  bool get maintainIntensity => throw _privateConstructorUsedError;
+
+  /// Serializes this TaperGuidance to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TaperGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TaperGuidanceCopyWith<TaperGuidance> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TaperGuidanceCopyWith<$Res> {
+  factory $TaperGuidanceCopyWith(
+          TaperGuidance value, $Res Function(TaperGuidance) then) =
+      _$TaperGuidanceCopyWithImpl<$Res, TaperGuidance>;
+  @useResult
+  $Res call(
+      {String strategy,
+      int minDurationDays,
+      int maxDurationDays,
+      bool maintainIntensity});
+}
+
+/// @nodoc
+class _$TaperGuidanceCopyWithImpl<$Res, $Val extends TaperGuidance>
+    implements $TaperGuidanceCopyWith<$Res> {
+  _$TaperGuidanceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TaperGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? strategy = null,
+    Object? minDurationDays = null,
+    Object? maxDurationDays = null,
+    Object? maintainIntensity = null,
+  }) {
+    return _then(_value.copyWith(
+      strategy: null == strategy
+          ? _value.strategy
+          : strategy // ignore: cast_nullable_to_non_nullable
+              as String,
+      minDurationDays: null == minDurationDays
+          ? _value.minDurationDays
+          : minDurationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxDurationDays: null == maxDurationDays
+          ? _value.maxDurationDays
+          : maxDurationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      maintainIntensity: null == maintainIntensity
+          ? _value.maintainIntensity
+          : maintainIntensity // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TaperGuidanceImplCopyWith<$Res>
+    implements $TaperGuidanceCopyWith<$Res> {
+  factory _$$TaperGuidanceImplCopyWith(
+          _$TaperGuidanceImpl value, $Res Function(_$TaperGuidanceImpl) then) =
+      __$$TaperGuidanceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String strategy,
+      int minDurationDays,
+      int maxDurationDays,
+      bool maintainIntensity});
+}
+
+/// @nodoc
+class __$$TaperGuidanceImplCopyWithImpl<$Res>
+    extends _$TaperGuidanceCopyWithImpl<$Res, _$TaperGuidanceImpl>
+    implements _$$TaperGuidanceImplCopyWith<$Res> {
+  __$$TaperGuidanceImplCopyWithImpl(
+      _$TaperGuidanceImpl _value, $Res Function(_$TaperGuidanceImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TaperGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? strategy = null,
+    Object? minDurationDays = null,
+    Object? maxDurationDays = null,
+    Object? maintainIntensity = null,
+  }) {
+    return _then(_$TaperGuidanceImpl(
+      strategy: null == strategy
+          ? _value.strategy
+          : strategy // ignore: cast_nullable_to_non_nullable
+              as String,
+      minDurationDays: null == minDurationDays
+          ? _value.minDurationDays
+          : minDurationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      maxDurationDays: null == maxDurationDays
+          ? _value.maxDurationDays
+          : maxDurationDays // ignore: cast_nullable_to_non_nullable
+              as int,
+      maintainIntensity: null == maintainIntensity
+          ? _value.maintainIntensity
+          : maintainIntensity // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TaperGuidanceImpl implements _TaperGuidance {
+  const _$TaperGuidanceImpl(
+      {required this.strategy,
+      required this.minDurationDays,
+      required this.maxDurationDays,
+      required this.maintainIntensity});
+
+  factory _$TaperGuidanceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TaperGuidanceImplFromJson(json);
+
+  @override
+  final String strategy;
+// "progressive_volume_reduction"
+  @override
+  final int minDurationDays;
+  @override
+  final int maxDurationDays;
+  @override
+  final bool maintainIntensity;
+
+  @override
+  String toString() {
+    return 'TaperGuidance(strategy: $strategy, minDurationDays: $minDurationDays, maxDurationDays: $maxDurationDays, maintainIntensity: $maintainIntensity)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TaperGuidanceImpl &&
+            (identical(other.strategy, strategy) ||
+                other.strategy == strategy) &&
+            (identical(other.minDurationDays, minDurationDays) ||
+                other.minDurationDays == minDurationDays) &&
+            (identical(other.maxDurationDays, maxDurationDays) ||
+                other.maxDurationDays == maxDurationDays) &&
+            (identical(other.maintainIntensity, maintainIntensity) ||
+                other.maintainIntensity == maintainIntensity));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, strategy, minDurationDays,
+      maxDurationDays, maintainIntensity);
+
+  /// Create a copy of TaperGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TaperGuidanceImplCopyWith<_$TaperGuidanceImpl> get copyWith =>
+      __$$TaperGuidanceImplCopyWithImpl<_$TaperGuidanceImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TaperGuidanceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TaperGuidance implements TaperGuidance {
+  const factory _TaperGuidance(
+      {required final String strategy,
+      required final int minDurationDays,
+      required final int maxDurationDays,
+      required final bool maintainIntensity}) = _$TaperGuidanceImpl;
+
+  factory _TaperGuidance.fromJson(Map<String, dynamic> json) =
+      _$TaperGuidanceImpl.fromJson;
+
+  @override
+  String get strategy; // "progressive_volume_reduction"
+  @override
+  int get minDurationDays;
+  @override
+  int get maxDurationDays;
+  @override
+  bool get maintainIntensity;
+
+  /// Create a copy of TaperGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TaperGuidanceImplCopyWith<_$TaperGuidanceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+StrengthGuidance _$StrengthGuidanceFromJson(Map<String, dynamic> json) {
+  return _StrengthGuidance.fromJson(json);
+}
+
+/// @nodoc
+mixin _$StrengthGuidance {
+  int get weeklyFrequency =>
+      throw _privateConstructorUsedError; // 1-4 based on priority
+  int get sessionDurationMinutes =>
+      throw _privateConstructorUsedError; // 10-20 for Phase 1
+  int get setsPerExercise =>
+      throw _privateConstructorUsedError; // 2-3 based on priority
+  String get repRange => throw _privateConstructorUsedError;
+
+  /// Serializes this StrengthGuidance to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of StrengthGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $StrengthGuidanceCopyWith<StrengthGuidance> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StrengthGuidanceCopyWith<$Res> {
+  factory $StrengthGuidanceCopyWith(
+          StrengthGuidance value, $Res Function(StrengthGuidance) then) =
+      _$StrengthGuidanceCopyWithImpl<$Res, StrengthGuidance>;
+  @useResult
+  $Res call(
+      {int weeklyFrequency,
+      int sessionDurationMinutes,
+      int setsPerExercise,
+      String repRange});
+}
+
+/// @nodoc
+class _$StrengthGuidanceCopyWithImpl<$Res, $Val extends StrengthGuidance>
+    implements $StrengthGuidanceCopyWith<$Res> {
+  _$StrengthGuidanceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of StrengthGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? weeklyFrequency = null,
+    Object? sessionDurationMinutes = null,
+    Object? setsPerExercise = null,
+    Object? repRange = null,
+  }) {
+    return _then(_value.copyWith(
+      weeklyFrequency: null == weeklyFrequency
+          ? _value.weeklyFrequency
+          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionDurationMinutes: null == sessionDurationMinutes
+          ? _value.sessionDurationMinutes
+          : sessionDurationMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      setsPerExercise: null == setsPerExercise
+          ? _value.setsPerExercise
+          : setsPerExercise // ignore: cast_nullable_to_non_nullable
+              as int,
+      repRange: null == repRange
+          ? _value.repRange
+          : repRange // ignore: cast_nullable_to_non_nullable
+              as String,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$StrengthGuidanceImplCopyWith<$Res>
+    implements $StrengthGuidanceCopyWith<$Res> {
+  factory _$$StrengthGuidanceImplCopyWith(_$StrengthGuidanceImpl value,
+          $Res Function(_$StrengthGuidanceImpl) then) =
+      __$$StrengthGuidanceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int weeklyFrequency,
+      int sessionDurationMinutes,
+      int setsPerExercise,
+      String repRange});
+}
+
+/// @nodoc
+class __$$StrengthGuidanceImplCopyWithImpl<$Res>
+    extends _$StrengthGuidanceCopyWithImpl<$Res, _$StrengthGuidanceImpl>
+    implements _$$StrengthGuidanceImplCopyWith<$Res> {
+  __$$StrengthGuidanceImplCopyWithImpl(_$StrengthGuidanceImpl _value,
+      $Res Function(_$StrengthGuidanceImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of StrengthGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? weeklyFrequency = null,
+    Object? sessionDurationMinutes = null,
+    Object? setsPerExercise = null,
+    Object? repRange = null,
+  }) {
+    return _then(_$StrengthGuidanceImpl(
+      weeklyFrequency: null == weeklyFrequency
+          ? _value.weeklyFrequency
+          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionDurationMinutes: null == sessionDurationMinutes
+          ? _value.sessionDurationMinutes
+          : sessionDurationMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      setsPerExercise: null == setsPerExercise
+          ? _value.setsPerExercise
+          : setsPerExercise // ignore: cast_nullable_to_non_nullable
+              as int,
+      repRange: null == repRange
+          ? _value.repRange
+          : repRange // ignore: cast_nullable_to_non_nullable
+              as String,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$StrengthGuidanceImpl implements _StrengthGuidance {
+  const _$StrengthGuidanceImpl(
+      {required this.weeklyFrequency,
+      required this.sessionDurationMinutes,
+      required this.setsPerExercise,
+      required this.repRange});
+
+  factory _$StrengthGuidanceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StrengthGuidanceImplFromJson(json);
+
+  @override
+  final int weeklyFrequency;
+// 1-4 based on priority
+  @override
+  final int sessionDurationMinutes;
+// 10-20 for Phase 1
+  @override
+  final int setsPerExercise;
+// 2-3 based on priority
+  @override
+  final String repRange;
+
+  @override
+  String toString() {
+    return 'StrengthGuidance(weeklyFrequency: $weeklyFrequency, sessionDurationMinutes: $sessionDurationMinutes, setsPerExercise: $setsPerExercise, repRange: $repRange)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StrengthGuidanceImpl &&
+            (identical(other.weeklyFrequency, weeklyFrequency) ||
+                other.weeklyFrequency == weeklyFrequency) &&
+            (identical(other.sessionDurationMinutes, sessionDurationMinutes) ||
+                other.sessionDurationMinutes == sessionDurationMinutes) &&
+            (identical(other.setsPerExercise, setsPerExercise) ||
+                other.setsPerExercise == setsPerExercise) &&
+            (identical(other.repRange, repRange) ||
+                other.repRange == repRange));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, weeklyFrequency,
+      sessionDurationMinutes, setsPerExercise, repRange);
+
+  /// Create a copy of StrengthGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StrengthGuidanceImplCopyWith<_$StrengthGuidanceImpl> get copyWith =>
+      __$$StrengthGuidanceImplCopyWithImpl<_$StrengthGuidanceImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StrengthGuidanceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _StrengthGuidance implements StrengthGuidance {
+  const factory _StrengthGuidance(
+      {required final int weeklyFrequency,
+      required final int sessionDurationMinutes,
+      required final int setsPerExercise,
+      required final String repRange}) = _$StrengthGuidanceImpl;
+
+  factory _StrengthGuidance.fromJson(Map<String, dynamic> json) =
+      _$StrengthGuidanceImpl.fromJson;
+
+  @override
+  int get weeklyFrequency; // 1-4 based on priority
+  @override
+  int get sessionDurationMinutes; // 10-20 for Phase 1
+  @override
+  int get setsPerExercise; // 2-3 based on priority
+  @override
+  String get repRange;
+
+  /// Create a copy of StrengthGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$StrengthGuidanceImplCopyWith<_$StrengthGuidanceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+MobilityGuidance _$MobilityGuidanceFromJson(Map<String, dynamic> json) {
+  return _MobilityGuidance.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MobilityGuidance {
+  int get weeklyFrequency =>
+      throw _privateConstructorUsedError; // 2-7 based on priority
+  int get sessionDurationMinutes =>
+      throw _privateConstructorUsedError; // 10-30 based on priority
+  List<String> get sessionTypes =>
+      throw _privateConstructorUsedError; // ["active_pre_run", "passive_post_run", "recovery_deep"]
+  List<String> get focusAreas =>
+      throw _privateConstructorUsedError; // ["hip_mobility", "ankle_mobility", "thoracic_spine", "hamstrings"]
+  bool get increaseDuringTaper => throw _privateConstructorUsedError;
+
+  /// Serializes this MobilityGuidance to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of MobilityGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $MobilityGuidanceCopyWith<MobilityGuidance> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MobilityGuidanceCopyWith<$Res> {
+  factory $MobilityGuidanceCopyWith(
+          MobilityGuidance value, $Res Function(MobilityGuidance) then) =
+      _$MobilityGuidanceCopyWithImpl<$Res, MobilityGuidance>;
+  @useResult
+  $Res call(
+      {int weeklyFrequency,
+      int sessionDurationMinutes,
+      List<String> sessionTypes,
+      List<String> focusAreas,
+      bool increaseDuringTaper});
+}
+
+/// @nodoc
+class _$MobilityGuidanceCopyWithImpl<$Res, $Val extends MobilityGuidance>
+    implements $MobilityGuidanceCopyWith<$Res> {
+  _$MobilityGuidanceCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of MobilityGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? weeklyFrequency = null,
+    Object? sessionDurationMinutes = null,
+    Object? sessionTypes = null,
+    Object? focusAreas = null,
+    Object? increaseDuringTaper = null,
+  }) {
+    return _then(_value.copyWith(
+      weeklyFrequency: null == weeklyFrequency
+          ? _value.weeklyFrequency
+          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionDurationMinutes: null == sessionDurationMinutes
+          ? _value.sessionDurationMinutes
+          : sessionDurationMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionTypes: null == sessionTypes
+          ? _value.sessionTypes
+          : sessionTypes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      focusAreas: null == focusAreas
+          ? _value.focusAreas
+          : focusAreas // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      increaseDuringTaper: null == increaseDuringTaper
+          ? _value.increaseDuringTaper
+          : increaseDuringTaper // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MobilityGuidanceImplCopyWith<$Res>
+    implements $MobilityGuidanceCopyWith<$Res> {
+  factory _$$MobilityGuidanceImplCopyWith(_$MobilityGuidanceImpl value,
+          $Res Function(_$MobilityGuidanceImpl) then) =
+      __$$MobilityGuidanceImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {int weeklyFrequency,
+      int sessionDurationMinutes,
+      List<String> sessionTypes,
+      List<String> focusAreas,
+      bool increaseDuringTaper});
+}
+
+/// @nodoc
+class __$$MobilityGuidanceImplCopyWithImpl<$Res>
+    extends _$MobilityGuidanceCopyWithImpl<$Res, _$MobilityGuidanceImpl>
+    implements _$$MobilityGuidanceImplCopyWith<$Res> {
+  __$$MobilityGuidanceImplCopyWithImpl(_$MobilityGuidanceImpl _value,
+      $Res Function(_$MobilityGuidanceImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of MobilityGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? weeklyFrequency = null,
+    Object? sessionDurationMinutes = null,
+    Object? sessionTypes = null,
+    Object? focusAreas = null,
+    Object? increaseDuringTaper = null,
+  }) {
+    return _then(_$MobilityGuidanceImpl(
+      weeklyFrequency: null == weeklyFrequency
+          ? _value.weeklyFrequency
+          : weeklyFrequency // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionDurationMinutes: null == sessionDurationMinutes
+          ? _value.sessionDurationMinutes
+          : sessionDurationMinutes // ignore: cast_nullable_to_non_nullable
+              as int,
+      sessionTypes: null == sessionTypes
+          ? _value._sessionTypes
+          : sessionTypes // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      focusAreas: null == focusAreas
+          ? _value._focusAreas
+          : focusAreas // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      increaseDuringTaper: null == increaseDuringTaper
+          ? _value.increaseDuringTaper
+          : increaseDuringTaper // ignore: cast_nullable_to_non_nullable
+              as bool,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MobilityGuidanceImpl implements _MobilityGuidance {
+  const _$MobilityGuidanceImpl(
+      {required this.weeklyFrequency,
+      required this.sessionDurationMinutes,
+      required final List<String> sessionTypes,
+      required final List<String> focusAreas,
+      required this.increaseDuringTaper})
+      : _sessionTypes = sessionTypes,
+        _focusAreas = focusAreas;
+
+  factory _$MobilityGuidanceImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MobilityGuidanceImplFromJson(json);
+
+  @override
+  final int weeklyFrequency;
+// 2-7 based on priority
+  @override
+  final int sessionDurationMinutes;
+// 10-30 based on priority
+  final List<String> _sessionTypes;
+// 10-30 based on priority
+  @override
+  List<String> get sessionTypes {
+    if (_sessionTypes is EqualUnmodifiableListView) return _sessionTypes;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_sessionTypes);
+  }
+
+// ["active_pre_run", "passive_post_run", "recovery_deep"]
+  final List<String> _focusAreas;
+// ["active_pre_run", "passive_post_run", "recovery_deep"]
+  @override
+  List<String> get focusAreas {
+    if (_focusAreas is EqualUnmodifiableListView) return _focusAreas;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_focusAreas);
+  }
+
+// ["hip_mobility", "ankle_mobility", "thoracic_spine", "hamstrings"]
+  @override
+  final bool increaseDuringTaper;
+
+  @override
+  String toString() {
+    return 'MobilityGuidance(weeklyFrequency: $weeklyFrequency, sessionDurationMinutes: $sessionDurationMinutes, sessionTypes: $sessionTypes, focusAreas: $focusAreas, increaseDuringTaper: $increaseDuringTaper)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MobilityGuidanceImpl &&
+            (identical(other.weeklyFrequency, weeklyFrequency) ||
+                other.weeklyFrequency == weeklyFrequency) &&
+            (identical(other.sessionDurationMinutes, sessionDurationMinutes) ||
+                other.sessionDurationMinutes == sessionDurationMinutes) &&
+            const DeepCollectionEquality()
+                .equals(other._sessionTypes, _sessionTypes) &&
+            const DeepCollectionEquality()
+                .equals(other._focusAreas, _focusAreas) &&
+            (identical(other.increaseDuringTaper, increaseDuringTaper) ||
+                other.increaseDuringTaper == increaseDuringTaper));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      weeklyFrequency,
+      sessionDurationMinutes,
+      const DeepCollectionEquality().hash(_sessionTypes),
+      const DeepCollectionEquality().hash(_focusAreas),
+      increaseDuringTaper);
+
+  /// Create a copy of MobilityGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MobilityGuidanceImplCopyWith<_$MobilityGuidanceImpl> get copyWith =>
+      __$$MobilityGuidanceImplCopyWithImpl<_$MobilityGuidanceImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MobilityGuidanceImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MobilityGuidance implements MobilityGuidance {
+  const factory _MobilityGuidance(
+      {required final int weeklyFrequency,
+      required final int sessionDurationMinutes,
+      required final List<String> sessionTypes,
+      required final List<String> focusAreas,
+      required final bool increaseDuringTaper}) = _$MobilityGuidanceImpl;
+
+  factory _MobilityGuidance.fromJson(Map<String, dynamic> json) =
+      _$MobilityGuidanceImpl.fromJson;
+
+  @override
+  int get weeklyFrequency; // 2-7 based on priority
+  @override
+  int get sessionDurationMinutes; // 10-30 based on priority
+  @override
+  List<String>
+      get sessionTypes; // ["active_pre_run", "passive_post_run", "recovery_deep"]
+  @override
+  List<String>
+      get focusAreas; // ["hip_mobility", "ankle_mobility", "thoracic_spine", "hamstrings"]
+  @override
+  bool get increaseDuringTaper;
+
+  /// Create a copy of MobilityGuidance
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MobilityGuidanceImplCopyWith<_$MobilityGuidanceImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
 UserContext _$UserContextFromJson(Map<String, dynamic> json) {
   return _UserContext.fromJson(json);
 }
 
 /// @nodoc
 mixin _$UserContext {
-  int get age => throw _privateConstructorUsedError;
-  String get gender => throw _privateConstructorUsedError;
-  String get experienceLevel => throw _privateConstructorUsedError;
+  int? get age => throw _privateConstructorUsedError;
+  String? get gender => throw _privateConstructorUsedError;
   List<String> get availableDays => throw _privateConstructorUsedError;
-  Map<String, int> get timeConstraints => throw _privateConstructorUsedError;
-  List<String> get injuryHistory => throw _privateConstructorUsedError;
-  double? get weeklyMileageBase => throw _privateConstructorUsedError;
+  String? get constraints => throw _privateConstructorUsedError;
 
   /// Serializes this UserContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -306,13 +1804,10 @@ abstract class $UserContextCopyWith<$Res> {
       _$UserContextCopyWithImpl<$Res, UserContext>;
   @useResult
   $Res call(
-      {int age,
-      String gender,
-      String experienceLevel,
+      {int? age,
+      String? gender,
       List<String> availableDays,
-      Map<String, int> timeConstraints,
-      List<String> injuryHistory,
-      double? weeklyMileageBase});
+      String? constraints});
 }
 
 /// @nodoc
@@ -330,43 +1825,28 @@ class _$UserContextCopyWithImpl<$Res, $Val extends UserContext>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? age = null,
-    Object? gender = null,
-    Object? experienceLevel = null,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? availableDays = null,
-    Object? timeConstraints = null,
-    Object? injuryHistory = null,
-    Object? weeklyMileageBase = freezed,
+    Object? constraints = freezed,
   }) {
     return _then(_value.copyWith(
-      age: null == age
+      age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      gender: null == gender
+              as int?,
+      gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       availableDays: null == availableDays
           ? _value.availableDays
           : availableDays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      timeConstraints: null == timeConstraints
-          ? _value.timeConstraints
-          : timeConstraints // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      injuryHistory: null == injuryHistory
-          ? _value.injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      weeklyMileageBase: freezed == weeklyMileageBase
-          ? _value.weeklyMileageBase
-          : weeklyMileageBase // ignore: cast_nullable_to_non_nullable
-              as double?,
+      constraints: freezed == constraints
+          ? _value.constraints
+          : constraints // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -380,13 +1860,10 @@ abstract class _$$UserContextImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int age,
-      String gender,
-      String experienceLevel,
+      {int? age,
+      String? gender,
       List<String> availableDays,
-      Map<String, int> timeConstraints,
-      List<String> injuryHistory,
-      double? weeklyMileageBase});
+      String? constraints});
 }
 
 /// @nodoc
@@ -402,43 +1879,28 @@ class __$$UserContextImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? age = null,
-    Object? gender = null,
-    Object? experienceLevel = null,
+    Object? age = freezed,
+    Object? gender = freezed,
     Object? availableDays = null,
-    Object? timeConstraints = null,
-    Object? injuryHistory = null,
-    Object? weeklyMileageBase = freezed,
+    Object? constraints = freezed,
   }) {
     return _then(_$UserContextImpl(
-      age: null == age
+      age: freezed == age
           ? _value.age
           : age // ignore: cast_nullable_to_non_nullable
-              as int,
-      gender: null == gender
+              as int?,
+      gender: freezed == gender
           ? _value.gender
           : gender // ignore: cast_nullable_to_non_nullable
-              as String,
-      experienceLevel: null == experienceLevel
-          ? _value.experienceLevel
-          : experienceLevel // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       availableDays: null == availableDays
           ? _value._availableDays
           : availableDays // ignore: cast_nullable_to_non_nullable
               as List<String>,
-      timeConstraints: null == timeConstraints
-          ? _value._timeConstraints
-          : timeConstraints // ignore: cast_nullable_to_non_nullable
-              as Map<String, int>,
-      injuryHistory: null == injuryHistory
-          ? _value._injuryHistory
-          : injuryHistory // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      weeklyMileageBase: freezed == weeklyMileageBase
-          ? _value.weeklyMileageBase
-          : weeklyMileageBase // ignore: cast_nullable_to_non_nullable
-              as double?,
+      constraints: freezed == constraints
+          ? _value.constraints
+          : constraints // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -447,26 +1909,19 @@ class __$$UserContextImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$UserContextImpl implements _UserContext {
   const _$UserContextImpl(
-      {required this.age,
-      required this.gender,
-      required this.experienceLevel,
+      {this.age,
+      this.gender,
       required final List<String> availableDays,
-      required final Map<String, int> timeConstraints,
-      required final List<String> injuryHistory,
-      this.weeklyMileageBase})
-      : _availableDays = availableDays,
-        _timeConstraints = timeConstraints,
-        _injuryHistory = injuryHistory;
+      this.constraints})
+      : _availableDays = availableDays;
 
   factory _$UserContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$UserContextImplFromJson(json);
 
   @override
-  final int age;
+  final int? age;
   @override
-  final String gender;
-  @override
-  final String experienceLevel;
+  final String? gender;
   final List<String> _availableDays;
   @override
   List<String> get availableDays {
@@ -475,28 +1930,12 @@ class _$UserContextImpl implements _UserContext {
     return EqualUnmodifiableListView(_availableDays);
   }
 
-  final Map<String, int> _timeConstraints;
   @override
-  Map<String, int> get timeConstraints {
-    if (_timeConstraints is EqualUnmodifiableMapView) return _timeConstraints;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableMapView(_timeConstraints);
-  }
-
-  final List<String> _injuryHistory;
-  @override
-  List<String> get injuryHistory {
-    if (_injuryHistory is EqualUnmodifiableListView) return _injuryHistory;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_injuryHistory);
-  }
-
-  @override
-  final double? weeklyMileageBase;
+  final String? constraints;
 
   @override
   String toString() {
-    return 'UserContext(age: $age, gender: $gender, experienceLevel: $experienceLevel, availableDays: $availableDays, timeConstraints: $timeConstraints, injuryHistory: $injuryHistory, weeklyMileageBase: $weeklyMileageBase)';
+    return 'UserContext(age: $age, gender: $gender, availableDays: $availableDays, constraints: $constraints)';
   }
 
   @override
@@ -506,29 +1945,16 @@ class _$UserContextImpl implements _UserContext {
             other is _$UserContextImpl &&
             (identical(other.age, age) || other.age == age) &&
             (identical(other.gender, gender) || other.gender == gender) &&
-            (identical(other.experienceLevel, experienceLevel) ||
-                other.experienceLevel == experienceLevel) &&
             const DeepCollectionEquality()
                 .equals(other._availableDays, _availableDays) &&
-            const DeepCollectionEquality()
-                .equals(other._timeConstraints, _timeConstraints) &&
-            const DeepCollectionEquality()
-                .equals(other._injuryHistory, _injuryHistory) &&
-            (identical(other.weeklyMileageBase, weeklyMileageBase) ||
-                other.weeklyMileageBase == weeklyMileageBase));
+            (identical(other.constraints, constraints) ||
+                other.constraints == constraints));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      age,
-      gender,
-      experienceLevel,
-      const DeepCollectionEquality().hash(_availableDays),
-      const DeepCollectionEquality().hash(_timeConstraints),
-      const DeepCollectionEquality().hash(_injuryHistory),
-      weeklyMileageBase);
+  int get hashCode => Object.hash(runtimeType, age, gender,
+      const DeepCollectionEquality().hash(_availableDays), constraints);
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -548,31 +1974,22 @@ class _$UserContextImpl implements _UserContext {
 
 abstract class _UserContext implements UserContext {
   const factory _UserContext(
-      {required final int age,
-      required final String gender,
-      required final String experienceLevel,
+      {final int? age,
+      final String? gender,
       required final List<String> availableDays,
-      required final Map<String, int> timeConstraints,
-      required final List<String> injuryHistory,
-      final double? weeklyMileageBase}) = _$UserContextImpl;
+      final String? constraints}) = _$UserContextImpl;
 
   factory _UserContext.fromJson(Map<String, dynamic> json) =
       _$UserContextImpl.fromJson;
 
   @override
-  int get age;
+  int? get age;
   @override
-  String get gender;
-  @override
-  String get experienceLevel;
+  String? get gender;
   @override
   List<String> get availableDays;
   @override
-  Map<String, int> get timeConstraints;
-  @override
-  List<String> get injuryHistory;
-  @override
-  double? get weeklyMileageBase;
+  String? get constraints;
 
   /// Create a copy of UserContext
   /// with the given fields replaced by the non-null parameter values.
@@ -591,9 +2008,10 @@ mixin _$GoalContext {
   String get type => throw _privateConstructorUsedError;
   String get target => throw _privateConstructorUsedError;
   DateTime get deadline => throw _privateConstructorUsedError;
-  double get confidence => throw _privateConstructorUsedError;
-  List<String> get specialInstructions => throw _privateConstructorUsedError;
-  String? get currentPace => throw _privateConstructorUsedError;
+  String? get currentFitness => throw _privateConstructorUsedError;
+  double? get initialWeeklyVolume => throw _privateConstructorUsedError;
+  bool? get isFirstTime => throw _privateConstructorUsedError;
+  Map<String, String?> get priorities => throw _privateConstructorUsedError;
 
   /// Serializes this GoalContext to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -615,9 +2033,10 @@ abstract class $GoalContextCopyWith<$Res> {
       {String type,
       String target,
       DateTime deadline,
-      double confidence,
-      List<String> specialInstructions,
-      String? currentPace});
+      String? currentFitness,
+      double? initialWeeklyVolume,
+      bool? isFirstTime,
+      Map<String, String?> priorities});
 }
 
 /// @nodoc
@@ -638,9 +2057,10 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
     Object? type = null,
     Object? target = null,
     Object? deadline = null,
-    Object? confidence = null,
-    Object? specialInstructions = null,
-    Object? currentPace = freezed,
+    Object? currentFitness = freezed,
+    Object? initialWeeklyVolume = freezed,
+    Object? isFirstTime = freezed,
+    Object? priorities = null,
   }) {
     return _then(_value.copyWith(
       type: null == type
@@ -655,18 +2075,22 @@ class _$GoalContextCopyWithImpl<$Res, $Val extends GoalContext>
           ? _value.deadline
           : deadline // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      specialInstructions: null == specialInstructions
-          ? _value.specialInstructions
-          : specialInstructions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentPace: freezed == currentPace
-          ? _value.currentPace
-          : currentPace // ignore: cast_nullable_to_non_nullable
+      currentFitness: freezed == currentFitness
+          ? _value.currentFitness
+          : currentFitness // ignore: cast_nullable_to_non_nullable
               as String?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      priorities: null == priorities
+          ? _value.priorities
+          : priorities // ignore: cast_nullable_to_non_nullable
+              as Map<String, String?>,
     ) as $Val);
   }
 }
@@ -683,9 +2107,10 @@ abstract class _$$GoalContextImplCopyWith<$Res>
       {String type,
       String target,
       DateTime deadline,
-      double confidence,
-      List<String> specialInstructions,
-      String? currentPace});
+      String? currentFitness,
+      double? initialWeeklyVolume,
+      bool? isFirstTime,
+      Map<String, String?> priorities});
 }
 
 /// @nodoc
@@ -704,9 +2129,10 @@ class __$$GoalContextImplCopyWithImpl<$Res>
     Object? type = null,
     Object? target = null,
     Object? deadline = null,
-    Object? confidence = null,
-    Object? specialInstructions = null,
-    Object? currentPace = freezed,
+    Object? currentFitness = freezed,
+    Object? initialWeeklyVolume = freezed,
+    Object? isFirstTime = freezed,
+    Object? priorities = null,
   }) {
     return _then(_$GoalContextImpl(
       type: null == type
@@ -721,18 +2147,22 @@ class __$$GoalContextImplCopyWithImpl<$Res>
           ? _value.deadline
           : deadline // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      confidence: null == confidence
-          ? _value.confidence
-          : confidence // ignore: cast_nullable_to_non_nullable
-              as double,
-      specialInstructions: null == specialInstructions
-          ? _value._specialInstructions
-          : specialInstructions // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      currentPace: freezed == currentPace
-          ? _value.currentPace
-          : currentPace // ignore: cast_nullable_to_non_nullable
+      currentFitness: freezed == currentFitness
+          ? _value.currentFitness
+          : currentFitness // ignore: cast_nullable_to_non_nullable
               as String?,
+      initialWeeklyVolume: freezed == initialWeeklyVolume
+          ? _value.initialWeeklyVolume
+          : initialWeeklyVolume // ignore: cast_nullable_to_non_nullable
+              as double?,
+      isFirstTime: freezed == isFirstTime
+          ? _value.isFirstTime
+          : isFirstTime // ignore: cast_nullable_to_non_nullable
+              as bool?,
+      priorities: null == priorities
+          ? _value._priorities
+          : priorities // ignore: cast_nullable_to_non_nullable
+              as Map<String, String?>,
     ));
   }
 }
@@ -744,10 +2174,11 @@ class _$GoalContextImpl implements _GoalContext {
       {required this.type,
       required this.target,
       required this.deadline,
-      required this.confidence,
-      required final List<String> specialInstructions,
-      this.currentPace})
-      : _specialInstructions = specialInstructions;
+      this.currentFitness,
+      this.initialWeeklyVolume,
+      this.isFirstTime,
+      required final Map<String, String?> priorities})
+      : _priorities = priorities;
 
   factory _$GoalContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$GoalContextImplFromJson(json);
@@ -759,22 +2190,22 @@ class _$GoalContextImpl implements _GoalContext {
   @override
   final DateTime deadline;
   @override
-  final double confidence;
-  final List<String> _specialInstructions;
+  final String? currentFitness;
   @override
-  List<String> get specialInstructions {
-    if (_specialInstructions is EqualUnmodifiableListView)
-      return _specialInstructions;
+  final double? initialWeeklyVolume;
+  @override
+  final bool? isFirstTime;
+  final Map<String, String?> _priorities;
+  @override
+  Map<String, String?> get priorities {
+    if (_priorities is EqualUnmodifiableMapView) return _priorities;
     // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_specialInstructions);
+    return EqualUnmodifiableMapView(_priorities);
   }
 
   @override
-  final String? currentPace;
-
-  @override
   String toString() {
-    return 'GoalContext(type: $type, target: $target, deadline: $deadline, confidence: $confidence, specialInstructions: $specialInstructions, currentPace: $currentPace)';
+    return 'GoalContext(type: $type, target: $target, deadline: $deadline, currentFitness: $currentFitness, initialWeeklyVolume: $initialWeeklyVolume, isFirstTime: $isFirstTime, priorities: $priorities)';
   }
 
   @override
@@ -786,12 +2217,14 @@ class _$GoalContextImpl implements _GoalContext {
             (identical(other.target, target) || other.target == target) &&
             (identical(other.deadline, deadline) ||
                 other.deadline == deadline) &&
-            (identical(other.confidence, confidence) ||
-                other.confidence == confidence) &&
+            (identical(other.currentFitness, currentFitness) ||
+                other.currentFitness == currentFitness) &&
+            (identical(other.initialWeeklyVolume, initialWeeklyVolume) ||
+                other.initialWeeklyVolume == initialWeeklyVolume) &&
+            (identical(other.isFirstTime, isFirstTime) ||
+                other.isFirstTime == isFirstTime) &&
             const DeepCollectionEquality()
-                .equals(other._specialInstructions, _specialInstructions) &&
-            (identical(other.currentPace, currentPace) ||
-                other.currentPace == currentPace));
+                .equals(other._priorities, _priorities));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -801,9 +2234,10 @@ class _$GoalContextImpl implements _GoalContext {
       type,
       target,
       deadline,
-      confidence,
-      const DeepCollectionEquality().hash(_specialInstructions),
-      currentPace);
+      currentFitness,
+      initialWeeklyVolume,
+      isFirstTime,
+      const DeepCollectionEquality().hash(_priorities));
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -826,9 +2260,10 @@ abstract class _GoalContext implements GoalContext {
       {required final String type,
       required final String target,
       required final DateTime deadline,
-      required final double confidence,
-      required final List<String> specialInstructions,
-      final String? currentPace}) = _$GoalContextImpl;
+      final String? currentFitness,
+      final double? initialWeeklyVolume,
+      final bool? isFirstTime,
+      required final Map<String, String?> priorities}) = _$GoalContextImpl;
 
   factory _GoalContext.fromJson(Map<String, dynamic> json) =
       _$GoalContextImpl.fromJson;
@@ -840,11 +2275,13 @@ abstract class _GoalContext implements GoalContext {
   @override
   DateTime get deadline;
   @override
-  double get confidence;
+  String? get currentFitness;
   @override
-  List<String> get specialInstructions;
+  double? get initialWeeklyVolume;
   @override
-  String? get currentPace;
+  bool? get isFirstTime;
+  @override
+  Map<String, String?> get priorities;
 
   /// Create a copy of GoalContext
   /// with the given fields replaced by the non-null parameter values.
@@ -860,12 +2297,16 @@ WorkoutSummary _$WorkoutSummaryFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$WorkoutSummary {
-  DateTime get date => throw _privateConstructorUsedError;
+  String get id => throw _privateConstructorUsedError;
+  int get daysAgo => throw _privateConstructorUsedError;
   String get type => throw _privateConstructorUsedError;
-  int get duration => throw _privateConstructorUsedError;
-  double? get distance => throw _privateConstructorUsedError;
+  bool get isKey => throw _privateConstructorUsedError;
+  String get status => throw _privateConstructorUsedError;
+  int? get plannedDuration => throw _privateConstructorUsedError; // seconds
+  int? get actualDuration => throw _privateConstructorUsedError;
+  double? get plannedDistance => throw _privateConstructorUsedError; // km
+  double? get actualDistance => throw _privateConstructorUsedError;
   int? get rpe => throw _privateConstructorUsedError;
-  bool get completed => throw _privateConstructorUsedError;
 
   /// Serializes this WorkoutSummary to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -884,12 +2325,16 @@ abstract class $WorkoutSummaryCopyWith<$Res> {
       _$WorkoutSummaryCopyWithImpl<$Res, WorkoutSummary>;
   @useResult
   $Res call(
-      {DateTime date,
+      {String id,
+      int daysAgo,
       String type,
-      int duration,
-      double? distance,
-      int? rpe,
-      bool completed});
+      bool isKey,
+      String status,
+      int? plannedDuration,
+      int? actualDuration,
+      double? plannedDistance,
+      double? actualDistance,
+      int? rpe});
 }
 
 /// @nodoc
@@ -907,38 +2352,58 @@ class _$WorkoutSummaryCopyWithImpl<$Res, $Val extends WorkoutSummary>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? id = null,
+    Object? daysAgo = null,
     Object? type = null,
-    Object? duration = null,
-    Object? distance = freezed,
+    Object? isKey = null,
+    Object? status = null,
+    Object? plannedDuration = freezed,
+    Object? actualDuration = freezed,
+    Object? plannedDistance = freezed,
+    Object? actualDistance = freezed,
     Object? rpe = freezed,
-    Object? completed = null,
   }) {
     return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      daysAgo: null == daysAgo
+          ? _value.daysAgo
+          : daysAgo // ignore: cast_nullable_to_non_nullable
+              as int,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as int,
-      distance: freezed == distance
-          ? _value.distance
-          : distance // ignore: cast_nullable_to_non_nullable
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      plannedDuration: freezed == plannedDuration
+          ? _value.plannedDuration
+          : plannedDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actualDuration: freezed == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      plannedDistance: freezed == plannedDistance
+          ? _value.plannedDistance
+          : plannedDistance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      actualDistance: freezed == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
               as double?,
       rpe: freezed == rpe
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as bool,
     ) as $Val);
   }
 }
@@ -952,12 +2417,16 @@ abstract class _$$WorkoutSummaryImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {DateTime date,
+      {String id,
+      int daysAgo,
       String type,
-      int duration,
-      double? distance,
-      int? rpe,
-      bool completed});
+      bool isKey,
+      String status,
+      int? plannedDuration,
+      int? actualDuration,
+      double? plannedDistance,
+      double? actualDistance,
+      int? rpe});
 }
 
 /// @nodoc
@@ -973,38 +2442,58 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? date = null,
+    Object? id = null,
+    Object? daysAgo = null,
     Object? type = null,
-    Object? duration = null,
-    Object? distance = freezed,
+    Object? isKey = null,
+    Object? status = null,
+    Object? plannedDuration = freezed,
+    Object? actualDuration = freezed,
+    Object? plannedDistance = freezed,
+    Object? actualDistance = freezed,
     Object? rpe = freezed,
-    Object? completed = null,
   }) {
     return _then(_$WorkoutSummaryImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as String,
+      daysAgo: null == daysAgo
+          ? _value.daysAgo
+          : daysAgo // ignore: cast_nullable_to_non_nullable
+              as int,
       type: null == type
           ? _value.type
           : type // ignore: cast_nullable_to_non_nullable
               as String,
-      duration: null == duration
-          ? _value.duration
-          : duration // ignore: cast_nullable_to_non_nullable
-              as int,
-      distance: freezed == distance
-          ? _value.distance
-          : distance // ignore: cast_nullable_to_non_nullable
+      isKey: null == isKey
+          ? _value.isKey
+          : isKey // ignore: cast_nullable_to_non_nullable
+              as bool,
+      status: null == status
+          ? _value.status
+          : status // ignore: cast_nullable_to_non_nullable
+              as String,
+      plannedDuration: freezed == plannedDuration
+          ? _value.plannedDuration
+          : plannedDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      actualDuration: freezed == actualDuration
+          ? _value.actualDuration
+          : actualDuration // ignore: cast_nullable_to_non_nullable
+              as int?,
+      plannedDistance: freezed == plannedDistance
+          ? _value.plannedDistance
+          : plannedDistance // ignore: cast_nullable_to_non_nullable
+              as double?,
+      actualDistance: freezed == actualDistance
+          ? _value.actualDistance
+          : actualDistance // ignore: cast_nullable_to_non_nullable
               as double?,
       rpe: freezed == rpe
           ? _value.rpe
           : rpe // ignore: cast_nullable_to_non_nullable
               as int?,
-      completed: null == completed
-          ? _value.completed
-          : completed // ignore: cast_nullable_to_non_nullable
-              as bool,
     ));
   }
 }
@@ -1013,32 +2502,46 @@ class __$$WorkoutSummaryImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$WorkoutSummaryImpl implements _WorkoutSummary {
   const _$WorkoutSummaryImpl(
-      {required this.date,
+      {required this.id,
+      required this.daysAgo,
       required this.type,
-      required this.duration,
-      this.distance,
-      this.rpe,
-      required this.completed});
+      required this.isKey,
+      required this.status,
+      this.plannedDuration,
+      this.actualDuration,
+      this.plannedDistance,
+      this.actualDistance,
+      this.rpe});
 
   factory _$WorkoutSummaryImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSummaryImplFromJson(json);
 
   @override
-  final DateTime date;
+  final String id;
+  @override
+  final int daysAgo;
   @override
   final String type;
   @override
-  final int duration;
+  final bool isKey;
   @override
-  final double? distance;
+  final String status;
+  @override
+  final int? plannedDuration;
+// seconds
+  @override
+  final int? actualDuration;
+  @override
+  final double? plannedDistance;
+// km
+  @override
+  final double? actualDistance;
   @override
   final int? rpe;
-  @override
-  final bool completed;
 
   @override
   String toString() {
-    return 'WorkoutSummary(date: $date, type: $type, duration: $duration, distance: $distance, rpe: $rpe, completed: $completed)';
+    return 'WorkoutSummary(id: $id, daysAgo: $daysAgo, type: $type, isKey: $isKey, status: $status, plannedDuration: $plannedDuration, actualDuration: $actualDuration, plannedDistance: $plannedDistance, actualDistance: $actualDistance, rpe: $rpe)';
   }
 
   @override
@@ -1046,21 +2549,26 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$WorkoutSummaryImpl &&
-            (identical(other.date, date) || other.date == date) &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.daysAgo, daysAgo) || other.daysAgo == daysAgo) &&
             (identical(other.type, type) || other.type == type) &&
-            (identical(other.duration, duration) ||
-                other.duration == duration) &&
-            (identical(other.distance, distance) ||
-                other.distance == distance) &&
-            (identical(other.rpe, rpe) || other.rpe == rpe) &&
-            (identical(other.completed, completed) ||
-                other.completed == completed));
+            (identical(other.isKey, isKey) || other.isKey == isKey) &&
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.plannedDuration, plannedDuration) ||
+                other.plannedDuration == plannedDuration) &&
+            (identical(other.actualDuration, actualDuration) ||
+                other.actualDuration == actualDuration) &&
+            (identical(other.plannedDistance, plannedDistance) ||
+                other.plannedDistance == plannedDistance) &&
+            (identical(other.actualDistance, actualDistance) ||
+                other.actualDistance == actualDistance) &&
+            (identical(other.rpe, rpe) || other.rpe == rpe));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, date, type, duration, distance, rpe, completed);
+  int get hashCode => Object.hash(runtimeType, id, daysAgo, type, isKey, status,
+      plannedDuration, actualDuration, plannedDistance, actualDistance, rpe);
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.
@@ -1081,28 +2589,40 @@ class _$WorkoutSummaryImpl implements _WorkoutSummary {
 
 abstract class _WorkoutSummary implements WorkoutSummary {
   const factory _WorkoutSummary(
-      {required final DateTime date,
+      {required final String id,
+      required final int daysAgo,
       required final String type,
-      required final int duration,
-      final double? distance,
-      final int? rpe,
-      required final bool completed}) = _$WorkoutSummaryImpl;
+      required final bool isKey,
+      required final String status,
+      final int? plannedDuration,
+      final int? actualDuration,
+      final double? plannedDistance,
+      final double? actualDistance,
+      final int? rpe}) = _$WorkoutSummaryImpl;
 
   factory _WorkoutSummary.fromJson(Map<String, dynamic> json) =
       _$WorkoutSummaryImpl.fromJson;
 
   @override
-  DateTime get date;
+  String get id;
+  @override
+  int get daysAgo;
   @override
   String get type;
   @override
-  int get duration;
+  bool get isKey;
   @override
-  double? get distance;
+  String get status;
+  @override
+  int? get plannedDuration; // seconds
+  @override
+  int? get actualDuration;
+  @override
+  double? get plannedDistance; // km
+  @override
+  double? get actualDistance;
   @override
   int? get rpe;
-  @override
-  bool get completed;
 
   /// Create a copy of WorkoutSummary
   /// with the given fields replaced by the non-null parameter values.

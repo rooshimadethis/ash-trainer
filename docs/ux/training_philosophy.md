@@ -4,22 +4,18 @@ This document outlines the core training philosophies, plan structures, and adap
 
 ## 1. Core Training Philosophy
 
-We will adopt a **Dynamic Progression Model** that shifts based on user experience level.
+Ash uses a **Hybrid Adaptation Strategy** that balances a user's **current training capacity** (Volume/Experience) with their **specific objectives** (Goal Type).
 
-### **A. Beginner & Low Volume (< 30km/week): The Pyramidal Approach**
-*   **Why:** Beginners often lack the structural durability for high-intensity intervals (Polarized). They need a broad aerobic base and safe "moderate" stimuli to build strength.
-*   **Distribution:**
-    *   70-80% Easy / Aerobic Base
-    *   15-25% Moderate / Threshold (The "Base Building" zone)
-    *   0-5% High Intensity
-*   **Focus:** Consistency, frequency, and safe volume accumulation.
+### **A. Capacity-Based Intensity Distribution**
+*   **Beginner & Low Volume (< 30km/week): The Pyramidal Approach**
+    *   **Focus:** Consistency and safe volume accumulation.
+    *   **Distribution:** 70-80% Easy, 15-25% Moderate (Base Building), 0-5% High.
+*   **Intermediate & Advanced (> 40km/week): The Polarized (80/20) Approach**
+    *   **Focus:** Breaking plateaus and improving ceiling (VO2 max/Threshold).
+    *   **Distribution:** 80% Low Intensity (RPE 3-4), 20% High Intensity (RPE 8-10).
 
-### **B. Intermediate & Advanced (> 40km/week): The Polarized (80/20) Approach**
-*   **Why:** To break plateaus, advanced runners need to polarize their training—keeping easy days truly easy to allow for very hard, high-quality key sessions.
-*   **Distribution:**
-    *   80% Low Intensity (Zone 1/2)
-    *   20% High Intensity (Zone 4/5 - Intervals, Tempo)
-*   **Focus:** Improving VO2 max, lactate threshold, and race-specific sharpening.
+### **B. Goal-Driven Customization**
+While capacity determines the *foundation*, the **Goal Type** dictates the *structure* (Phases/Blocks) and the *prescription style* (Time-based vs. Distance-based). Ash merges these two signals to create a tailored path.
 
 ### **C. Out of Scope**
 Ash focuses on **training prescription**, not:
@@ -32,127 +28,23 @@ Ash focuses on **training prescription**, not:
 Ash supports four primary goal types that determine training plan structure. Each goal type requires different training approaches, intensity distributions, and periodization strategies.
 
 #### **1. Distance Milestone Goals**
-*Examples: "Run my first 10K", "Complete a half marathon", "Run 5 miles without stopping"*
+*Examples: "Run my first 10K", "Complete a half marathon"*
 
-**Philosophy:** Completion over speed. Build endurance safely and prevent injury.
-
-**Workout Prescription:**
-*   **Time-based training:** Prescribe by duration, not distance (e.g., "run for 30 minutes" vs "run 5K")
-*   **Run/Walk intervals:** For true beginners, alternate running and walking
-*   **Gradual progression:** Increase duration by 5-10 minutes per week
-
-**Intensity Distribution (Pyramidal):**
-*   75-80% Easy/Aerobic (RPE 3-4)
-*   15-20% Moderate (RPE 6-7)
-*   0-5% High Intensity (RPE 8-9)
-
-**Key Workout Types:**
-*   Long run progression (gradually increase duration)
-*   Easy aerobic runs (build frequency and consistency)
-*   Minimal speed work (light strides for variety, not performance)
-
-**Mesocycle Structure:**
-*   **Base Phase:** 6-8 weeks of pure aerobic building
-*   **Distance Familiarization:** Practice runs at 80-90% of goal distance (no traditional peak phase)
-*   **Minimal Taper:** 7-10 days, 20-30% volume reduction
-*   **Recovery Weeks:** Every 3-4 weeks, reduce volume by 30%
-
-**Success Metrics:**
-*   Completing weekly long run without excessive fatigue
-*   Increasing total weekly running time
-*   Consistency (showing up for scheduled runs)
-*   Injury-free progression
-
-**ACWR Range:** 0.8 - 1.2 (conservative to prevent injury in newer runners)
+**Philosophy:** Completion over speed. Build endurance safely and prevent injury. Focus on time-based training and gradual progression to minimize impact stress on newer tissues.
 
 ---
 
 #### **2. Time Performance Goals**
-*Examples: "Sub-30 minute 5K", "Break 2 hours in the half marathon", "Run a 10K 5 minutes faster"*
+*Examples: "Sub-30 minute 5K", "Break 2 hours in the half marathon"*
 
-**Philosophy:** Improve speed and efficiency. Track quantifiable progress.
-
-**Workout Prescription:**
-*   **Distance-based key workouts:** Intervals and tempo runs by distance (e.g., "6 × 400m", "5K at tempo pace")
-*   **Regular benchmarking:** Monthly time trials to track progress
-*   **Pace targets:** Specific goal pace ranges for workouts
-
-**Intensity Distribution (Polarized 80/20):**
-*   80% Easy (RPE 3-4, Zone 1-2)
-*   20% High Intensity (RPE 8-9, Zone 4-5: intervals, tempo, threshold)
-*   **Minimal moderate zone** - Avoid "junk miles"
-
-**Key Workout Types:**
-*   **Interval training:** Short bursts at or above goal race pace (400m, 800m, 1K repeats)
-*   **Tempo runs:** Sustained efforts at comfortably hard pace (RPE 7-8)
-*   **Race pace workouts:** Practice running at target pace for extended periods
-*   **Hill repeats:** Build power and running economy
-*   **Time trials:** Monthly benchmark tests
-
-**Mesocycle Structure:**
-*   **Base Phase (4-6 weeks):** Build aerobic foundation
-*   **Build Phase (4-6 weeks):** Introduce race-specific intensity
-*   **Peak Phase (2-3 weeks):** Highest volume + intensity, sharpening workouts
-*   **Taper (1-2 weeks):** Reduce volume 40-50%, maintain intensity with short, sharp efforts
-
-**Success Metrics:**
-*   Pace improvements in time trials
-*   Ability to sustain goal pace for longer durations
-*   Improved interval workout performance
-*   Race day PR achievement
-
-**ACWR Range:** 0.8 - 1.3 (standard range, allow higher peaks for intensity blocks)
+**Philosophy:** Improve speed and efficiency. Track quantifiable progress through distance-based key workouts and regular benchmarking. Polarized intensity (80/20) is used to maximize high-quality stimuli while ensuring recovery.
 
 ---
 
 #### **3. Event Goals (Race-Specific)**
-*Examples: "Austin Marathon on Feb 16", "NYC Half Marathon", "Boston Marathon qualifier"*
+*Examples: "Austin Marathon on Feb 16", "Boston Marathon qualifier"*
 
-**Philosophy:** Peak performance on a specific date. All training builds toward race day.
-
-**Workout Prescription:**
-*   **Race simulation:** Practice race-day conditions, fueling, pacing
-*   **Goal pace segments:** Increasingly longer segments at target race pace
-*   **Dress rehearsals:** Full race-day routine practice
-
-**Intensity Distribution (Varies by Phase):**
-*   **Base:** 80% easy, 15% moderate, 5% high
-*   **Build:** 75% easy, 10% moderate, 15% high
-*   **Peak:** 70% easy, 5% moderate, 25% high
-*   **Taper:** 85% easy, 15% high (short, sharp efforts)
-
-**Key Workout Types:**
-*   **Long runs with race-specific elements:**
-    *   Final miles at goal race pace
-    *   Practice fueling strategy every 45-60 minutes
-    *   Simulate race terrain (hills, elevation)
-*   **Goal pace workouts:** Build duration at target race pace
-*   **Tune-up races:** Shorter races 3-6 weeks before goal race (with 2-3 day mini-taper)
-
-**Plan Duration by Race Distance:**
-*   5K/10K: 8-12 weeks
-*   Half Marathon: 12-16 weeks
-*   Marathon: 16-20 weeks
-
-**Phase Breakdown:**
-1. **Base (40% of plan):** Aerobic foundation, gradual volume increase
-2. **Build (30% of plan):** Race-specific workouts, peak long runs
-3. **Peak (10% of plan):** Highest intensity + volume week
-4. **Taper (20% of plan):** Progressive volume reduction (see Section 5 for detailed taper protocols)
-
-**Post-Race Recovery:**
-*   5K: 3-5 days easy
-*   10K: 5-7 days easy
-*   Half Marathon: 1-2 weeks reduced volume
-*   Marathon: 2-4 weeks recovery, then rebuild
-
-**Success Metrics:**
-*   Completing key workouts at goal pace
-*   Successful tune-up race performances
-*   Hitting target long run distances
-*   Race day goal achievement
-
-**ACWR Range:** 0.9 - 1.4 (allow higher peaks during build/peak phases, strict monitoring)
+**Philosophy:** Peak performance on a specific date. Training is structured into distinct periodized phases (Base, Build, Peak, Taper) to arrive at the start line fresh and optimized.
 
 **Short-Notice Races (<3 weeks):**
 *   Skip Build phase, go straight to abbreviated taper
@@ -164,7 +56,7 @@ Ash supports four primary goal types that determine training plan structure. Eac
 #### **4. Maintenance Goals**
 *Examples: "Keep running 3x/week during busy season", "Maintain current fitness while traveling", "Stay active without training stress"*
 
-**Philosophy:** Sustain current fitness with minimal effective dose. Reduce pressure, increase enjoyment.
+**Philosophy:** Sustain fitness while prioritizing mental freshness and long-term habit formation. Reduce pressure, maximize enjoyment.
 
 **Workout Prescription:**
 *   **Flexible scheduling:** Days are suggestions, not rigid rules
@@ -183,8 +75,8 @@ Ash supports four primary goal types that determine training plan structure. Eac
 *   **Cross-training:** Cycling, swimming, or other low-impact cardio
 *   **Strength training:** 1-2 sessions per week, compound movements
 
-**Mesocycle Structure:**
-*   **No traditional periodization** - Flat, consistent week-to-week
+**Phase Structure:**
+*   **No traditional phases** - Consistent "Maintenance" intent throughout.
 *   **Volume:** 50-66% of previous training volume
 *   **Frequency:** Maintain running frequency (e.g., if you ran 4x/week, keep 4x/week but shorten duration)
 *   **Duration:** Can be sustained for 2-8 weeks without significant fitness loss
@@ -205,65 +97,15 @@ Ash supports four primary goal types that determine training plan structure. Eac
 **Success Metrics:**
 *   Maintaining consistency (showing up for scheduled sessions)
 *   Feeling fresh and recovered
-*   No significant performance decline in quality sessions
+*   High "Enjoyment" ratings for completed sessions
 *   Injury-free training
 
 **ACWR Range:** 0.7 - 1.0 (intentionally low, avoiding progressive overload)
 
 ---
 
-#### **Pillar Coordination by Goal Type**
-
-| Goal Type | Running Priority | Strength Priority | Mobility Priority |
-|-----------|------------------|-------------------|-------------------|
-| Distance Milestone | High | Medium | Medium |
-| Time Performance | High | Medium-High | Medium |
-| Event (Race) | High | Medium (reduce in taper) | High (increase in taper) |
-| Maintenance | Medium | High | High |
-
----
-
-#### **Missed Workout Protocols by Goal Type**
-
-**Distance Milestone:**
-*   Skip missed workouts entirely - don't try to make up
-*   Focus on next scheduled session
-*   Consistency over perfection
-
-**Time Performance:**
-*   If key workout missed: Attempt to reschedule within 48 hours if fresh
-*   If easy run missed: Skip it
-*   Never double up hard sessions
-
-**Event (Race):**
-*   Missed key workout in base phase: Skip it
-*   Missed key workout in build/peak: Attempt light version if 48+ hours to next hard session
-*   Missed long run: Do shortened version (60-70%) if possible
-
-**Maintenance:**
-*   All workouts are flexible - skip without guilt
-*   Maintain frequency over specific workouts
-
----
-
-#### **Hybrid Goals**
-
-Some users may have combined goals (e.g., "Complete my first marathon in under 4 hours"):
-*   **Primary goal type:** Event (deadline-driven structure)
-*   **Secondary goal type:** Time Performance (pace targets during workouts)
-*   **Training approach:** Use Event periodization with Time Performance intensity distribution during build/peak phases
-
----
-
-#### **Dynamic Goal Type Switching**
-
-Users may need to switch goal types mid-plan:
-*   **Event → Maintenance:** Automatic transition after race completion (2-4 week recovery period)
-*   **Time Performance → Event:** When user registers for a race (restructure into event-based periodization)
-*   **Distance Milestone → Time Performance:** After completing first distance goal (shift to pace-focused training)
-*   **Any → Maintenance:** When life gets overwhelming (immediate transition available)
-
-Ash should detect these transitions and offer to adjust the plan accordingly.
+#### **Pillar Coordination & Hybrid Goals**
+Ash dynamically balances running, strength, and mobility based on goal type and user priority. For hybrid goals (e.g., "First marathon under 4:00"), Ash prioritizes the event-based structure while applying specific performance targets during key workouts.
 
 ## 2. Holistic "Three-Pillar" Integration
 
@@ -300,10 +142,10 @@ Ash tracks training stress to prevent overtraining and optimize adaptation.
     *   **> 1.3:** High injury risk, suggest deload or easier week
     *   **< 0.8:** Undertraining, can safely increase volume
 
-### **Adaptive Deload Triggers**
+### **Adaptive Recovery Triggers**
 If ACWR exceeds 1.3 or user reports multiple consecutive poor sessions, Ash automatically suggests:
-*   Early recovery week (move Week 4 up)
-*   Reduce volume by 20-30% for next week
+*   Early Recovery Block (immediate shift to recovery intent)
+*   Reduce volume by 20-30% for the next 7 days
 *   Maintain intensity but shorten duration
 
 ---
@@ -332,15 +174,20 @@ All sessions are prescribed using **Rate of Perceived Exertion (RPE)** on a 1-10
 
 ---
 
-## 5. Plan Structure (The "Deliverables")
+## 5. Plan Structure (Phases & Blocks)
 
-Ash will generate plans in **4-Week Mesocycles**.
+Ash generates plans as a sequence of **Phases**, which are further broken down into **Hydrated Blocks**.
 
-### **Weekly Microcycle Logic**
+### **Phase Skeleton**
+Every plan starts with a "Skeleton"—a long-term timeline of phases leading to the goal.
+*   **Dynamic Skeleton**: If life happens, the AI can steal days from a "Base" phase to preserve a "Taper" phase.
 
-A **microcycle** is a single week of training within a mesocycle. It balances stress and recovery across all three pillars (Running, Strength, Mobility).
+### **Training Blocks (The "Liquid" Block)**
+A **block** is a logical cluster of workouts (typically 3-10 days) within a phase.
 
-#### **Key Microcycle Principles**
+A **Training Block** is a logical cluster of workouts within a Phase. It balances stress and recovery across all three pillars (Running, Strength, Mobility).
+ 
+ #### **Key Training Block Principles**
 *   **Hard Days Hard, Easy Days Easy:** Never stack high-intensity sessions back-to-back
 *   **48-Hour Recovery Rule:** Allow 48 hours between hard efforts in the same pillar (e.g., Tuesday Intervals → Friday next hard run)
 *   **Pillar Coordination:** Avoid hard leg strength the day before a key run (e.g., no heavy squats before Long Run)
@@ -363,75 +210,12 @@ A **microcycle** is a single week of training within a mesocycle. It balances st
 *   **Active Mobility:** Dynamic stretches, yoga flows, or movement prep. Can be done before workouts or standalone.
 *   **Passive Mobility:** Static stretching, foam rolling, or restorative yoga. Best for recovery days or post-workout.
 
-#### **Sample Microcycle Structure (Running Priority: High, Strength: Medium)**
-*   **Monday:** Rest or Passive Mobility (20 min)
-*   **Tuesday:** Quality Run 1 (Intervals, RPE 9) + Upper Body Strength (30 min)
-*   **Wednesday:** Easy Aerobic Run (RPE 3-4, 40 min)
-*   **Thursday:** Quality Run 2 (Tempo, RPE 7-8) OR Easy Run (if fatigued)
-*   **Friday:** Active Mobility (20 min) or Rest
-*   **Saturday:** Long Run (RPE 4-5, 60-90 min) + Lower Body Strength (light, 2-3 RIR)
-*   **Sunday:** Full Rest or Cross-Training (bike, swim)
-
-**Note:** This is a template for a **4-day running week** with **2 strength sessions**. Ash customizes based on user's pillar priorities, available days, and current mesocycle week (Week 1-4).
-
-### **Event-Based Periodization (Race Goal)**
-
-When a user has a target race, Ash structures training into distinct phases leading to a **taper**.
-
-#### **Race Types**
-
-Ash tracks multiple types of racing and athletic events:
-
-| Event Type | Icon/Color | Training Impact | Examples |
-|------------|------------|-----------------|----------|
-| **Goal Race** | 🏆 Gold star | Primary goal - all training builds toward this | Target marathon, first 10K |
-| **Tune-Up Race** | 🎯 Gold outline | Practice race - reduced training 2-3 days before | 5K before marathon, half marathon speed test |
-| **Fun Run / Casual Event** | 🏃 Orange dot | Social run - treated as a workout, not a race | Charity 5K, parkrun, team relay |
-| **Non-Running Event** | 📅 Purple | Other athletic events | Triathlon, obstacle course, hiking trip |
-
-#### **Smart Planning Around Events**
-
-When an event is added:
-1. **Goal Race**: Automatic taper period (reduced volume 1-3 weeks before depending on distance)
-2. **Tune-Up Race**: Light training 2-3 days before, recovery day after
-3. **Fun Run**: Slight intensity reduction day before, count as workout
-4. **Recovery**: Easy week scheduled post-race based on event distance and effort
-
-#### **Phase Structure**
-| Phase | Duration | Focus |
-|-------|----------|-------|
-| **Base** | 4-8 weeks | Volume building, aerobic foundation, injury-proofing |
-| **Build** | 4-6 weeks | Race-specific intensity, longer intervals, goal pace work |
-| **Peak** | 2-3 weeks | Highest intensity + volume week, sharpening |
-| **Taper** | 1-3 weeks | Volume reduction, maintain intensity, freshness |
-
-#### **Taper Protocols by Race Distance**
-
-| Race | Taper Length | Volume Reduction | Intensity |
-|------|--------------|------------------|-----------|
-| **5K** | 7-10 days | -30% week 1, -50% final 3-4 days | Maintain with short, sharp strides |
-| **10K** | 10-14 days | -30% week 1, -50% week 2 | 1-2 short tempo/interval sessions |
-| **Half Marathon** | 2 weeks | -30% week 1, -50% week 2 | One race pace tune-up |
-| **Marathon** | 3 weeks | -20% W1, -40% W2, -60% W3 | One moderate long run W1, easy thereafter |
-
-#### **Taper Principles**
-*   **Reduce volume, NOT intensity:** Keep some fast running to maintain neuromuscular sharpness
-*   **Protect sleep and recovery:** This is when adaptation happens
-*   **Strength during taper:** Reduce to 1 light maintenance session, no heavy legs in final week
-*   **Avoid new stressors:** No new shoes, foods, or training routes race week
-*   **Mental preparation:** Ash can offer pre-race confidence prompts
-
-#### **Short Notice Races (<3 weeks out)**
-If user adds a race with minimal lead time:
-*   Skip Build phase, go straight to abbreviated taper
-*   Suggest treating as "training race" (lower expectations, useful experience)
-*   Offer post-race analysis to inform future training
-
-### **Monthly Mesocycle Logic (3 Steps Forward, 1 Back)**
-1.  **Week 1:** Base Volume
-2.  **Week 2:** Progression (+10% volume or added intensity)
-3.  **Week 3:** Peak Volume (Hardest week)
-4.  **Week 4:** **Recovery / Cutback Week** (Volume reduced by 20-30%, intensity maintained but duration shortened).
+### **Phase-Based Periodization Logic**
+Workload progresses through a Phase via standard stress/recovery blocks:
+1.  **Intro Block:** Onramp and volume stabilization.
+2.  **Progression Block:** Strategic load increase.
+3.  **Peak Block:** Intensive adaptation.
+4.  **Recovery Block:** Strategic deload (20-30% volume reduction) to allow physiological supercompensation.
 
 ---
 
@@ -439,14 +223,21 @@ If user adds a race with minimal lead time:
 
 The "Ash Planning Prompts" must handle these scenarios rigorously.
 
-### **A. Missed Workouts**
-*   **Rule:** "One missed workout is gone."
-*   **Logic:**
-    *   Never cram a missed session into a rest day.
-    *   If a *Key Session* (Long Run, Interval) is missed:
-        *   If user is fresh: Swap it with the next Easy Run.
-        *   If user is fatigued: Skip it entirely.
-    *   **NEVER** do two hard days back-to-back to "catch up."
+### **A. Missed Workouts & The "Fixed Grid" Philosophy**
+Ash treats your training schedule like a **fixed grid**, not a "queue" where everything slides forward. This protects recovery days and ensures the Long Run (the "Big Rock") remains on schedule.
+
+*   **Rule:** "Minor interruptions adapt; major interruptions repair."
+*   **Logic (The ≤ 2 Day Decision Matrix)**:
+    *   **Easy Run**: **Delete**. Do not try to recover these miles; they are gone.
+    *   **Strength Session**: **Consolidate**. Move it to the next **Hard Run** day (Speed or Tempo). Follow the "6-Hour Rule" (Run in AM, Lift in PM).
+    *   **Speed/Tempo Run**: **Swap**. Move the hard run to the next scheduled **Strength** day. Downgrade that strength session to core/mobility only.
+    *   **Long Run**: **Priority**. Shift the Long Run to the next available day. Cancel/Skip whatever was originally on that day (even if it was strength).
+
+*   **The Constraints**:
+    *   **48-Hour Recovery**: No heavy leg strength within 48 hours of a Long Run.
+    *   **6-Hour Rule**: Consolidated sessions must be separated by at least 6 hours (Run First).
+    *   **No Chain Reactions**: A reschedule cannot push the Long Run into the following week.
+    *   **AI Strategic Repair**: For disruptions > 2 days, the AI re-evaluates the entire remaining Phase Skeleton to protect the goal.
 
 ### **B. Injury & Pain Management (Adaptive)**
 *   **Diagnosis Protocol:**
@@ -505,6 +296,12 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
 *   Multiple skipped sessions without explanation
 *   Declining session RPE engagement (not rating workouts)
 
+#### **The Honesty Protocol**
+If a user's consistency drops significantly (e.g., > 40% sessions missed in a High-Priority phase), Ash initiates the **Honesty Protocol**:
+1.  **Flag the Risk**: "Hey, we've missed a few key sessions. At this rate, hitting our original sub-4:00 goal might not be safe for your legs."
+2.  **Offer a Safe Pivot**: "I can adjust our target to a 'Strong Finish' goal, which reduces the intensity but ensures we get you to the finish line healthy. What do you think?"
+3.  **Rescale the Skeleton**: The AI re-generates the remaining Phases with the new, safer intent.
+
 #### **Conversation Flow**
 1.  **Acknowledge without judgment:**
     > "Totally okay to feel that way. Can I ask—what's going on?"
@@ -541,39 +338,8 @@ When a user wants to skip a workout and doesn't mention illness, injury, or sche
 *   **Distinguish Fatigue from Motivation:** Fatigue = body needs rest. Low motivation = may need novelty, shorter sessions, or goal realignment.
 *   **Celebrate Small Wins:** "A 10-minute walk still counts. You moved today."
 
-## 7. Return-to-Training Protocols
-
-When users take breaks (planned or unplanned), Ash asks about the reason and severity to adjust the return.
-
-### **After Illness**
-*   **Mild (cold, minor bug):**
-    *   Resume at 50% volume
-    *   Progress 10-20% per week until back to baseline
-*   **Moderate (fever, chest infection):**
-    *   Wait until symptom-free for 3-5 days
-    *   Resume at 30% volume
-    *   Progress 15% per week
-
-### **After Injury**
-*   **Minor (1-2 weeks off):**
-    *   Resume at 60% volume for affected activities
-    *   Maintain other pillars if unaffected
-*   **Major (4+ weeks off):**
-    *   Treat as beginner for that movement pattern
-    *   Rebuild base conservatively
-
-### **After Life Break (vacation, burnout, busy period)**
-*   **1-2 weeks:** Resume at 80% volume
-*   **3-4 weeks:** Resume at 60% volume
-*   **2+ months:** Restart from Week 1 of current mesocycle
-
-### **Maintenance Mode**
-For planned busy periods (2-8 weeks), Ash offers a "Maintenance Mode":
-*   **Frequency:** 2-3 key sessions per week
-*   **Volume:** Cut by 50%
-*   **Intensity:** Maintain high intensity (same RPE targets)
-*   **Focus:** Compound movements and one quality run (Long Run or Intervals)
-*   **Philosophy:** "You won't gain fitness, but you won't lose it either."
+## 7. Return-to-Training
+When returning from a break (planned or unplanned), Ash prioritizes safety by applying a volume ceiling to the first block back. This prevents sudden spikes in ACWR and reduces injury risk.
 
 ---
 
@@ -582,7 +348,7 @@ For planned busy periods (2-8 weeks), Ash offers a "Maintenance Mode":
 When progress stalls despite consistent training, Ash suggests strategic interventions.
 
 ### **Strength Plateau**
-*   **Deload Week:** Reduce volume by 40%, maintain intensity (already in mesocycle)
+*   **Deload Week:** Reduce volume by 40%, maintain intensity (already built into phase progression)
 *   **Variation Block (2-3 weeks):**
     *   Swap primary lifts for variations (e.g., back squat → front squat, bench → incline bench)
     *   Change rep ranges (if doing 5 reps, try 8-10 reps)
@@ -658,27 +424,4 @@ Ash adjusts plans based on environmental conditions to keep training safe and ef
 ---
 
 ## 11. Initial Plan Generation
-
-When a user completes onboarding, Ash generates Week 1 using the following inputs:
-
-| Onboarding Input | Mapped To |
-|------------------|-----------|
-| Goal type | Pillar priority & periodization model (Pyramidal vs. Polarized) |
-| Activity level | Starting volume (Chronic Load baseline) |
-| Training types enjoyed | Pillar composition & exercise pool |
-| Available days | Microcycle structure |
-| Injuries/limitations | Movement exclusions + caution flags |
-| Event date (if provided) | Periodization phases with taper |
-
-### Starting Volume Estimates
-
-| Activity Level | Est. Weekly Running | Est. Strength Sessions |
-|----------------|---------------------|------------------------|
-| Just getting started | 10-15 km | 1-2x (short, bodyweight) |
-| Casually active | 15-25 km | 2x |
-| Regularly training | 25-40 km | 2-3x |
-| Very active | 40+ km | 3x |
-
-These are starting points—Ash adjusts based on Week 1-2 feedback (see ACWR in Section 2).
-
-For the full onboarding flow and question details, see [Onboarding Flow](../features/onboarding_flow.md). 
+Starting volume is determined by current activity level, mapped to an estimated weekly workload. Week 1-2 feedback is then used to calibrate the plan via the ACWR and RPE signals.

@@ -17,6 +17,7 @@ extension UserDTOMapper on UserDTO {
       availableDays: (jsonDecode(availableDays) as List).cast<String>(),
       constraints: constraints,
       healthPermissionsGranted: healthPermissionsGranted,
+      preferredDistanceUnit: preferredDistanceUnit,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -36,6 +37,7 @@ extension UserMapper on User {
       availableDays: jsonEncode(availableDays),
       constraints: constraints,
       healthPermissionsGranted: healthPermissionsGranted,
+      preferredDistanceUnit: preferredDistanceUnit,
       createdAt: createdAt,
       updatedAt: updatedAt,
     );
@@ -53,6 +55,7 @@ extension UserMapper on User {
       availableDays: jsonEncode(availableDays),
       constraints: Value(constraints),
       healthPermissionsGranted: Value(healthPermissionsGranted),
+      preferredDistanceUnit: Value(preferredDistanceUnit),
       createdAt: createdAt,
       updatedAt: updatedAt,
     );

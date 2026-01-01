@@ -9,7 +9,7 @@ class OnboardingProgress extends StatefulWidget {
   const OnboardingProgress({
     super.key,
     required this.currentStep,
-    this.totalSteps = 6,
+    this.totalSteps = 7,
     required this.label,
   });
 

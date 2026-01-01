@@ -9,8 +9,8 @@ class Workouts extends Table {
   IntColumn get userId => integer()();
   IntColumn get goalId => integer()();
 
-  TextColumn get mesocycleId => text().nullable()();
-  TextColumn get microcycleId => text().nullable()();
+  TextColumn get phaseId => text().nullable()();
+  TextColumn get blockId => text().nullable()();
 
   DateTimeColumn get scheduledDate => dateTime()();
   TextColumn get type => text()(); // 'easy_run', etc.
@@ -27,7 +27,12 @@ class Workouts extends Table {
   RealColumn get actualDistance => real().nullable()();
   RealColumn get actualPace => real().nullable()();
   IntColumn get rpe => integer().nullable()();
+  TextColumn get syncedFrom =>
+      text().nullable()(); // 'manual', 'health_api', 'screenshot'
   DateTimeColumn get completedAt => dateTime().nullable()();
+
+  // Flag for "Big Rocks" (Long Runs, intervals, high-priority strength)
+  BoolColumn get isKey => boolean().withDefault(const Constant(false))();
 
   @override
   Set<Column> get primaryKey => {id};

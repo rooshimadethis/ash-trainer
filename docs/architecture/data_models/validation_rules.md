@@ -69,43 +69,43 @@ This document defines input validation and business logic rules for all data ent
 
 ---
 
-### Table: `mesocycles`
-
-#### Field Validation
-
-| Field | Rule | Error Message |
-|-------|------|---------------|
-| `phase` | Must be one of: `base`, `build`, `peak`, `taper`, `recovery` | "Invalid phase" |
-| `intensityDistribution` | Must be one of: `pyramidal`, `polarized`, `threshold` | "Invalid intensity distribution" |
-| `mesocycleNumber` | Must be unique per goal | "Mesocycle number already exists for this goal" |
-| `endDate` | Must be after `startDate` | "End date must be after start date" |
-| `endDate` - `startDate` | Typically 21-28 days | Warning if outside range |
-| `targetWeeklyVolume` | Must be > 0 | "Weekly volume must be positive" |
-| `targetWeeklyDuration` | Must be > 0 | "Weekly duration must be positive" |
-
-#### Business Logic
-
-- **Mesocycle duration**: Typically 3-4 weeks (21-28 days)
-- **Phase progression**: Base → Build → Peak → Taper → Recovery (enforced at application layer)
+### Table: `phases`
+ 
+ #### Field Validation
+ 
+ | Field | Rule | Error Message |
+ |-------|------|---------------|
+ | `phaseType` | Must be one of: `base`, `build`, `peak`, `taper`, `recovery` | "Invalid phase type" |
+ | `intensityDistribution` | Must be one of: `pyramidal`, `polarized`, `threshold` | "Invalid intensity distribution" |
+ | `phaseNumber` | Must be unique per goal | "Phase number already exists" |
+ | `durationWeeks` | Must be 1-24 | "Phase duration must be 1-24 weeks" |
+ | `endDate` | Must be after `startDate` (if hydrated) | "End date must be after start date" |
+ | `targetWeeklyVolume` | Must be > 0 | "Weekly volume must be positive" |
+ | `targetWeeklyDuration` | Must be > 0 | "Weekly duration must be positive" |
+ 
+ #### Business Logic
+ 
+ - **Phase duration**: Flexible, typically 2-6 weeks.
+ - **Phase progression**: Base → Build → Peak → Taper → Recovery.
+ - **Hydration Responsibility**: AI provides `durationWeeks`. App computes `startDate`/`endDate`.
 
 ---
 
-### Table: `microcycles`
-
-#### Field Validation
-
-| Field | Rule | Error Message |
-|-------|------|---------------|
-| `weekNumber` | Must be unique per mesocycle | "Week number already exists for this mesocycle" |
-| `weekNumber` | Must be 1-4 (within mesocycle) | "Week number must be 1-4" |
-| `endDate` | Must be after `startDate` | "End date must be after start date" |
-| `endDate` - `startDate` | Must be exactly 7 days | "Microcycle must be 7 days" |
-| `adherencePercentage` | Must be 0-100 | "Adherence out of range" |
-
-#### Business Logic
-
-- **Week duration**: Exactly 7 days (Monday-Sunday)
-- **Computed stats**: `totalVolume`, `totalDuration`, `adherencePercentage` updated by application layer after workouts complete
+### Table: `training_blocks`
+ 
+ #### Field Validation
+ 
+ | Field | Rule | Error Message |
+ |-------|------|---------------|
+ | `blockNumber` | Must be unique per phase | "Block number already exists" |
+ | `intent` | Must be one of: `intro`, `progression`, `peak`, `recovery` | "Invalid block intent" |
+ | `endDate` | Must be after `startDate` (if hydrated) | "End date must be after start date" |
+ | `adherencePercentage` | Must be 0-100 | "Adherence out of range" |
+ 
+ #### Business Logic
+ 
+ - **Block duration**: Flexible (3-10 days).
+ - **Computed stats**: `totalVolume`, `totalDuration`, `adherencePercentage` updated by app as workouts complete.
 
 ---
 

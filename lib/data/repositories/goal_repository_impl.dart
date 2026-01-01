@@ -85,6 +85,23 @@ class GoalRepositoryImpl implements GoalRepository {
   }
 
   @override
+  Future<void> updateRationale({
+    required String goalId,
+    required String overallApproach,
+    required String intensityDistribution,
+    required String keyWorkouts,
+    required String recoveryStrategy,
+  }) async {
+    await _dao.updateRationale(
+      goalId: int.parse(goalId),
+      overallApproach: overallApproach,
+      intensityDistribution: intensityDistribution,
+      keyWorkouts: keyWorkouts,
+      recoveryStrategy: recoveryStrategy,
+    );
+  }
+
+  @override
   Future<void> deactivateGoal(String goalId) async {
     await _dao.deactivateGoal(int.parse(goalId));
   }

@@ -31,12 +31,12 @@ class AshSelectionTile extends StatelessWidget {
             height: 48,
             decoration: BoxDecoration(
               color: isSelected
-                  ? AppColors.primary.withValues(alpha: 0.1)
+                  ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                   : AppColors.backgroundDark.withValues(alpha: 0.3),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: isSelected
-                    ? AppColors.primary.withValues(alpha: 0.3)
+                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
                     : AppColors.divider,
               ),
             ),
@@ -75,10 +75,12 @@ class AshSelectionTile extends StatelessWidget {
             height: 24,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: isSelected ? AppColors.primary : Colors.transparent,
+              color: isSelected
+                  ? Theme.of(context).primaryColor
+                  : Colors.transparent,
               border: Border.all(
                 color: isSelected
-                    ? AppColors.primary
+                    ? Theme.of(context).primaryColor
                     : AppColors.textSecondary.withValues(alpha: 0.3),
                 width: 2,
               ),

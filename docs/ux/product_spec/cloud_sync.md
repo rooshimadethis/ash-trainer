@@ -14,7 +14,7 @@ Ash ensures users never lose their training data through automatic cloud synchro
 - **Goals**: All goal types and progress data
 - **Workouts**: Planned and completed workouts, including RPE and feedback
 - **Health Data**: Biomarkers, recovery metrics, injury records
-- **Training Plans**: Generated plans and microcycles
+- **Training Plans**: Generated plans and training blocks
 - **Pillar Priorities**: Running, Strength, Mobility configurations
 
 ### Sync Frequency

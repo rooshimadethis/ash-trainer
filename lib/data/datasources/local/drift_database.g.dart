@@ -53,6 +53,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
           type: DriftSqlType.string,
           requiredDuringInsert: false,
           defaultValue: const Constant('cm'));
+  static const VerificationMeta _preferredDistanceUnitMeta =
+      const VerificationMeta('preferredDistanceUnit');
+  @override
+  late final GeneratedColumn<String> preferredDistanceUnit =
+      GeneratedColumn<String>('preferred_distance_unit', aliasedName, false,
+          type: DriftSqlType.string,
+          requiredDuringInsert: false,
+          defaultValue: const Constant('km'));
   static const VerificationMeta _availableDaysMeta =
       const VerificationMeta('availableDays');
   @override
@@ -97,6 +105,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
         preferredWeightUnit,
         height,
         preferredHeightUnit,
+        preferredDistanceUnit,
         availableDays,
         constraints,
         healthPermissionsGranted,
@@ -143,6 +152,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
           _preferredHeightUnitMeta,
           preferredHeightUnit.isAcceptableOrUnknown(
               data['preferred_height_unit']!, _preferredHeightUnitMeta));
+    }
+    if (data.containsKey('preferred_distance_unit')) {
+      context.handle(
+          _preferredDistanceUnitMeta,
+          preferredDistanceUnit.isAcceptableOrUnknown(
+              data['preferred_distance_unit']!, _preferredDistanceUnitMeta));
     }
     if (data.containsKey('available_days')) {
       context.handle(
@@ -202,6 +217,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, UserDTO> {
       preferredHeightUnit: attachedDatabase.typeMapping.read(
           DriftSqlType.string,
           data['${effectivePrefix}preferred_height_unit'])!,
+      preferredDistanceUnit: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}preferred_distance_unit'])!,
       availableDays: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}available_days'])!,
       constraints: attachedDatabase.typeMapping
@@ -230,6 +248,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
   final String preferredWeightUnit;
   final double? height;
   final String preferredHeightUnit;
+  final String preferredDistanceUnit;
   final String availableDays;
   final String? constraints;
   final bool healthPermissionsGranted;
@@ -243,6 +262,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       required this.preferredWeightUnit,
       this.height,
       required this.preferredHeightUnit,
+      required this.preferredDistanceUnit,
       required this.availableDays,
       this.constraints,
       required this.healthPermissionsGranted,
@@ -266,6 +286,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       map['height'] = Variable<double>(height);
     }
     map['preferred_height_unit'] = Variable<String>(preferredHeightUnit);
+    map['preferred_distance_unit'] = Variable<String>(preferredDistanceUnit);
     map['available_days'] = Variable<String>(availableDays);
     if (!nullToAbsent || constraints != null) {
       map['constraints'] = Variable<String>(constraints);
@@ -289,6 +310,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       height:
           height == null && nullToAbsent ? const Value.absent() : Value(height),
       preferredHeightUnit: Value(preferredHeightUnit),
+      preferredDistanceUnit: Value(preferredDistanceUnit),
       availableDays: Value(availableDays),
       constraints: constraints == null && nullToAbsent
           ? const Value.absent()
@@ -312,6 +334,8 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       height: serializer.fromJson<double?>(json['height']),
       preferredHeightUnit:
           serializer.fromJson<String>(json['preferredHeightUnit']),
+      preferredDistanceUnit:
+          serializer.fromJson<String>(json['preferredDistanceUnit']),
       availableDays: serializer.fromJson<String>(json['availableDays']),
       constraints: serializer.fromJson<String?>(json['constraints']),
       healthPermissionsGranted:
@@ -331,6 +355,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       'preferredWeightUnit': serializer.toJson<String>(preferredWeightUnit),
       'height': serializer.toJson<double?>(height),
       'preferredHeightUnit': serializer.toJson<String>(preferredHeightUnit),
+      'preferredDistanceUnit': serializer.toJson<String>(preferredDistanceUnit),
       'availableDays': serializer.toJson<String>(availableDays),
       'constraints': serializer.toJson<String?>(constraints),
       'healthPermissionsGranted':
@@ -348,6 +373,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           String? preferredWeightUnit,
           Value<double?> height = const Value.absent(),
           String? preferredHeightUnit,
+          String? preferredDistanceUnit,
           String? availableDays,
           Value<String?> constraints = const Value.absent(),
           bool? healthPermissionsGranted,
@@ -361,6 +387,8 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
         preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
         height: height.present ? height.value : this.height,
         preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
+        preferredDistanceUnit:
+            preferredDistanceUnit ?? this.preferredDistanceUnit,
         availableDays: availableDays ?? this.availableDays,
         constraints: constraints.present ? constraints.value : this.constraints,
         healthPermissionsGranted:
@@ -381,6 +409,9 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       preferredHeightUnit: data.preferredHeightUnit.present
           ? data.preferredHeightUnit.value
           : this.preferredHeightUnit,
+      preferredDistanceUnit: data.preferredDistanceUnit.present
+          ? data.preferredDistanceUnit.value
+          : this.preferredDistanceUnit,
       availableDays: data.availableDays.present
           ? data.availableDays.value
           : this.availableDays,
@@ -404,6 +435,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           ..write('preferredWeightUnit: $preferredWeightUnit, ')
           ..write('height: $height, ')
           ..write('preferredHeightUnit: $preferredHeightUnit, ')
+          ..write('preferredDistanceUnit: $preferredDistanceUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -422,6 +454,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
       preferredWeightUnit,
       height,
       preferredHeightUnit,
+      preferredDistanceUnit,
       availableDays,
       constraints,
       healthPermissionsGranted,
@@ -438,6 +471,7 @@ class UserDTO extends DataClass implements Insertable<UserDTO> {
           other.preferredWeightUnit == this.preferredWeightUnit &&
           other.height == this.height &&
           other.preferredHeightUnit == this.preferredHeightUnit &&
+          other.preferredDistanceUnit == this.preferredDistanceUnit &&
           other.availableDays == this.availableDays &&
           other.constraints == this.constraints &&
           other.healthPermissionsGranted == this.healthPermissionsGranted &&
@@ -453,6 +487,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
   final Value<String> preferredWeightUnit;
   final Value<double?> height;
   final Value<String> preferredHeightUnit;
+  final Value<String> preferredDistanceUnit;
   final Value<String> availableDays;
   final Value<String?> constraints;
   final Value<bool> healthPermissionsGranted;
@@ -466,6 +501,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     this.preferredWeightUnit = const Value.absent(),
     this.height = const Value.absent(),
     this.preferredHeightUnit = const Value.absent(),
+    this.preferredDistanceUnit = const Value.absent(),
     this.availableDays = const Value.absent(),
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -480,6 +516,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     this.preferredWeightUnit = const Value.absent(),
     this.height = const Value.absent(),
     this.preferredHeightUnit = const Value.absent(),
+    this.preferredDistanceUnit = const Value.absent(),
     required String availableDays,
     this.constraints = const Value.absent(),
     this.healthPermissionsGranted = const Value.absent(),
@@ -496,6 +533,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
     Expression<String>? preferredWeightUnit,
     Expression<double>? height,
     Expression<String>? preferredHeightUnit,
+    Expression<String>? preferredDistanceUnit,
     Expression<String>? availableDays,
     Expression<String>? constraints,
     Expression<bool>? healthPermissionsGranted,
@@ -512,6 +550,8 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       if (height != null) 'height': height,
       if (preferredHeightUnit != null)
         'preferred_height_unit': preferredHeightUnit,
+      if (preferredDistanceUnit != null)
+        'preferred_distance_unit': preferredDistanceUnit,
       if (availableDays != null) 'available_days': availableDays,
       if (constraints != null) 'constraints': constraints,
       if (healthPermissionsGranted != null)
@@ -529,6 +569,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       Value<String>? preferredWeightUnit,
       Value<double?>? height,
       Value<String>? preferredHeightUnit,
+      Value<String>? preferredDistanceUnit,
       Value<String>? availableDays,
       Value<String?>? constraints,
       Value<bool>? healthPermissionsGranted,
@@ -542,6 +583,8 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       preferredWeightUnit: preferredWeightUnit ?? this.preferredWeightUnit,
       height: height ?? this.height,
       preferredHeightUnit: preferredHeightUnit ?? this.preferredHeightUnit,
+      preferredDistanceUnit:
+          preferredDistanceUnit ?? this.preferredDistanceUnit,
       availableDays: availableDays ?? this.availableDays,
       constraints: constraints ?? this.constraints,
       healthPermissionsGranted:
@@ -577,6 +620,10 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
       map['preferred_height_unit'] =
           Variable<String>(preferredHeightUnit.value);
     }
+    if (preferredDistanceUnit.present) {
+      map['preferred_distance_unit'] =
+          Variable<String>(preferredDistanceUnit.value);
+    }
     if (availableDays.present) {
       map['available_days'] = Variable<String>(availableDays.value);
     }
@@ -606,6 +653,7 @@ class UsersCompanion extends UpdateCompanion<UserDTO> {
           ..write('preferredWeightUnit: $preferredWeightUnit, ')
           ..write('height: $height, ')
           ..write('preferredHeightUnit: $preferredHeightUnit, ')
+          ..write('preferredDistanceUnit: $preferredDistanceUnit, ')
           ..write('availableDays: $availableDays, ')
           ..write('constraints: $constraints, ')
           ..write('healthPermissionsGranted: $healthPermissionsGranted, ')
@@ -682,6 +730,15 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
   late final GeneratedColumn<int> currentBestTime = GeneratedColumn<int>(
       'current_best_time', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _isFirstTimeMeta =
+      const VerificationMeta('isFirstTime');
+  @override
+  late final GeneratedColumn<bool> isFirstTime = GeneratedColumn<bool>(
+      'is_first_time', aliasedName, true,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_first_time" IN (0, 1))'));
   static const VerificationMeta _eventNameMeta =
       const VerificationMeta('eventName');
   @override
@@ -712,6 +769,36 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
   late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
       'end_date', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _initialTrainingFrequencyMeta =
+      const VerificationMeta('initialTrainingFrequency');
+  @override
+  late final GeneratedColumn<int> initialTrainingFrequency =
+      GeneratedColumn<int>('initial_training_frequency', aliasedName, true,
+          type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _initialWeeklyVolumeMeta =
+      const VerificationMeta('initialWeeklyVolume');
+  @override
+  late final GeneratedColumn<double> initialWeeklyVolume =
+      GeneratedColumn<double>('initial_weekly_volume', aliasedName, true,
+          type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _runningPriorityMeta =
+      const VerificationMeta('runningPriority');
+  @override
+  late final GeneratedColumn<String> runningPriority = GeneratedColumn<String>(
+      'running_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _strengthPriorityMeta =
+      const VerificationMeta('strengthPriority');
+  @override
+  late final GeneratedColumn<String> strengthPriority = GeneratedColumn<String>(
+      'strength_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _mobilityPriorityMeta =
+      const VerificationMeta('mobilityPriority');
+  @override
+  late final GeneratedColumn<String> mobilityPriority = GeneratedColumn<String>(
+      'mobility_priority', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _confidenceMeta =
       const VerificationMeta('confidence');
   @override
@@ -752,6 +839,31 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
       type: DriftSqlType.double,
       requiredDuringInsert: false,
       defaultValue: const Constant(0.0));
+  static const VerificationMeta _rationaleOverallApproachMeta =
+      const VerificationMeta('rationaleOverallApproach');
+  @override
+  late final GeneratedColumn<String> rationaleOverallApproach =
+      GeneratedColumn<String>('rationale_overall_approach', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleIntensityDistributionMeta =
+      const VerificationMeta('rationaleIntensityDistribution');
+  @override
+  late final GeneratedColumn<String> rationaleIntensityDistribution =
+      GeneratedColumn<String>(
+          'rationale_intensity_distribution', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleKeyWorkoutsMeta =
+      const VerificationMeta('rationaleKeyWorkouts');
+  @override
+  late final GeneratedColumn<String> rationaleKeyWorkouts =
+      GeneratedColumn<String>('rationale_key_workouts', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _rationaleRecoveryStrategyMeta =
+      const VerificationMeta('rationaleRecoveryStrategy');
+  @override
+  late final GeneratedColumn<String> rationaleRecoveryStrategy =
+      GeneratedColumn<String>('rationale_recovery_strategy', aliasedName, true,
+          type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _createdAtMeta =
       const VerificationMeta('createdAt');
   @override
@@ -775,16 +887,26 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
         targetDate,
         targetTime,
         currentBestTime,
+        isFirstTime,
         eventName,
         eventDate,
         maintenanceFrequency,
         maintenanceDuration,
         endDate,
+        initialTrainingFrequency,
+        initialWeeklyVolume,
+        runningPriority,
+        strengthPriority,
+        mobilityPriority,
         confidence,
         adherenceScore,
         qualityScore,
         consistencyScore,
         recoveryScore,
+        rationaleOverallApproach,
+        rationaleIntensityDistribution,
+        rationaleKeyWorkouts,
+        rationaleRecoveryStrategy,
         createdAt,
         updatedAt
       ];
@@ -847,6 +969,12 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           currentBestTime.isAcceptableOrUnknown(
               data['current_best_time']!, _currentBestTimeMeta));
     }
+    if (data.containsKey('is_first_time')) {
+      context.handle(
+          _isFirstTimeMeta,
+          isFirstTime.isAcceptableOrUnknown(
+              data['is_first_time']!, _isFirstTimeMeta));
+    }
     if (data.containsKey('event_name')) {
       context.handle(_eventNameMeta,
           eventName.isAcceptableOrUnknown(data['event_name']!, _eventNameMeta));
@@ -870,6 +998,37 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
     if (data.containsKey('end_date')) {
       context.handle(_endDateMeta,
           endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('initial_training_frequency')) {
+      context.handle(
+          _initialTrainingFrequencyMeta,
+          initialTrainingFrequency.isAcceptableOrUnknown(
+              data['initial_training_frequency']!,
+              _initialTrainingFrequencyMeta));
+    }
+    if (data.containsKey('initial_weekly_volume')) {
+      context.handle(
+          _initialWeeklyVolumeMeta,
+          initialWeeklyVolume.isAcceptableOrUnknown(
+              data['initial_weekly_volume']!, _initialWeeklyVolumeMeta));
+    }
+    if (data.containsKey('running_priority')) {
+      context.handle(
+          _runningPriorityMeta,
+          runningPriority.isAcceptableOrUnknown(
+              data['running_priority']!, _runningPriorityMeta));
+    }
+    if (data.containsKey('strength_priority')) {
+      context.handle(
+          _strengthPriorityMeta,
+          strengthPriority.isAcceptableOrUnknown(
+              data['strength_priority']!, _strengthPriorityMeta));
+    }
+    if (data.containsKey('mobility_priority')) {
+      context.handle(
+          _mobilityPriorityMeta,
+          mobilityPriority.isAcceptableOrUnknown(
+              data['mobility_priority']!, _mobilityPriorityMeta));
     }
     if (data.containsKey('confidence')) {
       context.handle(
@@ -900,6 +1059,33 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           _recoveryScoreMeta,
           recoveryScore.isAcceptableOrUnknown(
               data['recovery_score']!, _recoveryScoreMeta));
+    }
+    if (data.containsKey('rationale_overall_approach')) {
+      context.handle(
+          _rationaleOverallApproachMeta,
+          rationaleOverallApproach.isAcceptableOrUnknown(
+              data['rationale_overall_approach']!,
+              _rationaleOverallApproachMeta));
+    }
+    if (data.containsKey('rationale_intensity_distribution')) {
+      context.handle(
+          _rationaleIntensityDistributionMeta,
+          rationaleIntensityDistribution.isAcceptableOrUnknown(
+              data['rationale_intensity_distribution']!,
+              _rationaleIntensityDistributionMeta));
+    }
+    if (data.containsKey('rationale_key_workouts')) {
+      context.handle(
+          _rationaleKeyWorkoutsMeta,
+          rationaleKeyWorkouts.isAcceptableOrUnknown(
+              data['rationale_key_workouts']!, _rationaleKeyWorkoutsMeta));
+    }
+    if (data.containsKey('rationale_recovery_strategy')) {
+      context.handle(
+          _rationaleRecoveryStrategyMeta,
+          rationaleRecoveryStrategy.isAcceptableOrUnknown(
+              data['rationale_recovery_strategy']!,
+              _rationaleRecoveryStrategyMeta));
     }
     if (data.containsKey('created_at')) {
       context.handle(_createdAtMeta,
@@ -940,6 +1126,8 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           .read(DriftSqlType.int, data['${effectivePrefix}target_time']),
       currentBestTime: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}current_best_time']),
+      isFirstTime: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_first_time']),
       eventName: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}event_name']),
       eventDate: attachedDatabase.typeMapping
@@ -950,6 +1138,17 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           DriftSqlType.int, data['${effectivePrefix}maintenance_duration']),
       endDate: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      initialTrainingFrequency: attachedDatabase.typeMapping.read(
+          DriftSqlType.int,
+          data['${effectivePrefix}initial_training_frequency']),
+      initialWeeklyVolume: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}initial_weekly_volume']),
+      runningPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}running_priority']),
+      strengthPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}strength_priority']),
+      mobilityPriority: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}mobility_priority']),
       confidence: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}confidence'])!,
       adherenceScore: attachedDatabase.typeMapping.read(
@@ -960,6 +1159,18 @@ class $GoalsTable extends Goals with TableInfo<$GoalsTable, GoalDTO> {
           DriftSqlType.double, data['${effectivePrefix}consistency_score'])!,
       recoveryScore: attachedDatabase.typeMapping
           .read(DriftSqlType.double, data['${effectivePrefix}recovery_score'])!,
+      rationaleOverallApproach: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_overall_approach']),
+      rationaleIntensityDistribution: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_intensity_distribution']),
+      rationaleKeyWorkouts: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_key_workouts']),
+      rationaleRecoveryStrategy: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}rationale_recovery_strategy']),
       createdAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
       updatedAt: attachedDatabase.typeMapping
@@ -983,16 +1194,26 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
   final DateTime? targetDate;
   final int? targetTime;
   final int? currentBestTime;
+  final bool? isFirstTime;
   final String? eventName;
   final DateTime? eventDate;
   final int? maintenanceFrequency;
   final int? maintenanceDuration;
   final DateTime? endDate;
+  final int? initialTrainingFrequency;
+  final double? initialWeeklyVolume;
+  final String? runningPriority;
+  final String? strengthPriority;
+  final String? mobilityPriority;
   final double confidence;
   final double adherenceScore;
   final double qualityScore;
   final double consistencyScore;
   final double recoveryScore;
+  final String? rationaleOverallApproach;
+  final String? rationaleIntensityDistribution;
+  final String? rationaleKeyWorkouts;
+  final String? rationaleRecoveryStrategy;
   final DateTime createdAt;
   final DateTime updatedAt;
   const GoalDTO(
@@ -1005,16 +1226,26 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       this.targetDate,
       this.targetTime,
       this.currentBestTime,
+      this.isFirstTime,
       this.eventName,
       this.eventDate,
       this.maintenanceFrequency,
       this.maintenanceDuration,
       this.endDate,
+      this.initialTrainingFrequency,
+      this.initialWeeklyVolume,
+      this.runningPriority,
+      this.strengthPriority,
+      this.mobilityPriority,
       required this.confidence,
       required this.adherenceScore,
       required this.qualityScore,
       required this.consistencyScore,
       required this.recoveryScore,
+      this.rationaleOverallApproach,
+      this.rationaleIntensityDistribution,
+      this.rationaleKeyWorkouts,
+      this.rationaleRecoveryStrategy,
       required this.createdAt,
       required this.updatedAt});
   @override
@@ -1037,6 +1268,9 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
     if (!nullToAbsent || currentBestTime != null) {
       map['current_best_time'] = Variable<int>(currentBestTime);
     }
+    if (!nullToAbsent || isFirstTime != null) {
+      map['is_first_time'] = Variable<bool>(isFirstTime);
+    }
     if (!nullToAbsent || eventName != null) {
       map['event_name'] = Variable<String>(eventName);
     }
@@ -1052,11 +1286,42 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
     if (!nullToAbsent || endDate != null) {
       map['end_date'] = Variable<DateTime>(endDate);
     }
+    if (!nullToAbsent || initialTrainingFrequency != null) {
+      map['initial_training_frequency'] =
+          Variable<int>(initialTrainingFrequency);
+    }
+    if (!nullToAbsent || initialWeeklyVolume != null) {
+      map['initial_weekly_volume'] = Variable<double>(initialWeeklyVolume);
+    }
+    if (!nullToAbsent || runningPriority != null) {
+      map['running_priority'] = Variable<String>(runningPriority);
+    }
+    if (!nullToAbsent || strengthPriority != null) {
+      map['strength_priority'] = Variable<String>(strengthPriority);
+    }
+    if (!nullToAbsent || mobilityPriority != null) {
+      map['mobility_priority'] = Variable<String>(mobilityPriority);
+    }
     map['confidence'] = Variable<double>(confidence);
     map['adherence_score'] = Variable<double>(adherenceScore);
     map['quality_score'] = Variable<double>(qualityScore);
     map['consistency_score'] = Variable<double>(consistencyScore);
     map['recovery_score'] = Variable<double>(recoveryScore);
+    if (!nullToAbsent || rationaleOverallApproach != null) {
+      map['rationale_overall_approach'] =
+          Variable<String>(rationaleOverallApproach);
+    }
+    if (!nullToAbsent || rationaleIntensityDistribution != null) {
+      map['rationale_intensity_distribution'] =
+          Variable<String>(rationaleIntensityDistribution);
+    }
+    if (!nullToAbsent || rationaleKeyWorkouts != null) {
+      map['rationale_key_workouts'] = Variable<String>(rationaleKeyWorkouts);
+    }
+    if (!nullToAbsent || rationaleRecoveryStrategy != null) {
+      map['rationale_recovery_strategy'] =
+          Variable<String>(rationaleRecoveryStrategy);
+    }
     map['created_at'] = Variable<DateTime>(createdAt);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     return map;
@@ -1081,6 +1346,9 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       currentBestTime: currentBestTime == null && nullToAbsent
           ? const Value.absent()
           : Value(currentBestTime),
+      isFirstTime: isFirstTime == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isFirstTime),
       eventName: eventName == null && nullToAbsent
           ? const Value.absent()
           : Value(eventName),
@@ -1096,11 +1364,40 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       endDate: endDate == null && nullToAbsent
           ? const Value.absent()
           : Value(endDate),
+      initialTrainingFrequency: initialTrainingFrequency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(initialTrainingFrequency),
+      initialWeeklyVolume: initialWeeklyVolume == null && nullToAbsent
+          ? const Value.absent()
+          : Value(initialWeeklyVolume),
+      runningPriority: runningPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(runningPriority),
+      strengthPriority: strengthPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(strengthPriority),
+      mobilityPriority: mobilityPriority == null && nullToAbsent
+          ? const Value.absent()
+          : Value(mobilityPriority),
       confidence: Value(confidence),
       adherenceScore: Value(adherenceScore),
       qualityScore: Value(qualityScore),
       consistencyScore: Value(consistencyScore),
       recoveryScore: Value(recoveryScore),
+      rationaleOverallApproach: rationaleOverallApproach == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rationaleOverallApproach),
+      rationaleIntensityDistribution:
+          rationaleIntensityDistribution == null && nullToAbsent
+              ? const Value.absent()
+              : Value(rationaleIntensityDistribution),
+      rationaleKeyWorkouts: rationaleKeyWorkouts == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rationaleKeyWorkouts),
+      rationaleRecoveryStrategy:
+          rationaleRecoveryStrategy == null && nullToAbsent
+              ? const Value.absent()
+              : Value(rationaleRecoveryStrategy),
       createdAt: Value(createdAt),
       updatedAt: Value(updatedAt),
     );
@@ -1119,6 +1416,7 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       targetDate: serializer.fromJson<DateTime?>(json['targetDate']),
       targetTime: serializer.fromJson<int?>(json['targetTime']),
       currentBestTime: serializer.fromJson<int?>(json['currentBestTime']),
+      isFirstTime: serializer.fromJson<bool?>(json['isFirstTime']),
       eventName: serializer.fromJson<String?>(json['eventName']),
       eventDate: serializer.fromJson<DateTime?>(json['eventDate']),
       maintenanceFrequency:
@@ -1126,11 +1424,26 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       maintenanceDuration:
           serializer.fromJson<int?>(json['maintenanceDuration']),
       endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      initialTrainingFrequency:
+          serializer.fromJson<int?>(json['initialTrainingFrequency']),
+      initialWeeklyVolume:
+          serializer.fromJson<double?>(json['initialWeeklyVolume']),
+      runningPriority: serializer.fromJson<String?>(json['runningPriority']),
+      strengthPriority: serializer.fromJson<String?>(json['strengthPriority']),
+      mobilityPriority: serializer.fromJson<String?>(json['mobilityPriority']),
       confidence: serializer.fromJson<double>(json['confidence']),
       adherenceScore: serializer.fromJson<double>(json['adherenceScore']),
       qualityScore: serializer.fromJson<double>(json['qualityScore']),
       consistencyScore: serializer.fromJson<double>(json['consistencyScore']),
       recoveryScore: serializer.fromJson<double>(json['recoveryScore']),
+      rationaleOverallApproach:
+          serializer.fromJson<String?>(json['rationaleOverallApproach']),
+      rationaleIntensityDistribution:
+          serializer.fromJson<String?>(json['rationaleIntensityDistribution']),
+      rationaleKeyWorkouts:
+          serializer.fromJson<String?>(json['rationaleKeyWorkouts']),
+      rationaleRecoveryStrategy:
+          serializer.fromJson<String?>(json['rationaleRecoveryStrategy']),
       createdAt: serializer.fromJson<DateTime>(json['createdAt']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
     );
@@ -1148,16 +1461,30 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       'targetDate': serializer.toJson<DateTime?>(targetDate),
       'targetTime': serializer.toJson<int?>(targetTime),
       'currentBestTime': serializer.toJson<int?>(currentBestTime),
+      'isFirstTime': serializer.toJson<bool?>(isFirstTime),
       'eventName': serializer.toJson<String?>(eventName),
       'eventDate': serializer.toJson<DateTime?>(eventDate),
       'maintenanceFrequency': serializer.toJson<int?>(maintenanceFrequency),
       'maintenanceDuration': serializer.toJson<int?>(maintenanceDuration),
       'endDate': serializer.toJson<DateTime?>(endDate),
+      'initialTrainingFrequency':
+          serializer.toJson<int?>(initialTrainingFrequency),
+      'initialWeeklyVolume': serializer.toJson<double?>(initialWeeklyVolume),
+      'runningPriority': serializer.toJson<String?>(runningPriority),
+      'strengthPriority': serializer.toJson<String?>(strengthPriority),
+      'mobilityPriority': serializer.toJson<String?>(mobilityPriority),
       'confidence': serializer.toJson<double>(confidence),
       'adherenceScore': serializer.toJson<double>(adherenceScore),
       'qualityScore': serializer.toJson<double>(qualityScore),
       'consistencyScore': serializer.toJson<double>(consistencyScore),
       'recoveryScore': serializer.toJson<double>(recoveryScore),
+      'rationaleOverallApproach':
+          serializer.toJson<String?>(rationaleOverallApproach),
+      'rationaleIntensityDistribution':
+          serializer.toJson<String?>(rationaleIntensityDistribution),
+      'rationaleKeyWorkouts': serializer.toJson<String?>(rationaleKeyWorkouts),
+      'rationaleRecoveryStrategy':
+          serializer.toJson<String?>(rationaleRecoveryStrategy),
       'createdAt': serializer.toJson<DateTime>(createdAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
     };
@@ -1173,16 +1500,26 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           Value<DateTime?> targetDate = const Value.absent(),
           Value<int?> targetTime = const Value.absent(),
           Value<int?> currentBestTime = const Value.absent(),
+          Value<bool?> isFirstTime = const Value.absent(),
           Value<String?> eventName = const Value.absent(),
           Value<DateTime?> eventDate = const Value.absent(),
           Value<int?> maintenanceFrequency = const Value.absent(),
           Value<int?> maintenanceDuration = const Value.absent(),
           Value<DateTime?> endDate = const Value.absent(),
+          Value<int?> initialTrainingFrequency = const Value.absent(),
+          Value<double?> initialWeeklyVolume = const Value.absent(),
+          Value<String?> runningPriority = const Value.absent(),
+          Value<String?> strengthPriority = const Value.absent(),
+          Value<String?> mobilityPriority = const Value.absent(),
           double? confidence,
           double? adherenceScore,
           double? qualityScore,
           double? consistencyScore,
           double? recoveryScore,
+          Value<String?> rationaleOverallApproach = const Value.absent(),
+          Value<String?> rationaleIntensityDistribution = const Value.absent(),
+          Value<String?> rationaleKeyWorkouts = const Value.absent(),
+          Value<String?> rationaleRecoveryStrategy = const Value.absent(),
           DateTime? createdAt,
           DateTime? updatedAt}) =>
       GoalDTO(
@@ -1198,6 +1535,7 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         currentBestTime: currentBestTime.present
             ? currentBestTime.value
             : this.currentBestTime,
+        isFirstTime: isFirstTime.present ? isFirstTime.value : this.isFirstTime,
         eventName: eventName.present ? eventName.value : this.eventName,
         eventDate: eventDate.present ? eventDate.value : this.eventDate,
         maintenanceFrequency: maintenanceFrequency.present
@@ -1207,11 +1545,38 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
             ? maintenanceDuration.value
             : this.maintenanceDuration,
         endDate: endDate.present ? endDate.value : this.endDate,
+        initialTrainingFrequency: initialTrainingFrequency.present
+            ? initialTrainingFrequency.value
+            : this.initialTrainingFrequency,
+        initialWeeklyVolume: initialWeeklyVolume.present
+            ? initialWeeklyVolume.value
+            : this.initialWeeklyVolume,
+        runningPriority: runningPriority.present
+            ? runningPriority.value
+            : this.runningPriority,
+        strengthPriority: strengthPriority.present
+            ? strengthPriority.value
+            : this.strengthPriority,
+        mobilityPriority: mobilityPriority.present
+            ? mobilityPriority.value
+            : this.mobilityPriority,
         confidence: confidence ?? this.confidence,
         adherenceScore: adherenceScore ?? this.adherenceScore,
         qualityScore: qualityScore ?? this.qualityScore,
         consistencyScore: consistencyScore ?? this.consistencyScore,
         recoveryScore: recoveryScore ?? this.recoveryScore,
+        rationaleOverallApproach: rationaleOverallApproach.present
+            ? rationaleOverallApproach.value
+            : this.rationaleOverallApproach,
+        rationaleIntensityDistribution: rationaleIntensityDistribution.present
+            ? rationaleIntensityDistribution.value
+            : this.rationaleIntensityDistribution,
+        rationaleKeyWorkouts: rationaleKeyWorkouts.present
+            ? rationaleKeyWorkouts.value
+            : this.rationaleKeyWorkouts,
+        rationaleRecoveryStrategy: rationaleRecoveryStrategy.present
+            ? rationaleRecoveryStrategy.value
+            : this.rationaleRecoveryStrategy,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
@@ -1232,6 +1597,8 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       currentBestTime: data.currentBestTime.present
           ? data.currentBestTime.value
           : this.currentBestTime,
+      isFirstTime:
+          data.isFirstTime.present ? data.isFirstTime.value : this.isFirstTime,
       eventName: data.eventName.present ? data.eventName.value : this.eventName,
       eventDate: data.eventDate.present ? data.eventDate.value : this.eventDate,
       maintenanceFrequency: data.maintenanceFrequency.present
@@ -1241,6 +1608,21 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           ? data.maintenanceDuration.value
           : this.maintenanceDuration,
       endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      initialTrainingFrequency: data.initialTrainingFrequency.present
+          ? data.initialTrainingFrequency.value
+          : this.initialTrainingFrequency,
+      initialWeeklyVolume: data.initialWeeklyVolume.present
+          ? data.initialWeeklyVolume.value
+          : this.initialWeeklyVolume,
+      runningPriority: data.runningPriority.present
+          ? data.runningPriority.value
+          : this.runningPriority,
+      strengthPriority: data.strengthPriority.present
+          ? data.strengthPriority.value
+          : this.strengthPriority,
+      mobilityPriority: data.mobilityPriority.present
+          ? data.mobilityPriority.value
+          : this.mobilityPriority,
       confidence:
           data.confidence.present ? data.confidence.value : this.confidence,
       adherenceScore: data.adherenceScore.present
@@ -1255,6 +1637,19 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
       recoveryScore: data.recoveryScore.present
           ? data.recoveryScore.value
           : this.recoveryScore,
+      rationaleOverallApproach: data.rationaleOverallApproach.present
+          ? data.rationaleOverallApproach.value
+          : this.rationaleOverallApproach,
+      rationaleIntensityDistribution:
+          data.rationaleIntensityDistribution.present
+              ? data.rationaleIntensityDistribution.value
+              : this.rationaleIntensityDistribution,
+      rationaleKeyWorkouts: data.rationaleKeyWorkouts.present
+          ? data.rationaleKeyWorkouts.value
+          : this.rationaleKeyWorkouts,
+      rationaleRecoveryStrategy: data.rationaleRecoveryStrategy.present
+          ? data.rationaleRecoveryStrategy.value
+          : this.rationaleRecoveryStrategy,
       createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
     );
@@ -1272,16 +1667,27 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           ..write('targetDate: $targetDate, ')
           ..write('targetTime: $targetTime, ')
           ..write('currentBestTime: $currentBestTime, ')
+          ..write('isFirstTime: $isFirstTime, ')
           ..write('eventName: $eventName, ')
           ..write('eventDate: $eventDate, ')
           ..write('maintenanceFrequency: $maintenanceFrequency, ')
           ..write('maintenanceDuration: $maintenanceDuration, ')
           ..write('endDate: $endDate, ')
+          ..write('initialTrainingFrequency: $initialTrainingFrequency, ')
+          ..write('initialWeeklyVolume: $initialWeeklyVolume, ')
+          ..write('runningPriority: $runningPriority, ')
+          ..write('strengthPriority: $strengthPriority, ')
+          ..write('mobilityPriority: $mobilityPriority, ')
           ..write('confidence: $confidence, ')
           ..write('adherenceScore: $adherenceScore, ')
           ..write('qualityScore: $qualityScore, ')
           ..write('consistencyScore: $consistencyScore, ')
           ..write('recoveryScore: $recoveryScore, ')
+          ..write('rationaleOverallApproach: $rationaleOverallApproach, ')
+          ..write(
+              'rationaleIntensityDistribution: $rationaleIntensityDistribution, ')
+          ..write('rationaleKeyWorkouts: $rationaleKeyWorkouts, ')
+          ..write('rationaleRecoveryStrategy: $rationaleRecoveryStrategy, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -1299,16 +1705,26 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
         targetDate,
         targetTime,
         currentBestTime,
+        isFirstTime,
         eventName,
         eventDate,
         maintenanceFrequency,
         maintenanceDuration,
         endDate,
+        initialTrainingFrequency,
+        initialWeeklyVolume,
+        runningPriority,
+        strengthPriority,
+        mobilityPriority,
         confidence,
         adherenceScore,
         qualityScore,
         consistencyScore,
         recoveryScore,
+        rationaleOverallApproach,
+        rationaleIntensityDistribution,
+        rationaleKeyWorkouts,
+        rationaleRecoveryStrategy,
         createdAt,
         updatedAt
       ]);
@@ -1325,16 +1741,27 @@ class GoalDTO extends DataClass implements Insertable<GoalDTO> {
           other.targetDate == this.targetDate &&
           other.targetTime == this.targetTime &&
           other.currentBestTime == this.currentBestTime &&
+          other.isFirstTime == this.isFirstTime &&
           other.eventName == this.eventName &&
           other.eventDate == this.eventDate &&
           other.maintenanceFrequency == this.maintenanceFrequency &&
           other.maintenanceDuration == this.maintenanceDuration &&
           other.endDate == this.endDate &&
+          other.initialTrainingFrequency == this.initialTrainingFrequency &&
+          other.initialWeeklyVolume == this.initialWeeklyVolume &&
+          other.runningPriority == this.runningPriority &&
+          other.strengthPriority == this.strengthPriority &&
+          other.mobilityPriority == this.mobilityPriority &&
           other.confidence == this.confidence &&
           other.adherenceScore == this.adherenceScore &&
           other.qualityScore == this.qualityScore &&
           other.consistencyScore == this.consistencyScore &&
           other.recoveryScore == this.recoveryScore &&
+          other.rationaleOverallApproach == this.rationaleOverallApproach &&
+          other.rationaleIntensityDistribution ==
+              this.rationaleIntensityDistribution &&
+          other.rationaleKeyWorkouts == this.rationaleKeyWorkouts &&
+          other.rationaleRecoveryStrategy == this.rationaleRecoveryStrategy &&
           other.createdAt == this.createdAt &&
           other.updatedAt == this.updatedAt);
 }
@@ -1349,16 +1776,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
   final Value<DateTime?> targetDate;
   final Value<int?> targetTime;
   final Value<int?> currentBestTime;
+  final Value<bool?> isFirstTime;
   final Value<String?> eventName;
   final Value<DateTime?> eventDate;
   final Value<int?> maintenanceFrequency;
   final Value<int?> maintenanceDuration;
   final Value<DateTime?> endDate;
+  final Value<int?> initialTrainingFrequency;
+  final Value<double?> initialWeeklyVolume;
+  final Value<String?> runningPriority;
+  final Value<String?> strengthPriority;
+  final Value<String?> mobilityPriority;
   final Value<double> confidence;
   final Value<double> adherenceScore;
   final Value<double> qualityScore;
   final Value<double> consistencyScore;
   final Value<double> recoveryScore;
+  final Value<String?> rationaleOverallApproach;
+  final Value<String?> rationaleIntensityDistribution;
+  final Value<String?> rationaleKeyWorkouts;
+  final Value<String?> rationaleRecoveryStrategy;
   final Value<DateTime> createdAt;
   final Value<DateTime> updatedAt;
   const GoalsCompanion({
@@ -1371,16 +1808,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.targetDate = const Value.absent(),
     this.targetTime = const Value.absent(),
     this.currentBestTime = const Value.absent(),
+    this.isFirstTime = const Value.absent(),
     this.eventName = const Value.absent(),
     this.eventDate = const Value.absent(),
     this.maintenanceFrequency = const Value.absent(),
     this.maintenanceDuration = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.initialTrainingFrequency = const Value.absent(),
+    this.initialWeeklyVolume = const Value.absent(),
+    this.runningPriority = const Value.absent(),
+    this.strengthPriority = const Value.absent(),
+    this.mobilityPriority = const Value.absent(),
     this.confidence = const Value.absent(),
     this.adherenceScore = const Value.absent(),
     this.qualityScore = const Value.absent(),
     this.consistencyScore = const Value.absent(),
     this.recoveryScore = const Value.absent(),
+    this.rationaleOverallApproach = const Value.absent(),
+    this.rationaleIntensityDistribution = const Value.absent(),
+    this.rationaleKeyWorkouts = const Value.absent(),
+    this.rationaleRecoveryStrategy = const Value.absent(),
     this.createdAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
   });
@@ -1394,16 +1841,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     this.targetDate = const Value.absent(),
     this.targetTime = const Value.absent(),
     this.currentBestTime = const Value.absent(),
+    this.isFirstTime = const Value.absent(),
     this.eventName = const Value.absent(),
     this.eventDate = const Value.absent(),
     this.maintenanceFrequency = const Value.absent(),
     this.maintenanceDuration = const Value.absent(),
     this.endDate = const Value.absent(),
+    this.initialTrainingFrequency = const Value.absent(),
+    this.initialWeeklyVolume = const Value.absent(),
+    this.runningPriority = const Value.absent(),
+    this.strengthPriority = const Value.absent(),
+    this.mobilityPriority = const Value.absent(),
     this.confidence = const Value.absent(),
     this.adherenceScore = const Value.absent(),
     this.qualityScore = const Value.absent(),
     this.consistencyScore = const Value.absent(),
     this.recoveryScore = const Value.absent(),
+    this.rationaleOverallApproach = const Value.absent(),
+    this.rationaleIntensityDistribution = const Value.absent(),
+    this.rationaleKeyWorkouts = const Value.absent(),
+    this.rationaleRecoveryStrategy = const Value.absent(),
     required DateTime createdAt,
     required DateTime updatedAt,
   })  : userId = Value(userId),
@@ -1421,16 +1878,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     Expression<DateTime>? targetDate,
     Expression<int>? targetTime,
     Expression<int>? currentBestTime,
+    Expression<bool>? isFirstTime,
     Expression<String>? eventName,
     Expression<DateTime>? eventDate,
     Expression<int>? maintenanceFrequency,
     Expression<int>? maintenanceDuration,
     Expression<DateTime>? endDate,
+    Expression<int>? initialTrainingFrequency,
+    Expression<double>? initialWeeklyVolume,
+    Expression<String>? runningPriority,
+    Expression<String>? strengthPriority,
+    Expression<String>? mobilityPriority,
     Expression<double>? confidence,
     Expression<double>? adherenceScore,
     Expression<double>? qualityScore,
     Expression<double>? consistencyScore,
     Expression<double>? recoveryScore,
+    Expression<String>? rationaleOverallApproach,
+    Expression<String>? rationaleIntensityDistribution,
+    Expression<String>? rationaleKeyWorkouts,
+    Expression<String>? rationaleRecoveryStrategy,
     Expression<DateTime>? createdAt,
     Expression<DateTime>? updatedAt,
   }) {
@@ -1444,6 +1911,7 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       if (targetDate != null) 'target_date': targetDate,
       if (targetTime != null) 'target_time': targetTime,
       if (currentBestTime != null) 'current_best_time': currentBestTime,
+      if (isFirstTime != null) 'is_first_time': isFirstTime,
       if (eventName != null) 'event_name': eventName,
       if (eventDate != null) 'event_date': eventDate,
       if (maintenanceFrequency != null)
@@ -1451,11 +1919,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       if (maintenanceDuration != null)
         'maintenance_duration': maintenanceDuration,
       if (endDate != null) 'end_date': endDate,
+      if (initialTrainingFrequency != null)
+        'initial_training_frequency': initialTrainingFrequency,
+      if (initialWeeklyVolume != null)
+        'initial_weekly_volume': initialWeeklyVolume,
+      if (runningPriority != null) 'running_priority': runningPriority,
+      if (strengthPriority != null) 'strength_priority': strengthPriority,
+      if (mobilityPriority != null) 'mobility_priority': mobilityPriority,
       if (confidence != null) 'confidence': confidence,
       if (adherenceScore != null) 'adherence_score': adherenceScore,
       if (qualityScore != null) 'quality_score': qualityScore,
       if (consistencyScore != null) 'consistency_score': consistencyScore,
       if (recoveryScore != null) 'recovery_score': recoveryScore,
+      if (rationaleOverallApproach != null)
+        'rationale_overall_approach': rationaleOverallApproach,
+      if (rationaleIntensityDistribution != null)
+        'rationale_intensity_distribution': rationaleIntensityDistribution,
+      if (rationaleKeyWorkouts != null)
+        'rationale_key_workouts': rationaleKeyWorkouts,
+      if (rationaleRecoveryStrategy != null)
+        'rationale_recovery_strategy': rationaleRecoveryStrategy,
       if (createdAt != null) 'created_at': createdAt,
       if (updatedAt != null) 'updated_at': updatedAt,
     });
@@ -1471,16 +1954,26 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       Value<DateTime?>? targetDate,
       Value<int?>? targetTime,
       Value<int?>? currentBestTime,
+      Value<bool?>? isFirstTime,
       Value<String?>? eventName,
       Value<DateTime?>? eventDate,
       Value<int?>? maintenanceFrequency,
       Value<int?>? maintenanceDuration,
       Value<DateTime?>? endDate,
+      Value<int?>? initialTrainingFrequency,
+      Value<double?>? initialWeeklyVolume,
+      Value<String?>? runningPriority,
+      Value<String?>? strengthPriority,
+      Value<String?>? mobilityPriority,
       Value<double>? confidence,
       Value<double>? adherenceScore,
       Value<double>? qualityScore,
       Value<double>? consistencyScore,
       Value<double>? recoveryScore,
+      Value<String?>? rationaleOverallApproach,
+      Value<String?>? rationaleIntensityDistribution,
+      Value<String?>? rationaleKeyWorkouts,
+      Value<String?>? rationaleRecoveryStrategy,
       Value<DateTime>? createdAt,
       Value<DateTime>? updatedAt}) {
     return GoalsCompanion(
@@ -1493,16 +1986,30 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
       targetDate: targetDate ?? this.targetDate,
       targetTime: targetTime ?? this.targetTime,
       currentBestTime: currentBestTime ?? this.currentBestTime,
+      isFirstTime: isFirstTime ?? this.isFirstTime,
       eventName: eventName ?? this.eventName,
       eventDate: eventDate ?? this.eventDate,
       maintenanceFrequency: maintenanceFrequency ?? this.maintenanceFrequency,
       maintenanceDuration: maintenanceDuration ?? this.maintenanceDuration,
       endDate: endDate ?? this.endDate,
+      initialTrainingFrequency:
+          initialTrainingFrequency ?? this.initialTrainingFrequency,
+      initialWeeklyVolume: initialWeeklyVolume ?? this.initialWeeklyVolume,
+      runningPriority: runningPriority ?? this.runningPriority,
+      strengthPriority: strengthPriority ?? this.strengthPriority,
+      mobilityPriority: mobilityPriority ?? this.mobilityPriority,
       confidence: confidence ?? this.confidence,
       adherenceScore: adherenceScore ?? this.adherenceScore,
       qualityScore: qualityScore ?? this.qualityScore,
       consistencyScore: consistencyScore ?? this.consistencyScore,
       recoveryScore: recoveryScore ?? this.recoveryScore,
+      rationaleOverallApproach:
+          rationaleOverallApproach ?? this.rationaleOverallApproach,
+      rationaleIntensityDistribution:
+          rationaleIntensityDistribution ?? this.rationaleIntensityDistribution,
+      rationaleKeyWorkouts: rationaleKeyWorkouts ?? this.rationaleKeyWorkouts,
+      rationaleRecoveryStrategy:
+          rationaleRecoveryStrategy ?? this.rationaleRecoveryStrategy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
     );
@@ -1538,6 +2045,9 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     if (currentBestTime.present) {
       map['current_best_time'] = Variable<int>(currentBestTime.value);
     }
+    if (isFirstTime.present) {
+      map['is_first_time'] = Variable<bool>(isFirstTime.value);
+    }
     if (eventName.present) {
       map['event_name'] = Variable<String>(eventName.value);
     }
@@ -1553,6 +2063,23 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     if (endDate.present) {
       map['end_date'] = Variable<DateTime>(endDate.value);
     }
+    if (initialTrainingFrequency.present) {
+      map['initial_training_frequency'] =
+          Variable<int>(initialTrainingFrequency.value);
+    }
+    if (initialWeeklyVolume.present) {
+      map['initial_weekly_volume'] =
+          Variable<double>(initialWeeklyVolume.value);
+    }
+    if (runningPriority.present) {
+      map['running_priority'] = Variable<String>(runningPriority.value);
+    }
+    if (strengthPriority.present) {
+      map['strength_priority'] = Variable<String>(strengthPriority.value);
+    }
+    if (mobilityPriority.present) {
+      map['mobility_priority'] = Variable<String>(mobilityPriority.value);
+    }
     if (confidence.present) {
       map['confidence'] = Variable<double>(confidence.value);
     }
@@ -1567,6 +2094,22 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
     }
     if (recoveryScore.present) {
       map['recovery_score'] = Variable<double>(recoveryScore.value);
+    }
+    if (rationaleOverallApproach.present) {
+      map['rationale_overall_approach'] =
+          Variable<String>(rationaleOverallApproach.value);
+    }
+    if (rationaleIntensityDistribution.present) {
+      map['rationale_intensity_distribution'] =
+          Variable<String>(rationaleIntensityDistribution.value);
+    }
+    if (rationaleKeyWorkouts.present) {
+      map['rationale_key_workouts'] =
+          Variable<String>(rationaleKeyWorkouts.value);
+    }
+    if (rationaleRecoveryStrategy.present) {
+      map['rationale_recovery_strategy'] =
+          Variable<String>(rationaleRecoveryStrategy.value);
     }
     if (createdAt.present) {
       map['created_at'] = Variable<DateTime>(createdAt.value);
@@ -1589,16 +2132,27 @@ class GoalsCompanion extends UpdateCompanion<GoalDTO> {
           ..write('targetDate: $targetDate, ')
           ..write('targetTime: $targetTime, ')
           ..write('currentBestTime: $currentBestTime, ')
+          ..write('isFirstTime: $isFirstTime, ')
           ..write('eventName: $eventName, ')
           ..write('eventDate: $eventDate, ')
           ..write('maintenanceFrequency: $maintenanceFrequency, ')
           ..write('maintenanceDuration: $maintenanceDuration, ')
           ..write('endDate: $endDate, ')
+          ..write('initialTrainingFrequency: $initialTrainingFrequency, ')
+          ..write('initialWeeklyVolume: $initialWeeklyVolume, ')
+          ..write('runningPriority: $runningPriority, ')
+          ..write('strengthPriority: $strengthPriority, ')
+          ..write('mobilityPriority: $mobilityPriority, ')
           ..write('confidence: $confidence, ')
           ..write('adherenceScore: $adherenceScore, ')
           ..write('qualityScore: $qualityScore, ')
           ..write('consistencyScore: $consistencyScore, ')
           ..write('recoveryScore: $recoveryScore, ')
+          ..write('rationaleOverallApproach: $rationaleOverallApproach, ')
+          ..write(
+              'rationaleIntensityDistribution: $rationaleIntensityDistribution, ')
+          ..write('rationaleKeyWorkouts: $rationaleKeyWorkouts, ')
+          ..write('rationaleRecoveryStrategy: $rationaleRecoveryStrategy, ')
           ..write('createdAt: $createdAt, ')
           ..write('updatedAt: $updatedAt')
           ..write(')'))
@@ -3074,17 +3628,17 @@ class $WorkoutsTable extends Workouts
   late final GeneratedColumn<int> goalId = GeneratedColumn<int>(
       'goal_id', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  static const VerificationMeta _mesocycleIdMeta =
-      const VerificationMeta('mesocycleId');
+  static const VerificationMeta _phaseIdMeta =
+      const VerificationMeta('phaseId');
   @override
-  late final GeneratedColumn<String> mesocycleId = GeneratedColumn<String>(
-      'mesocycle_id', aliasedName, true,
+  late final GeneratedColumn<String> phaseId = GeneratedColumn<String>(
+      'phase_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
-  static const VerificationMeta _microcycleIdMeta =
-      const VerificationMeta('microcycleId');
+  static const VerificationMeta _blockIdMeta =
+      const VerificationMeta('blockId');
   @override
-  late final GeneratedColumn<String> microcycleId = GeneratedColumn<String>(
-      'microcycle_id', aliasedName, true,
+  late final GeneratedColumn<String> blockId = GeneratedColumn<String>(
+      'block_id', aliasedName, true,
       type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _scheduledDateMeta =
       const VerificationMeta('scheduledDate');
@@ -3154,19 +3708,34 @@ class $WorkoutsTable extends Workouts
   late final GeneratedColumn<int> rpe = GeneratedColumn<int>(
       'rpe', aliasedName, true,
       type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _syncedFromMeta =
+      const VerificationMeta('syncedFrom');
+  @override
+  late final GeneratedColumn<String> syncedFrom = GeneratedColumn<String>(
+      'synced_from', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
   static const VerificationMeta _completedAtMeta =
       const VerificationMeta('completedAt');
   @override
   late final GeneratedColumn<DateTime> completedAt = GeneratedColumn<DateTime>(
       'completed_at', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _isKeyMeta = const VerificationMeta('isKey');
+  @override
+  late final GeneratedColumn<bool> isKey = GeneratedColumn<bool>(
+      'is_key', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_key" IN (0, 1))'),
+      defaultValue: const Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         id,
         userId,
         goalId,
-        mesocycleId,
-        microcycleId,
+        phaseId,
+        blockId,
         scheduledDate,
         type,
         name,
@@ -3179,7 +3748,9 @@ class $WorkoutsTable extends Workouts
         actualDistance,
         actualPace,
         rpe,
-        completedAt
+        syncedFrom,
+        completedAt,
+        isKey
       ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -3208,17 +3779,13 @@ class $WorkoutsTable extends Workouts
     } else if (isInserting) {
       context.missing(_goalIdMeta);
     }
-    if (data.containsKey('mesocycle_id')) {
-      context.handle(
-          _mesocycleIdMeta,
-          mesocycleId.isAcceptableOrUnknown(
-              data['mesocycle_id']!, _mesocycleIdMeta));
+    if (data.containsKey('phase_id')) {
+      context.handle(_phaseIdMeta,
+          phaseId.isAcceptableOrUnknown(data['phase_id']!, _phaseIdMeta));
     }
-    if (data.containsKey('microcycle_id')) {
-      context.handle(
-          _microcycleIdMeta,
-          microcycleId.isAcceptableOrUnknown(
-              data['microcycle_id']!, _microcycleIdMeta));
+    if (data.containsKey('block_id')) {
+      context.handle(_blockIdMeta,
+          blockId.isAcceptableOrUnknown(data['block_id']!, _blockIdMeta));
     }
     if (data.containsKey('scheduled_date')) {
       context.handle(
@@ -3292,11 +3859,21 @@ class $WorkoutsTable extends Workouts
       context.handle(
           _rpeMeta, rpe.isAcceptableOrUnknown(data['rpe']!, _rpeMeta));
     }
+    if (data.containsKey('synced_from')) {
+      context.handle(
+          _syncedFromMeta,
+          syncedFrom.isAcceptableOrUnknown(
+              data['synced_from']!, _syncedFromMeta));
+    }
     if (data.containsKey('completed_at')) {
       context.handle(
           _completedAtMeta,
           completedAt.isAcceptableOrUnknown(
               data['completed_at']!, _completedAtMeta));
+    }
+    if (data.containsKey('is_key')) {
+      context.handle(
+          _isKeyMeta, isKey.isAcceptableOrUnknown(data['is_key']!, _isKeyMeta));
     }
     return context;
   }
@@ -3313,10 +3890,10 @@ class $WorkoutsTable extends Workouts
           .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
       goalId: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}goal_id'])!,
-      mesocycleId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}mesocycle_id']),
-      microcycleId: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}microcycle_id']),
+      phaseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_id']),
+      blockId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}block_id']),
       scheduledDate: attachedDatabase.typeMapping.read(
           DriftSqlType.dateTime, data['${effectivePrefix}scheduled_date'])!,
       type: attachedDatabase.typeMapping
@@ -3341,8 +3918,12 @@ class $WorkoutsTable extends Workouts
           .read(DriftSqlType.double, data['${effectivePrefix}actual_pace']),
       rpe: attachedDatabase.typeMapping
           .read(DriftSqlType.int, data['${effectivePrefix}rpe']),
+      syncedFrom: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}synced_from']),
       completedAt: attachedDatabase.typeMapping
           .read(DriftSqlType.dateTime, data['${effectivePrefix}completed_at']),
+      isKey: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_key'])!,
     );
   }
 
@@ -3356,8 +3937,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final String id;
   final int userId;
   final int goalId;
-  final String? mesocycleId;
-  final String? microcycleId;
+  final String? phaseId;
+  final String? blockId;
   final DateTime scheduledDate;
   final String type;
   final String name;
@@ -3370,13 +3951,15 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final double? actualDistance;
   final double? actualPace;
   final int? rpe;
+  final String? syncedFrom;
   final DateTime? completedAt;
+  final bool isKey;
   const WorkoutDTO(
       {required this.id,
       required this.userId,
       required this.goalId,
-      this.mesocycleId,
-      this.microcycleId,
+      this.phaseId,
+      this.blockId,
       required this.scheduledDate,
       required this.type,
       required this.name,
@@ -3389,18 +3972,20 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       this.actualDistance,
       this.actualPace,
       this.rpe,
-      this.completedAt});
+      this.syncedFrom,
+      this.completedAt,
+      required this.isKey});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<int>(userId);
     map['goal_id'] = Variable<int>(goalId);
-    if (!nullToAbsent || mesocycleId != null) {
-      map['mesocycle_id'] = Variable<String>(mesocycleId);
+    if (!nullToAbsent || phaseId != null) {
+      map['phase_id'] = Variable<String>(phaseId);
     }
-    if (!nullToAbsent || microcycleId != null) {
-      map['microcycle_id'] = Variable<String>(microcycleId);
+    if (!nullToAbsent || blockId != null) {
+      map['block_id'] = Variable<String>(blockId);
     }
     map['scheduled_date'] = Variable<DateTime>(scheduledDate);
     map['type'] = Variable<String>(type);
@@ -3428,9 +4013,13 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
     if (!nullToAbsent || rpe != null) {
       map['rpe'] = Variable<int>(rpe);
     }
+    if (!nullToAbsent || syncedFrom != null) {
+      map['synced_from'] = Variable<String>(syncedFrom);
+    }
     if (!nullToAbsent || completedAt != null) {
       map['completed_at'] = Variable<DateTime>(completedAt);
     }
+    map['is_key'] = Variable<bool>(isKey);
     return map;
   }
 
@@ -3439,12 +4028,12 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id: Value(id),
       userId: Value(userId),
       goalId: Value(goalId),
-      mesocycleId: mesocycleId == null && nullToAbsent
+      phaseId: phaseId == null && nullToAbsent
           ? const Value.absent()
-          : Value(mesocycleId),
-      microcycleId: microcycleId == null && nullToAbsent
+          : Value(phaseId),
+      blockId: blockId == null && nullToAbsent
           ? const Value.absent()
-          : Value(microcycleId),
+          : Value(blockId),
       scheduledDate: Value(scheduledDate),
       type: Value(type),
       name: Value(name),
@@ -3469,9 +4058,13 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ? const Value.absent()
           : Value(actualPace),
       rpe: rpe == null && nullToAbsent ? const Value.absent() : Value(rpe),
+      syncedFrom: syncedFrom == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncedFrom),
       completedAt: completedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(completedAt),
+      isKey: Value(isKey),
     );
   }
 
@@ -3482,8 +4075,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<int>(json['userId']),
       goalId: serializer.fromJson<int>(json['goalId']),
-      mesocycleId: serializer.fromJson<String?>(json['mesocycleId']),
-      microcycleId: serializer.fromJson<String?>(json['microcycleId']),
+      phaseId: serializer.fromJson<String?>(json['phaseId']),
+      blockId: serializer.fromJson<String?>(json['blockId']),
       scheduledDate: serializer.fromJson<DateTime>(json['scheduledDate']),
       type: serializer.fromJson<String>(json['type']),
       name: serializer.fromJson<String>(json['name']),
@@ -3496,7 +4089,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualDistance: serializer.fromJson<double?>(json['actualDistance']),
       actualPace: serializer.fromJson<double?>(json['actualPace']),
       rpe: serializer.fromJson<int?>(json['rpe']),
+      syncedFrom: serializer.fromJson<String?>(json['syncedFrom']),
       completedAt: serializer.fromJson<DateTime?>(json['completedAt']),
+      isKey: serializer.fromJson<bool>(json['isKey']),
     );
   }
   @override
@@ -3506,8 +4101,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<int>(userId),
       'goalId': serializer.toJson<int>(goalId),
-      'mesocycleId': serializer.toJson<String?>(mesocycleId),
-      'microcycleId': serializer.toJson<String?>(microcycleId),
+      'phaseId': serializer.toJson<String?>(phaseId),
+      'blockId': serializer.toJson<String?>(blockId),
       'scheduledDate': serializer.toJson<DateTime>(scheduledDate),
       'type': serializer.toJson<String>(type),
       'name': serializer.toJson<String>(name),
@@ -3520,7 +4115,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'actualDistance': serializer.toJson<double?>(actualDistance),
       'actualPace': serializer.toJson<double?>(actualPace),
       'rpe': serializer.toJson<int?>(rpe),
+      'syncedFrom': serializer.toJson<String?>(syncedFrom),
       'completedAt': serializer.toJson<DateTime?>(completedAt),
+      'isKey': serializer.toJson<bool>(isKey),
     };
   }
 
@@ -3528,8 +4125,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           {String? id,
           int? userId,
           int? goalId,
-          Value<String?> mesocycleId = const Value.absent(),
-          Value<String?> microcycleId = const Value.absent(),
+          Value<String?> phaseId = const Value.absent(),
+          Value<String?> blockId = const Value.absent(),
           DateTime? scheduledDate,
           String? type,
           String? name,
@@ -3542,14 +4139,15 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           Value<double?> actualDistance = const Value.absent(),
           Value<double?> actualPace = const Value.absent(),
           Value<int?> rpe = const Value.absent(),
-          Value<DateTime?> completedAt = const Value.absent()}) =>
+          Value<String?> syncedFrom = const Value.absent(),
+          Value<DateTime?> completedAt = const Value.absent(),
+          bool? isKey}) =>
       WorkoutDTO(
         id: id ?? this.id,
         userId: userId ?? this.userId,
         goalId: goalId ?? this.goalId,
-        mesocycleId: mesocycleId.present ? mesocycleId.value : this.mesocycleId,
-        microcycleId:
-            microcycleId.present ? microcycleId.value : this.microcycleId,
+        phaseId: phaseId.present ? phaseId.value : this.phaseId,
+        blockId: blockId.present ? blockId.value : this.blockId,
         scheduledDate: scheduledDate ?? this.scheduledDate,
         type: type ?? this.type,
         name: name ?? this.name,
@@ -3566,18 +4164,17 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
             actualDistance.present ? actualDistance.value : this.actualDistance,
         actualPace: actualPace.present ? actualPace.value : this.actualPace,
         rpe: rpe.present ? rpe.value : this.rpe,
+        syncedFrom: syncedFrom.present ? syncedFrom.value : this.syncedFrom,
         completedAt: completedAt.present ? completedAt.value : this.completedAt,
+        isKey: isKey ?? this.isKey,
       );
   WorkoutDTO copyWithCompanion(WorkoutsCompanion data) {
     return WorkoutDTO(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
       goalId: data.goalId.present ? data.goalId.value : this.goalId,
-      mesocycleId:
-          data.mesocycleId.present ? data.mesocycleId.value : this.mesocycleId,
-      microcycleId: data.microcycleId.present
-          ? data.microcycleId.value
-          : this.microcycleId,
+      phaseId: data.phaseId.present ? data.phaseId.value : this.phaseId,
+      blockId: data.blockId.present ? data.blockId.value : this.blockId,
       scheduledDate: data.scheduledDate.present
           ? data.scheduledDate.value
           : this.scheduledDate,
@@ -3602,8 +4199,11 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualPace:
           data.actualPace.present ? data.actualPace.value : this.actualPace,
       rpe: data.rpe.present ? data.rpe.value : this.rpe,
+      syncedFrom:
+          data.syncedFrom.present ? data.syncedFrom.value : this.syncedFrom,
       completedAt:
           data.completedAt.present ? data.completedAt.value : this.completedAt,
+      isKey: data.isKey.present ? data.isKey.value : this.isKey,
     );
   }
 
@@ -3613,8 +4213,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('mesocycleId: $mesocycleId, ')
-          ..write('microcycleId: $microcycleId, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockId: $blockId, ')
           ..write('scheduledDate: $scheduledDate, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
@@ -3627,7 +4227,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           ..write('actualDistance: $actualDistance, ')
           ..write('actualPace: $actualPace, ')
           ..write('rpe: $rpe, ')
-          ..write('completedAt: $completedAt')
+          ..write('syncedFrom: $syncedFrom, ')
+          ..write('completedAt: $completedAt, ')
+          ..write('isKey: $isKey')
           ..write(')'))
         .toString();
   }
@@ -3637,8 +4239,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       id,
       userId,
       goalId,
-      mesocycleId,
-      microcycleId,
+      phaseId,
+      blockId,
       scheduledDate,
       type,
       name,
@@ -3651,7 +4253,9 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       actualDistance,
       actualPace,
       rpe,
-      completedAt);
+      syncedFrom,
+      completedAt,
+      isKey);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3659,8 +4263,8 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           other.id == this.id &&
           other.userId == this.userId &&
           other.goalId == this.goalId &&
-          other.mesocycleId == this.mesocycleId &&
-          other.microcycleId == this.microcycleId &&
+          other.phaseId == this.phaseId &&
+          other.blockId == this.blockId &&
           other.scheduledDate == this.scheduledDate &&
           other.type == this.type &&
           other.name == this.name &&
@@ -3673,15 +4277,17 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           other.actualDistance == this.actualDistance &&
           other.actualPace == this.actualPace &&
           other.rpe == this.rpe &&
-          other.completedAt == this.completedAt);
+          other.syncedFrom == this.syncedFrom &&
+          other.completedAt == this.completedAt &&
+          other.isKey == this.isKey);
 }
 
 class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<String> id;
   final Value<int> userId;
   final Value<int> goalId;
-  final Value<String?> mesocycleId;
-  final Value<String?> microcycleId;
+  final Value<String?> phaseId;
+  final Value<String?> blockId;
   final Value<DateTime> scheduledDate;
   final Value<String> type;
   final Value<String> name;
@@ -3694,14 +4300,16 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<double?> actualDistance;
   final Value<double?> actualPace;
   final Value<int?> rpe;
+  final Value<String?> syncedFrom;
   final Value<DateTime?> completedAt;
+  final Value<bool> isKey;
   final Value<int> rowid;
   const WorkoutsCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
     this.goalId = const Value.absent(),
-    this.mesocycleId = const Value.absent(),
-    this.microcycleId = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockId = const Value.absent(),
     this.scheduledDate = const Value.absent(),
     this.type = const Value.absent(),
     this.name = const Value.absent(),
@@ -3714,15 +4322,17 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.actualDistance = const Value.absent(),
     this.actualPace = const Value.absent(),
     this.rpe = const Value.absent(),
+    this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
+    this.isKey = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   WorkoutsCompanion.insert({
     required String id,
     required int userId,
     required int goalId,
-    this.mesocycleId = const Value.absent(),
-    this.microcycleId = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockId = const Value.absent(),
     required DateTime scheduledDate,
     required String type,
     required String name,
@@ -3735,7 +4345,9 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     this.actualDistance = const Value.absent(),
     this.actualPace = const Value.absent(),
     this.rpe = const Value.absent(),
+    this.syncedFrom = const Value.absent(),
     this.completedAt = const Value.absent(),
+    this.isKey = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         userId = Value(userId),
@@ -3749,8 +4361,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<String>? id,
     Expression<int>? userId,
     Expression<int>? goalId,
-    Expression<String>? mesocycleId,
-    Expression<String>? microcycleId,
+    Expression<String>? phaseId,
+    Expression<String>? blockId,
     Expression<DateTime>? scheduledDate,
     Expression<String>? type,
     Expression<String>? name,
@@ -3763,15 +4375,17 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<double>? actualDistance,
     Expression<double>? actualPace,
     Expression<int>? rpe,
+    Expression<String>? syncedFrom,
     Expression<DateTime>? completedAt,
+    Expression<bool>? isKey,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
       if (goalId != null) 'goal_id': goalId,
-      if (mesocycleId != null) 'mesocycle_id': mesocycleId,
-      if (microcycleId != null) 'microcycle_id': microcycleId,
+      if (phaseId != null) 'phase_id': phaseId,
+      if (blockId != null) 'block_id': blockId,
       if (scheduledDate != null) 'scheduled_date': scheduledDate,
       if (type != null) 'type': type,
       if (name != null) 'name': name,
@@ -3784,7 +4398,9 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       if (actualDistance != null) 'actual_distance': actualDistance,
       if (actualPace != null) 'actual_pace': actualPace,
       if (rpe != null) 'rpe': rpe,
+      if (syncedFrom != null) 'synced_from': syncedFrom,
       if (completedAt != null) 'completed_at': completedAt,
+      if (isKey != null) 'is_key': isKey,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -3793,8 +4409,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       {Value<String>? id,
       Value<int>? userId,
       Value<int>? goalId,
-      Value<String?>? mesocycleId,
-      Value<String?>? microcycleId,
+      Value<String?>? phaseId,
+      Value<String?>? blockId,
       Value<DateTime>? scheduledDate,
       Value<String>? type,
       Value<String>? name,
@@ -3807,14 +4423,16 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       Value<double?>? actualDistance,
       Value<double?>? actualPace,
       Value<int?>? rpe,
+      Value<String?>? syncedFrom,
       Value<DateTime?>? completedAt,
+      Value<bool>? isKey,
       Value<int>? rowid}) {
     return WorkoutsCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       goalId: goalId ?? this.goalId,
-      mesocycleId: mesocycleId ?? this.mesocycleId,
-      microcycleId: microcycleId ?? this.microcycleId,
+      phaseId: phaseId ?? this.phaseId,
+      blockId: blockId ?? this.blockId,
       scheduledDate: scheduledDate ?? this.scheduledDate,
       type: type ?? this.type,
       name: name ?? this.name,
@@ -3827,7 +4445,9 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       actualDistance: actualDistance ?? this.actualDistance,
       actualPace: actualPace ?? this.actualPace,
       rpe: rpe ?? this.rpe,
+      syncedFrom: syncedFrom ?? this.syncedFrom,
       completedAt: completedAt ?? this.completedAt,
+      isKey: isKey ?? this.isKey,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -3844,11 +4464,11 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     if (goalId.present) {
       map['goal_id'] = Variable<int>(goalId.value);
     }
-    if (mesocycleId.present) {
-      map['mesocycle_id'] = Variable<String>(mesocycleId.value);
+    if (phaseId.present) {
+      map['phase_id'] = Variable<String>(phaseId.value);
     }
-    if (microcycleId.present) {
-      map['microcycle_id'] = Variable<String>(microcycleId.value);
+    if (blockId.present) {
+      map['block_id'] = Variable<String>(blockId.value);
     }
     if (scheduledDate.present) {
       map['scheduled_date'] = Variable<DateTime>(scheduledDate.value);
@@ -3886,8 +4506,14 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     if (rpe.present) {
       map['rpe'] = Variable<int>(rpe.value);
     }
+    if (syncedFrom.present) {
+      map['synced_from'] = Variable<String>(syncedFrom.value);
+    }
     if (completedAt.present) {
       map['completed_at'] = Variable<DateTime>(completedAt.value);
+    }
+    if (isKey.present) {
+      map['is_key'] = Variable<bool>(isKey.value);
     }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
@@ -3901,8 +4527,8 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
           ..write('id: $id, ')
           ..write('userId: $userId, ')
           ..write('goalId: $goalId, ')
-          ..write('mesocycleId: $mesocycleId, ')
-          ..write('microcycleId: $microcycleId, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockId: $blockId, ')
           ..write('scheduledDate: $scheduledDate, ')
           ..write('type: $type, ')
           ..write('name: $name, ')
@@ -3915,8 +4541,1537 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
           ..write('actualDistance: $actualDistance, ')
           ..write('actualPace: $actualPace, ')
           ..write('rpe: $rpe, ')
+          ..write('syncedFrom: $syncedFrom, ')
           ..write('completedAt: $completedAt, ')
+          ..write('isKey: $isKey, ')
           ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $PhasesTable extends Phases with TableInfo<$PhasesTable, PhaseDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PhasesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _goalIdMeta = const VerificationMeta('goalId');
+  @override
+  late final GeneratedColumn<int> goalId = GeneratedColumn<int>(
+      'goal_id', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phaseNumberMeta =
+      const VerificationMeta('phaseNumber');
+  @override
+  late final GeneratedColumn<int> phaseNumber = GeneratedColumn<int>(
+      'phase_number', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _phaseTypeMeta =
+      const VerificationMeta('phaseType');
+  @override
+  late final GeneratedColumn<String> phaseType = GeneratedColumn<String>(
+      'phase_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationWeeksMeta =
+      const VerificationMeta('durationWeeks');
+  @override
+  late final GeneratedColumn<int> durationWeeks = GeneratedColumn<int>(
+      'duration_weeks', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _targetWeeklyVolumeMeta =
+      const VerificationMeta('targetWeeklyVolume');
+  @override
+  late final GeneratedColumn<String> targetWeeklyVolume =
+      GeneratedColumn<String>('target_weekly_volume', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _targetWeeklyDurationMeta =
+      const VerificationMeta('targetWeeklyDuration');
+  @override
+  late final GeneratedColumn<String> targetWeeklyDuration =
+      GeneratedColumn<String>('target_weekly_duration', aliasedName, false,
+          type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String> description = GeneratedColumn<String>(
+      'description', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _actualDistanceMeta =
+      const VerificationMeta('actualDistance');
+  @override
+  late final GeneratedColumn<double> actualDistance = GeneratedColumn<double>(
+      'actual_distance', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _actualDurationMeta =
+      const VerificationMeta('actualDuration');
+  @override
+  late final GeneratedColumn<int> actualDuration = GeneratedColumn<int>(
+      'actual_duration', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        goalId,
+        phaseNumber,
+        phaseType,
+        durationWeeks,
+        targetWeeklyVolume,
+        targetWeeklyDuration,
+        startDate,
+        endDate,
+        description,
+        actualDistance,
+        actualDuration
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'phases';
+  @override
+  VerificationContext validateIntegrity(Insertable<PhaseDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('goal_id')) {
+      context.handle(_goalIdMeta,
+          goalId.isAcceptableOrUnknown(data['goal_id']!, _goalIdMeta));
+    } else if (isInserting) {
+      context.missing(_goalIdMeta);
+    }
+    if (data.containsKey('phase_number')) {
+      context.handle(
+          _phaseNumberMeta,
+          phaseNumber.isAcceptableOrUnknown(
+              data['phase_number']!, _phaseNumberMeta));
+    } else if (isInserting) {
+      context.missing(_phaseNumberMeta);
+    }
+    if (data.containsKey('phase_type')) {
+      context.handle(_phaseTypeMeta,
+          phaseType.isAcceptableOrUnknown(data['phase_type']!, _phaseTypeMeta));
+    } else if (isInserting) {
+      context.missing(_phaseTypeMeta);
+    }
+    if (data.containsKey('duration_weeks')) {
+      context.handle(
+          _durationWeeksMeta,
+          durationWeeks.isAcceptableOrUnknown(
+              data['duration_weeks']!, _durationWeeksMeta));
+    } else if (isInserting) {
+      context.missing(_durationWeeksMeta);
+    }
+    if (data.containsKey('target_weekly_volume')) {
+      context.handle(
+          _targetWeeklyVolumeMeta,
+          targetWeeklyVolume.isAcceptableOrUnknown(
+              data['target_weekly_volume']!, _targetWeeklyVolumeMeta));
+    } else if (isInserting) {
+      context.missing(_targetWeeklyVolumeMeta);
+    }
+    if (data.containsKey('target_weekly_duration')) {
+      context.handle(
+          _targetWeeklyDurationMeta,
+          targetWeeklyDuration.isAcceptableOrUnknown(
+              data['target_weekly_duration']!, _targetWeeklyDurationMeta));
+    } else if (isInserting) {
+      context.missing(_targetWeeklyDurationMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('actual_distance')) {
+      context.handle(
+          _actualDistanceMeta,
+          actualDistance.isAcceptableOrUnknown(
+              data['actual_distance']!, _actualDistanceMeta));
+    }
+    if (data.containsKey('actual_duration')) {
+      context.handle(
+          _actualDurationMeta,
+          actualDuration.isAcceptableOrUnknown(
+              data['actual_duration']!, _actualDurationMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PhaseDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PhaseDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      goalId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}goal_id'])!,
+      phaseNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}phase_number'])!,
+      phaseType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_type'])!,
+      durationWeeks: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration_weeks'])!,
+      targetWeeklyVolume: attachedDatabase.typeMapping.read(
+          DriftSqlType.string, data['${effectivePrefix}target_weekly_volume'])!,
+      targetWeeklyDuration: attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}target_weekly_duration'])!,
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      description: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}description']),
+      actualDistance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}actual_distance'])!,
+      actualDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_duration'])!,
+    );
+  }
+
+  @override
+  $PhasesTable createAlias(String alias) {
+    return $PhasesTable(attachedDatabase, alias);
+  }
+}
+
+class PhaseDTO extends DataClass implements Insertable<PhaseDTO> {
+  final String id;
+  final int goalId;
+  final int phaseNumber;
+  final String phaseType;
+  final int durationWeeks;
+  final String targetWeeklyVolume;
+  final String targetWeeklyDuration;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final String? description;
+  final double actualDistance;
+  final int actualDuration;
+  const PhaseDTO(
+      {required this.id,
+      required this.goalId,
+      required this.phaseNumber,
+      required this.phaseType,
+      required this.durationWeeks,
+      required this.targetWeeklyVolume,
+      required this.targetWeeklyDuration,
+      this.startDate,
+      this.endDate,
+      this.description,
+      required this.actualDistance,
+      required this.actualDuration});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['goal_id'] = Variable<int>(goalId);
+    map['phase_number'] = Variable<int>(phaseNumber);
+    map['phase_type'] = Variable<String>(phaseType);
+    map['duration_weeks'] = Variable<int>(durationWeeks);
+    map['target_weekly_volume'] = Variable<String>(targetWeeklyVolume);
+    map['target_weekly_duration'] = Variable<String>(targetWeeklyDuration);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime>(endDate);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String>(description);
+    }
+    map['actual_distance'] = Variable<double>(actualDistance);
+    map['actual_duration'] = Variable<int>(actualDuration);
+    return map;
+  }
+
+  PhasesCompanion toCompanion(bool nullToAbsent) {
+    return PhasesCompanion(
+      id: Value(id),
+      goalId: Value(goalId),
+      phaseNumber: Value(phaseNumber),
+      phaseType: Value(phaseType),
+      durationWeeks: Value(durationWeeks),
+      targetWeeklyVolume: Value(targetWeeklyVolume),
+      targetWeeklyDuration: Value(targetWeeklyDuration),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
+    );
+  }
+
+  factory PhaseDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PhaseDTO(
+      id: serializer.fromJson<String>(json['id']),
+      goalId: serializer.fromJson<int>(json['goalId']),
+      phaseNumber: serializer.fromJson<int>(json['phaseNumber']),
+      phaseType: serializer.fromJson<String>(json['phaseType']),
+      durationWeeks: serializer.fromJson<int>(json['durationWeeks']),
+      targetWeeklyVolume:
+          serializer.fromJson<String>(json['targetWeeklyVolume']),
+      targetWeeklyDuration:
+          serializer.fromJson<String>(json['targetWeeklyDuration']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      description: serializer.fromJson<String?>(json['description']),
+      actualDistance: serializer.fromJson<double>(json['actualDistance']),
+      actualDuration: serializer.fromJson<int>(json['actualDuration']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'goalId': serializer.toJson<int>(goalId),
+      'phaseNumber': serializer.toJson<int>(phaseNumber),
+      'phaseType': serializer.toJson<String>(phaseType),
+      'durationWeeks': serializer.toJson<int>(durationWeeks),
+      'targetWeeklyVolume': serializer.toJson<String>(targetWeeklyVolume),
+      'targetWeeklyDuration': serializer.toJson<String>(targetWeeklyDuration),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+      'description': serializer.toJson<String?>(description),
+      'actualDistance': serializer.toJson<double>(actualDistance),
+      'actualDuration': serializer.toJson<int>(actualDuration),
+    };
+  }
+
+  PhaseDTO copyWith(
+          {String? id,
+          int? goalId,
+          int? phaseNumber,
+          String? phaseType,
+          int? durationWeeks,
+          String? targetWeeklyVolume,
+          String? targetWeeklyDuration,
+          Value<DateTime?> startDate = const Value.absent(),
+          Value<DateTime?> endDate = const Value.absent(),
+          Value<String?> description = const Value.absent(),
+          double? actualDistance,
+          int? actualDuration}) =>
+      PhaseDTO(
+        id: id ?? this.id,
+        goalId: goalId ?? this.goalId,
+        phaseNumber: phaseNumber ?? this.phaseNumber,
+        phaseType: phaseType ?? this.phaseType,
+        durationWeeks: durationWeeks ?? this.durationWeeks,
+        targetWeeklyVolume: targetWeeklyVolume ?? this.targetWeeklyVolume,
+        targetWeeklyDuration: targetWeeklyDuration ?? this.targetWeeklyDuration,
+        startDate: startDate.present ? startDate.value : this.startDate,
+        endDate: endDate.present ? endDate.value : this.endDate,
+        description: description.present ? description.value : this.description,
+        actualDistance: actualDistance ?? this.actualDistance,
+        actualDuration: actualDuration ?? this.actualDuration,
+      );
+  PhaseDTO copyWithCompanion(PhasesCompanion data) {
+    return PhaseDTO(
+      id: data.id.present ? data.id.value : this.id,
+      goalId: data.goalId.present ? data.goalId.value : this.goalId,
+      phaseNumber:
+          data.phaseNumber.present ? data.phaseNumber.value : this.phaseNumber,
+      phaseType: data.phaseType.present ? data.phaseType.value : this.phaseType,
+      durationWeeks: data.durationWeeks.present
+          ? data.durationWeeks.value
+          : this.durationWeeks,
+      targetWeeklyVolume: data.targetWeeklyVolume.present
+          ? data.targetWeeklyVolume.value
+          : this.targetWeeklyVolume,
+      targetWeeklyDuration: data.targetWeeklyDuration.present
+          ? data.targetWeeklyDuration.value
+          : this.targetWeeklyDuration,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      description:
+          data.description.present ? data.description.value : this.description,
+      actualDistance: data.actualDistance.present
+          ? data.actualDistance.value
+          : this.actualDistance,
+      actualDuration: data.actualDuration.present
+          ? data.actualDuration.value
+          : this.actualDuration,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PhaseDTO(')
+          ..write('id: $id, ')
+          ..write('goalId: $goalId, ')
+          ..write('phaseNumber: $phaseNumber, ')
+          ..write('phaseType: $phaseType, ')
+          ..write('durationWeeks: $durationWeeks, ')
+          ..write('targetWeeklyVolume: $targetWeeklyVolume, ')
+          ..write('targetWeeklyDuration: $targetWeeklyDuration, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('description: $description, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      goalId,
+      phaseNumber,
+      phaseType,
+      durationWeeks,
+      targetWeeklyVolume,
+      targetWeeklyDuration,
+      startDate,
+      endDate,
+      description,
+      actualDistance,
+      actualDuration);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PhaseDTO &&
+          other.id == this.id &&
+          other.goalId == this.goalId &&
+          other.phaseNumber == this.phaseNumber &&
+          other.phaseType == this.phaseType &&
+          other.durationWeeks == this.durationWeeks &&
+          other.targetWeeklyVolume == this.targetWeeklyVolume &&
+          other.targetWeeklyDuration == this.targetWeeklyDuration &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.description == this.description &&
+          other.actualDistance == this.actualDistance &&
+          other.actualDuration == this.actualDuration);
+}
+
+class PhasesCompanion extends UpdateCompanion<PhaseDTO> {
+  final Value<String> id;
+  final Value<int> goalId;
+  final Value<int> phaseNumber;
+  final Value<String> phaseType;
+  final Value<int> durationWeeks;
+  final Value<String> targetWeeklyVolume;
+  final Value<String> targetWeeklyDuration;
+  final Value<DateTime?> startDate;
+  final Value<DateTime?> endDate;
+  final Value<String?> description;
+  final Value<double> actualDistance;
+  final Value<int> actualDuration;
+  final Value<int> rowid;
+  const PhasesCompanion({
+    this.id = const Value.absent(),
+    this.goalId = const Value.absent(),
+    this.phaseNumber = const Value.absent(),
+    this.phaseType = const Value.absent(),
+    this.durationWeeks = const Value.absent(),
+    this.targetWeeklyVolume = const Value.absent(),
+    this.targetWeeklyDuration = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PhasesCompanion.insert({
+    required String id,
+    required int goalId,
+    required int phaseNumber,
+    required String phaseType,
+    required int durationWeeks,
+    required String targetWeeklyVolume,
+    required String targetWeeklyDuration,
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.description = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        goalId = Value(goalId),
+        phaseNumber = Value(phaseNumber),
+        phaseType = Value(phaseType),
+        durationWeeks = Value(durationWeeks),
+        targetWeeklyVolume = Value(targetWeeklyVolume),
+        targetWeeklyDuration = Value(targetWeeklyDuration);
+  static Insertable<PhaseDTO> custom({
+    Expression<String>? id,
+    Expression<int>? goalId,
+    Expression<int>? phaseNumber,
+    Expression<String>? phaseType,
+    Expression<int>? durationWeeks,
+    Expression<String>? targetWeeklyVolume,
+    Expression<String>? targetWeeklyDuration,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<String>? description,
+    Expression<double>? actualDistance,
+    Expression<int>? actualDuration,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (goalId != null) 'goal_id': goalId,
+      if (phaseNumber != null) 'phase_number': phaseNumber,
+      if (phaseType != null) 'phase_type': phaseType,
+      if (durationWeeks != null) 'duration_weeks': durationWeeks,
+      if (targetWeeklyVolume != null)
+        'target_weekly_volume': targetWeeklyVolume,
+      if (targetWeeklyDuration != null)
+        'target_weekly_duration': targetWeeklyDuration,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (description != null) 'description': description,
+      if (actualDistance != null) 'actual_distance': actualDistance,
+      if (actualDuration != null) 'actual_duration': actualDuration,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PhasesCompanion copyWith(
+      {Value<String>? id,
+      Value<int>? goalId,
+      Value<int>? phaseNumber,
+      Value<String>? phaseType,
+      Value<int>? durationWeeks,
+      Value<String>? targetWeeklyVolume,
+      Value<String>? targetWeeklyDuration,
+      Value<DateTime?>? startDate,
+      Value<DateTime?>? endDate,
+      Value<String?>? description,
+      Value<double>? actualDistance,
+      Value<int>? actualDuration,
+      Value<int>? rowid}) {
+    return PhasesCompanion(
+      id: id ?? this.id,
+      goalId: goalId ?? this.goalId,
+      phaseNumber: phaseNumber ?? this.phaseNumber,
+      phaseType: phaseType ?? this.phaseType,
+      durationWeeks: durationWeeks ?? this.durationWeeks,
+      targetWeeklyVolume: targetWeeklyVolume ?? this.targetWeeklyVolume,
+      targetWeeklyDuration: targetWeeklyDuration ?? this.targetWeeklyDuration,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      description: description ?? this.description,
+      actualDistance: actualDistance ?? this.actualDistance,
+      actualDuration: actualDuration ?? this.actualDuration,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (goalId.present) {
+      map['goal_id'] = Variable<int>(goalId.value);
+    }
+    if (phaseNumber.present) {
+      map['phase_number'] = Variable<int>(phaseNumber.value);
+    }
+    if (phaseType.present) {
+      map['phase_type'] = Variable<String>(phaseType.value);
+    }
+    if (durationWeeks.present) {
+      map['duration_weeks'] = Variable<int>(durationWeeks.value);
+    }
+    if (targetWeeklyVolume.present) {
+      map['target_weekly_volume'] = Variable<String>(targetWeeklyVolume.value);
+    }
+    if (targetWeeklyDuration.present) {
+      map['target_weekly_duration'] =
+          Variable<String>(targetWeeklyDuration.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String>(description.value);
+    }
+    if (actualDistance.present) {
+      map['actual_distance'] = Variable<double>(actualDistance.value);
+    }
+    if (actualDuration.present) {
+      map['actual_duration'] = Variable<int>(actualDuration.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PhasesCompanion(')
+          ..write('id: $id, ')
+          ..write('goalId: $goalId, ')
+          ..write('phaseNumber: $phaseNumber, ')
+          ..write('phaseType: $phaseType, ')
+          ..write('durationWeeks: $durationWeeks, ')
+          ..write('targetWeeklyVolume: $targetWeeklyVolume, ')
+          ..write('targetWeeklyDuration: $targetWeeklyDuration, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('description: $description, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TrainingBlocksTable extends TrainingBlocks
+    with TableInfo<$TrainingBlocksTable, TrainingBlockDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TrainingBlocksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _phaseIdMeta =
+      const VerificationMeta('phaseId');
+  @override
+  late final GeneratedColumn<String> phaseId = GeneratedColumn<String>(
+      'phase_id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _blockNumberMeta =
+      const VerificationMeta('blockNumber');
+  @override
+  late final GeneratedColumn<int> blockNumber = GeneratedColumn<int>(
+      'block_number', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _intentMeta = const VerificationMeta('intent');
+  @override
+  late final GeneratedColumn<String> intent = GeneratedColumn<String>(
+      'intent', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _durationDaysMeta =
+      const VerificationMeta('durationDays');
+  @override
+  late final GeneratedColumn<int> durationDays = GeneratedColumn<int>(
+      'duration_days', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, true,
+      type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  static const VerificationMeta _actualDistanceMeta =
+      const VerificationMeta('actualDistance');
+  @override
+  late final GeneratedColumn<double> actualDistance = GeneratedColumn<double>(
+      'actual_distance', aliasedName, false,
+      type: DriftSqlType.double,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0.0));
+  static const VerificationMeta _actualDurationMeta =
+      const VerificationMeta('actualDuration');
+  @override
+  late final GeneratedColumn<int> actualDuration = GeneratedColumn<int>(
+      'actual_duration', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultValue: const Constant(0));
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        phaseId,
+        blockNumber,
+        intent,
+        durationDays,
+        startDate,
+        endDate,
+        actualDistance,
+        actualDuration
+      ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'training_blocks';
+  @override
+  VerificationContext validateIntegrity(Insertable<TrainingBlockDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('phase_id')) {
+      context.handle(_phaseIdMeta,
+          phaseId.isAcceptableOrUnknown(data['phase_id']!, _phaseIdMeta));
+    } else if (isInserting) {
+      context.missing(_phaseIdMeta);
+    }
+    if (data.containsKey('block_number')) {
+      context.handle(
+          _blockNumberMeta,
+          blockNumber.isAcceptableOrUnknown(
+              data['block_number']!, _blockNumberMeta));
+    } else if (isInserting) {
+      context.missing(_blockNumberMeta);
+    }
+    if (data.containsKey('intent')) {
+      context.handle(_intentMeta,
+          intent.isAcceptableOrUnknown(data['intent']!, _intentMeta));
+    } else if (isInserting) {
+      context.missing(_intentMeta);
+    }
+    if (data.containsKey('duration_days')) {
+      context.handle(
+          _durationDaysMeta,
+          durationDays.isAcceptableOrUnknown(
+              data['duration_days']!, _durationDaysMeta));
+    } else if (isInserting) {
+      context.missing(_durationDaysMeta);
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    }
+    if (data.containsKey('actual_distance')) {
+      context.handle(
+          _actualDistanceMeta,
+          actualDistance.isAcceptableOrUnknown(
+              data['actual_distance']!, _actualDistanceMeta));
+    }
+    if (data.containsKey('actual_duration')) {
+      context.handle(
+          _actualDurationMeta,
+          actualDuration.isAcceptableOrUnknown(
+              data['actual_duration']!, _actualDurationMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TrainingBlockDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TrainingBlockDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      phaseId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}phase_id'])!,
+      blockNumber: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}block_number'])!,
+      intent: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}intent'])!,
+      durationDays: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}duration_days'])!,
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date']),
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date']),
+      actualDistance: attachedDatabase.typeMapping.read(
+          DriftSqlType.double, data['${effectivePrefix}actual_distance'])!,
+      actualDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}actual_duration'])!,
+    );
+  }
+
+  @override
+  $TrainingBlocksTable createAlias(String alias) {
+    return $TrainingBlocksTable(attachedDatabase, alias);
+  }
+}
+
+class TrainingBlockDTO extends DataClass
+    implements Insertable<TrainingBlockDTO> {
+  final String id;
+  final String phaseId;
+  final int blockNumber;
+  final String intent;
+  final int durationDays;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final double actualDistance;
+  final int actualDuration;
+  const TrainingBlockDTO(
+      {required this.id,
+      required this.phaseId,
+      required this.blockNumber,
+      required this.intent,
+      required this.durationDays,
+      this.startDate,
+      this.endDate,
+      required this.actualDistance,
+      required this.actualDuration});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['phase_id'] = Variable<String>(phaseId);
+    map['block_number'] = Variable<int>(blockNumber);
+    map['intent'] = Variable<String>(intent);
+    map['duration_days'] = Variable<int>(durationDays);
+    if (!nullToAbsent || startDate != null) {
+      map['start_date'] = Variable<DateTime>(startDate);
+    }
+    if (!nullToAbsent || endDate != null) {
+      map['end_date'] = Variable<DateTime>(endDate);
+    }
+    map['actual_distance'] = Variable<double>(actualDistance);
+    map['actual_duration'] = Variable<int>(actualDuration);
+    return map;
+  }
+
+  TrainingBlocksCompanion toCompanion(bool nullToAbsent) {
+    return TrainingBlocksCompanion(
+      id: Value(id),
+      phaseId: Value(phaseId),
+      blockNumber: Value(blockNumber),
+      intent: Value(intent),
+      durationDays: Value(durationDays),
+      startDate: startDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startDate),
+      endDate: endDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(endDate),
+      actualDistance: Value(actualDistance),
+      actualDuration: Value(actualDuration),
+    );
+  }
+
+  factory TrainingBlockDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TrainingBlockDTO(
+      id: serializer.fromJson<String>(json['id']),
+      phaseId: serializer.fromJson<String>(json['phaseId']),
+      blockNumber: serializer.fromJson<int>(json['blockNumber']),
+      intent: serializer.fromJson<String>(json['intent']),
+      durationDays: serializer.fromJson<int>(json['durationDays']),
+      startDate: serializer.fromJson<DateTime?>(json['startDate']),
+      endDate: serializer.fromJson<DateTime?>(json['endDate']),
+      actualDistance: serializer.fromJson<double>(json['actualDistance']),
+      actualDuration: serializer.fromJson<int>(json['actualDuration']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'phaseId': serializer.toJson<String>(phaseId),
+      'blockNumber': serializer.toJson<int>(blockNumber),
+      'intent': serializer.toJson<String>(intent),
+      'durationDays': serializer.toJson<int>(durationDays),
+      'startDate': serializer.toJson<DateTime?>(startDate),
+      'endDate': serializer.toJson<DateTime?>(endDate),
+      'actualDistance': serializer.toJson<double>(actualDistance),
+      'actualDuration': serializer.toJson<int>(actualDuration),
+    };
+  }
+
+  TrainingBlockDTO copyWith(
+          {String? id,
+          String? phaseId,
+          int? blockNumber,
+          String? intent,
+          int? durationDays,
+          Value<DateTime?> startDate = const Value.absent(),
+          Value<DateTime?> endDate = const Value.absent(),
+          double? actualDistance,
+          int? actualDuration}) =>
+      TrainingBlockDTO(
+        id: id ?? this.id,
+        phaseId: phaseId ?? this.phaseId,
+        blockNumber: blockNumber ?? this.blockNumber,
+        intent: intent ?? this.intent,
+        durationDays: durationDays ?? this.durationDays,
+        startDate: startDate.present ? startDate.value : this.startDate,
+        endDate: endDate.present ? endDate.value : this.endDate,
+        actualDistance: actualDistance ?? this.actualDistance,
+        actualDuration: actualDuration ?? this.actualDuration,
+      );
+  TrainingBlockDTO copyWithCompanion(TrainingBlocksCompanion data) {
+    return TrainingBlockDTO(
+      id: data.id.present ? data.id.value : this.id,
+      phaseId: data.phaseId.present ? data.phaseId.value : this.phaseId,
+      blockNumber:
+          data.blockNumber.present ? data.blockNumber.value : this.blockNumber,
+      intent: data.intent.present ? data.intent.value : this.intent,
+      durationDays: data.durationDays.present
+          ? data.durationDays.value
+          : this.durationDays,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      actualDistance: data.actualDistance.present
+          ? data.actualDistance.value
+          : this.actualDistance,
+      actualDuration: data.actualDuration.present
+          ? data.actualDuration.value
+          : this.actualDuration,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingBlockDTO(')
+          ..write('id: $id, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockNumber: $blockNumber, ')
+          ..write('intent: $intent, ')
+          ..write('durationDays: $durationDays, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(id, phaseId, blockNumber, intent,
+      durationDays, startDate, endDate, actualDistance, actualDuration);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TrainingBlockDTO &&
+          other.id == this.id &&
+          other.phaseId == this.phaseId &&
+          other.blockNumber == this.blockNumber &&
+          other.intent == this.intent &&
+          other.durationDays == this.durationDays &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.actualDistance == this.actualDistance &&
+          other.actualDuration == this.actualDuration);
+}
+
+class TrainingBlocksCompanion extends UpdateCompanion<TrainingBlockDTO> {
+  final Value<String> id;
+  final Value<String> phaseId;
+  final Value<int> blockNumber;
+  final Value<String> intent;
+  final Value<int> durationDays;
+  final Value<DateTime?> startDate;
+  final Value<DateTime?> endDate;
+  final Value<double> actualDistance;
+  final Value<int> actualDuration;
+  final Value<int> rowid;
+  const TrainingBlocksCompanion({
+    this.id = const Value.absent(),
+    this.phaseId = const Value.absent(),
+    this.blockNumber = const Value.absent(),
+    this.intent = const Value.absent(),
+    this.durationDays = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TrainingBlocksCompanion.insert({
+    required String id,
+    required String phaseId,
+    required int blockNumber,
+    required String intent,
+    required int durationDays,
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.actualDistance = const Value.absent(),
+    this.actualDuration = const Value.absent(),
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        phaseId = Value(phaseId),
+        blockNumber = Value(blockNumber),
+        intent = Value(intent),
+        durationDays = Value(durationDays);
+  static Insertable<TrainingBlockDTO> custom({
+    Expression<String>? id,
+    Expression<String>? phaseId,
+    Expression<int>? blockNumber,
+    Expression<String>? intent,
+    Expression<int>? durationDays,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<double>? actualDistance,
+    Expression<int>? actualDuration,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (phaseId != null) 'phase_id': phaseId,
+      if (blockNumber != null) 'block_number': blockNumber,
+      if (intent != null) 'intent': intent,
+      if (durationDays != null) 'duration_days': durationDays,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (actualDistance != null) 'actual_distance': actualDistance,
+      if (actualDuration != null) 'actual_duration': actualDuration,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TrainingBlocksCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? phaseId,
+      Value<int>? blockNumber,
+      Value<String>? intent,
+      Value<int>? durationDays,
+      Value<DateTime?>? startDate,
+      Value<DateTime?>? endDate,
+      Value<double>? actualDistance,
+      Value<int>? actualDuration,
+      Value<int>? rowid}) {
+    return TrainingBlocksCompanion(
+      id: id ?? this.id,
+      phaseId: phaseId ?? this.phaseId,
+      blockNumber: blockNumber ?? this.blockNumber,
+      intent: intent ?? this.intent,
+      durationDays: durationDays ?? this.durationDays,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      actualDistance: actualDistance ?? this.actualDistance,
+      actualDuration: actualDuration ?? this.actualDuration,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (phaseId.present) {
+      map['phase_id'] = Variable<String>(phaseId.value);
+    }
+    if (blockNumber.present) {
+      map['block_number'] = Variable<int>(blockNumber.value);
+    }
+    if (intent.present) {
+      map['intent'] = Variable<String>(intent.value);
+    }
+    if (durationDays.present) {
+      map['duration_days'] = Variable<int>(durationDays.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (actualDistance.present) {
+      map['actual_distance'] = Variable<double>(actualDistance.value);
+    }
+    if (actualDuration.present) {
+      map['actual_duration'] = Variable<int>(actualDuration.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TrainingBlocksCompanion(')
+          ..write('id: $id, ')
+          ..write('phaseId: $phaseId, ')
+          ..write('blockNumber: $blockNumber, ')
+          ..write('intent: $intent, ')
+          ..write('durationDays: $durationDays, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('actualDistance: $actualDistance, ')
+          ..write('actualDuration: $actualDuration, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $BiomarkersTable extends Biomarkers
+    with TableInfo<$BiomarkersTable, Biomarker> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $BiomarkersTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<int> userId = GeneratedColumn<int>(
+      'user_id', aliasedName, false,
+      type: DriftSqlType.int,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('REFERENCES users (id)'));
+  static const VerificationMeta _dateMeta = const VerificationMeta('date');
+  @override
+  late final GeneratedColumn<DateTime> date = GeneratedColumn<DateTime>(
+      'date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _sleepDurationMeta =
+      const VerificationMeta('sleepDuration');
+  @override
+  late final GeneratedColumn<int> sleepDuration = GeneratedColumn<int>(
+      'sleep_duration', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _hrvMeta = const VerificationMeta('hrv');
+  @override
+  late final GeneratedColumn<double> hrv = GeneratedColumn<double>(
+      'hrv', aliasedName, true,
+      type: DriftSqlType.double, requiredDuringInsert: false);
+  static const VerificationMeta _rhrMeta = const VerificationMeta('rhr');
+  @override
+  late final GeneratedColumn<int> rhr = GeneratedColumn<int>(
+      'rhr', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, userId, date, sleepDuration, hrv, rhr, createdAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'biomarkers';
+  @override
+  VerificationContext validateIntegrity(Insertable<Biomarker> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(_userIdMeta,
+          userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta));
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('date')) {
+      context.handle(
+          _dateMeta, date.isAcceptableOrUnknown(data['date']!, _dateMeta));
+    } else if (isInserting) {
+      context.missing(_dateMeta);
+    }
+    if (data.containsKey('sleep_duration')) {
+      context.handle(
+          _sleepDurationMeta,
+          sleepDuration.isAcceptableOrUnknown(
+              data['sleep_duration']!, _sleepDurationMeta));
+    }
+    if (data.containsKey('hrv')) {
+      context.handle(
+          _hrvMeta, hrv.isAcceptableOrUnknown(data['hrv']!, _hrvMeta));
+    }
+    if (data.containsKey('rhr')) {
+      context.handle(
+          _rhrMeta, rhr.isAcceptableOrUnknown(data['rhr']!, _rhrMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  List<Set<GeneratedColumn>> get uniqueKeys => [
+        {userId, date},
+      ];
+  @override
+  Biomarker map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Biomarker(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      userId: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}user_id'])!,
+      date: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}date'])!,
+      sleepDuration: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}sleep_duration']),
+      hrv: attachedDatabase.typeMapping
+          .read(DriftSqlType.double, data['${effectivePrefix}hrv']),
+      rhr: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}rhr']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $BiomarkersTable createAlias(String alias) {
+    return $BiomarkersTable(attachedDatabase, alias);
+  }
+}
+
+class Biomarker extends DataClass implements Insertable<Biomarker> {
+  final int id;
+  final int userId;
+
+  /// Date (one record per user per day)
+  final DateTime date;
+
+  /// Health metrics (Phase 2 MVP)
+  final int? sleepDuration;
+  final double? hrv;
+  final int? rhr;
+
+  /// Metadata
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const Biomarker(
+      {required this.id,
+      required this.userId,
+      required this.date,
+      this.sleepDuration,
+      this.hrv,
+      this.rhr,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['user_id'] = Variable<int>(userId);
+    map['date'] = Variable<DateTime>(date);
+    if (!nullToAbsent || sleepDuration != null) {
+      map['sleep_duration'] = Variable<int>(sleepDuration);
+    }
+    if (!nullToAbsent || hrv != null) {
+      map['hrv'] = Variable<double>(hrv);
+    }
+    if (!nullToAbsent || rhr != null) {
+      map['rhr'] = Variable<int>(rhr);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  BiomarkersCompanion toCompanion(bool nullToAbsent) {
+    return BiomarkersCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      date: Value(date),
+      sleepDuration: sleepDuration == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sleepDuration),
+      hrv: hrv == null && nullToAbsent ? const Value.absent() : Value(hrv),
+      rhr: rhr == null && nullToAbsent ? const Value.absent() : Value(rhr),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory Biomarker.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Biomarker(
+      id: serializer.fromJson<int>(json['id']),
+      userId: serializer.fromJson<int>(json['userId']),
+      date: serializer.fromJson<DateTime>(json['date']),
+      sleepDuration: serializer.fromJson<int?>(json['sleepDuration']),
+      hrv: serializer.fromJson<double?>(json['hrv']),
+      rhr: serializer.fromJson<int?>(json['rhr']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'userId': serializer.toJson<int>(userId),
+      'date': serializer.toJson<DateTime>(date),
+      'sleepDuration': serializer.toJson<int?>(sleepDuration),
+      'hrv': serializer.toJson<double?>(hrv),
+      'rhr': serializer.toJson<int?>(rhr),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  Biomarker copyWith(
+          {int? id,
+          int? userId,
+          DateTime? date,
+          Value<int?> sleepDuration = const Value.absent(),
+          Value<double?> hrv = const Value.absent(),
+          Value<int?> rhr = const Value.absent(),
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      Biomarker(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        date: date ?? this.date,
+        sleepDuration:
+            sleepDuration.present ? sleepDuration.value : this.sleepDuration,
+        hrv: hrv.present ? hrv.value : this.hrv,
+        rhr: rhr.present ? rhr.value : this.rhr,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  Biomarker copyWithCompanion(BiomarkersCompanion data) {
+    return Biomarker(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      date: data.date.present ? data.date.value : this.date,
+      sleepDuration: data.sleepDuration.present
+          ? data.sleepDuration.value
+          : this.sleepDuration,
+      hrv: data.hrv.present ? data.hrv.value : this.hrv,
+      rhr: data.rhr.present ? data.rhr.value : this.rhr,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Biomarker(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('sleepDuration: $sleepDuration, ')
+          ..write('hrv: $hrv, ')
+          ..write('rhr: $rhr, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id, userId, date, sleepDuration, hrv, rhr, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Biomarker &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.date == this.date &&
+          other.sleepDuration == this.sleepDuration &&
+          other.hrv == this.hrv &&
+          other.rhr == this.rhr &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class BiomarkersCompanion extends UpdateCompanion<Biomarker> {
+  final Value<int> id;
+  final Value<int> userId;
+  final Value<DateTime> date;
+  final Value<int?> sleepDuration;
+  final Value<double?> hrv;
+  final Value<int?> rhr;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  const BiomarkersCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.date = const Value.absent(),
+    this.sleepDuration = const Value.absent(),
+    this.hrv = const Value.absent(),
+    this.rhr = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  });
+  BiomarkersCompanion.insert({
+    this.id = const Value.absent(),
+    required int userId,
+    required DateTime date,
+    this.sleepDuration = const Value.absent(),
+    this.hrv = const Value.absent(),
+    this.rhr = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+  })  : userId = Value(userId),
+        date = Value(date);
+  static Insertable<Biomarker> custom({
+    Expression<int>? id,
+    Expression<int>? userId,
+    Expression<DateTime>? date,
+    Expression<int>? sleepDuration,
+    Expression<double>? hrv,
+    Expression<int>? rhr,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (date != null) 'date': date,
+      if (sleepDuration != null) 'sleep_duration': sleepDuration,
+      if (hrv != null) 'hrv': hrv,
+      if (rhr != null) 'rhr': rhr,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+    });
+  }
+
+  BiomarkersCompanion copyWith(
+      {Value<int>? id,
+      Value<int>? userId,
+      Value<DateTime>? date,
+      Value<int?>? sleepDuration,
+      Value<double?>? hrv,
+      Value<int?>? rhr,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt}) {
+    return BiomarkersCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      date: date ?? this.date,
+      sleepDuration: sleepDuration ?? this.sleepDuration,
+      hrv: hrv ?? this.hrv,
+      rhr: rhr ?? this.rhr,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<int>(userId.value);
+    }
+    if (date.present) {
+      map['date'] = Variable<DateTime>(date.value);
+    }
+    if (sleepDuration.present) {
+      map['sleep_duration'] = Variable<int>(sleepDuration.value);
+    }
+    if (hrv.present) {
+      map['hrv'] = Variable<double>(hrv.value);
+    }
+    if (rhr.present) {
+      map['rhr'] = Variable<int>(rhr.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('BiomarkersCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('date: $date, ')
+          ..write('sleepDuration: $sleepDuration, ')
+          ..write('hrv: $hrv, ')
+          ..write('rhr: $rhr, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
           ..write(')'))
         .toString();
   }
@@ -3935,12 +6090,18 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MediumTermContextTable mediumTermContext =
       $MediumTermContextTable(this);
   late final $WorkoutsTable workouts = $WorkoutsTable(this);
+  late final $PhasesTable phases = $PhasesTable(this);
+  late final $TrainingBlocksTable trainingBlocks = $TrainingBlocksTable(this);
+  late final $BiomarkersTable biomarkers = $BiomarkersTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final ConversationDao conversationDao =
       ConversationDao(this as AppDatabase);
   late final ContextDao contextDao = ContextDao(this as AppDatabase);
   late final WorkoutDao workoutDao = WorkoutDao(this as AppDatabase);
+  late final TrainingPlanDao trainingPlanDao =
+      TrainingPlanDao(this as AppDatabase);
+  late final BiomarkerDao biomarkerDao = BiomarkerDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -3952,7 +6113,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         conversationMessages,
         longTermContext,
         mediumTermContext,
-        workouts
+        workouts,
+        phases,
+        trainingBlocks,
+        biomarkers
       ];
 }
 
@@ -3964,6 +6128,7 @@ typedef $$UsersTableCreateCompanionBuilder = UsersCompanion Function({
   Value<String> preferredWeightUnit,
   Value<double?> height,
   Value<String> preferredHeightUnit,
+  Value<String> preferredDistanceUnit,
   required String availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -3978,6 +6143,7 @@ typedef $$UsersTableUpdateCompanionBuilder = UsersCompanion Function({
   Value<String> preferredWeightUnit,
   Value<double?> height,
   Value<String> preferredHeightUnit,
+  Value<String> preferredDistanceUnit,
   Value<String> availableDays,
   Value<String?> constraints,
   Value<bool> healthPermissionsGranted,
@@ -4052,6 +6218,20 @@ final class $$UsersTableReferences
     return ProcessedTableManager(
         manager.$state.copyWith(prefetchedData: cache));
   }
+
+  static MultiTypedResultKey<$BiomarkersTable, List<Biomarker>>
+      _biomarkersRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+          db.biomarkers,
+          aliasName: $_aliasNameGenerator(db.users.id, db.biomarkers.userId));
+
+  $$BiomarkersTableProcessedTableManager get biomarkersRefs {
+    final manager = $$BiomarkersTableTableManager($_db, $_db.biomarkers)
+        .filter((f) => f.userId.id.sqlEquals($_itemColumn<int>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_biomarkersRefsTable($_db));
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: cache));
+  }
 }
 
 class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
@@ -4083,6 +6263,10 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
 
   ColumnFilters<String> get preferredHeightUnit => $composableBuilder(
       column: $table.preferredHeightUnit,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit,
       builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get availableDays => $composableBuilder(
@@ -4184,6 +6368,27 @@ class $$UsersTableFilterComposer extends Composer<_$AppDatabase, $UsersTable> {
             ));
     return f(composer);
   }
+
+  Expression<bool> biomarkersRefs(
+      Expression<bool> Function($$BiomarkersTableFilterComposer f) f) {
+    final $$BiomarkersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.biomarkers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BiomarkersTableFilterComposer(
+              $db: $db,
+              $table: $db.biomarkers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableOrderingComposer
@@ -4216,6 +6421,10 @@ class $$UsersTableOrderingComposer
 
   ColumnOrderings<String> get preferredHeightUnit => $composableBuilder(
       column: $table.preferredHeightUnit,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get availableDays => $composableBuilder(
@@ -4265,6 +6474,9 @@ class $$UsersTableAnnotationComposer
 
   GeneratedColumn<String> get preferredHeightUnit => $composableBuilder(
       column: $table.preferredHeightUnit, builder: (column) => column);
+
+  GeneratedColumn<String> get preferredDistanceUnit => $composableBuilder(
+      column: $table.preferredDistanceUnit, builder: (column) => column);
 
   GeneratedColumn<String> get availableDays => $composableBuilder(
       column: $table.availableDays, builder: (column) => column);
@@ -4365,6 +6577,27 @@ class $$UsersTableAnnotationComposer
                 ));
     return f(composer);
   }
+
+  Expression<T> biomarkersRefs<T extends Object>(
+      Expression<T> Function($$BiomarkersTableAnnotationComposer a) f) {
+    final $$BiomarkersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.id,
+        referencedTable: $db.biomarkers,
+        getReferencedColumn: (t) => t.userId,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$BiomarkersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.biomarkers,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return f(composer);
+  }
 }
 
 class $$UsersTableTableManager extends RootTableManager<
@@ -4382,7 +6615,8 @@ class $$UsersTableTableManager extends RootTableManager<
         {bool goalsRefs,
         bool conversationsRefs,
         bool longTermContextRefs,
-        bool mediumTermContextRefs})> {
+        bool mediumTermContextRefs,
+        bool biomarkersRefs})> {
   $$UsersTableTableManager(_$AppDatabase db, $UsersTable table)
       : super(TableManagerState(
           db: db,
@@ -4401,6 +6635,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<String> preferredWeightUnit = const Value.absent(),
             Value<double?> height = const Value.absent(),
             Value<String> preferredHeightUnit = const Value.absent(),
+            Value<String> preferredDistanceUnit = const Value.absent(),
             Value<String> availableDays = const Value.absent(),
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -4415,6 +6650,7 @@ class $$UsersTableTableManager extends RootTableManager<
             preferredWeightUnit: preferredWeightUnit,
             height: height,
             preferredHeightUnit: preferredHeightUnit,
+            preferredDistanceUnit: preferredDistanceUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,
@@ -4429,6 +6665,7 @@ class $$UsersTableTableManager extends RootTableManager<
             Value<String> preferredWeightUnit = const Value.absent(),
             Value<double?> height = const Value.absent(),
             Value<String> preferredHeightUnit = const Value.absent(),
+            Value<String> preferredDistanceUnit = const Value.absent(),
             required String availableDays,
             Value<String?> constraints = const Value.absent(),
             Value<bool> healthPermissionsGranted = const Value.absent(),
@@ -4443,6 +6680,7 @@ class $$UsersTableTableManager extends RootTableManager<
             preferredWeightUnit: preferredWeightUnit,
             height: height,
             preferredHeightUnit: preferredHeightUnit,
+            preferredDistanceUnit: preferredDistanceUnit,
             availableDays: availableDays,
             constraints: constraints,
             healthPermissionsGranted: healthPermissionsGranted,
@@ -4457,14 +6695,16 @@ class $$UsersTableTableManager extends RootTableManager<
               {goalsRefs = false,
               conversationsRefs = false,
               longTermContextRefs = false,
-              mediumTermContextRefs = false}) {
+              mediumTermContextRefs = false,
+              biomarkersRefs = false}) {
             return PrefetchHooks(
               db: db,
               explicitlyWatchedTables: [
                 if (goalsRefs) db.goals,
                 if (conversationsRefs) db.conversations,
                 if (longTermContextRefs) db.longTermContext,
-                if (mediumTermContextRefs) db.mediumTermContext
+                if (mediumTermContextRefs) db.mediumTermContext,
+                if (biomarkersRefs) db.biomarkers
               ],
               addJoins: null,
               getPrefetchedDataCallback: (items) async {
@@ -4518,6 +6758,18 @@ class $$UsersTableTableManager extends RootTableManager<
                         referencedItemsForCurrentItem: (item,
                                 referencedItems) =>
                             referencedItems.where((e) => e.userId == item.id),
+                        typedResults: items),
+                  if (biomarkersRefs)
+                    await $_getPrefetchedData<UserDTO, $UsersTable, Biomarker>(
+                        currentTable: table,
+                        referencedTable:
+                            $$UsersTableReferences._biomarkersRefsTable(db),
+                        managerFromTypedResult: (p0) =>
+                            $$UsersTableReferences(db, table, p0)
+                                .biomarkersRefs,
+                        referencedItemsForCurrentItem: (item,
+                                referencedItems) =>
+                            referencedItems.where((e) => e.userId == item.id),
                         typedResults: items)
                 ];
               },
@@ -4541,7 +6793,8 @@ typedef $$UsersTableProcessedTableManager = ProcessedTableManager<
         {bool goalsRefs,
         bool conversationsRefs,
         bool longTermContextRefs,
-        bool mediumTermContextRefs})>;
+        bool mediumTermContextRefs,
+        bool biomarkersRefs})>;
 typedef $$GoalsTableCreateCompanionBuilder = GoalsCompanion Function({
   Value<int> id,
   required int userId,
@@ -4552,16 +6805,26 @@ typedef $$GoalsTableCreateCompanionBuilder = GoalsCompanion Function({
   Value<DateTime?> targetDate,
   Value<int?> targetTime,
   Value<int?> currentBestTime,
+  Value<bool?> isFirstTime,
   Value<String?> eventName,
   Value<DateTime?> eventDate,
   Value<int?> maintenanceFrequency,
   Value<int?> maintenanceDuration,
   Value<DateTime?> endDate,
+  Value<int?> initialTrainingFrequency,
+  Value<double?> initialWeeklyVolume,
+  Value<String?> runningPriority,
+  Value<String?> strengthPriority,
+  Value<String?> mobilityPriority,
   Value<double> confidence,
   Value<double> adherenceScore,
   Value<double> qualityScore,
   Value<double> consistencyScore,
   Value<double> recoveryScore,
+  Value<String?> rationaleOverallApproach,
+  Value<String?> rationaleIntensityDistribution,
+  Value<String?> rationaleKeyWorkouts,
+  Value<String?> rationaleRecoveryStrategy,
   required DateTime createdAt,
   required DateTime updatedAt,
 });
@@ -4575,16 +6838,26 @@ typedef $$GoalsTableUpdateCompanionBuilder = GoalsCompanion Function({
   Value<DateTime?> targetDate,
   Value<int?> targetTime,
   Value<int?> currentBestTime,
+  Value<bool?> isFirstTime,
   Value<String?> eventName,
   Value<DateTime?> eventDate,
   Value<int?> maintenanceFrequency,
   Value<int?> maintenanceDuration,
   Value<DateTime?> endDate,
+  Value<int?> initialTrainingFrequency,
+  Value<double?> initialWeeklyVolume,
+  Value<String?> runningPriority,
+  Value<String?> strengthPriority,
+  Value<String?> mobilityPriority,
   Value<double> confidence,
   Value<double> adherenceScore,
   Value<double> qualityScore,
   Value<double> consistencyScore,
   Value<double> recoveryScore,
+  Value<String?> rationaleOverallApproach,
+  Value<String?> rationaleIntensityDistribution,
+  Value<String?> rationaleKeyWorkouts,
+  Value<String?> rationaleRecoveryStrategy,
   Value<DateTime> createdAt,
   Value<DateTime> updatedAt,
 });
@@ -4659,6 +6932,9 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
       column: $table.currentBestTime,
       builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<String> get eventName => $composableBuilder(
       column: $table.eventName, builder: (column) => ColumnFilters(column));
 
@@ -4676,6 +6952,26 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
   ColumnFilters<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority,
+      builder: (column) => ColumnFilters(column));
+
   ColumnFilters<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => ColumnFilters(column));
 
@@ -4692,6 +6988,23 @@ class $$GoalsTableFilterComposer extends Composer<_$AppDatabase, $GoalsTable> {
 
   ColumnFilters<double> get recoveryScore => $composableBuilder(
       column: $table.recoveryScore, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy,
+      builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get createdAt => $composableBuilder(
       column: $table.createdAt, builder: (column) => ColumnFilters(column));
@@ -4776,6 +7089,9 @@ class $$GoalsTableOrderingComposer
       column: $table.currentBestTime,
       builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<String> get eventName => $composableBuilder(
       column: $table.eventName, builder: (column) => ColumnOrderings(column));
 
@@ -4792,6 +7108,26 @@ class $$GoalsTableOrderingComposer
 
   ColumnOrderings<DateTime> get endDate => $composableBuilder(
       column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority,
+      builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => ColumnOrderings(column));
@@ -4810,6 +7146,23 @@ class $$GoalsTableOrderingComposer
 
   ColumnOrderings<double> get recoveryScore => $composableBuilder(
       column: $table.recoveryScore,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy,
       builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get createdAt => $composableBuilder(
@@ -4872,6 +7225,9 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<int> get currentBestTime => $composableBuilder(
       column: $table.currentBestTime, builder: (column) => column);
 
+  GeneratedColumn<bool> get isFirstTime => $composableBuilder(
+      column: $table.isFirstTime, builder: (column) => column);
+
   GeneratedColumn<String> get eventName =>
       $composableBuilder(column: $table.eventName, builder: (column) => column);
 
@@ -4887,6 +7243,21 @@ class $$GoalsTableAnnotationComposer
   GeneratedColumn<DateTime> get endDate =>
       $composableBuilder(column: $table.endDate, builder: (column) => column);
 
+  GeneratedColumn<int> get initialTrainingFrequency => $composableBuilder(
+      column: $table.initialTrainingFrequency, builder: (column) => column);
+
+  GeneratedColumn<double> get initialWeeklyVolume => $composableBuilder(
+      column: $table.initialWeeklyVolume, builder: (column) => column);
+
+  GeneratedColumn<String> get runningPriority => $composableBuilder(
+      column: $table.runningPriority, builder: (column) => column);
+
+  GeneratedColumn<String> get strengthPriority => $composableBuilder(
+      column: $table.strengthPriority, builder: (column) => column);
+
+  GeneratedColumn<String> get mobilityPriority => $composableBuilder(
+      column: $table.mobilityPriority, builder: (column) => column);
+
   GeneratedColumn<double> get confidence => $composableBuilder(
       column: $table.confidence, builder: (column) => column);
 
@@ -4901,6 +7272,20 @@ class $$GoalsTableAnnotationComposer
 
   GeneratedColumn<double> get recoveryScore => $composableBuilder(
       column: $table.recoveryScore, builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleOverallApproach => $composableBuilder(
+      column: $table.rationaleOverallApproach, builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleIntensityDistribution =>
+      $composableBuilder(
+          column: $table.rationaleIntensityDistribution,
+          builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleKeyWorkouts => $composableBuilder(
+      column: $table.rationaleKeyWorkouts, builder: (column) => column);
+
+  GeneratedColumn<String> get rationaleRecoveryStrategy => $composableBuilder(
+      column: $table.rationaleRecoveryStrategy, builder: (column) => column);
 
   GeneratedColumn<DateTime> get createdAt =>
       $composableBuilder(column: $table.createdAt, builder: (column) => column);
@@ -4982,16 +7367,27 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<DateTime?> targetDate = const Value.absent(),
             Value<int?> targetTime = const Value.absent(),
             Value<int?> currentBestTime = const Value.absent(),
+            Value<bool?> isFirstTime = const Value.absent(),
             Value<String?> eventName = const Value.absent(),
             Value<DateTime?> eventDate = const Value.absent(),
             Value<int?> maintenanceFrequency = const Value.absent(),
             Value<int?> maintenanceDuration = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<int?> initialTrainingFrequency = const Value.absent(),
+            Value<double?> initialWeeklyVolume = const Value.absent(),
+            Value<String?> runningPriority = const Value.absent(),
+            Value<String?> strengthPriority = const Value.absent(),
+            Value<String?> mobilityPriority = const Value.absent(),
             Value<double> confidence = const Value.absent(),
             Value<double> adherenceScore = const Value.absent(),
             Value<double> qualityScore = const Value.absent(),
             Value<double> consistencyScore = const Value.absent(),
             Value<double> recoveryScore = const Value.absent(),
+            Value<String?> rationaleOverallApproach = const Value.absent(),
+            Value<String?> rationaleIntensityDistribution =
+                const Value.absent(),
+            Value<String?> rationaleKeyWorkouts = const Value.absent(),
+            Value<String?> rationaleRecoveryStrategy = const Value.absent(),
             Value<DateTime> createdAt = const Value.absent(),
             Value<DateTime> updatedAt = const Value.absent(),
           }) =>
@@ -5005,16 +7401,26 @@ class $$GoalsTableTableManager extends RootTableManager<
             targetDate: targetDate,
             targetTime: targetTime,
             currentBestTime: currentBestTime,
+            isFirstTime: isFirstTime,
             eventName: eventName,
             eventDate: eventDate,
             maintenanceFrequency: maintenanceFrequency,
             maintenanceDuration: maintenanceDuration,
             endDate: endDate,
+            initialTrainingFrequency: initialTrainingFrequency,
+            initialWeeklyVolume: initialWeeklyVolume,
+            runningPriority: runningPriority,
+            strengthPriority: strengthPriority,
+            mobilityPriority: mobilityPriority,
             confidence: confidence,
             adherenceScore: adherenceScore,
             qualityScore: qualityScore,
             consistencyScore: consistencyScore,
             recoveryScore: recoveryScore,
+            rationaleOverallApproach: rationaleOverallApproach,
+            rationaleIntensityDistribution: rationaleIntensityDistribution,
+            rationaleKeyWorkouts: rationaleKeyWorkouts,
+            rationaleRecoveryStrategy: rationaleRecoveryStrategy,
             createdAt: createdAt,
             updatedAt: updatedAt,
           ),
@@ -5028,16 +7434,27 @@ class $$GoalsTableTableManager extends RootTableManager<
             Value<DateTime?> targetDate = const Value.absent(),
             Value<int?> targetTime = const Value.absent(),
             Value<int?> currentBestTime = const Value.absent(),
+            Value<bool?> isFirstTime = const Value.absent(),
             Value<String?> eventName = const Value.absent(),
             Value<DateTime?> eventDate = const Value.absent(),
             Value<int?> maintenanceFrequency = const Value.absent(),
             Value<int?> maintenanceDuration = const Value.absent(),
             Value<DateTime?> endDate = const Value.absent(),
+            Value<int?> initialTrainingFrequency = const Value.absent(),
+            Value<double?> initialWeeklyVolume = const Value.absent(),
+            Value<String?> runningPriority = const Value.absent(),
+            Value<String?> strengthPriority = const Value.absent(),
+            Value<String?> mobilityPriority = const Value.absent(),
             Value<double> confidence = const Value.absent(),
             Value<double> adherenceScore = const Value.absent(),
             Value<double> qualityScore = const Value.absent(),
             Value<double> consistencyScore = const Value.absent(),
             Value<double> recoveryScore = const Value.absent(),
+            Value<String?> rationaleOverallApproach = const Value.absent(),
+            Value<String?> rationaleIntensityDistribution =
+                const Value.absent(),
+            Value<String?> rationaleKeyWorkouts = const Value.absent(),
+            Value<String?> rationaleRecoveryStrategy = const Value.absent(),
             required DateTime createdAt,
             required DateTime updatedAt,
           }) =>
@@ -5051,16 +7468,26 @@ class $$GoalsTableTableManager extends RootTableManager<
             targetDate: targetDate,
             targetTime: targetTime,
             currentBestTime: currentBestTime,
+            isFirstTime: isFirstTime,
             eventName: eventName,
             eventDate: eventDate,
             maintenanceFrequency: maintenanceFrequency,
             maintenanceDuration: maintenanceDuration,
             endDate: endDate,
+            initialTrainingFrequency: initialTrainingFrequency,
+            initialWeeklyVolume: initialWeeklyVolume,
+            runningPriority: runningPriority,
+            strengthPriority: strengthPriority,
+            mobilityPriority: mobilityPriority,
             confidence: confidence,
             adherenceScore: adherenceScore,
             qualityScore: qualityScore,
             consistencyScore: consistencyScore,
             recoveryScore: recoveryScore,
+            rationaleOverallApproach: rationaleOverallApproach,
+            rationaleIntensityDistribution: rationaleIntensityDistribution,
+            rationaleKeyWorkouts: rationaleKeyWorkouts,
+            rationaleRecoveryStrategy: rationaleRecoveryStrategy,
             createdAt: createdAt,
             updatedAt: updatedAt,
           ),
@@ -6469,8 +8896,8 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   required String id,
   required int userId,
   required int goalId,
-  Value<String?> mesocycleId,
-  Value<String?> microcycleId,
+  Value<String?> phaseId,
+  Value<String?> blockId,
   required DateTime scheduledDate,
   required String type,
   required String name,
@@ -6483,15 +8910,17 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   Value<double?> actualDistance,
   Value<double?> actualPace,
   Value<int?> rpe,
+  Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
+  Value<bool> isKey,
   Value<int> rowid,
 });
 typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<String> id,
   Value<int> userId,
   Value<int> goalId,
-  Value<String?> mesocycleId,
-  Value<String?> microcycleId,
+  Value<String?> phaseId,
+  Value<String?> blockId,
   Value<DateTime> scheduledDate,
   Value<String> type,
   Value<String> name,
@@ -6504,7 +8933,9 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<double?> actualDistance,
   Value<double?> actualPace,
   Value<int?> rpe,
+  Value<String?> syncedFrom,
   Value<DateTime?> completedAt,
+  Value<bool> isKey,
   Value<int> rowid,
 });
 
@@ -6526,11 +8957,11 @@ class $$WorkoutsTableFilterComposer
   ColumnFilters<int> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId, builder: (column) => ColumnFilters(column));
+  ColumnFilters<String> get blockId => $composableBuilder(
+      column: $table.blockId, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate, builder: (column) => ColumnFilters(column));
@@ -6572,8 +9003,14 @@ class $$WorkoutsTableFilterComposer
   ColumnFilters<int> get rpe => $composableBuilder(
       column: $table.rpe, builder: (column) => ColumnFilters(column));
 
+  ColumnFilters<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => ColumnFilters(column));
+
   ColumnFilters<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isKey => $composableBuilder(
+      column: $table.isKey, builder: (column) => ColumnFilters(column));
 }
 
 class $$WorkoutsTableOrderingComposer
@@ -6594,12 +9031,11 @@ class $$WorkoutsTableOrderingComposer
   ColumnOrderings<int> get goalId => $composableBuilder(
       column: $table.goalId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId,
-      builder: (column) => ColumnOrderings(column));
+  ColumnOrderings<String> get blockId => $composableBuilder(
+      column: $table.blockId, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate,
@@ -6642,8 +9078,14 @@ class $$WorkoutsTableOrderingComposer
   ColumnOrderings<int> get rpe => $composableBuilder(
       column: $table.rpe, builder: (column) => ColumnOrderings(column));
 
+  ColumnOrderings<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => ColumnOrderings(column));
+
   ColumnOrderings<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isKey => $composableBuilder(
+      column: $table.isKey, builder: (column) => ColumnOrderings(column));
 }
 
 class $$WorkoutsTableAnnotationComposer
@@ -6664,11 +9106,11 @@ class $$WorkoutsTableAnnotationComposer
   GeneratedColumn<int> get goalId =>
       $composableBuilder(column: $table.goalId, builder: (column) => column);
 
-  GeneratedColumn<String> get mesocycleId => $composableBuilder(
-      column: $table.mesocycleId, builder: (column) => column);
+  GeneratedColumn<String> get phaseId =>
+      $composableBuilder(column: $table.phaseId, builder: (column) => column);
 
-  GeneratedColumn<String> get microcycleId => $composableBuilder(
-      column: $table.microcycleId, builder: (column) => column);
+  GeneratedColumn<String> get blockId =>
+      $composableBuilder(column: $table.blockId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get scheduledDate => $composableBuilder(
       column: $table.scheduledDate, builder: (column) => column);
@@ -6706,8 +9148,14 @@ class $$WorkoutsTableAnnotationComposer
   GeneratedColumn<int> get rpe =>
       $composableBuilder(column: $table.rpe, builder: (column) => column);
 
+  GeneratedColumn<String> get syncedFrom => $composableBuilder(
+      column: $table.syncedFrom, builder: (column) => column);
+
   GeneratedColumn<DateTime> get completedAt => $composableBuilder(
       column: $table.completedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get isKey =>
+      $composableBuilder(column: $table.isKey, builder: (column) => column);
 }
 
 class $$WorkoutsTableTableManager extends RootTableManager<
@@ -6736,8 +9184,8 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<String> id = const Value.absent(),
             Value<int> userId = const Value.absent(),
             Value<int> goalId = const Value.absent(),
-            Value<String?> mesocycleId = const Value.absent(),
-            Value<String?> microcycleId = const Value.absent(),
+            Value<String?> phaseId = const Value.absent(),
+            Value<String?> blockId = const Value.absent(),
             Value<DateTime> scheduledDate = const Value.absent(),
             Value<String> type = const Value.absent(),
             Value<String> name = const Value.absent(),
@@ -6750,15 +9198,17 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<double?> actualDistance = const Value.absent(),
             Value<double?> actualPace = const Value.absent(),
             Value<int?> rpe = const Value.absent(),
+            Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
+            Value<bool> isKey = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               WorkoutsCompanion(
             id: id,
             userId: userId,
             goalId: goalId,
-            mesocycleId: mesocycleId,
-            microcycleId: microcycleId,
+            phaseId: phaseId,
+            blockId: blockId,
             scheduledDate: scheduledDate,
             type: type,
             name: name,
@@ -6771,15 +9221,17 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             actualDistance: actualDistance,
             actualPace: actualPace,
             rpe: rpe,
+            syncedFrom: syncedFrom,
             completedAt: completedAt,
+            isKey: isKey,
             rowid: rowid,
           ),
           createCompanionCallback: ({
             required String id,
             required int userId,
             required int goalId,
-            Value<String?> mesocycleId = const Value.absent(),
-            Value<String?> microcycleId = const Value.absent(),
+            Value<String?> phaseId = const Value.absent(),
+            Value<String?> blockId = const Value.absent(),
             required DateTime scheduledDate,
             required String type,
             required String name,
@@ -6792,15 +9244,17 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<double?> actualDistance = const Value.absent(),
             Value<double?> actualPace = const Value.absent(),
             Value<int?> rpe = const Value.absent(),
+            Value<String?> syncedFrom = const Value.absent(),
             Value<DateTime?> completedAt = const Value.absent(),
+            Value<bool> isKey = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
               WorkoutsCompanion.insert(
             id: id,
             userId: userId,
             goalId: goalId,
-            mesocycleId: mesocycleId,
-            microcycleId: microcycleId,
+            phaseId: phaseId,
+            blockId: blockId,
             scheduledDate: scheduledDate,
             type: type,
             name: name,
@@ -6813,7 +9267,9 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             actualDistance: actualDistance,
             actualPace: actualPace,
             rpe: rpe,
+            syncedFrom: syncedFrom,
             completedAt: completedAt,
+            isKey: isKey,
             rowid: rowid,
           ),
           withReferenceMapper: (p0) => p0
@@ -6835,6 +9291,836 @@ typedef $$WorkoutsTableProcessedTableManager = ProcessedTableManager<
     (WorkoutDTO, BaseReferences<_$AppDatabase, $WorkoutsTable, WorkoutDTO>),
     WorkoutDTO,
     PrefetchHooks Function()>;
+typedef $$PhasesTableCreateCompanionBuilder = PhasesCompanion Function({
+  required String id,
+  required int goalId,
+  required int phaseNumber,
+  required String phaseType,
+  required int durationWeeks,
+  required String targetWeeklyVolume,
+  required String targetWeeklyDuration,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<String?> description,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
+  Value<int> rowid,
+});
+typedef $$PhasesTableUpdateCompanionBuilder = PhasesCompanion Function({
+  Value<String> id,
+  Value<int> goalId,
+  Value<int> phaseNumber,
+  Value<String> phaseType,
+  Value<int> durationWeeks,
+  Value<String> targetWeeklyVolume,
+  Value<String> targetWeeklyDuration,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<String?> description,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
+  Value<int> rowid,
+});
+
+class $$PhasesTableFilterComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get goalId => $composableBuilder(
+      column: $table.goalId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get phaseType => $composableBuilder(
+      column: $table.phaseType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $$PhasesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get goalId => $composableBuilder(
+      column: $table.goalId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get phaseType => $composableBuilder(
+      column: $table.phaseType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$PhasesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PhasesTable> {
+  $$PhasesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<int> get goalId =>
+      $composableBuilder(column: $table.goalId, builder: (column) => column);
+
+  GeneratedColumn<int> get phaseNumber => $composableBuilder(
+      column: $table.phaseNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get phaseType =>
+      $composableBuilder(column: $table.phaseType, builder: (column) => column);
+
+  GeneratedColumn<int> get durationWeeks => $composableBuilder(
+      column: $table.durationWeeks, builder: (column) => column);
+
+  GeneratedColumn<String> get targetWeeklyVolume => $composableBuilder(
+      column: $table.targetWeeklyVolume, builder: (column) => column);
+
+  GeneratedColumn<String> get targetWeeklyDuration => $composableBuilder(
+      column: $table.targetWeeklyDuration, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<String> get description => $composableBuilder(
+      column: $table.description, builder: (column) => column);
+
+  GeneratedColumn<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance, builder: (column) => column);
+
+  GeneratedColumn<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration, builder: (column) => column);
+}
+
+class $$PhasesTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $PhasesTable,
+    PhaseDTO,
+    $$PhasesTableFilterComposer,
+    $$PhasesTableOrderingComposer,
+    $$PhasesTableAnnotationComposer,
+    $$PhasesTableCreateCompanionBuilder,
+    $$PhasesTableUpdateCompanionBuilder,
+    (PhaseDTO, BaseReferences<_$AppDatabase, $PhasesTable, PhaseDTO>),
+    PhaseDTO,
+    PrefetchHooks Function()> {
+  $$PhasesTableTableManager(_$AppDatabase db, $PhasesTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PhasesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PhasesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PhasesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<int> goalId = const Value.absent(),
+            Value<int> phaseNumber = const Value.absent(),
+            Value<String> phaseType = const Value.absent(),
+            Value<int> durationWeeks = const Value.absent(),
+            Value<String> targetWeeklyVolume = const Value.absent(),
+            Value<String> targetWeeklyDuration = const Value.absent(),
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhasesCompanion(
+            id: id,
+            goalId: goalId,
+            phaseNumber: phaseNumber,
+            phaseType: phaseType,
+            durationWeeks: durationWeeks,
+            targetWeeklyVolume: targetWeeklyVolume,
+            targetWeeklyDuration: targetWeeklyDuration,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required int goalId,
+            required int phaseNumber,
+            required String phaseType,
+            required int durationWeeks,
+            required String targetWeeklyVolume,
+            required String targetWeeklyDuration,
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<String?> description = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              PhasesCompanion.insert(
+            id: id,
+            goalId: goalId,
+            phaseNumber: phaseNumber,
+            phaseType: phaseType,
+            durationWeeks: durationWeeks,
+            targetWeeklyVolume: targetWeeklyVolume,
+            targetWeeklyDuration: targetWeeklyDuration,
+            startDate: startDate,
+            endDate: endDate,
+            description: description,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$PhasesTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $PhasesTable,
+    PhaseDTO,
+    $$PhasesTableFilterComposer,
+    $$PhasesTableOrderingComposer,
+    $$PhasesTableAnnotationComposer,
+    $$PhasesTableCreateCompanionBuilder,
+    $$PhasesTableUpdateCompanionBuilder,
+    (PhaseDTO, BaseReferences<_$AppDatabase, $PhasesTable, PhaseDTO>),
+    PhaseDTO,
+    PrefetchHooks Function()>;
+typedef $$TrainingBlocksTableCreateCompanionBuilder = TrainingBlocksCompanion
+    Function({
+  required String id,
+  required String phaseId,
+  required int blockNumber,
+  required String intent,
+  required int durationDays,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
+  Value<int> rowid,
+});
+typedef $$TrainingBlocksTableUpdateCompanionBuilder = TrainingBlocksCompanion
+    Function({
+  Value<String> id,
+  Value<String> phaseId,
+  Value<int> blockNumber,
+  Value<String> intent,
+  Value<int> durationDays,
+  Value<DateTime?> startDate,
+  Value<DateTime?> endDate,
+  Value<double> actualDistance,
+  Value<int> actualDuration,
+  Value<int> rowid,
+});
+
+class $$TrainingBlocksTableFilterComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get intent => $composableBuilder(
+      column: $table.intent, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get durationDays => $composableBuilder(
+      column: $table.durationDays, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnFilters(column));
+}
+
+class $$TrainingBlocksTableOrderingComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get phaseId => $composableBuilder(
+      column: $table.phaseId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get intent => $composableBuilder(
+      column: $table.intent, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get durationDays => $composableBuilder(
+      column: $table.durationDays,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration,
+      builder: (column) => ColumnOrderings(column));
+}
+
+class $$TrainingBlocksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TrainingBlocksTable> {
+  $$TrainingBlocksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get phaseId =>
+      $composableBuilder(column: $table.phaseId, builder: (column) => column);
+
+  GeneratedColumn<int> get blockNumber => $composableBuilder(
+      column: $table.blockNumber, builder: (column) => column);
+
+  GeneratedColumn<String> get intent =>
+      $composableBuilder(column: $table.intent, builder: (column) => column);
+
+  GeneratedColumn<int> get durationDays => $composableBuilder(
+      column: $table.durationDays, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<double> get actualDistance => $composableBuilder(
+      column: $table.actualDistance, builder: (column) => column);
+
+  GeneratedColumn<int> get actualDuration => $composableBuilder(
+      column: $table.actualDuration, builder: (column) => column);
+}
+
+class $$TrainingBlocksTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TrainingBlocksTable,
+    TrainingBlockDTO,
+    $$TrainingBlocksTableFilterComposer,
+    $$TrainingBlocksTableOrderingComposer,
+    $$TrainingBlocksTableAnnotationComposer,
+    $$TrainingBlocksTableCreateCompanionBuilder,
+    $$TrainingBlocksTableUpdateCompanionBuilder,
+    (
+      TrainingBlockDTO,
+      BaseReferences<_$AppDatabase, $TrainingBlocksTable, TrainingBlockDTO>
+    ),
+    TrainingBlockDTO,
+    PrefetchHooks Function()> {
+  $$TrainingBlocksTableTableManager(
+      _$AppDatabase db, $TrainingBlocksTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TrainingBlocksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TrainingBlocksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TrainingBlocksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> phaseId = const Value.absent(),
+            Value<int> blockNumber = const Value.absent(),
+            Value<String> intent = const Value.absent(),
+            Value<int> durationDays = const Value.absent(),
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TrainingBlocksCompanion(
+            id: id,
+            phaseId: phaseId,
+            blockNumber: blockNumber,
+            intent: intent,
+            durationDays: durationDays,
+            startDate: startDate,
+            endDate: endDate,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String phaseId,
+            required int blockNumber,
+            required String intent,
+            required int durationDays,
+            Value<DateTime?> startDate = const Value.absent(),
+            Value<DateTime?> endDate = const Value.absent(),
+            Value<double> actualDistance = const Value.absent(),
+            Value<int> actualDuration = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              TrainingBlocksCompanion.insert(
+            id: id,
+            phaseId: phaseId,
+            blockNumber: blockNumber,
+            intent: intent,
+            durationDays: durationDays,
+            startDate: startDate,
+            endDate: endDate,
+            actualDistance: actualDistance,
+            actualDuration: actualDuration,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TrainingBlocksTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TrainingBlocksTable,
+    TrainingBlockDTO,
+    $$TrainingBlocksTableFilterComposer,
+    $$TrainingBlocksTableOrderingComposer,
+    $$TrainingBlocksTableAnnotationComposer,
+    $$TrainingBlocksTableCreateCompanionBuilder,
+    $$TrainingBlocksTableUpdateCompanionBuilder,
+    (
+      TrainingBlockDTO,
+      BaseReferences<_$AppDatabase, $TrainingBlocksTable, TrainingBlockDTO>
+    ),
+    TrainingBlockDTO,
+    PrefetchHooks Function()>;
+typedef $$BiomarkersTableCreateCompanionBuilder = BiomarkersCompanion Function({
+  Value<int> id,
+  required int userId,
+  required DateTime date,
+  Value<int?> sleepDuration,
+  Value<double?> hrv,
+  Value<int?> rhr,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+typedef $$BiomarkersTableUpdateCompanionBuilder = BiomarkersCompanion Function({
+  Value<int> id,
+  Value<int> userId,
+  Value<DateTime> date,
+  Value<int?> sleepDuration,
+  Value<double?> hrv,
+  Value<int?> rhr,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+});
+
+final class $$BiomarkersTableReferences
+    extends BaseReferences<_$AppDatabase, $BiomarkersTable, Biomarker> {
+  $$BiomarkersTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $UsersTable _userIdTable(_$AppDatabase db) => db.users
+      .createAlias($_aliasNameGenerator(db.biomarkers.userId, db.users.id));
+
+  $$UsersTableProcessedTableManager get userId {
+    final $_column = $_itemColumn<int>('user_id')!;
+
+    final manager = $$UsersTableTableManager($_db, $_db.users)
+        .filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+        manager.$state.copyWith(prefetchedData: [item]));
+  }
+}
+
+class $$BiomarkersTableFilterComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<double> get hrv => $composableBuilder(
+      column: $table.hrv, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<int> get rhr => $composableBuilder(
+      column: $table.rhr, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+
+  $$UsersTableFilterComposer get userId {
+    final $$UsersTableFilterComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableFilterComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableOrderingComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get date => $composableBuilder(
+      column: $table.date, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration,
+      builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<double> get hrv => $composableBuilder(
+      column: $table.hrv, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<int> get rhr => $composableBuilder(
+      column: $table.rhr, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+
+  $$UsersTableOrderingComposer get userId {
+    final $$UsersTableOrderingComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableOrderingComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableAnnotationComposer
+    extends Composer<_$AppDatabase, $BiomarkersTable> {
+  $$BiomarkersTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get date =>
+      $composableBuilder(column: $table.date, builder: (column) => column);
+
+  GeneratedColumn<int> get sleepDuration => $composableBuilder(
+      column: $table.sleepDuration, builder: (column) => column);
+
+  GeneratedColumn<double> get hrv =>
+      $composableBuilder(column: $table.hrv, builder: (column) => column);
+
+  GeneratedColumn<int> get rhr =>
+      $composableBuilder(column: $table.rhr, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  $$UsersTableAnnotationComposer get userId {
+    final $$UsersTableAnnotationComposer composer = $composerBuilder(
+        composer: this,
+        getCurrentColumn: (t) => t.userId,
+        referencedTable: $db.users,
+        getReferencedColumn: (t) => t.id,
+        builder: (joinBuilder,
+                {$addJoinBuilderToRootComposer,
+                $removeJoinBuilderFromRootComposer}) =>
+            $$UsersTableAnnotationComposer(
+              $db: $db,
+              $table: $db.users,
+              $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+              joinBuilder: joinBuilder,
+              $removeJoinBuilderFromRootComposer:
+                  $removeJoinBuilderFromRootComposer,
+            ));
+    return composer;
+  }
+}
+
+class $$BiomarkersTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $BiomarkersTable,
+    Biomarker,
+    $$BiomarkersTableFilterComposer,
+    $$BiomarkersTableOrderingComposer,
+    $$BiomarkersTableAnnotationComposer,
+    $$BiomarkersTableCreateCompanionBuilder,
+    $$BiomarkersTableUpdateCompanionBuilder,
+    (Biomarker, $$BiomarkersTableReferences),
+    Biomarker,
+    PrefetchHooks Function({bool userId})> {
+  $$BiomarkersTableTableManager(_$AppDatabase db, $BiomarkersTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$BiomarkersTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$BiomarkersTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$BiomarkersTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<int> userId = const Value.absent(),
+            Value<DateTime> date = const Value.absent(),
+            Value<int?> sleepDuration = const Value.absent(),
+            Value<double?> hrv = const Value.absent(),
+            Value<int?> rhr = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              BiomarkersCompanion(
+            id: id,
+            userId: userId,
+            date: date,
+            sleepDuration: sleepDuration,
+            hrv: hrv,
+            rhr: rhr,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required int userId,
+            required DateTime date,
+            Value<int?> sleepDuration = const Value.absent(),
+            Value<double?> hrv = const Value.absent(),
+            Value<int?> rhr = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+          }) =>
+              BiomarkersCompanion.insert(
+            id: id,
+            userId: userId,
+            date: date,
+            sleepDuration: sleepDuration,
+            hrv: hrv,
+            rhr: rhr,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (
+                    e.readTable(table),
+                    $$BiomarkersTableReferences(db, table, e)
+                  ))
+              .toList(),
+          prefetchHooksCallback: ({userId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins: <
+                  T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic>>(state) {
+                if (userId) {
+                  state = state.withJoin(
+                    currentTable: table,
+                    currentColumn: table.userId,
+                    referencedTable:
+                        $$BiomarkersTableReferences._userIdTable(db),
+                    referencedColumn:
+                        $$BiomarkersTableReferences._userIdTable(db).id,
+                  ) as T;
+                }
+
+                return state;
+              },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ));
+}
+
+typedef $$BiomarkersTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $BiomarkersTable,
+    Biomarker,
+    $$BiomarkersTableFilterComposer,
+    $$BiomarkersTableOrderingComposer,
+    $$BiomarkersTableAnnotationComposer,
+    $$BiomarkersTableCreateCompanionBuilder,
+    $$BiomarkersTableUpdateCompanionBuilder,
+    (Biomarker, $$BiomarkersTableReferences),
+    Biomarker,
+    PrefetchHooks Function({bool userId})>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -6853,4 +10139,10 @@ class $AppDatabaseManager {
       $$MediumTermContextTableTableManager(_db, _db.mediumTermContext);
   $$WorkoutsTableTableManager get workouts =>
       $$WorkoutsTableTableManager(_db, _db.workouts);
+  $$PhasesTableTableManager get phases =>
+      $$PhasesTableTableManager(_db, _db.phases);
+  $$TrainingBlocksTableTableManager get trainingBlocks =>
+      $$TrainingBlocksTableTableManager(_db, _db.trainingBlocks);
+  $$BiomarkersTableTableManager get biomarkers =>
+      $$BiomarkersTableTableManager(_db, _db.biomarkers);
 }

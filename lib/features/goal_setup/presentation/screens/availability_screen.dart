@@ -39,7 +39,7 @@ class AvailabilityScreen extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 4,
+                  currentStep: 5,
                   label: 'Availability',
                 ),
                 const SizedBox(height: 24),
@@ -95,7 +95,7 @@ class AvailabilityScreen extends ConsumerWidget {
                     child: Text(
                       '⚠ Only 1 training day available. We recommend at least 2-3.',
                       style: AppTextStyles.bodyMedium
-                          .copyWith(color: AppColors.accentOrange),
+                          .copyWith(color: AppColors.accentBlue),
                       textAlign: TextAlign.center,
                     ),
                   ),

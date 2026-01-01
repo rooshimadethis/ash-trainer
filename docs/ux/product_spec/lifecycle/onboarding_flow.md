@@ -4,15 +4,20 @@ The initial "interview" where Ash learns about the user to generate Week 1.
 
 ## 1. The Interview
 *   **Goal**: "What are we training for?" (Select Goal Type)
-*   **History**: "How much have you run in the last month?" (Determines Base Volume)
+*   **Goal Details**: Specific parameters based on goal type (distance, target time, event name, etc.)
+*   **Training Context**: "How are you training?" (Training frequency, weekly volume, pillar priorities)
+*   **Personal Details**: Age, gender, weight, height
 *   **Availability**: "Which days can you train?" (Frequency)
 *   **Constraint Check**: "Any injuries or time limits?"
+*   **Health Permissions**: Connect to health data for automatic tracking
 
 ## 2. Plan Generation Logic
-*   **Input**: Activity Level (Example: "Casually Active")
-*   **Output**: Starting Volume (Example: 20km/week)
+*   **Input**: Training Frequency & Weekly Volume (from Training Context)
+*   **Output**: Starting Volume and intensity distribution (Pyramidal vs. Polarized)
 *   **Input**: Goal Type (Example: "Time Performance")
-*   **Output**: Intensity Distribution (Polarized 80/20)
+*   **Output**: Phase structure and workout types
+*   **Input**: Pillar Priorities (Running/Strength/Mobility)
+*   **Output**: Coordinated workout scheduling across pillars
 
 See [goal_types.md](../training/goal_types.md) for detailed mapping of Goal Type to Plan Structure.
 

@@ -15,6 +15,8 @@ class User with _$User {
     double? height, // Always stored in CM
     @Default('cm')
     String preferredHeightUnit, // UI display preference: 'cm' or 'in'
+    @Default('km')
+    String preferredDistanceUnit, // UI display preference: 'km' or 'mi'
     @Default([]) List<String> availableDays,
     String? constraints,
     @Default(false) bool healthPermissionsGranted,

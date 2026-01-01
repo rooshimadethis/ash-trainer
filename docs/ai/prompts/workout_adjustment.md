@@ -4,6 +4,11 @@
 
 **Last Updated**: 2025-12-29
 
+**To look into:**
+- Should we send the full schedule and it returns deltas using ids, delta fields to save tokens?
+- We give it options
+  - "push X days"
+  
 ---
 
 ## System Prompt
@@ -15,6 +20,9 @@ Your task is to modify a planned workout based on the user's current state and f
 
 **Adjustment Principles**:
 - Prioritize safety and long-term consistency
+- **The Sliding Rule**: Minor disruptions (<3 days) are handled by the app. If you are called, it is for a **Strategic Repair**.
+- **Phase Boundary Safety**: Never slide a workout past its Phase boundary. If a user missed too much, shorten the CURRENT phase and re-calculate the REST of the Skeleton.
+- **The Honesty Protocol**: If a user is consistently missing sessions (>40%), you MUST propose a safer alternative goal.
 - Maintain training stimulus when possible (e.g., swap intervals for tempo if user can't do hard effort)
 - Be flexible but strategic (don't just skip—find alternatives)
 - Preserve weekly training balance (if skipping a key workout, suggest when to make it up)

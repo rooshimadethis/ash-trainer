@@ -11,13 +11,17 @@
 
 ---
 
-## Entry Points
-- App first launch (new user)
-- Account creation complete
+### User Flow
 
-## User Flow
+#### Startup Routine (Routing Strategy)
+Before any screen is shown, the app checks the user's state:
+1. **No User in DB** → Show **Step 1: Welcome Screen**.
+2. **User exists but no active Goal** → Skip Step 1, go straight to **Step 2: Goal Type Selection**.
+3. **User + Active Goal exists** → Skip onboarding, go to **Home Screen**.
 
-### Step 1: Welcome Screen
+---
+
+### Step 1: Welcome Screen (Onboarding Feature)
 **User Sees**:
 - Ash branding and logo
 - Welcome message: "Hey there! I'm Ash, your AI running coach 👋"
@@ -28,16 +32,7 @@
 - "Let's do this!" button
 
 **User Can**:
-- Tap "Get Started" → Goes to Step 2
-
-**Data Displayed**:
-- Static content (no user data yet)
-
-**Data Collected**:
-- None
-
-**Edge Cases**:
-- None (static screen)
+- Tap "Let's do this!" → Goes to Step 2
 
 ---
 
@@ -202,7 +197,50 @@
 
 ---
 
-### Step 4: Personal Details Screen
+### Step 4: Training Context Screen
+*(Shown after Goal Details for all goal types)*
+
+**User Sees**:
+- Question: "How are you training?"
+- Helper text: "Help me understand your current load and priorities."
+- Two sections:
+  - **TRAINING HISTORY**:
+    - Days per week (avg) - numeric input
+    - Weekly Volume - numeric input with km/mi toggle
+  - **PILLAR PRIORITIES (MAX 1 HIGH)**:
+    - Running - Low/Medium/High selector
+    - Strength - Low/Medium/High selector
+    - Mobility - Low/Medium/High selector
+- Progress indicator (Step 4 of 7)
+
+**User Can**:
+- Enter training frequency (days per week)
+- Enter current weekly volume
+- Toggle between km/mi units for volume
+- Select priority level for each pillar (Running, Strength, Mobility)
+- Only one pillar can be set to "High" - selecting a new "High" automatically downgrades the previous one to "Medium"
+- Tap "Next" → Goes to Step 5 (Personal Details)
+- Tap "Back" → Goes to Step 3 (Goal Details)
+
+**Data Displayed**:
+- Previously entered values if navigating back
+
+**Data Collected**:
+- `Goal.initialTrainingFrequency` (number, days per week)
+- `Goal.initialWeeklyVolume` (number, always stored in KM)
+- `Goal.runningPriority` (enum: Low, Medium, High)
+- `Goal.strengthPriority` (enum: Low, Medium, High)
+- `Goal.mobilityPriority` (enum: Low, Medium, High)
+- `User.preferredDistanceUnit` (enum: km, mi) - UI display preference only
+
+**Edge Cases**:
+- Empty inputs: Treated as null/not provided
+- Multiple "High" priorities: UI enforces only one High at a time
+- Unit conversion: Miles are converted to kilometers for storage (1 mi = 1.60934 km)
+
+---
+
+### Step 5: Personal Details Screen
 **User Sees**:
 - Question: "A bit about you..."
 - Age input (numeric)
@@ -211,15 +249,15 @@
 - Height input (numeric) with units toggle (cm/in)
   - If 'cm' selected: Single input field
   - If 'in' selected: Split input fields for Feet and Inches
-- Progress indicator (Step 3 of 5)
+- Progress indicator (Step 5 of 7)
 
 **User Can**:
 - Enter age
 - Select gender
 - Enter weight/toggle units
 - Enter height/toggle units
-- Tap "Next" → Goes to Step 5 (Availability)
-- Tap "Back" → Goes to Step 3
+- Tap "Next" → Goes to Step 6 (Availability)
+- Tap "Back" → Goes to Step 4 (Training Context)
 
 **Data Displayed**:
 - None
@@ -239,17 +277,17 @@
 
 ---
 
-### Step 5: Availability Screen
+### Step 6: Availability Screen
 **User Sees**:
 - Question: "When are you NOT available to train?"
 - Weekly calendar with selectable days (Mon-Sun)
 - Helper text: "Tap any days that are off-limits (work, family time, Netflix binges... we get it)"
-- Progress indicator (Step 4 of 5)
+- Progress indicator (Step 6 of 7)
 
 **User Can**:
 - Tap days to select/deselect unavailable days → Updates selection
-- Tap "Next" → Goes to Step 6 (if at least 2 days remain available)
-- Tap "Back" → Goes to Step 4
+- Tap "Next" → Goes to Step 7 (if at least 2 days remain available)
+- Tap "Back" → Goes to Step 5
 
 **Data Displayed**:
 - None
@@ -265,18 +303,18 @@
 
 ---
 
-### Step 6: Constraints Check Screen
+### Step 7: Constraints Check Screen
 **User Sees**:
 - Question: "Anything I should know about? (Injuries, time limits, etc.)"
 - Text input field (optional)
 - Examples: "Knee gets cranky after 5K", "Max 30 min per session", "All good!"
 - Helper text: "This helps me keep you healthy and realistic"
-- Progress indicator (Step 5 of 5)
+- Progress indicator (Step 7 of 7)
 
 **User Can**:
 - Type constraints (optional)
-- Tap "Next" → Goes to Step 7 (Health Permissions)
-- Tap "Back" → Goes to Step 5
+- Tap "Next" → Goes to Step 8 (Health Permissions)
+- Tap "Back" → Goes to Step 6
 
 **Data Displayed**:
 - None
@@ -290,7 +328,7 @@
 
 ---
 
-### Step 7: Health Permissions Screen
+### Step 8: Health Permissions Screen
 **User Sees**:
 - Explanation: "Let's connect to your health data so I can track your runs automatically!"
 - Benefits list:
@@ -303,9 +341,9 @@
 
 **User Can**:
 - Tap "Grant Permissions" → Opens system health permissions dialog
-- After granting → Goes to Step 8
-- Tap "Skip for now" → Goes to Step 8 (manual logging only)
-- Tap "Back" → Goes to Step 6 (Constraints Check Screen)
+- After granting → Goes to Step 9
+- Tap "Skip for now" → Goes to Step 9 (manual logging only)
+- Tap "Back" → Goes to Step 7 (Constraints Check Screen)
 
 **Data Displayed**:
 - None
@@ -315,11 +353,11 @@
 
 **Edge Cases**:
 - User denies permissions: Show "No problem! You can enable this later in Settings"
-- Permissions already granted: Skip this screen, go directly to Step 8
+- Permissions already granted: Skip this screen, go directly to Step 9
 
 ---
 
-### Step 8: Plan Generation Screen (Loading)
+### Step 9: Plan Generation Screen (Loading)
 **User Sees**:
 - Loading animation
 - Message: "Hang tight! I'm building your custom plan..."
@@ -350,13 +388,13 @@
   - `Goal.type` + goal-specific details
   - **Special instruction**: "Create a benchmark easy run (20 min, Zone 2) as the first workout for calibration"
 - Generate Week 1 training plan
-- Create initial `Microcycle` and `Workouts`
+- Create initial `TrainingBlock` and `Workouts`
 - **First workout must be**: Easy Run, 20 minutes, Zone 2, purpose: "Establish baseline"
 - Calculate initial `Goal.confidence` (default: 85%)
 
 ---
 
-### Step 9: Plan Review Screen
+### Step 10: Plan Review Screen
 **User Sees**:
 - Success message: "Your plan is ready! Here's Week 1 🎉"
 - Weekly calendar view showing 7 days with workout badges:
@@ -372,7 +410,7 @@
 **User Can**:
 - Scroll through week → View all workouts
 - Tap a workout → See workout details (modal)
-- Tap "Looks good!" → Goes to Step 10
+- Tap "Looks good!" → Goes to Step 11
 - Tap "Adjust plan" → Opens adjustment options (future feature, for now shows "Coming soon")
 - Tap "Back" → Goes to Step 9 (Plan Generation screen)
 
@@ -389,7 +427,7 @@
 
 ---
 
-### Step 10: First Workout Prompt Screen
+### Step 11: First Workout Prompt Screen
 **User Sees**:
 - Message: "One more thing - let's do a quick baseline run!"
 - Explanation: "This helps me learn your pace and how you feel at different intensities. Think of it as our 'getting to know you' run."
@@ -402,7 +440,7 @@
 - "I'll do this later" option
 
 **User Can**:
-- Tap "Start now" → Goes to Step 11 (workout tracking)
+- Tap "Start now" → Goes to Step 12 (workout tracking)
 - Tap "I'll do this later" → Goes to Exit (Home page)
 
 **Data Displayed**:
@@ -416,7 +454,7 @@
 
 ---
 
-### Step 11: Workout Tracking Screen
+### Step 12: Workout Tracking Screen
 *(This is a simplified version for onboarding - full workout tracking is Journey #3)*
 
 **User Sees**:
@@ -427,7 +465,7 @@
 
 **User Can**:
 - Wait for workout completion
-- Tap "Finish Workout" → Goes to Step 12
+- Tap "Finish Workout" → Goes to Step 13
 - Tap "Cancel" → Confirms cancellation → Goes to Exit
 
 **Data Displayed**:
@@ -443,7 +481,7 @@
 
 ---
 
-### Step 12: Post-Workout Feedback Screen
+### Step 13: Post-Workout Feedback Screen
 **User Sees**:
 - Congratulations message: "Nice work! That's one in the books 🎉"
 - Workout summary:
@@ -518,7 +556,7 @@
 - `preferredWeightUnit` (enum: kg, lb) - UI display preference only
 - `height` (number, always stored in CM)
 - `preferredHeightUnit` (enum: cm, in) - UI display preference only
-- `trainingHistory` (deprecated - will be inferred from baseline workout performance)
+- `preferredDistanceUnit` (enum: km, mi) - UI display preference only
 - `availableDays` (array of strings: ["monday", "tuesday", ...])
 - `constraints` (text, nullable)
 - `healthPermissionsGranted` (boolean)
@@ -531,9 +569,15 @@
 - `eventName` (text, nullable)
 - `eventDate` (date, nullable)
 - `currentBestTime` (duration, nullable)
+- `isFirstTime` (boolean, nullable) - For distance milestone goals
 - `maintenanceFrequency` (number, nullable)
 - `maintenanceDuration` (number, nullable)
 - `confidence` (number, 0-100)
+- `initialTrainingFrequency` (number, nullable) - Days per week from Training Context
+- `initialWeeklyVolume` (number, nullable) - Always stored in KM
+- `runningPriority` (text, nullable) - "Low", "Medium", or "High"
+- `strengthPriority` (text, nullable) - "Low", "Medium", or "High"
+- `mobilityPriority` (text, nullable) - "Low", "Medium", or "High"
 
 ### Workout Table
 - `scheduledDate` (date)
@@ -573,4 +617,4 @@
 
 ---
 
-**Last Updated**: 2025-12-29 (Reordered flow & added demographics)
+**Last Updated**: 2025-12-30 (Added Training Context screen with pillar priorities)

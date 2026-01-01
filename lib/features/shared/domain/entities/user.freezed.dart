@@ -31,6 +31,8 @@ mixin _$User {
       throw _privateConstructorUsedError; // Always stored in CM
   String get preferredHeightUnit =>
       throw _privateConstructorUsedError; // UI display preference: 'cm' or 'in'
+  String get preferredDistanceUnit =>
+      throw _privateConstructorUsedError; // UI display preference: 'km' or 'mi'
   List<String> get availableDays => throw _privateConstructorUsedError;
   String? get constraints => throw _privateConstructorUsedError;
   bool get healthPermissionsGranted => throw _privateConstructorUsedError;
@@ -59,6 +61,7 @@ abstract class $UserCopyWith<$Res> {
       String preferredWeightUnit,
       double? height,
       String preferredHeightUnit,
+      String preferredDistanceUnit,
       List<String> availableDays,
       String? constraints,
       bool healthPermissionsGranted,
@@ -88,6 +91,7 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
     Object? preferredWeightUnit = null,
     Object? height = freezed,
     Object? preferredHeightUnit = null,
+    Object? preferredDistanceUnit = null,
     Object? availableDays = null,
     Object? constraints = freezed,
     Object? healthPermissionsGranted = null,
@@ -122,6 +126,10 @@ class _$UserCopyWithImpl<$Res, $Val extends User>
       preferredHeightUnit: null == preferredHeightUnit
           ? _value.preferredHeightUnit
           : preferredHeightUnit // ignore: cast_nullable_to_non_nullable
+              as String,
+      preferredDistanceUnit: null == preferredDistanceUnit
+          ? _value.preferredDistanceUnit
+          : preferredDistanceUnit // ignore: cast_nullable_to_non_nullable
               as String,
       availableDays: null == availableDays
           ? _value.availableDays
@@ -162,6 +170,7 @@ abstract class _$$UserImplCopyWith<$Res> implements $UserCopyWith<$Res> {
       String preferredWeightUnit,
       double? height,
       String preferredHeightUnit,
+      String preferredDistanceUnit,
       List<String> availableDays,
       String? constraints,
       bool healthPermissionsGranted,
@@ -188,6 +197,7 @@ class __$$UserImplCopyWithImpl<$Res>
     Object? preferredWeightUnit = null,
     Object? height = freezed,
     Object? preferredHeightUnit = null,
+    Object? preferredDistanceUnit = null,
     Object? availableDays = null,
     Object? constraints = freezed,
     Object? healthPermissionsGranted = null,
@@ -222,6 +232,10 @@ class __$$UserImplCopyWithImpl<$Res>
       preferredHeightUnit: null == preferredHeightUnit
           ? _value.preferredHeightUnit
           : preferredHeightUnit // ignore: cast_nullable_to_non_nullable
+              as String,
+      preferredDistanceUnit: null == preferredDistanceUnit
+          ? _value.preferredDistanceUnit
+          : preferredDistanceUnit // ignore: cast_nullable_to_non_nullable
               as String,
       availableDays: null == availableDays
           ? _value._availableDays
@@ -258,6 +272,7 @@ class _$UserImpl implements _User {
       this.preferredWeightUnit = 'kg',
       this.height,
       this.preferredHeightUnit = 'cm',
+      this.preferredDistanceUnit = 'km',
       final List<String> availableDays = const [],
       this.constraints,
       this.healthPermissionsGranted = false,
@@ -288,8 +303,12 @@ class _$UserImpl implements _User {
   @JsonKey()
   final String preferredHeightUnit;
 // UI display preference: 'cm' or 'in'
+  @override
+  @JsonKey()
+  final String preferredDistanceUnit;
+// UI display preference: 'km' or 'mi'
   final List<String> _availableDays;
-// UI display preference: 'cm' or 'in'
+// UI display preference: 'km' or 'mi'
   @override
   @JsonKey()
   List<String> get availableDays {
@@ -310,7 +329,7 @@ class _$UserImpl implements _User {
 
   @override
   String toString() {
-    return 'User(id: $id, age: $age, gender: $gender, weight: $weight, preferredWeightUnit: $preferredWeightUnit, height: $height, preferredHeightUnit: $preferredHeightUnit, availableDays: $availableDays, constraints: $constraints, healthPermissionsGranted: $healthPermissionsGranted, createdAt: $createdAt, updatedAt: $updatedAt)';
+    return 'User(id: $id, age: $age, gender: $gender, weight: $weight, preferredWeightUnit: $preferredWeightUnit, height: $height, preferredHeightUnit: $preferredHeightUnit, preferredDistanceUnit: $preferredDistanceUnit, availableDays: $availableDays, constraints: $constraints, healthPermissionsGranted: $healthPermissionsGranted, createdAt: $createdAt, updatedAt: $updatedAt)';
   }
 
   @override
@@ -327,6 +346,8 @@ class _$UserImpl implements _User {
             (identical(other.height, height) || other.height == height) &&
             (identical(other.preferredHeightUnit, preferredHeightUnit) ||
                 other.preferredHeightUnit == preferredHeightUnit) &&
+            (identical(other.preferredDistanceUnit, preferredDistanceUnit) ||
+                other.preferredDistanceUnit == preferredDistanceUnit) &&
             const DeepCollectionEquality()
                 .equals(other._availableDays, _availableDays) &&
             (identical(other.constraints, constraints) ||
@@ -351,6 +372,7 @@ class _$UserImpl implements _User {
       preferredWeightUnit,
       height,
       preferredHeightUnit,
+      preferredDistanceUnit,
       const DeepCollectionEquality().hash(_availableDays),
       constraints,
       healthPermissionsGranted,
@@ -382,6 +404,7 @@ abstract class _User implements User {
       final String preferredWeightUnit,
       final double? height,
       final String preferredHeightUnit,
+      final String preferredDistanceUnit,
       final List<String> availableDays,
       final String? constraints,
       final bool healthPermissionsGranted,
@@ -404,6 +427,8 @@ abstract class _User implements User {
   double? get height; // Always stored in CM
   @override
   String get preferredHeightUnit; // UI display preference: 'cm' or 'in'
+  @override
+  String get preferredDistanceUnit; // UI display preference: 'km' or 'mi'
   @override
   List<String> get availableDays;
   @override

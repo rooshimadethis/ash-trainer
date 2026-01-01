@@ -141,7 +141,7 @@ These journeys represent the fundamental value proposition of Ash.
 - Calendar with marked completion
 - Goal progress view
 
-**Status**: ⚠️ Not documented
+**Status**: ✅ **[Documented](file:///Users/rooshi/Documents/programming/flutter/ash-trainer/docs/ux/user_journeys/03_workout_logging_completion.md)**
 
 ---
 

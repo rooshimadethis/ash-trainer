@@ -5,10 +5,11 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../features/shared/domain/entities/ai/context_models.dart';
 import '../../features/shared/domain/entities/ai/ai_types.dart';
 import '../../features/shared/domain/entities/ai/training_plan_response.dart';
-import '../../features/shared/domain/entities/workout.dart';
+import '../../features/shared/domain/entities/training/workout.dart';
 import '../../features/shared/domain/entities/ai/conversation.dart';
 import '../../core/constants/ai_constants.dart';
 import '../../core/config/ai_config.dart';
+import '../../core/utils/logger.dart';
 import 'ai_service.dart';
 
 class AIServiceImpl implements AIService {
@@ -39,11 +40,15 @@ class AIServiceImpl implements AIService {
     final prompt = _buildPrompt(
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
-      context: context.toJson(),
+      context: PlanGenerationContext.activeToJson(context),
       responseSchema: responseSchema,
     );
 
     final content = [gemini.Content.text(prompt)];
+
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Generate Plan) ---');
+    AppLogger.info(prompt);
 
     final response = await _model.generateContent(
       content,
@@ -54,11 +59,9 @@ class AIServiceImpl implements AIService {
       throw Exception('Empty response from AI');
     }
 
-    // DEBUG: Print raw response to console before parsing
-    // ignore: avoid_print
-    print('--- RAW AI RESPONSE (Pre-Parsing) ---');
-    // ignore: avoid_print
-    print(response.text);
+    // DEBUG: Log raw response to console before parsing
+    AppLogger.info('--- RAW AI RESPONSE (Pre-Parsing) ---');
+    AppLogger.info(response.text!);
 
     dynamic json;
     try {
@@ -79,7 +82,8 @@ class AIServiceImpl implements AIService {
         tokensUsed: response.usageMetadata?.totalTokenCount ?? 0,
         timestamp: DateTime.now(),
       );
-    } catch (e) {
+    } catch (e, stack) {
+      AppLogger.error('AI Processing Error', e, stack);
       throw AIProcessingException(e.toString(), rawResponse: response.text);
     }
   }
@@ -108,6 +112,10 @@ class AIServiceImpl implements AIService {
 
     final content = [gemini.Content.text(prompt)];
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Adjust Workout) ---');
+    AppLogger.info(prompt);
+
     final response = await _model.generateContent(
       content,
       generationConfig: AIConfig.getConfig(AITaskType.workoutAdjustment),
@@ -116,6 +124,10 @@ class AIServiceImpl implements AIService {
     if (response.text == null) {
       throw Exception('Empty response from AI');
     }
+
+    // DEBUG: Log Raw Response
+    AppLogger.info('--- AI RESPONSE (Adjust Workout) ---');
+    AppLogger.info(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -159,6 +171,10 @@ class AIServiceImpl implements AIService {
 
     final content = [gemini.Content.text(prompt)];
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Reschedule Workouts) ---');
+    AppLogger.info(prompt);
+
     final response = await _model.generateContent(
       content,
       generationConfig: AIConfig.getConfig(AITaskType.rescheduling),
@@ -167,6 +183,10 @@ class AIServiceImpl implements AIService {
     if (response.text == null) {
       throw Exception('Empty response from AI');
     }
+
+    // DEBUG: Log Raw Response
+    AppLogger.info('--- AI RESPONSE (Reschedule Workouts) ---');
+    AppLogger.info(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -215,8 +235,17 @@ class AIServiceImpl implements AIService {
     // We don't reuse chat session objects as we are stateless
     final chatSession = sessionModel.startChat(history: history);
 
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Chat) ---');
+    AppLogger.info('User: $userMessage');
+    AppLogger.info('System Instruction: $systemInstruction');
+
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
+
+    // DEBUG: Log Response
+    AppLogger.info('--- AI RESPONSE (Chat) ---');
+    AppLogger.info(response.text ?? '[No Text]');
 
     return AIResponse(
       data: response.text ?? '',
@@ -294,8 +323,21 @@ class AIServiceImpl implements AIService {
     );
 
     final chatSession = sessionModel.startChat(history: history);
+    // DEBUG: Log Request
+    AppLogger.info('--- AI REQUEST (Chat w/ Tools) ---');
+    AppLogger.info('User: $userMessage');
+    AppLogger.info('Tools: ${tools.map((t) => t.name).join(', ')}');
+
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
+
+    // DEBUG: Log Response
+    AppLogger.info('--- AI RESPONSE (Chat w/ Tools) ---');
+    AppLogger.info(response.text ?? '[No Text]');
+    if (response.functionCalls.isNotEmpty) {
+      AppLogger.info(
+          'Function Call: ${response.functionCalls.first.name}(${response.functionCalls.first.args})');
+    }
 
     // Check for function call
     final functionCalls = response.functionCalls;

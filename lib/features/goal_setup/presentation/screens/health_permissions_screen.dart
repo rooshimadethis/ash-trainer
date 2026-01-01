@@ -23,8 +23,7 @@ class HealthPermissionsScreen extends ConsumerWidget {
               children: [
                 const SizedBox(height: 12),
                 const OnboardingProgress(
-                  currentStep: 6,
-                  totalSteps: 6,
+                  currentStep: 7,
                   label: 'Connect Health',
                 ),
                 const SizedBox(height: 32),
@@ -102,7 +101,7 @@ class HealthPermissionsScreen extends ConsumerWidget {
   Widget _buildBenefitRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 20, color: AppColors.accentOrange),
+        Icon(icon, size: 20, color: AppColors.accentBlue),
         const SizedBox(width: 12),
         Text(
           text,

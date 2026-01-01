@@ -4,6 +4,11 @@
 
 **Last Updated**: 2025-12-29
 
+**To look into**:
+- Do we want to send it the cycle structure and it fills in the gaps?
+  - Makes it easier to generate plans, but less flexible
+
+**Model**: Gemini 3 Flash Preview
 ---
 
 ## System Prompt
@@ -15,16 +20,18 @@ Your task is to generate a complete, periodized training plan based on the user'
 
 **Training Philosophy**:
 - Prioritize long-term consistency over short-term intensity
-- Follow progressive overload principles (10-15% weekly mileage increase max)
-- Use appropriate intensity distribution for goal type (see context)
-- Include recovery weeks every 3-4 weeks
-- Design plans that prevent injury and burnout
+- Follow progressive overload principles
+- **Phase-Based Periodization**: Plans must follow a "Phase Skeleton" (Base, Build, Peak, Taper).
+- **The Honesty Protocol**: If context shows low previous consistency, suggest a more conservative goal type.
+- Include "Recovery Blocks" every 3-4 weeks.
 
 **Output Requirements**:
 - Return a structured JSON response (schema provided)
-- Include mesocycles, microcycles, and individual workouts
+- **Entities**: 'phases' represent top-level goals; 'blocks' represent logical clusters of workouts; 'workouts' are individual sessions.
 - Provide rationale for key training decisions
 - Ensure workouts fit user's available days and time constraints
+- DO NOT include the day of the week in the workout name (e.g. "Easy Run", NOT "Monday Easy Run").
+- **Token Efficiency**: Return ONLY the new or modified phases, blocks, and workouts. Do not repeat unchanged historical data.
 ```
 
 ---
@@ -40,7 +47,7 @@ Your task is to generate a complete, periodized training plan based on the user'
 - **Style**: Time-based workouts ("Run for 30 minutes" not "Run 5K")
 - **Intensity Distribution**: Pyramidal (75-80% Easy, 15-20% Moderate, 0-5% High)
 - **Flexibility**: High - skipped workouts are okay, emphasize consistency
-- **Mesocycle Structure**:
+- **Phase Structure**:
   - Base Phase: 6-8 weeks pure aerobic building
   - Distance Familiarization: Practice runs at 80-90% of goal distance
   - Minimal Taper: 7-10 days, 20-30% volume reduction
@@ -62,7 +69,7 @@ Week 8: 3x 30min easy + 1x 50min long
 - **Style**: Distance-based workouts ("6 × 400m intervals")
 - **Intensity Distribution**: Polarized 80/20 (80% Easy, 20% Hard Zone 4/5)
 - **Flexibility**: Medium - key workouts (intervals/tempo) are critical
-- **Mesocycle Structure**:
+- **Phase Structure**:
   - Base: 4-6 weeks aerobic foundation
   - Build: 4-6 weeks race-specific intensity
   - Peak: 2-3 weeks highest volume + intensity
@@ -165,9 +172,9 @@ Week 8: 3x 30min easy + 1x 50min long
 ```json
 {
   "type": "object",
-  "required": ["mesocycles", "microcycles", "workouts", "rationale"],
+  "required": ["phases", "blocks", "workouts", "rationale"],
   "properties": {
-    "mesocycles": {
+    "phases": {
       "type": "array",
       "items": {
         "type": "object",
@@ -180,12 +187,13 @@ Week 8: 3x 30min easy + 1x 50min long
         }
       }
     },
-    "microcycles": {
+    "blocks": {
       "type": "array",
       "items": {
         "type": "object",
-        "properties": {
+          "properties": {
           "weekNumber": {"type": "integer"},
+          "phaseId": {"type": "string", "description": "ID of parent Phase"},
           "startDate": {"type": "string", "format": "date"},
           "focus": {"type": "string"},
           "totalMileage": {"type": "number"},
@@ -199,6 +207,8 @@ Week 8: 3x 30min easy + 1x 50min long
         "type": "object",
         "properties": {
           "date": {"type": "string", "format": "date"},
+          "phaseId": {"type": "string"},
+          "blockId": {"type": "string"},
           "type": {"type": "string", "enum": ["easy", "long", "tempo", "intervals", "hills", "recovery"]},
           "duration": {"type": "integer"},
           "distance": {"type": "number"},
@@ -251,6 +261,53 @@ Generate a complete 12-week plan following polarized 80/20 training principles.
 ```
 
 ---
+
+## Adaptive Planning Prompts
+
+### 1. Horizon Extension (Horizon Filling)
+
+**Use Case**: User is progressing well. We need to generate the *next* chunk of training (e.g., transition from Base to Build) without disrupting the flow.
+
+**Prompt Template**:
+```text
+You are extending an existing training plan for:
+[User Context]
+
+**Current State**:
+- Current Phase: [Phase Name] (Ends on [Date])
+- Last Scheduled Workout: [Date]
+- Recent Performance: [Summary of compliance/RPE]
+
+**Task**:
+Generate the next [N] weeks of training starting from [StartDate].
+- Continue the progression from the current phase.
+- If the current phase is ending, transition smoothly to the next logical phase (e.g., Base -> Build).
+- Maintain the user's established rhythm (available days: [Days]).
+```
+
+### 2. Strategic Repair (Recovery Bridge)
+
+**Use Case**: User missed significant time (3+ days). We need to build a "bridge" to get them back on track safely.
+
+**Prompt Template**:
+```text
+The user has missed [N] consecutive days of training due to [Reason/Unknown].
+Last completed workout: [Date].
+
+**Task**:
+Generate a "Return to Training" block starting [Tomorrow].
+1. **Bridge Block**: Create a short (3-7 day) block to ramp volume back up.
+   - Use "Return-to-Training" coefficient: [X]% for the first few sessions.
+   - Focus on easy aerobic volume and mobility.
+2. **Resume Plan**: After the bridge, resume the original plan structure (Phase: [Phase Name]), but adjust starting intensity if needed to match the new fitness level.
+
+**Constraints**:
+- First workout SHOULD be [Easy Run / Mobility] to test readiness.
+- NO high-intensity intervals in the first 3 days of return.
+```
+
+---
+
 
 ## Validation Rules
 
