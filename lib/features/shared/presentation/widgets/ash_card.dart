@@ -21,6 +21,7 @@ class AshCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap != null
           ? () {
@@ -34,23 +35,37 @@ class AshCard extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: backgroundColor ?? Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(28), // More modern, larger radius
+          borderRadius: BorderRadius.circular(32),
           border: Border.all(
             color: isSelected
                 ? Theme.of(context).primaryColor.withValues(alpha: 0.5)
-                : borderColor ?? Theme.of(context).colorScheme.outline,
-            width: isSelected ? 2.0 : borderWidth,
+                : borderColor ?? Colors.transparent,
+            width: isSelected ? 2.0 : (borderColor != null ? borderWidth : 0),
           ),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
-                    blurRadius: 24,
-                    spreadRadius: -4,
-                  ),
-                ]
-              : [],
+          boxShadow: [
+            if (isSelected)
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.2),
+                blurRadius: 32,
+                spreadRadius: 2,
+              )
+            else ...[
+              // Standard depth shadow
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                offset: const Offset(0, 8),
+                blurRadius: 16,
+                spreadRadius: -4,
+              ),
+              // Subtle inner glow/highlight for 3D feel
+              BoxShadow(
+                color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.5),
+                offset: const Offset(0, 1),
+                blurRadius: 0,
+                spreadRadius: 0,
+              ),
+            ],
+          ],
         ),
         child: child,
       ),

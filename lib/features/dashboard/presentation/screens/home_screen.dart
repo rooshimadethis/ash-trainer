@@ -52,12 +52,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-            width: 1,
-          ),
+          bottom: BorderSide.none,
         ),
       ),
       child: Row(
@@ -111,12 +108,23 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             Text(title),
             const SizedBox(height: 4),
             AnimatedContainer(
-              duration: const Duration(milliseconds: 200),
-              height: 3,
-              width: isSelected ? 16 : 0,
+              duration: const Duration(milliseconds: 300),
+              height: 4,
+              width: isSelected ? 24 : 0,
               decoration: BoxDecoration(
                 color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(2),
+                boxShadow: isSelected
+                    ? [
+                        BoxShadow(
+                          color: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.4),
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]
+                    : [],
               ),
             ),
           ],

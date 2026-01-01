@@ -54,14 +54,17 @@ class _TodayViewState extends ConsumerState<TodayView> {
                     Text(
                       'TODAY',
                       style: AppTextStyles.label.copyWith(
-                        letterSpacing: 2,
-                        color: Theme.of(context).primaryColor,
+                        letterSpacing: 2.5,
+                        fontSize: 11,
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.8),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       dateStr,
-                      style: AppTextStyles.h2,
+                      style: AppTextStyles.h1, // Larger header
                     ),
                   ],
                 ),
@@ -75,12 +78,21 @@ class _TodayViewState extends ConsumerState<TodayView> {
                       decoration: BoxDecoration(
                         color: Colors.redAccent.withValues(alpha: 0.1),
                         shape: BoxShape.circle,
-                        border: Border.all(
-                            color: Colors.redAccent.withValues(alpha: 0.3)),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            offset: const Offset(0, 4),
+                            blurRadius: 8,
+                          ),
+                          BoxShadow(
+                            color: Colors.white.withValues(alpha: 0.05),
+                            offset: const Offset(0, 1),
+                            blurRadius: 0,
+                          ),
+                        ],
                       ),
                       child: IconButton(
                         onPressed: () {
-                          // Get the navigator key from the root MaterialApp
                           final navigatorKey =
                               Navigator.of(context, rootNavigator: true)
                                   .widget
@@ -90,7 +102,7 @@ class _TodayViewState extends ConsumerState<TodayView> {
                           }
                         },
                         icon: const Icon(Icons.bug_report,
-                            color: Colors.redAccent),
+                            color: Colors.redAccent, size: 20),
                       ),
                     );
                     return true;
@@ -111,15 +123,25 @@ class _TodayViewState extends ConsumerState<TodayView> {
               ),
               Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                  color: Theme.of(context).colorScheme.surface,
                   shape: BoxShape.circle,
-                  border:
-                      Border.all(color: Theme.of(context).colorScheme.outline),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4),
+                    ),
+                    BoxShadow(
+                      color: Colors.white.withValues(alpha: 0.05),
+                      offset: const Offset(0, 1),
+                      blurRadius: 0,
+                    ),
+                  ],
                 ),
                 child: IconButton(
-                  onPressed: null, // Open profile or settings
+                  onPressed: null,
                   icon: Icon(Icons.person_outline_rounded,
-                      color: Theme.of(context).colorScheme.onSurface),
+                      color: Theme.of(context).colorScheme.onSurface, size: 20),
                 ),
               ),
             ],

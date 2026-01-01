@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTextStyles {
-  static TextStyle get display => GoogleFonts.plusJakartaSans();
+  static TextStyle get display => GoogleFonts.outfit(); // Rounded and friendly
   static TextStyle get body =>
-      GoogleFonts.inter(); // Switched to Inter for body
+      GoogleFonts.plusJakartaSans(); // Clean and modern for body
 
   static TextStyle get h1 => display.copyWith(
-        fontSize: 32,
-        fontWeight: FontWeight.w800, // Extra bold for H1
+        fontSize: 34,
+        fontWeight: FontWeight.w800, // Very bold
         height: 1.1,
-        letterSpacing: -1.0, // Tighter tracking
+        letterSpacing: -0.5,
       );
 
   static TextStyle get h2 => display.copyWith(

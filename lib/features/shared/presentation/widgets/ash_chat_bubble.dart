@@ -44,18 +44,25 @@ class AshChatBubble extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isAsh ? ashBubbleColor : userBubbleColor,
                 borderRadius: BorderRadius.only(
-                  topLeft: const Radius.circular(24),
-                  topRight: const Radius.circular(24),
-                  bottomLeft: Radius.circular(isAsh ? 4 : 24),
-                  bottomRight: Radius.circular(isAsh ? 24 : 4),
+                  topLeft: const Radius.circular(32),
+                  topRight: const Radius.circular(32),
+                  bottomLeft: Radius.circular(isAsh ? 8 : 32),
+                  bottomRight: Radius.circular(isAsh ? 32 : 8),
                 ),
-                border: isAsh
-                    ? Border.all(
-                        color:
-                            isDark ? AppColors.border : AppColors.borderLight,
-                        width: 1,
-                      )
-                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+                    offset: const Offset(0, 4),
+                    blurRadius: 12,
+                    spreadRadius: -2,
+                  ),
+                  BoxShadow(
+                    color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.4),
+                    offset: const Offset(0, 1),
+                    blurRadius: 0,
+                    spreadRadius: 0,
+                  ),
+                ],
               ),
               child: Text(
                 text,

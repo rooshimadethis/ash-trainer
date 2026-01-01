@@ -118,14 +118,11 @@ class AppTheme {
   static CardThemeData _buildCardTheme({required bool isDark}) {
     return CardThemeData(
       color: isDark ? AppColors.surface : AppColors.surfaceLight,
-      elevation: isDark ? 0 : 2,
-      shadowColor: AppColors.black.withValues(alpha: 0.05),
+      elevation: 8,
+      shadowColor: Colors.black.withValues(alpha: isDark ? 0.3 : 0.1),
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(28),
-        side: BorderSide(
-          color: isDark ? AppColors.border : AppColors.borderLight,
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(32),
+        side: BorderSide.none,
       ),
       margin: const EdgeInsets.only(bottom: 16),
     );
@@ -140,9 +137,9 @@ class AppTheme {
         disabledForegroundColor: AppColors.textSecondaryDark,
         textStyle: AppTextStyles.buttonText,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(24),
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 28),
         elevation: 0,
       ),
     );
@@ -155,11 +152,15 @@ class AppTheme {
         foregroundColor:
             isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
         side: BorderSide(
-            color: isDark ? AppColors.border : AppColors.borderLight),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          color: isDark
+              ? AppColors.white.withValues(alpha: 0.1)
+              : AppColors.black.withValues(alpha: 0.1),
+          width: 1,
         ),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 28),
       ),
     );
   }
@@ -171,40 +172,39 @@ class AppTheme {
       fillColor:
           isDark ? AppColors.surfaceLighter : AppColors.surfaceLightSecondary,
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
         borderSide: BorderSide.none,
       ),
       enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(
-            color: isDark ? AppColors.border : AppColors.borderLight),
+        borderRadius: BorderRadius.circular(24),
+        borderSide: BorderSide.none,
       ),
       focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(20),
-        borderSide: BorderSide(color: primary, width: 1.5),
+        borderRadius: BorderRadius.circular(24),
+        borderSide:
+            BorderSide(color: primary.withValues(alpha: 0.5), width: 1.5),
       ),
       labelStyle: AppTextStyles.bodyMedium.copyWith(color: primary),
       hintStyle: AppTextStyles.bodyMedium.copyWith(color: AppColors.textMuted),
-      contentPadding: const EdgeInsets.all(16),
+      contentPadding: const EdgeInsets.all(20),
     );
   }
 
   static SliderThemeData _buildSliderTheme(Color primary) {
     return SliderThemeData(
       activeTrackColor: primary,
-      inactiveTrackColor: Colors.white,
+      inactiveTrackColor: primary.withValues(alpha: 0.1),
       thumbColor: Colors.white,
       activeTickMarkColor: Colors.transparent,
       inactiveTickMarkColor: Colors.transparent,
       overlayColor: primary.withValues(alpha: 0.2),
-      trackHeight: 10, // Slightly thicker as per "thicker" request maybe?
-      // User said "custom rpe slider"
+      trackHeight: 12,
       thumbShape: const RoundSliderThumbShape(
-        enabledThumbRadius: 12,
-        elevation: 4,
-        pressedElevation: 8,
+        enabledThumbRadius: 14,
+        elevation: 6,
+        pressedElevation: 10,
       ),
-      overlayShape: const RoundSliderOverlayShape(overlayRadius: 24),
+      overlayShape: const RoundSliderOverlayShape(overlayRadius: 28),
       trackShape: const RoundedRectSliderTrackShape(),
       tickMarkShape: SliderTickMarkShape.noTickMark,
     );

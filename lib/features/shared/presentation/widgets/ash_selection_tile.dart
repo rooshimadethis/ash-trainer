@@ -32,13 +32,20 @@ class AshSelectionTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isSelected
                   ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
-                  : Theme.of(context).colorScheme.surfaceContainerHighest,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                color: isSelected
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                    : Theme.of(context).colorScheme.outline,
-              ),
+                  : Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  offset: const Offset(0, 2),
+                  blurRadius: 4,
+                ),
+                BoxShadow(
+                  color: Colors.white.withValues(alpha: 0.1),
+                  offset: const Offset(0, 1),
+                  blurRadius: 0,
+                ),
+              ],
             ),
             child: Center(child: leading),
           ),

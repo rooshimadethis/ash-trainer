@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   // --- Brand Colors ---
-  static const Color primary = Color(0xFF6366F1); // Indigo 500 - Friendlier
-  static const Color primaryLight = Color(0xFF818CF8);
-  static const Color primaryDark = Color(0xFF4F46E5);
+  static const Color primary = Color(0xFF7C3AED); // Modern Violet
+  static const Color primaryLight = Color(0xFFA78BFA);
+  static const Color primaryDark = Color(0xFF5B21B6);
+  static const Color accentCoral = Color(0xFFFB7185); // Warm accent
+  static const Color accentMint = Color(0xFF34D399); // Fresh accent
 
   // --- Background & Surfaces ---
-  // Dark (current)
-  static const Color background = Color(0xFF0F172A); // Slate 900
-  static const Color surface = Color(0xFF1E293B); // Slate 800
-  static const Color surfaceLighter = Color(0xFF334155); // Slate 700
-  static const Color surfaceHighlight = Color(0xFF475569); // Slate 600
+  // Dark (current) - Soft Charcoal/Navy
+  static const Color background = Color(0xFF0F1219); // Deep, soft navy
+  static const Color surface = Color(0xFF181D27); // Slightly lighter
+  static const Color surfaceLighter = Color(0xFF242C3D);
+  static const Color surfaceHighlight = Color(0xFF323D52);
 
   // Light (new)
   static const Color backgroundLight = Color(0xFFF8FAFC); // Slate 50

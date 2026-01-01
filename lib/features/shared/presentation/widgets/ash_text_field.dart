@@ -52,18 +52,18 @@ class AshTextField extends StatelessWidget {
             fillColor: Theme.of(context).inputDecorationTheme.fillColor,
             suffixIcon: suffix, // Using suffixIcon for the widget
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(24),
               borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: Theme.of(context).colorScheme.outline),
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: Theme.of(context).primaryColor, width: 2),
+              borderRadius: BorderRadius.circular(24),
+              borderSide: BorderSide(
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.5),
+                  width: 1.5),
             ),
             contentPadding:
                 const EdgeInsets.symmetric(horizontal: 16, vertical: 16),

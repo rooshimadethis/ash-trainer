@@ -41,23 +41,41 @@ class MonthlyView extends ConsumerWidget {
                     ),
                     const SizedBox(width: 8),
                     if (!DateUtils.isSameMonth(focusedMonth, DateTime.now()))
-                      TextButton(
-                        onPressed: () {
+                      GestureDetector(
+                        onTap: () {
                           final now = DateTime.now();
                           ref.read(monthlyMonthProvider.notifier).state =
                               DateTime(now.year, now.month, 1);
                         },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'TODAY',
-                          style: AppTextStyles.label.copyWith(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 12,
-                            letterSpacing: 1.2,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .primaryColor
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.05),
+                                offset: const Offset(0, 2),
+                                blurRadius: 4,
+                              ),
+                              BoxShadow(
+                                color: Colors.white.withValues(alpha: 0.1),
+                                offset: const Offset(0, 1),
+                                blurRadius: 0,
+                              ),
+                            ],
+                          ),
+                          child: Text(
+                            'TODAY',
+                            style: AppTextStyles.label.copyWith(
+                              color: Theme.of(context).primaryColor,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 1.2,
+                            ),
                           ),
                         ),
                       ),
@@ -223,22 +241,39 @@ class MonthlyView extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.2),
-                    ),
+                        .withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        offset: const Offset(0, 4),
+                        blurRadius: 12,
+                        spreadRadius: -4,
+                      ),
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        offset: const Offset(0, 1),
+                        blurRadius: 0,
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.layers_rounded,
-                        size: 14,
-                        color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: BlockUtils.getColorForIntent(
+                                  dayBlock.intent, dayBlock.blockNumber)
+                              .withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.layers_rounded,
+                          size: 14,
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Flexible(
@@ -393,23 +428,35 @@ class _WeekRow extends StatelessWidget {
                 height: 72,
                 decoration: BoxDecoration(
                   color: Color.alphaBlend(blockTint, baseBackground),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(
-                    color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : isToday
-                            ? Theme.of(context)
-                                .primaryColor
-                                .withValues(alpha: 0.3)
-                            : Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withValues(alpha: 0.5),
-                    width: isSelected ? 1.5 : 1.0,
-                  ),
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    if (isSelected)
+                      BoxShadow(
+                        color: Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.3),
+                        blurRadius: 12,
+                        spreadRadius: 2,
+                      )
+                    else ...[
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.08),
+                        offset: const Offset(0, 4),
+                        blurRadius: 8,
+                        spreadRadius: -2,
+                      ),
+                      BoxShadow(
+                        color: Colors.white
+                            .withValues(alpha: isToday ? 0.05 : 0.02),
+                        offset: const Offset(0, 1),
+                        blurRadius: 0,
+                      ),
+                    ],
+                  ],
+                  border: null, // Removed border as color change is enough
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(11),
+                  borderRadius: BorderRadius.circular(23),
                   child: Column(
                     children: [
                       Expanded(
@@ -508,14 +555,21 @@ class _MonthNavButton extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withValues(alpha: 0.5),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-          ),
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              offset: const Offset(0, 4),
+              blurRadius: 8,
+              spreadRadius: -2,
+            ),
+            BoxShadow(
+              color: Colors.white.withValues(alpha: 0.05),
+              offset: const Offset(0, 1),
+              blurRadius: 0,
+            ),
+          ],
         ),
         child: Icon(
           icon,

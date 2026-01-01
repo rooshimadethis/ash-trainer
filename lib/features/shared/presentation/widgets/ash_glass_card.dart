@@ -21,23 +21,29 @@ class AshGlassCard extends StatelessWidget {
         color: isDark
             ? Colors.white.withValues(alpha: 0.03)
             : Theme.of(context).colorScheme.surface,
-        borderRadius:
-            borderRadius ?? BorderRadius.circular(28), // Larger radius
+        borderRadius: borderRadius ?? BorderRadius.circular(32),
         border: Border.all(
           color: isDark
-              ? Colors.white.withAlpha(15)
-              : Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-          width: 1,
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.black.withValues(alpha: 0.05),
+          width: 0.5,
         ),
-        boxShadow: isDark
-            ? null
-            : [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        boxShadow: [
+          // Depth shadow
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+            offset: const Offset(0, 12),
+            blurRadius: 24,
+            spreadRadius: -8,
+          ),
+          // Top highlight (edge light)
+          BoxShadow(
+            color: Colors.white.withValues(alpha: isDark ? 0.05 : 0.4),
+            offset: const Offset(0, 1),
+            blurRadius: 0,
+            spreadRadius: 0,
+          ),
+        ],
       ),
       child: child,
     );

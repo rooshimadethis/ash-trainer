@@ -27,12 +27,10 @@ class WorkoutCard extends ConsumerWidget {
 
     return AshCard(
       onTap: onTap,
-      borderWidth: 1.0,
-      borderColor: useWorkoutColor
-          ? typeColor.withValues(alpha: 0.3)
-          : Theme.of(context).colorScheme.outline,
+      borderWidth: 0,
+      borderColor: Colors.transparent,
       backgroundColor: useWorkoutColor
-          ? typeColor.withValues(alpha: 0.1)
+          ? typeColor.withValues(alpha: 0.15)
           : Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,12 +41,8 @@ class WorkoutCard extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: typeColor.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(
-                    color: typeColor.withValues(alpha: 0.2),
-                    width: 1,
-                  ),
+                  color: typeColor.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,

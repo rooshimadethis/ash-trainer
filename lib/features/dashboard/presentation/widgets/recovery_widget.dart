@@ -67,19 +67,19 @@ class RecoveryWidget extends ConsumerWidget {
                   context,
                   biomarker.hrv?.toStringAsFixed(0) ?? '--',
                   'HRV',
-                  Colors.green,
+                  const Color(0xFF4ADE80), // Softer Emerald
                 ),
                 _statItem(
                   context,
                   biomarker.sleepDurationFormatted,
                   'Sleep',
-                  Colors.blue,
+                  const Color(0xFF60A5FA), // Softer blue
                 ),
                 _statItem(
                   context,
                   biomarker.rhr?.toString() ?? '--',
                   'RHR',
-                  Colors.orange,
+                  const Color(0xFFFBBF24), // Softer Amber
                 ),
               ],
             ),
@@ -97,13 +97,32 @@ class RecoveryWidget extends ConsumerWidget {
 
   Widget _statItem(
       BuildContext context, String value, String label, Color color) {
-    return Column(
-      children: [
-        Text(value, style: AppTextStyles.h3.copyWith(color: color)),
-        Text(label,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      decoration: BoxDecoration(
+        color: color.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: AppTextStyles.h2.copyWith(
+              color: color,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label.toUpperCase(),
             style: AppTextStyles.labelSmall.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant)),
-      ],
+              color: color.withValues(alpha: 0.8),
+              letterSpacing: 1.0,
+              fontSize: 9,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -133,14 +152,47 @@ class RecoveryWidget extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 20),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => isAuthorized
-                  ? ref.read(healthSyncProvider.notifier).refresh()
-                  : _requestPermissions(ref),
-              icon: Icon(isAuthorized ? Icons.refresh : Icons.link),
-              label: Text(isAuthorized ? 'Refresh' : 'Connect'),
+          GestureDetector(
+            onTap: () => isAuthorized
+                ? ref.read(healthSyncProvider.notifier).refresh()
+                : _requestPermissions(ref),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(20),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                    offset: const Offset(0, 4),
+                    blurRadius: 12,
+                    spreadRadius: -2,
+                  ),
+                  BoxShadow(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    offset: const Offset(0, 1),
+                    blurRadius: 0,
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(isAuthorized ? Icons.refresh : Icons.link,
+                      color: Colors.white, size: 18),
+                  const SizedBox(width: 8),
+                  Text(
+                    isAuthorized ? 'Refresh' : 'Connect',
+                    style: AppTextStyles.buttonText.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],

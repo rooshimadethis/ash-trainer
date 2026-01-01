@@ -34,12 +34,10 @@ class WeeklyView extends ConsumerWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left_rounded,
-                      color: AppColors.textPrimary),
-                  onPressed: () => ref
-                      .read(selectedWeekProvider.notifier)
-                      .state = startOfWeek.subtract(const Duration(days: 7)),
+                _NavIcon(
+                  icon: Icons.chevron_left_rounded,
+                  onTap: () => ref.read(selectedWeekProvider.notifier).state =
+                      startOfWeek.subtract(const Duration(days: 7)),
                 ),
                 Column(
                   children: [
@@ -53,12 +51,10 @@ class WeeklyView extends ConsumerWidget {
                     Text(weekRangeStr, style: AppTextStyles.h4),
                   ],
                 ),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right_rounded,
-                      color: AppColors.textPrimary),
-                  onPressed: () => ref
-                      .read(selectedWeekProvider.notifier)
-                      .state = startOfWeek.add(const Duration(days: 7)),
+                _NavIcon(
+                  icon: Icons.chevron_right_rounded,
+                  onTap: () => ref.read(selectedWeekProvider.notifier).state =
+                      startOfWeek.add(const Duration(days: 7)),
                 ),
               ],
             ),
@@ -198,22 +194,39 @@ class WeeklyView extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.2),
-                    ),
+                        .withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.1),
+                        offset: const Offset(0, 4),
+                        blurRadius: 12,
+                        spreadRadius: -4,
+                      ),
+                      BoxShadow(
+                        color: Colors.white.withValues(alpha: 0.1),
+                        offset: const Offset(0, 1),
+                        blurRadius: 0,
+                      ),
+                    ],
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
-                        Icons.layers_rounded,
-                        size: 14,
-                        color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber),
+                      Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: BlockUtils.getColorForIntent(
+                                  dayBlock.intent, dayBlock.blockNumber)
+                              .withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(
+                          Icons.layers_rounded,
+                          size: 14,
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
+                        ),
                       ),
                       const SizedBox(width: 8),
                       Flexible(
@@ -321,21 +334,32 @@ class _DayColumn extends ConsumerWidget {
         margin: const EdgeInsets.symmetric(horizontal: 3),
         decoration: BoxDecoration(
           color: Color.alphaBlend(blockTint, baseBackground),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: isSelected
-                ? Theme.of(context).primaryColor
-                : isToday
-                    ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
-                    : Theme.of(context)
-                        .colorScheme
-                        .outline
-                        .withValues(alpha: 0.5),
-            width: isSelected ? 1.5 : 1.0,
-          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            if (isSelected)
+              BoxShadow(
+                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
+                blurRadius: 12,
+                spreadRadius: 2,
+              )
+            else ...[
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                offset: const Offset(0, 4),
+                blurRadius: 8,
+                spreadRadius: -2,
+              ),
+              BoxShadow(
+                color: Colors.white.withValues(alpha: isToday ? 0.05 : 0.02),
+                offset: const Offset(0, 1),
+                blurRadius: 0,
+              ),
+            ],
+          ],
+          border: null, // Removed border as color change is enough
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(11),
+          borderRadius: BorderRadius.circular(23),
           child: Column(
             children: [
               Expanded(
@@ -424,6 +448,41 @@ class _DayColumn extends ConsumerWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _NavIcon extends StatelessWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _NavIcon({required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(16),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              offset: const Offset(0, 4),
+              blurRadius: 8,
+              spreadRadius: -2,
+            ),
+            BoxShadow(
+              color: Colors.white.withValues(alpha: 0.05),
+              offset: const Offset(0, 1),
+              blurRadius: 0,
+            ),
+          ],
+        ),
+        child: Icon(icon, color: AppColors.textPrimary, size: 24),
       ),
     );
   }

@@ -7,6 +7,7 @@ import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
 import '../providers/calendar_provider.dart';
 import '../../../../data/providers/repository_providers.dart';
@@ -76,17 +77,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: typeColor.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color: typeColor.withValues(alpha: 0.5)),
+                          color: typeColor.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
                           WorkoutTypes.getDisplayName(workout.type)
                               .toUpperCase(),
                           style: AppTextStyles.labelSmall.copyWith(
                             color: typeColor,
-                            fontWeight: FontWeight.bold,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 0.5,
                           ),
                         ),
                       ),
@@ -116,12 +116,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   Text('PLANNED TARGETS',
                       style: Theme.of(context).textTheme.labelLarge),
                   const SizedBox(height: 16),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                    ),
+                  AshCard(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -150,7 +146,6 @@ class WorkoutDetailScreen extends ConsumerWidget {
                                   'RPE ${workout.intensity}', 'Intensity'),
                           ],
                         ),
-                        // Show pace for running workouts with distance
                         if (isRunning &&
                             workout.plannedDistance != null &&
                             workout.plannedDistance! > 0) ...[
@@ -175,20 +170,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     Text('COMPLETED ACTUALS',
                         style: Theme.of(context).textTheme.labelLarge),
                     const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .primary
-                                .withValues(alpha: 0.2)),
-                      ),
+                    AshCard(
+                      backgroundColor: typeColor.withValues(alpha: 0.1),
                       child: Wrap(
                         spacing: 32,
                         runSpacing: 16,
@@ -218,21 +201,11 @@ class WorkoutDetailScreen extends ConsumerWidget {
                     Text('STATUS',
                         style: Theme.of(context).textTheme.labelLarge),
                     const SizedBox(height: 16),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .error
-                            .withValues(alpha: 0.05),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .error
-                                .withValues(alpha: 0.2)),
-                      ),
+                    AshCard(
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .error
+                          .withValues(alpha: 0.1),
                       child: Row(
                         children: [
                           const Icon(Icons.block, color: Colors.red),
