@@ -16,7 +16,7 @@ class Workout with _$Workout {
     required String name,
     required int plannedDuration, // seconds
     double? plannedDistance, // km
-    String? intensity,
+    int? intensity, // Planned RPE (1-10)
     String? description,
     required String
         status, // 'planned', 'in_progress', 'completed', 'skipped', 'missed'

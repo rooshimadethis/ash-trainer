@@ -17,7 +17,7 @@ class Workouts extends Table {
   TextColumn get name => text()();
   IntColumn get plannedDuration => integer()(); // seconds
   RealColumn get plannedDistance => real().nullable()(); // km
-  TextColumn get intensity => text().nullable()();
+  IntColumn get intensity => integer().nullable()(); // RPE (1-10)
   TextColumn get description => text().nullable()();
 
   // 'planned', 'in_progress', 'completed', 'skipped', 'missed'

@@ -82,7 +82,7 @@ _$WorkoutSkeletonImpl _$$WorkoutSkeletonImplFromJson(
       name: json['name'] as String,
       plannedDuration: (json['plannedDuration'] as num).toInt(),
       plannedDistance: (json['plannedDistance'] as num?)?.toDouble(),
-      intensity: json['intensity'] as String,
+      intensity: (json['intensity'] as num).toInt(),
       description: json['description'] as String,
       isKey: json['isKey'] as bool? ?? false,
     );

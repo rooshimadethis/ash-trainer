@@ -50,7 +50,7 @@ class _AIWorkoutAdjusterTabState extends ConsumerState<AIWorkoutAdjusterTab> {
         scheduledDate: DateTime.now(),
         plannedDuration: 3600,
         plannedDistance: 10.0,
-        intensity: 'moderate',
+        intensity: 7, // RPE for moderate tempo run
         blockId: 'mock-block',
       );
 

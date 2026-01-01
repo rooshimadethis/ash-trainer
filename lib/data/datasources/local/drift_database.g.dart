@@ -3671,9 +3671,9 @@ class $WorkoutsTable extends Workouts
   static const VerificationMeta _intensityMeta =
       const VerificationMeta('intensity');
   @override
-  late final GeneratedColumn<String> intensity = GeneratedColumn<String>(
+  late final GeneratedColumn<int> intensity = GeneratedColumn<int>(
       'intensity', aliasedName, true,
-      type: DriftSqlType.string, requiredDuringInsert: false);
+      type: DriftSqlType.int, requiredDuringInsert: false);
   static const VerificationMeta _descriptionMeta =
       const VerificationMeta('description');
   @override
@@ -3905,7 +3905,7 @@ class $WorkoutsTable extends Workouts
       plannedDistance: attachedDatabase.typeMapping.read(
           DriftSqlType.double, data['${effectivePrefix}planned_distance']),
       intensity: attachedDatabase.typeMapping
-          .read(DriftSqlType.string, data['${effectivePrefix}intensity']),
+          .read(DriftSqlType.int, data['${effectivePrefix}intensity']),
       description: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}description']),
       status: attachedDatabase.typeMapping
@@ -3944,7 +3944,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
   final String name;
   final int plannedDuration;
   final double? plannedDistance;
-  final String? intensity;
+  final int? intensity;
   final String? description;
   final String status;
   final int? actualDuration;
@@ -3995,7 +3995,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       map['planned_distance'] = Variable<double>(plannedDistance);
     }
     if (!nullToAbsent || intensity != null) {
-      map['intensity'] = Variable<String>(intensity);
+      map['intensity'] = Variable<int>(intensity);
     }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String>(description);
@@ -4082,7 +4082,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       name: serializer.fromJson<String>(json['name']),
       plannedDuration: serializer.fromJson<int>(json['plannedDuration']),
       plannedDistance: serializer.fromJson<double?>(json['plannedDistance']),
-      intensity: serializer.fromJson<String?>(json['intensity']),
+      intensity: serializer.fromJson<int?>(json['intensity']),
       description: serializer.fromJson<String?>(json['description']),
       status: serializer.fromJson<String>(json['status']),
       actualDuration: serializer.fromJson<int?>(json['actualDuration']),
@@ -4108,7 +4108,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
       'name': serializer.toJson<String>(name),
       'plannedDuration': serializer.toJson<int>(plannedDuration),
       'plannedDistance': serializer.toJson<double?>(plannedDistance),
-      'intensity': serializer.toJson<String?>(intensity),
+      'intensity': serializer.toJson<int?>(intensity),
       'description': serializer.toJson<String?>(description),
       'status': serializer.toJson<String>(status),
       'actualDuration': serializer.toJson<int?>(actualDuration),
@@ -4132,7 +4132,7 @@ class WorkoutDTO extends DataClass implements Insertable<WorkoutDTO> {
           String? name,
           int? plannedDuration,
           Value<double?> plannedDistance = const Value.absent(),
-          Value<String?> intensity = const Value.absent(),
+          Value<int?> intensity = const Value.absent(),
           Value<String?> description = const Value.absent(),
           String? status,
           Value<int?> actualDuration = const Value.absent(),
@@ -4293,7 +4293,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
   final Value<String> name;
   final Value<int> plannedDuration;
   final Value<double?> plannedDistance;
-  final Value<String?> intensity;
+  final Value<int?> intensity;
   final Value<String?> description;
   final Value<String> status;
   final Value<int?> actualDuration;
@@ -4368,7 +4368,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
     Expression<String>? name,
     Expression<int>? plannedDuration,
     Expression<double>? plannedDistance,
-    Expression<String>? intensity,
+    Expression<int>? intensity,
     Expression<String>? description,
     Expression<String>? status,
     Expression<int>? actualDuration,
@@ -4416,7 +4416,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       Value<String>? name,
       Value<int>? plannedDuration,
       Value<double?>? plannedDistance,
-      Value<String?>? intensity,
+      Value<int?>? intensity,
       Value<String?>? description,
       Value<String>? status,
       Value<int?>? actualDuration,
@@ -4486,7 +4486,7 @@ class WorkoutsCompanion extends UpdateCompanion<WorkoutDTO> {
       map['planned_distance'] = Variable<double>(plannedDistance.value);
     }
     if (intensity.present) {
-      map['intensity'] = Variable<String>(intensity.value);
+      map['intensity'] = Variable<int>(intensity.value);
     }
     if (description.present) {
       map['description'] = Variable<String>(description.value);
@@ -8903,7 +8903,7 @@ typedef $$WorkoutsTableCreateCompanionBuilder = WorkoutsCompanion Function({
   required String name,
   required int plannedDuration,
   Value<double?> plannedDistance,
-  Value<String?> intensity,
+  Value<int?> intensity,
   Value<String?> description,
   required String status,
   Value<int?> actualDuration,
@@ -8926,7 +8926,7 @@ typedef $$WorkoutsTableUpdateCompanionBuilder = WorkoutsCompanion Function({
   Value<String> name,
   Value<int> plannedDuration,
   Value<double?> plannedDistance,
-  Value<String?> intensity,
+  Value<int?> intensity,
   Value<String?> description,
   Value<String> status,
   Value<int?> actualDuration,
@@ -8980,7 +8980,7 @@ class $$WorkoutsTableFilterComposer
       column: $table.plannedDistance,
       builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get intensity => $composableBuilder(
+  ColumnFilters<int> get intensity => $composableBuilder(
       column: $table.intensity, builder: (column) => ColumnFilters(column));
 
   ColumnFilters<String> get description => $composableBuilder(
@@ -9055,7 +9055,7 @@ class $$WorkoutsTableOrderingComposer
       column: $table.plannedDistance,
       builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get intensity => $composableBuilder(
+  ColumnOrderings<int> get intensity => $composableBuilder(
       column: $table.intensity, builder: (column) => ColumnOrderings(column));
 
   ColumnOrderings<String> get description => $composableBuilder(
@@ -9127,7 +9127,7 @@ class $$WorkoutsTableAnnotationComposer
   GeneratedColumn<double> get plannedDistance => $composableBuilder(
       column: $table.plannedDistance, builder: (column) => column);
 
-  GeneratedColumn<String> get intensity =>
+  GeneratedColumn<int> get intensity =>
       $composableBuilder(column: $table.intensity, builder: (column) => column);
 
   GeneratedColumn<String> get description => $composableBuilder(
@@ -9191,7 +9191,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             Value<String> name = const Value.absent(),
             Value<int> plannedDuration = const Value.absent(),
             Value<double?> plannedDistance = const Value.absent(),
-            Value<String?> intensity = const Value.absent(),
+            Value<int?> intensity = const Value.absent(),
             Value<String?> description = const Value.absent(),
             Value<String> status = const Value.absent(),
             Value<int?> actualDuration = const Value.absent(),
@@ -9237,7 +9237,7 @@ class $$WorkoutsTableTableManager extends RootTableManager<
             required String name,
             required int plannedDuration,
             Value<double?> plannedDistance = const Value.absent(),
-            Value<String?> intensity = const Value.absent(),
+            Value<int?> intensity = const Value.absent(),
             Value<String?> description = const Value.absent(),
             required String status,
             Value<int?> actualDuration = const Value.absent(),

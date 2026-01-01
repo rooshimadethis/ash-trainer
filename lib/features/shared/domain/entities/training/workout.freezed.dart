@@ -32,7 +32,8 @@ mixin _$Workout {
   String get name => throw _privateConstructorUsedError;
   int get plannedDuration => throw _privateConstructorUsedError; // seconds
   double? get plannedDistance => throw _privateConstructorUsedError; // km
-  String? get intensity => throw _privateConstructorUsedError;
+  int? get intensity =>
+      throw _privateConstructorUsedError; // Planned RPE (1-10)
   String? get description => throw _privateConstructorUsedError;
   String get status =>
       throw _privateConstructorUsedError; // 'planned', 'in_progress', 'completed', 'skipped', 'missed'
@@ -69,7 +70,7 @@ abstract class $WorkoutCopyWith<$Res> {
       String name,
       int plannedDuration,
       double? plannedDistance,
-      String? intensity,
+      int? intensity,
       String? description,
       String status,
       int? actualDuration,
@@ -161,7 +162,7 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
       intensity: freezed == intensity
           ? _value.intensity
           : intensity // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -220,7 +221,7 @@ abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
       String name,
       int plannedDuration,
       double? plannedDistance,
-      String? intensity,
+      int? intensity,
       String? description,
       String status,
       int? actualDuration,
@@ -310,7 +311,7 @@ class __$$WorkoutImplCopyWithImpl<$Res>
       intensity: freezed == intensity
           ? _value.intensity
           : intensity // ignore: cast_nullable_to_non_nullable
-              as String?,
+              as int?,
       description: freezed == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -404,7 +405,8 @@ class _$WorkoutImpl implements _Workout {
   final double? plannedDistance;
 // km
   @override
-  final String? intensity;
+  final int? intensity;
+// Planned RPE (1-10)
   @override
   final String? description;
   @override
@@ -522,7 +524,7 @@ abstract class _Workout implements Workout {
       required final String name,
       required final int plannedDuration,
       final double? plannedDistance,
-      final String? intensity,
+      final int? intensity,
       final String? description,
       required final String status,
       final int? actualDuration,
@@ -556,7 +558,7 @@ abstract class _Workout implements Workout {
   @override
   double? get plannedDistance; // km
   @override
-  String? get intensity;
+  int? get intensity; // Planned RPE (1-10)
   @override
   String? get description;
   @override

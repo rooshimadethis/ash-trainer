@@ -131,7 +131,7 @@ class WorkoutCard extends ConsumerWidget {
               if (workout.intensity != null)
                 _infoTile(
                   Icons.bolt_rounded,
-                  workout.intensity!,
+                  'RPE ${workout.intensity}',
                 ),
             ],
           ),

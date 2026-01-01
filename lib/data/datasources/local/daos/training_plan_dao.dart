@@ -20,6 +20,20 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
     return (delete(phases)..where((t) => t.goalId.equals(goalId))).go();
   }
 
+  Future<void> deleteBlocksForGoal(int goalId) async {
+    // Get all phase IDs for this goal
+    final phaseIds = await (select(phases)
+          ..where((t) => t.goalId.equals(goalId)))
+        .map((row) => row.id)
+        .get();
+
+    // Delete all blocks associated with those phases
+    if (phaseIds.isNotEmpty) {
+      await (delete(trainingBlocks)..where((t) => t.phaseId.isIn(phaseIds)))
+          .go();
+    }
+  }
+
   Future<TrainingBlockDTO?> getBlockById(String id) {
     return (select(trainingBlocks)..where((t) => t.id.equals(id)))
         .getSingleOrNull();

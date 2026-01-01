@@ -808,7 +808,7 @@ mixin _$WorkoutSkeleton {
   String get name => throw _privateConstructorUsedError;
   int get plannedDuration => throw _privateConstructorUsedError;
   double? get plannedDistance => throw _privateConstructorUsedError;
-  String get intensity => throw _privateConstructorUsedError;
+  int get intensity => throw _privateConstructorUsedError; // RPE (1-10)
   String get description => throw _privateConstructorUsedError;
   bool get isKey => throw _privateConstructorUsedError;
 
@@ -837,7 +837,7 @@ abstract class $WorkoutSkeletonCopyWith<$Res> {
       String name,
       int plannedDuration,
       double? plannedDistance,
-      String intensity,
+      int intensity,
       String description,
       bool isKey});
 }
@@ -905,7 +905,7 @@ class _$WorkoutSkeletonCopyWithImpl<$Res, $Val extends WorkoutSkeleton>
       intensity: null == intensity
           ? _value.intensity
           : intensity // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -935,7 +935,7 @@ abstract class _$$WorkoutSkeletonImplCopyWith<$Res>
       String name,
       int plannedDuration,
       double? plannedDistance,
-      String intensity,
+      int intensity,
       String description,
       bool isKey});
 }
@@ -1001,7 +1001,7 @@ class __$$WorkoutSkeletonImplCopyWithImpl<$Res>
       intensity: null == intensity
           ? _value.intensity
           : intensity // ignore: cast_nullable_to_non_nullable
-              as String,
+              as int,
       description: null == description
           ? _value.description
           : description // ignore: cast_nullable_to_non_nullable
@@ -1054,7 +1054,8 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
   @override
   final double? plannedDistance;
   @override
-  final String intensity;
+  final int intensity;
+// RPE (1-10)
   @override
   final String description;
   @override
@@ -1132,7 +1133,7 @@ abstract class _WorkoutSkeleton implements WorkoutSkeleton {
       required final String name,
       required final int plannedDuration,
       final double? plannedDistance,
-      required final String intensity,
+      required final int intensity,
       required final String description,
       final bool isKey}) = _$WorkoutSkeletonImpl;
 
@@ -1159,7 +1160,7 @@ abstract class _WorkoutSkeleton implements WorkoutSkeleton {
   @override
   double? get plannedDistance;
   @override
-  String get intensity;
+  int get intensity; // RPE (1-10)
   @override
   String get description;
   @override

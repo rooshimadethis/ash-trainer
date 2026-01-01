@@ -64,7 +64,6 @@ class AshTrainerApp extends ConsumerWidget {
         // Wrap with DebugOverlay only in debug mode
         assert(() {
           child = DebugOverlay(
-            navigatorKey: _navigatorKey,
             child: child!,
           );
           return true;

@@ -152,9 +152,10 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   @override
   Future<void> deleteWorkoutsForGoal(String goalId) async {
     final gId = int.parse(goalId);
+    // Delete in order: workouts -> blocks -> phases
     await _workoutDao.deleteWorkoutsForGoal(gId);
+    await _trainingPlanDao.deleteBlocksForGoal(gId);
     await _trainingPlanDao.deletePhasesForGoal(gId);
-    // Note: Blocks cascade delete if set up in DB
   }
 
   @override

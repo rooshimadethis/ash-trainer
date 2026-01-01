@@ -15,6 +15,7 @@ import 'package:ash_trainer/features/dashboard/presentation/widgets/countdown_ca
 import 'package:ash_trainer/features/training/presentation/providers/automation_provider.dart';
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
 import '../../../shared/domain/services/health_service.dart';
+import '../../../developer/presentation/widgets/debug_overlay.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -64,6 +65,49 @@ class _TodayViewState extends ConsumerState<TodayView> {
                     ),
                   ],
                 ),
+              ),
+              // Debug button (only in debug mode)
+              Builder(
+                builder: (context) {
+                  Widget? debugButton;
+                  assert(() {
+                    debugButton = Container(
+                      decoration: BoxDecoration(
+                        color: Colors.redAccent.withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                            color: Colors.redAccent.withValues(alpha: 0.3)),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          // Get the navigator key from the root MaterialApp
+                          final navigatorKey =
+                              Navigator.of(context, rootNavigator: true)
+                                  .widget
+                                  .key as GlobalKey<NavigatorState>?;
+                          if (navigatorKey != null) {
+                            DebugOverlay.showDebugMenu(context, navigatorKey);
+                          }
+                        },
+                        icon: const Icon(Icons.bug_report,
+                            color: Colors.redAccent),
+                      ),
+                    );
+                    return true;
+                  }());
+                  return debugButton ?? const SizedBox.shrink();
+                },
+              ),
+              // Add spacing only in debug mode
+              Builder(
+                builder: (context) {
+                  Widget? spacing;
+                  assert(() {
+                    spacing = const SizedBox(width: 12);
+                    return true;
+                  }());
+                  return spacing ?? const SizedBox.shrink();
+                },
               ),
               Container(
                 decoration: BoxDecoration(

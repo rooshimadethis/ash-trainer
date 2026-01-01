@@ -46,6 +46,45 @@ class GenerateTrainingPlan {
       throw Exception('Failed to generate plan');
     }
 
+    // Log plan structure to verify three-tier approach
+    // ignore: avoid_print
+    print('📊 Plan Generation Summary (Three-Tier Approach):');
+    // ignore: avoid_print
+    print('  ✅ TIER 1 - Phases: ${response.data!.phases.length}');
+    for (var phase in response.data!.phases) {
+      // ignore: avoid_print
+      print('    - ${phase.phaseType} (${phase.durationWeeks} weeks)');
+    }
+    // ignore: avoid_print
+    print('  ✅ TIER 2 - Blocks: ${response.data!.blocks.length}');
+    if (response.data!.blocks.isNotEmpty) {
+      final firstPhaseId = response.data!.phases.first.id;
+      final blocksInFirstPhase =
+          response.data!.blocks.where((b) => b.phaseId == firstPhaseId).length;
+      // ignore: avoid_print
+      print('    - Blocks in first phase: $blocksInFirstPhase');
+    }
+    // ignore: avoid_print
+    print('  ✅ TIER 3 - Workouts: ${response.data!.workouts.length}');
+    if (response.data!.workouts.isNotEmpty &&
+        response.data!.blocks.isNotEmpty) {
+      final firstBlockId = response.data!.blocks.first.id;
+      final secondBlockId =
+          response.data!.blocks.length > 1 ? response.data!.blocks[1].id : null;
+      final workoutsInFirstBlock = response.data!.workouts
+          .where((w) => w.blockId == firstBlockId)
+          .length;
+      final workoutsInSecondBlock = secondBlockId != null
+          ? response.data!.workouts
+              .where((w) => w.blockId == secondBlockId)
+              .length
+          : 0;
+      // ignore: avoid_print
+      print('    - Workouts in Block 1: $workoutsInFirstBlock');
+      // ignore: avoid_print
+      print('    - Workouts in Block 2: $workoutsInSecondBlock');
+    }
+
     // 3. Hydrate Plan (Convert Skeletons to Real Dates)
     // Use the start date determined by the Planning Config (smart logic)
     // or fallback to the override if provided (though builder usually rules)

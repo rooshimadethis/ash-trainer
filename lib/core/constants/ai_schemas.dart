@@ -71,7 +71,13 @@ class AISchemas {
             "name": {"type": "string"},
             "plannedDuration": {"type": "integer", "description": "Seconds"},
             "plannedDistance": {"type": "number", "description": "Kilometers"},
-            "intensity": {"type": "string"},
+            "intensity": {
+              "type": "integer",
+              "description":
+                  "Rate of Perceived Exertion (RPE) as a number from 1-10",
+              "minimum": 1,
+              "maximum": 10
+            },
             "description": {"type": "string"},
             "isKey": {"type": "boolean", "default": false},
           },
@@ -115,7 +121,12 @@ class AISchemas {
       "name": {"type": "string"},
       "plannedDuration": {"type": "integer"},
       "plannedDistance": {"type": "number"},
-      "intensity": {"type": "string"},
+      "intensity": {
+        "type": "integer",
+        "description": "Rate of Perceived Exertion (RPE) as a number from 1-10",
+        "minimum": 1,
+        "maximum": 10
+      },
       "description": {"type": "string"}
     },
     "required": [

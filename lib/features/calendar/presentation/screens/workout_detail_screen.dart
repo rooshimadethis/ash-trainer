@@ -146,7 +146,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
                                   'Distance'),
                             if (workout.intensity != null)
                               _metricItem(context, Icons.speed_outlined,
-                                  workout.intensity!, 'Intensity'),
+                                  'RPE ${workout.intensity}', 'Intensity'),
                           ],
                         ),
                         // Show pace for running workouts with distance

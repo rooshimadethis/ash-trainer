@@ -31,6 +31,26 @@ PILLAR COORDINATION:
 Generate a complete training plan based on the user's context, goal, and history.
 The plan must balance three pillars: Running, Strength, and Mobility.
 
+CRITICAL: Use a THREE-TIER planning approach to avoid over-planning:
+
+TIER 1 - LONG-TERM (All Phases):
+- Generate ALL phase outlines (Base, Build, Peak, Taper) for the ENTIRE training period
+- Include: phaseType, durationWeeks, targetWeeklyVolume, targetWeeklyDuration, description
+- This provides the strategic roadmap for the full training cycle
+
+TIER 2 - MEDIUM-TERM (Current Phase Blocks Only):
+- Generate block structure mainly for the FIRST/CURRENT phase, but you may generate future blocks if it helps with your planning
+- Include: blockNumber, intent, durationDays
+- Do NOT generate all blocks for future phases yet - they will be created closer to when needed
+
+TIER 3 - SHORT-TERM (Next 2 Blocks Only):
+- Generate detailed workouts ONLY for the FIRST 1-2 BLOCKS
+- Include full workout details: type, name, duration, distance, intensity, description
+- Do NOT generate workouts for blocks beyond the first 2
+- This gives ~7-14 days of detailed planning while staying adaptive
+
+RATIONALE: This phased approach allows for adaptation as the user progresses. Future blocks and workouts will be generated closer to when they're needed, accounting for actual progress, injuries, and life changes.
+
 PLANNING PRINCIPLES:
 1. PHASE STRUCTURE: Use a sequence of Phases (Base, Build, Peak, Taper) as defined by the goal type.
 2. RECOVERY BLOCKS: Ensure adequate recovery blocks (every 3-4 weeks) with reduced volume as per `recoveryVolumeReduction`.
@@ -60,6 +80,24 @@ PLANNING PRINCIPLES:
    - Respect Recovery Blocks: passive mobility only
    - If volume doesn't fit safely, suggest adding training days OR reducing duration
 
+6. RPE (RATE OF PERCEIVED EXERTION):
+   CRITICAL: The `intensity` field MUST be a single integer between 1 and 10 (NOT a string like "RPE 7").
+   
+   RPE Guidelines:
+   - 1-3: Very light (warm-up, cool-down, gentle mobility)
+   - 4-5: Easy (conversational pace, recovery runs)
+   - 6-7: Moderate (tempo runs, general strength training)
+   - 8-9: Hard (intervals, hill repeats, max effort strength)
+   - 10: Maximum effort (race pace, all-out sprints)
+   
+   Examples:
+   - Easy Run: 4 or 5
+   - Tempo Run: 7 or 8
+   - Interval Session: 8 or 9
+   - Strength Training: 7 (moderate effort, 2-3 reps in reserve)
+   - Mobility/Recovery: 2 or 3
+
+
 CRITICAL: Use the provided JSON schema. 
 - Create 'Phases' (Base, Build, etc.) with weekly volume targets.
 - Create 'Blocks' (logical chunks of 3-10 days) within those phases.
@@ -71,7 +109,7 @@ CRITICAL: Use the provided JSON schema.
     - Set `isKey: true` for important "Long Runs" and high-intensity "Quality" sessions (Intervals, Tempo, Hills).
     - For Strength sessions, set `isKey: true` if the user's Strength priority is 'High' or use best judgement. 
     - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
-6. CALENDAR ALIGNMENT:
+7. CALENDAR ALIGNMENT:
     - Use the `upcomingWeekdays` list from the config to map `dayNumber` to real days.
     - Index 0 corresponds to `dayNumber: 1`. 
     - Example: If `upcomingWeekdays[0]` is 'Saturday' and you want a Long Run, schedule it on `dayNumber: 1`.

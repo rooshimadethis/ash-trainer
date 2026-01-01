@@ -61,7 +61,7 @@ class WorkoutSkeleton with _$WorkoutSkeleton {
     required String name,
     required int plannedDuration,
     double? plannedDistance,
-    required String intensity,
+    required int intensity, // RPE (1-10)
     required String description,
     @Default(false) bool isKey,
   }) = _WorkoutSkeleton;
