@@ -321,7 +321,7 @@ class _DayColumn extends ConsumerWidget {
     final Color blockTint =
         blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
     final Color baseBackground = isToday
-        ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
+        ? (blockColor ?? Theme.of(context).primaryColor).withValues(alpha: 0.2)
         : Theme.of(context)
             .colorScheme
             .surfaceContainerHighest
@@ -336,13 +336,19 @@ class _DayColumn extends ConsumerWidget {
           color: Color.alphaBlend(blockTint, baseBackground),
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
-            if (isSelected)
+            if (isSelected) ...[
               BoxShadow(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
-                blurRadius: 12,
-                spreadRadius: 2,
-              )
-            else ...[
+                color: Colors.black.withValues(alpha: 0.25),
+                offset: const Offset(0, 12),
+                blurRadius: 24,
+                spreadRadius: -4,
+              ),
+              BoxShadow(
+                color: Colors.white.withValues(alpha: isToday ? 0.2 : 0.6),
+                offset: const Offset(0, 1),
+                blurRadius: 0,
+              ),
+            ] else ...[
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.08),
                 offset: const Offset(0, 4),
@@ -356,7 +362,13 @@ class _DayColumn extends ConsumerWidget {
               ),
             ],
           ],
-          border: null, // Removed border as color change is enough
+          border: (isToday || blockColor != null)
+              ? Border.all(
+                  color: (blockColor ?? Theme.of(context).primaryColor)
+                      .withValues(alpha: 0.15),
+                  width: 1,
+                )
+              : null,
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(23),
@@ -483,7 +495,8 @@ class _NavIcon extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(icon, color: AppColors.textPrimary, size: 24),
+        child: Icon(icon,
+            color: Theme.of(context).colorScheme.onSurface, size: 24),
       ),
     );
   }

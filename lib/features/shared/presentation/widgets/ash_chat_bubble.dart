@@ -51,13 +51,17 @@ class AshChatBubble extends StatelessWidget {
                 ),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
-                    offset: const Offset(0, 4),
-                    blurRadius: 12,
-                    spreadRadius: -2,
+                    color: Colors.black
+                        .withValues(alpha: AppColors.glassShadowOpacity),
+                    offset: const Offset(0, 8),
+                    blurRadius: 16,
+                    spreadRadius: -4,
                   ),
                   BoxShadow(
-                    color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.4),
+                    color: Colors.white.withValues(
+                        alpha: isDark
+                            ? AppColors.glassHighlightDarkOpacity
+                            : AppColors.glassHighlightLightOpacity),
                     offset: const Offset(0, 1),
                     blurRadius: 0,
                     spreadRadius: 0,

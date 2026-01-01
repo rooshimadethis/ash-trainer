@@ -5,7 +5,7 @@ import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
 
-class AshButton extends StatelessWidget {
+class AshButton extends StatefulWidget {
   final String label;
   final VoidCallback? onPressed;
   final IconData? icon;
@@ -20,19 +20,33 @@ class AshButton extends StatelessWidget {
   });
 
   @override
+  State<AshButton> createState() => _AshButtonState();
+}
+
+class _AshButtonState extends State<AshButton> {
+  bool _isPressed = false;
+
+  @override
   Widget build(BuildContext context) {
-    final isEnabled = onPressed != null;
-    final isPrimary = variant == AshButtonVariant.primary;
+    final isEnabled = widget.onPressed != null;
+    final isPrimary = widget.variant == AshButtonVariant.primary;
 
     return GestureDetector(
+      onTapDown: isEnabled ? (_) => setState(() => _isPressed = true) : null,
+      onTapUp: isEnabled ? (_) => setState(() => _isPressed = false) : null,
+      onTapCancel: isEnabled ? () => setState(() => _isPressed = false) : null,
       onTap: isEnabled
           ? () {
               AshHaptics.mediumImpact();
-              if (onPressed != null) onPressed!();
+              if (widget.onPressed != null) widget.onPressed!();
             }
           : null,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 100),
+        curve: Curves.easeInOut,
+        transform: _isPressed
+            ? Matrix4.translationValues(0, 4, 0)
+            : Matrix4.identity(),
         width: double.infinity,
         height: 60,
         decoration: BoxDecoration(
@@ -58,10 +72,13 @@ class AshButton extends StatelessWidget {
               ? [
                   // Standard depth shadow (same as AshCard)
                   BoxShadow(
-                    color: Colors.black
-                        .withValues(alpha: AppColors.glassShadowOpacity),
-                    offset: const Offset(0, 8),
-                    blurRadius: 16,
+                    color: Colors.black.withValues(
+                        alpha: _isPressed
+                            ? AppColors.glassShadowOpacity * 0.5
+                            : AppColors.glassShadowOpacity),
+                    offset:
+                        _isPressed ? const Offset(0, 4) : const Offset(0, 8),
+                    blurRadius: _isPressed ? 8 : 16,
                     spreadRadius: -4,
                   ),
                   // Subtle inner glow/highlight for 3D feel (same as AshCard)
@@ -82,7 +99,7 @@ class AshButton extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                label,
+                widget.label,
                 style: AppTextStyles.buttonText.copyWith(
                   color: isEnabled
                       ? (isPrimary
@@ -97,10 +114,10 @@ class AshButton extends StatelessWidget {
                   letterSpacing: 0.5,
                 ),
               ),
-              if (icon != null) ...[
+              if (widget.icon != null) ...[
                 const SizedBox(width: 8),
                 Icon(
-                  icon,
+                  widget.icon,
                   size: 20,
                   color: isEnabled
                       ? (isPrimary
