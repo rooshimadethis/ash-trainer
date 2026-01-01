@@ -5,7 +5,8 @@ import 'text_styles.dart';
 class AppTheme {
   static ThemeData lightTheme({Color? primaryColor}) {
     final primary = primaryColor ?? AppColors.primary;
-    final primaryContainer = primary.withValues(alpha: 0.1);
+    final primaryContainer =
+        primary.withValues(alpha: AppColors.glassOverlayOpacity);
 
     return ThemeData(
       brightness: Brightness.light,
@@ -50,7 +51,8 @@ class AppTheme {
 
   static ThemeData darkTheme({Color? primaryColor}) {
     final primary = primaryColor ?? AppColors.primary;
-    final primaryContainer = primary.withValues(alpha: 0.15);
+    final primaryContainer =
+        primary.withValues(alpha: AppColors.glassTintOpacity);
 
     return ThemeData(
       brightness: Brightness.dark,
@@ -193,7 +195,8 @@ class AppTheme {
   static SliderThemeData _buildSliderTheme(Color primary) {
     return SliderThemeData(
       activeTrackColor: primary,
-      inactiveTrackColor: primary.withValues(alpha: 0.1),
+      inactiveTrackColor:
+          primary.withValues(alpha: AppColors.glassOverlayOpacity),
       thumbColor: Colors.white,
       activeTickMarkColor: Colors.transparent,
       inactiveTickMarkColor: Colors.transparent,

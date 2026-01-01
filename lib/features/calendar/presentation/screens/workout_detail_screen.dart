@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -77,7 +78,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: typeColor.withValues(alpha: 0.15),
+                          color: typeColor.withValues(
+                              alpha: AppColors.glassTintOpacity),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -326,12 +328,15 @@ class WorkoutDetailScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.5),
+        color: Theme.of(context)
+            .colorScheme
+            .surface
+            .withValues(alpha: AppColors.glassSurfaceOpacity),
         borderRadius: BorderRadius.circular(24),
         boxShadow: [
           // Standard depth shadow (same as AshCard/AshButton)
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.15),
+            color: Colors.black.withValues(alpha: AppColors.glassShadowOpacity),
             offset: const Offset(0, 8),
             blurRadius: 16,
             spreadRadius: -4,
@@ -340,8 +345,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
           BoxShadow(
             color: Colors.white.withValues(
                 alpha: Theme.of(context).brightness == Brightness.dark
-                    ? 0.03
-                    : 0.5),
+                    ? AppColors.glassHighlightDarkOpacity
+                    : AppColors.glassHighlightLightOpacity),
             offset: const Offset(0, 1),
             blurRadius: 0,
             spreadRadius: 0,

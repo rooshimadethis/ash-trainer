@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/training/workout.dart';
 import 'ash_card.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
 import '../providers/user_provider.dart';
@@ -30,7 +31,7 @@ class WorkoutCard extends ConsumerWidget {
       borderWidth: 0,
       borderColor: Colors.transparent,
       backgroundColor: useWorkoutColor
-          ? typeColor.withValues(alpha: 0.15)
+          ? typeColor.withValues(alpha: AppColors.glassTintOpacity)
           : Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +42,8 @@ class WorkoutCard extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: typeColor.withValues(alpha: 0.15),
+                  color:
+                      typeColor.withValues(alpha: AppColors.glassTintOpacity),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(

@@ -194,7 +194,7 @@ class WeeklyView extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.15),
+                        .withValues(alpha: AppColors.glassTintOpacity),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
@@ -406,7 +406,8 @@ class _DayColumn extends ConsumerWidget {
                                 width: 22,
                                 height: 22,
                                 decoration: BoxDecoration(
-                                  color: displayColor.withValues(alpha: 0.15),
+                                  color: displayColor.withValues(
+                                      alpha: AppColors.glassTintOpacity),
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color: displayColor.withValues(alpha: 0.4),

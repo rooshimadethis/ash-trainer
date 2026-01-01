@@ -4,6 +4,7 @@ import 'workout_success_screen.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/theme_provider.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -106,13 +107,15 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   decoration: BoxDecoration(
-                    color:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                    color: Theme.of(context)
+                        .primaryColor
+                        .withValues(alpha: AppColors.glassTintOpacity),
                     borderRadius: BorderRadius.circular(32),
                     boxShadow: [
                       // Standard depth shadow (same as AshCard)
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.15),
+                        color: Colors.black
+                            .withValues(alpha: AppColors.glassShadowOpacity),
                         offset: const Offset(0, 8),
                         blurRadius: 16,
                         spreadRadius: -4,
@@ -122,8 +125,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                         color: Colors.white.withValues(
                             alpha:
                                 Theme.of(context).brightness == Brightness.dark
-                                    ? 0.03
-                                    : 0.5),
+                                    ? AppColors.glassHighlightDarkOpacity
+                                    : AppColors.glassHighlightLightOpacity),
                         offset: const Offset(0, 1),
                         blurRadius: 0,
                         spreadRadius: 0,
@@ -163,12 +166,13 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                     decoration: BoxDecoration(
                       color: Theme.of(context)
                           .primaryColor
-                          .withValues(alpha: 0.15),
+                          .withValues(alpha: AppColors.glassTintOpacity),
                       borderRadius: BorderRadius.circular(32),
                       boxShadow: [
                         // Standard depth shadow (same as AshCard)
                         BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.15),
+                          color: Colors.black
+                              .withValues(alpha: AppColors.glassShadowOpacity),
                           offset: const Offset(0, 8),
                           blurRadius: 16,
                           spreadRadius: -4,
@@ -178,8 +182,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                           color: Colors.white.withValues(
                               alpha: Theme.of(context).brightness ==
                                       Brightness.dark
-                                  ? 0.03
-                                  : 0.5),
+                                  ? AppColors.glassHighlightDarkOpacity
+                                  : AppColors.glassHighlightLightOpacity),
                           offset: const Offset(0, 1),
                           blurRadius: 0,
                           spreadRadius: 0,
@@ -222,14 +226,18 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                 const SizedBox(height: 16),
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
-                    activeTrackColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.15),
-                    inactiveTrackColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.05),
-                    thumbColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.8),
-                    overlayColor:
-                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    activeTrackColor: Theme.of(context)
+                        .primaryColor
+                        .withValues(alpha: AppColors.glassTintOpacity),
+                    inactiveTrackColor: Theme.of(context)
+                        .primaryColor
+                        .withValues(alpha: AppColors.glassInactiveOpacity),
+                    thumbColor: Theme.of(context)
+                        .primaryColor
+                        .withValues(alpha: AppColors.glassThumbOpacity),
+                    overlayColor: Theme.of(context)
+                        .primaryColor
+                        .withValues(alpha: AppColors.glassOverlayOpacity),
                     trackHeight: 8,
                     thumbShape: const RoundSliderThumbShape(
                       enabledThumbRadius: 16,

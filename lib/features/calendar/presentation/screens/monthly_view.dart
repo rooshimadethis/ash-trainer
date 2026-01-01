@@ -241,7 +241,7 @@ class MonthlyView extends ConsumerWidget {
                   decoration: BoxDecoration(
                     color: BlockUtils.getColorForIntent(
                             dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.15),
+                        .withValues(alpha: AppColors.glassTintOpacity),
                     borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(

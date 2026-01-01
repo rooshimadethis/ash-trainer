@@ -347,26 +347,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
           text: 'Good morning! Ready to tackle today? How are you feeling?',
         ),
         const SizedBox(height: 8),
-        Row(
-          children: [
-            const SizedBox(width: 52), // Offset for Ash's avatar
-            Expanded(
-              child: AshCard(
-                onTap: () {},
-                backgroundColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                borderColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.2),
-                child: Center(
-                  child: Text(
-                    'Quick Check-In',
-                    style: AppTextStyles.h4.copyWith(color: AppColors.primary),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
       ],
     );
   }

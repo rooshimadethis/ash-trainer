@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
@@ -38,15 +39,17 @@ class AshButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(24),
           color: isEnabled
               ? (isPrimary
-                  ? Theme.of(context)
-                      .primaryColor
-                      .withValues(alpha: 0.15) // Matching WorkoutCard alpha
+                  ? Theme.of(context).primaryColor.withValues(
+                      alpha: AppColors
+                          .glassTintOpacity) // Matching WorkoutCard alpha
                   : Theme.of(context)
                       .colorScheme
                       .surfaceContainerHighest
-                      .withValues(alpha: 0.5))
+                      .withValues(alpha: AppColors.glassSurfaceOpacity))
               : (isPrimary
-                  ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
+                  ? Theme.of(context)
+                      .primaryColor
+                      .withValues(alpha: AppColors.glassInactiveOpacity)
                   : Theme.of(context)
                       .colorScheme
                       .surfaceContainerHighest
@@ -55,7 +58,8 @@ class AshButton extends StatelessWidget {
               ? [
                   // Standard depth shadow (same as AshCard)
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
+                    color: Colors.black
+                        .withValues(alpha: AppColors.glassShadowOpacity),
                     offset: const Offset(0, 8),
                     blurRadius: 16,
                     spreadRadius: -4,
@@ -64,8 +68,8 @@ class AshButton extends StatelessWidget {
                   BoxShadow(
                     color: Colors.white.withValues(
                         alpha: Theme.of(context).brightness == Brightness.dark
-                            ? 0.03
-                            : 0.5),
+                            ? AppColors.glassHighlightDarkOpacity
+                            : AppColors.glassHighlightLightOpacity),
                     offset: const Offset(0, 1),
                     blurRadius: 0,
                     spreadRadius: 0,

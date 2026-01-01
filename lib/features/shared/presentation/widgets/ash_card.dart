@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/haptics.dart';
+import '../../../../core/theme/colors.dart';
 
 class AshCard extends StatelessWidget {
   final Widget child;
@@ -52,14 +53,18 @@ class AshCard extends StatelessWidget {
             else ...[
               // Standard depth shadow
               BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
+                color: Colors.black
+                    .withValues(alpha: AppColors.glassShadowOpacity),
                 offset: const Offset(0, 8),
                 blurRadius: 16,
                 spreadRadius: -4,
               ),
               // Subtle inner glow/highlight for 3D feel
               BoxShadow(
-                color: Colors.white.withValues(alpha: isDark ? 0.03 : 0.5),
+                color: Colors.white.withValues(
+                    alpha: isDark
+                        ? AppColors.glassHighlightDarkOpacity
+                        : AppColors.glassHighlightLightOpacity),
                 offset: const Offset(0, 1),
                 blurRadius: 0,
                 spreadRadius: 0,

@@ -61,6 +61,17 @@ class AppColors {
   static const Color error = Color(0xFFF87171); // Red 400
   static const Color warning = Color(0xFFFBBF24); // Amber 400
 
+  // --- Opacity Constants ---
+  static const double glassTintOpacity = 0.20; // Tinted cards, buttons, inputs
+  static const double glassSurfaceOpacity = 0.5; // Neutral frosted glass
+  static const double glassInactiveOpacity = 0.05; // Inactive elements
+  static const double glassHighlightDarkOpacity = 0.03; // Dark mode highlights
+  static const double glassHighlightLightOpacity = 0.5; // Light mode highlights
+  static const double glassShadowOpacity = 0.15; // Standard depth shadow
+  static const double glassOverlayOpacity =
+      0.1; // Slider overlay / interactions
+  static const double glassThumbOpacity = 0.8; // Slider thumb / strong accents
+
   static const Color white = Colors.white;
   static const Color black = Colors.black;
 

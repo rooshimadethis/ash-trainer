@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
 
@@ -161,12 +162,15 @@ class RecoveryWidget extends ConsumerWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
               decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+                color: Theme.of(context)
+                    .primaryColor
+                    .withValues(alpha: AppColors.glassTintOpacity),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   // Standard depth shadow (same as AshCard)
                   BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
+                    color: Colors.black
+                        .withValues(alpha: AppColors.glassShadowOpacity),
                     offset: const Offset(0, 8),
                     blurRadius: 16,
                     spreadRadius: -4,
@@ -175,8 +179,8 @@ class RecoveryWidget extends ConsumerWidget {
                   BoxShadow(
                     color: Colors.white.withValues(
                         alpha: Theme.of(context).brightness == Brightness.dark
-                            ? 0.03
-                            : 0.5),
+                            ? AppColors.glassHighlightDarkOpacity
+                            : AppColors.glassHighlightLightOpacity),
                     offset: const Offset(0, 1),
                     blurRadius: 0,
                     spreadRadius: 0,
