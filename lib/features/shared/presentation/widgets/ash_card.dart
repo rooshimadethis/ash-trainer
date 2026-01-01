@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/utils/haptics.dart';
 
 class AshCard extends StatelessWidget {
   final Widget child;
@@ -22,7 +23,12 @@ class AshCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap != null
+          ? () {
+              AshHaptics.mediumImpact();
+              onTap!();
+            }
+          : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutCubic,

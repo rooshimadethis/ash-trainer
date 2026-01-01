@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
 
@@ -42,7 +43,12 @@ class AshButton extends StatelessWidget {
             : [],
       ),
       child: ElevatedButton(
-        onPressed: onPressed,
+        onPressed: onPressed != null
+            ? () {
+                AshHaptics.mediumImpact();
+                onPressed!();
+              }
+            : null,
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary
               ? Theme.of(context).colorScheme.primary

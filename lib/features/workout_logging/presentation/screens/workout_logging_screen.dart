@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'workout_success_screen.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +12,7 @@ import '../../../shared/presentation/widgets/ash_button.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
+import '../../../../core/utils/haptics.dart';
 
 class WorkoutLoggingScreen extends ConsumerStatefulWidget {
   final Workout workout;
@@ -155,7 +155,13 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
                   divisions: 9,
                   activeColor: Theme.of(context).colorScheme.primary,
                   inactiveColor: AppColors.surfaceDark,
-                  onChanged: (val) => setState(() => _rpe = val.round()),
+                  onChanged: (val) {
+                    final roundedVal = val.round();
+                    if (roundedVal != _rpe) {
+                      AshHaptics.lightImpact();
+                      setState(() => _rpe = roundedVal);
+                    }
+                  },
                 ),
                 // Slider labels - using Stack for precise alignment
                 SizedBox(
@@ -217,8 +223,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
   Future<void> _submit() async {
     setState(() => _isSubmitting = true);
 
-    // Trigger light haptic feedback on button press
-    HapticFeedback.mediumImpact();
+    // Trigger medium haptic feedback on button press
+    AshHaptics.mediumImpact();
 
     // Get user's preferred unit for conversion
     final preferredUnit = ref.read(preferredDistanceUnitProvider);
@@ -240,7 +246,7 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
       await ref.read(workoutRepositoryProvider).logWorkout(updatedWorkout);
 
       // Trigger heavy haptic feedback on success
-      HapticFeedback.heavyImpact();
+      AshHaptics.heavyImpact();
 
       // Trigger automation
       await ref.read(trainingAutomationProvider).onWorkoutAction();
