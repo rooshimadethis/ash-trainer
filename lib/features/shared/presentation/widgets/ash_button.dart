@@ -30,7 +30,10 @@ class AshButton extends StatelessWidget {
         boxShadow: isEnabled && isPrimary
             ? [
                 BoxShadow(
-                  color: Theme.of(context).primaryColor.withValues(alpha: 0.25),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.25),
                   offset: const Offset(0, 4),
                   blurRadius: 20,
                   spreadRadius: 0,
@@ -42,7 +45,7 @@ class AshButton extends StatelessWidget {
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: isPrimary
-              ? Theme.of(context).primaryColor
+              ? Theme.of(context).colorScheme.primary
               : AppColors.surfaceHighlight,
           disabledBackgroundColor: AppColors.surfaceHighlight,
           foregroundColor:

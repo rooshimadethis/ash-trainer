@@ -65,7 +65,7 @@ class AppTextStyles {
   static TextStyle get label => display.copyWith(
         fontSize: 12,
         fontWeight: FontWeight.w700,
-        color: AppColors.primary,
+        // Color removed - will inherit from theme
         letterSpacing: 0.5,
         textBaseline: TextBaseline.alphabetic,
       );
@@ -73,7 +73,7 @@ class AppTextStyles {
   static TextStyle get labelLarge => display.copyWith(
         fontSize: 14,
         fontWeight: FontWeight.w700,
-        color: AppColors.primary,
+        // Color removed - will inherit from theme
         letterSpacing: 0.1,
       );
 
