@@ -311,10 +311,10 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _moodChip('Great 🚀', Colors.orange),
-                  _moodChip('Good 👍', Colors.green),
-                  _moodChip('Tired 🥱', Colors.blue),
-                  _moodChip('Sore 🤕', Colors.redAccent),
+                  _moodChip('Great 🚀'),
+                  _moodChip('Good 👍'),
+                  _moodChip('Tired 🥱'),
+                  _moodChip('Sore 🤕'),
                 ],
               ),
             ),
@@ -324,17 +324,19 @@ class _TodayViewState extends ConsumerState<TodayView> {
     );
   }
 
-  Widget _moodChip(String label, Color color) {
+  Widget _moodChip(String label) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return AshCard(
       onTap: () {},
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-      backgroundColor: color,
-      borderColor: Colors.black.withValues(alpha: 0.8),
+      backgroundColor: isDark ? AppColors.surface : AppColors.surfaceLight,
+      borderColor: isDark ? AppColors.retroAccent : Colors.black,
       borderWidth: 1.5,
       child: Text(
         label,
         style: AppTextStyles.label.copyWith(
-          color: Colors.white,
+          color:
+              isDark ? AppColors.textPrimaryDark : AppColors.textPrimaryLight,
           fontSize: 12,
           fontWeight: FontWeight.w900,
           letterSpacing: 0.5,

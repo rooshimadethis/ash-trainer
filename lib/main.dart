@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 
 Future<void> main() async {
@@ -61,14 +62,26 @@ class AshTrainerApp extends ConsumerWidget {
       theme: theme,
       home: const StartupRouter(),
       builder: (context, child) {
-        // Wrap with DebugOverlay only in debug mode
+        // Wrap with DebugOverlay and set global system UI style
+        final isDark = theme.brightness == Brightness.dark;
+        final systemUiOverlayStyle = SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
+          statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
+        );
+
+        Widget wrappedChild = AnnotatedRegion<SystemUiOverlayStyle>(
+          value: systemUiOverlayStyle,
+          child: child!,
+        );
+
         assert(() {
-          child = DebugOverlay(
-            child: child!,
+          wrappedChild = DebugOverlay(
+            child: wrappedChild,
           );
           return true;
         }());
-        return child!;
+        return wrappedChild;
       },
     );
   }

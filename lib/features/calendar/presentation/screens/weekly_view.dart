@@ -9,7 +9,6 @@ import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
 import '../widgets/calendar_nav_button.dart';
 import '../widgets/calendar_day_cell.dart';
-import '../widgets/calendar_progress_summary.dart';
 import '../widgets/selected_day_workout_list.dart';
 
 class WeeklyView extends ConsumerWidget {
@@ -35,27 +34,6 @@ class WeeklyView extends ConsumerWidget {
           _buildHeader(context, ref, startOfWeek, weekRangeStr),
           const SizedBox(height: 20),
 
-          // Ash context bubble
-          weeklyWorkoutsAsync.when(
-            data: (workouts) => _buildContextBubble(workouts, startOfWeek),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Progress summary cards
-          weeklyWorkoutsAsync.when(
-            data: (workouts) => CalendarProgressSummary(
-              workouts: workouts,
-              periodLabel: 'This Week',
-            ),
-            loading: () => const SizedBox(height: 80),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 24),
-
           // Week grid
           SizedBox(
             height: 120,
@@ -70,6 +48,21 @@ class WeeklyView extends ConsumerWidget {
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
           ),
+
+          const SizedBox(height: 24),
+
+          // Ash context bubble
+          weeklyWorkoutsAsync.when(
+            data: (workouts) => weeklyBlocksAsync.when(
+              data: (blocks) =>
+                  _buildContextBubble(workouts, blocks, selectedDate),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+
           const SizedBox(height: 32),
 
           // Selected day workout list
@@ -92,38 +85,35 @@ class WeeklyView extends ConsumerWidget {
     );
   }
 
-  Widget _buildContextBubble(List<Workout> workouts, DateTime startOfWeek) {
-    final completed = workouts.where((w) => w.status == 'completed').length;
-    final total = workouts.length;
-    final remaining = total - completed;
-
-    // Check if this is current week
-    final now = DateTime.now();
-    final isCurrentWeek =
-        now.isAfter(startOfWeek.subtract(const Duration(days: 1))) &&
-            now.isBefore(startOfWeek.add(const Duration(days: 7)));
+  Widget _buildContextBubble(List<Workout> workouts, List<TrainingBlock> blocks,
+      DateTime selectedDate) {
+    final currentBlock = _findBlockForDay(selectedDate, blocks);
 
     String message;
-    if (total == 0) {
-      message = "Looks like a recovery week! Focus on rest and mobility. 🧘";
-    } else if (completed == total) {
-      message = "Amazing work! You crushed every workout this week! 🏆";
-    } else if (isCurrentWeek) {
-      if (remaining == 1) {
-        message = "Just 1 workout left this week. You've got this! 💪";
-      } else if (remaining == total) {
-        message = "$total workouts planned this week. Let's make it count! 🔥";
+    if (currentBlock != null) {
+      final intent = currentBlock.intent.toLowerCase();
+      if (intent.contains('base')) {
+        message =
+            "We're in a Base phase. Focus on building an aerobic foundation with steady, easy efforts. 🏃‍♂️";
+      } else if (intent.contains('build')) {
+        message =
+            "It's the Build phase! We're increasing volume and adding some intensity to sharpen your fitness. 🔥";
+      } else if (intent.contains('peak')) {
+        message =
+            "Peak week! This is where we push the limits. Trust your training and stay focused. 🏆";
+      } else if (intent.contains('taper')) {
+        message =
+            "Taper time. We're cutting back volume so you're fresh and ready for race day. ⚡";
+      } else if (intent.contains('recover')) {
+        message =
+            "Recovery week. Prioritize sleep, mobility, and let your body absorb the hard work. 🧘";
       } else {
-        message = "$completed done, $remaining to go. Keep the momentum! 🚀";
+        message =
+            "Currently in the ${currentBlock.intent} block. Let's stay consistent and stick to the plan! 💪";
       }
     } else {
-      if (completed == 0 && total > 0) {
-        message =
-            "This week had $total workouts planned. Check out the details below!";
-      } else {
-        message =
-            "You completed $completed of $total workouts this week. Nice effort!";
-      }
+      message =
+          "No specific training block active right now. Let's keep moving and stay healthy! 🏃";
     }
 
     return AshChatBubble(text: message);

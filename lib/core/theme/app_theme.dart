@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'colors.dart';
 import 'text_styles.dart';
 
@@ -36,6 +37,12 @@ class AppTheme {
         titleTextStyle:
             AppTextStyles.h3.copyWith(color: AppColors.textPrimaryLight),
         iconTheme: const IconThemeData(color: AppColors.textPrimaryLight),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Brightness.dark, // Dark icons for light theme
+          statusBarBrightness: Brightness.light, // For iOS
+        ),
       ),
       cardTheme: _buildCardTheme(isDark: false),
       elevatedButtonTheme: _buildElevatedButtonTheme(primary),
@@ -85,6 +92,12 @@ class AppTheme {
         titleTextStyle:
             AppTextStyles.h3.copyWith(color: AppColors.textPrimaryDark),
         iconTheme: const IconThemeData(color: AppColors.textPrimaryDark),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness:
+              Brightness.light, // Light icons for dark theme
+          statusBarBrightness: Brightness.dark, // For iOS
+        ),
       ),
       cardTheme: _buildCardTheme(isDark: true),
       elevatedButtonTheme: _buildElevatedButtonTheme(primary),

@@ -14,6 +14,7 @@ import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
 import '../../../shared/presentation/widgets/ash_surface_card.dart';
+import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final Workout workout;
@@ -114,19 +115,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // Title & Description
+                  // Title
                   Text(workout.name,
                       style: AppTextStyles.h1.copyWith(
                           color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 12),
-                  Text(
-                    workout.description ??
+
+                  // Ash Description Bubble
+                  AshChatBubble(
+                    text: workout.description ??
                         'No description provided for this workout.',
-                    style: AppTextStyles.bodyLarge.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withValues(alpha: 0.8)),
                   ),
 
                   const SizedBox(height: 32),

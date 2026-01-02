@@ -12,6 +12,7 @@ import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
 import '../../../../core/utils/haptics.dart';
+import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 
 class WorkoutLoggingScreen extends ConsumerStatefulWidget {
   final Workout workout;
@@ -91,10 +92,8 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
               children: [
                 Text(widget.workout.name, style: AppTextStyles.h2),
                 const SizedBox(height: 8),
-                Text(
-                  'How did it go? Enter your actuals below.',
-                  style: AppTextStyles.bodyMedium.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant),
+                const AshChatBubble(
+                  text: 'How did it go? Enter your actuals below.',
                 ),
                 const SizedBox(height: 32),
 

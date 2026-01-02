@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/utils/block_utils.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/borders.dart';
 import '../../../../core/theme/shadows.dart';
@@ -47,32 +46,21 @@ class CalendarDayCell extends ConsumerWidget {
     final isToday = DateUtils.isSameDay(day, DateTime.now());
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final blockColor = block != null
-        ? BlockUtils.getColorForIntent(block!.intent, block!.blockNumber)
-        : null;
+    // Background color – always neutral white/surface as per user request
+    final Color backgroundColor =
+        isDark ? AppColors.surface : AppColors.surfaceLight;
 
-    // Get dominant workout color for the day (first workout's color)
-    final workoutColor =
-        workouts.isNotEmpty ? WorkoutTypes.getColor(workouts.first.type) : null;
-
-    // Bold color background - full workout color or neutral for empty days
-    final Color backgroundColor = workoutColor ??
-        blockColor ??
-        (isDark ? AppColors.surface : AppColors.surfaceLightSecondary);
-
-    // Whether this cell has a bold colored background
-    final bool hasBoldColor = workoutColor != null || blockColor != null;
+    // Cells are no longer bold colored, so pips/text should use standard colors
+    const bool hasBoldColor = false;
 
     // Border color for selection/today states
     final Color borderColor = isSelected
         ? (isDark ? AppColors.retroAccent : Colors.black)
         : isToday
             ? Theme.of(context).primaryColor
-            : hasBoldColor
-                ? Colors.black.withValues(alpha: 0.15)
-                : (isDark
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : Colors.black.withValues(alpha: 0.06));
+            : (isDark
+                ? Colors.white.withValues(alpha: 0.08)
+                : Colors.black.withValues(alpha: 0.06));
 
     final double borderWidth = isSelected ? AppBorders.selected : 1.5;
 
@@ -105,12 +93,10 @@ class CalendarDayCell extends ConsumerWidget {
 
   /// Expanded content for weekly view - full day name, larger number, workout icons
   Widget _buildExpandedContent(BuildContext context, bool hasBoldColor) {
-    // Use white text on bold colored backgrounds, dark on neutral
-    final textColor =
-        hasBoldColor ? Colors.white : Theme.of(context).colorScheme.onSurface;
-    final mutedTextColor = hasBoldColor
-        ? Colors.white.withValues(alpha: 0.7)
-        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
+    // Standard themed text colors since background is always neutral
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final mutedTextColor =
+        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -146,12 +132,10 @@ class CalendarDayCell extends ConsumerWidget {
 
   /// Compact content for monthly view - single letter, small number, workout dots
   Widget _buildCompactContent(BuildContext context, bool hasBoldColor) {
-    // Use white text on bold colored backgrounds, dark on neutral
-    final textColor =
-        hasBoldColor ? Colors.white : Theme.of(context).colorScheme.onSurface;
-    final mutedTextColor = hasBoldColor
-        ? Colors.white.withValues(alpha: 0.7)
-        : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
+    // Standard themed text colors since background is always neutral
+    final textColor = Theme.of(context).colorScheme.onSurface;
+    final mutedTextColor =
+        Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.4);
 
     return Column(
       children: [
@@ -193,42 +177,34 @@ class CalendarDayCell extends ConsumerWidget {
     );
   }
 
-  /// Outlined workout pip - white ring on colored bg, colored ring on neutral bg
+  /// Solid workout pip with workout type color
   Widget _buildWorkoutPip(
       BuildContext context, Workout workout, bool hasBoldColor) {
     final isCompleted = workout.status == 'completed';
-    final workoutTypeColor = WorkoutTypes.getColor(workout.type);
-
-    // On bold backgrounds: white outlined pips
-    // On neutral backgrounds: colored outlined pips
-    final pipColor = hasBoldColor ? Colors.white : workoutTypeColor;
+    final pipColor = WorkoutTypes.getColor(workout.type);
 
     final size = style == CalendarDayCellStyle.expanded ? 18.0 : 8.0;
-    final borderWidth = style == CalendarDayCellStyle.expanded ? 2.0 : 1.5;
 
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: style == CalendarDayCellStyle.expanded ? 0 : 1.5,
-        vertical: style == CalendarDayCellStyle.expanded ? 1 : 0,
+        vertical: style == CalendarDayCellStyle.expanded ? 2 : 0,
       ),
       width: size,
       height: size,
       decoration: BoxDecoration(
-        // Fill only if completed
-        color:
-            isCompleted ? pipColor.withValues(alpha: 0.3) : Colors.transparent,
+        color: pipColor.withValues(alpha: isCompleted ? 1.0 : 0.4),
         shape: BoxShape.circle,
-        border: Border.all(
-          color: pipColor.withValues(alpha: isCompleted ? 1.0 : 0.6),
-          width: borderWidth,
-        ),
+        border: !isCompleted && style == CalendarDayCellStyle.expanded
+            ? Border.all(color: pipColor, width: 1.5)
+            : null,
       ),
       child: isCompleted && style == CalendarDayCellStyle.expanded
-          ? Center(
+          ? const Center(
               child: Icon(
                 Icons.check_rounded,
                 size: 10,
-                color: pipColor,
+                color: Colors.white,
               ),
             )
           : null,

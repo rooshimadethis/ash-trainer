@@ -8,7 +8,6 @@ import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
 import '../widgets/calendar_nav_button.dart';
 import '../widgets/calendar_day_cell.dart';
-import '../widgets/calendar_progress_summary.dart';
 import '../widgets/selected_day_workout_list.dart';
 
 class MonthlyView extends ConsumerWidget {
@@ -54,27 +53,6 @@ class MonthlyView extends ConsumerWidget {
 
           const SizedBox(height: 20),
 
-          // Ash context bubble
-          monthlyWorkoutsAsync.when(
-            data: (workouts) => _buildContextBubble(workouts, focusedMonth),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 20),
-
-          // Progress summary cards
-          monthlyWorkoutsAsync.when(
-            data: (workouts) => CalendarProgressSummary(
-              workouts: workouts,
-              periodLabel: 'This Month',
-            ),
-            loading: () => const SizedBox(height: 80),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
-
-          const SizedBox(height: 24),
-
           // Month grid
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
@@ -100,6 +78,21 @@ class MonthlyView extends ConsumerWidget {
                   height: 200, child: Center(child: Text('Error: $err'))),
             ),
           ),
+
+          const SizedBox(height: 24),
+
+          // Ash context bubble
+          monthlyWorkoutsAsync.when(
+            data: (workouts) => monthlyBlocksAsync.when(
+              data: (blocks) =>
+                  _buildContextBubble(workouts, blocks, selectedDate),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+
           const SizedBox(height: 32),
 
           // Selected day workout list
@@ -122,55 +115,60 @@ class MonthlyView extends ConsumerWidget {
     );
   }
 
-  Widget _buildContextBubble(List<Workout> workouts, DateTime focusedMonth) {
-    final completed = workouts.where((w) => w.status == 'completed').length;
-    final total = workouts.length;
-
-    // Check if this is current month
-    final now = DateTime.now();
-    final isCurrentMonth =
-        now.month == focusedMonth.month && now.year == focusedMonth.year;
+  Widget _buildContextBubble(List<Workout> workouts, List<TrainingBlock> blocks,
+      DateTime selectedDate) {
+    final currentBlock = _findBlockForDay(selectedDate, blocks);
 
     // Get month name
-    final monthName = DateFormat('MMMM').format(focusedMonth);
+    final monthName = DateFormat('MMMM').format(selectedDate);
 
     String message;
-    if (total == 0) {
-      message =
-          "No workouts planned for $monthName. Time to set some goals! 🎯";
-    } else if (completed == total) {
-      message =
-          "You completed every workout in $monthName! Incredible consistency! 🏆";
-    } else if (isCurrentMonth) {
-      final progress = ((completed / total) * 100).round();
-      if (progress == 0) {
+    if (currentBlock != null) {
+      final intent = currentBlock.intent.toLowerCase();
+      if (intent.contains('base')) {
         message =
-            "$total workouts planned for $monthName. Let's build that momentum! 🚀";
-      } else if (progress >= 75) {
+            "For $monthName, we're focusing on the Base phase. Steady aerobic miles to build your foundation. 🏃‍♂️";
+      } else if (intent.contains('build')) {
         message =
-            "$progress% complete! You're crushing $monthName! Keep it up! 💪";
-      } else if (progress >= 50) {
+            "$monthName is a Build phase. We're ramping up volume and intensity to take your fitness to the next level. 🔥";
+      } else if (intent.contains('peak')) {
         message =
-            "Halfway through! $completed of $total workouts done. Strong progress! 🔥";
+            "It's the Peak phase in $monthName! Things will get tough, but this is where the biggest gains happen. 🏆";
+      } else if (intent.contains('taper')) {
+        message =
+            "We're in the Taper phase for $monthName. Sharpening up and resting for peak performance. ⚡";
+      } else if (intent.contains('recover')) {
+        message =
+            "$monthName includes a Recovery phase. Essential rest to make sure your body is absorbing all your training. 🧘";
       } else {
         message =
-            "$completed workouts down, ${total - completed} to go this month. You've got this!";
+            "In $monthName, we're currently in the ${currentBlock.intent} block. Stick to the process! 💪";
       }
     } else {
-      final successRate = total > 0 ? ((completed / total) * 100).round() : 0;
-      if (successRate >= 80) {
-        message =
-            "Great month! You hit $successRate% of your workouts in $monthName. 🌟";
-      } else if (successRate >= 50) {
-        message =
-            "Solid effort in $monthName - $completed of $total workouts completed.";
-      } else {
-        message =
-            "$monthName had $total planned workouts. Every step counts! 🏃";
-      }
+      message =
+          "No specific training block defined for $monthName yet. Let's keep a consistent routine! 🏃";
     }
 
     return AshChatBubble(text: message);
+  }
+
+  /// Helper to find block for a day - duplicated from _WeekRow but needed for context bubble
+  TrainingBlock? _findBlockForDay(DateTime day, List<TrainingBlock> blocks) {
+    return blocks.cast<TrainingBlock?>().firstWhere(
+      (b) {
+        if (b == null || b.startDate == null || b.endDate == null) {
+          return false;
+        }
+        final start =
+            DateTime(b.startDate!.year, b.startDate!.month, b.startDate!.day);
+        final end = DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
+            .add(const Duration(days: 1));
+        final d = DateTime(day.year, day.month, day.day);
+        return (d.isAtSameMomentAs(start) || d.isAfter(start)) &&
+            d.isBefore(end);
+      },
+      orElse: () => null,
+    );
   }
 
   Widget _buildHeader(

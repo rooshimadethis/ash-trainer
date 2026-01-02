@@ -5,7 +5,7 @@ import 'package:ash_trainer/core/theme/shadows.dart';
 
 enum ChatBubbleSender { ash, user }
 
-class AshChatBubble extends StatelessWidget {
+class AshChatBubble extends StatefulWidget {
   final String text;
   final ChatBubbleSender sender;
   final Widget? icon;
@@ -18,8 +18,52 @@ class AshChatBubble extends StatelessWidget {
   });
 
   @override
+  State<AshChatBubble> createState() => _AshChatBubbleState();
+}
+
+class _AshChatBubbleState extends State<AshChatBubble>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<int> _characterCount;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+    );
+    _setupAnimation();
+  }
+
+  @override
+  void didUpdateWidget(AshChatBubble oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.text != widget.text) {
+      _setupAnimation();
+    }
+  }
+
+  void _setupAnimation() {
+    // Calculate duration based on text length: ~30ms per character
+    final duration =
+        Duration(milliseconds: (widget.text.length * 15).clamp(400, 3000));
+    _controller.duration = duration;
+
+    _characterCount = StepTween(begin: 0, end: widget.text.length).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.linear),
+    );
+    _controller.forward(from: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isAsh = sender == ChatBubbleSender.ash;
+    final isAsh = widget.sender == ChatBubbleSender.ash;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final ashBubbleColor =
@@ -57,17 +101,24 @@ class AshChatBubble extends StatelessWidget {
                 ),
                 boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
               ),
-              child: Text(
-                text,
-                style: AppTextStyles.bodyMedium.copyWith(
-                  color: isAsh ? ashTextColor : userTextColor,
-                  fontWeight: isAsh ? FontWeight.w500 : FontWeight.w600,
-                ),
+              child: AnimatedBuilder(
+                animation: _characterCount,
+                builder: (context, child) {
+                  final textToShow =
+                      widget.text.substring(0, _characterCount.value);
+                  return Text(
+                    textToShow,
+                    style: AppTextStyles.bodyMedium.copyWith(
+                      color: isAsh ? ashTextColor : userTextColor,
+                      fontWeight: isAsh ? FontWeight.w500 : FontWeight.w600,
+                    ),
+                  );
+                },
               ),
             ),
           ),
           const SizedBox(width: 12),
-          if (!isAsh) icon ?? const SizedBox.shrink(),
+          if (!isAsh) widget.icon ?? const SizedBox.shrink(),
         ],
       ),
     );
@@ -76,8 +127,8 @@ class AshChatBubble extends StatelessWidget {
   Widget _buildAvatar(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      width: 40,
-      height: 40,
+      width: 44,
+      height: 44,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         shape: BoxShape.circle,
@@ -86,15 +137,9 @@ class AshChatBubble extends StatelessWidget {
           width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
-      ),
-      child: Center(
-        child: Text(
-          'A',
-          style: AppTextStyles.label.copyWith(
-            color: Colors.black,
-            fontWeight: FontWeight.w900,
-            fontSize: 18,
-          ),
+        image: const DecorationImage(
+          image: AssetImage('assets/images/ash_red_panda.png'),
+          fit: BoxFit.cover,
         ),
       ),
     );
