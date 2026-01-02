@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import 'ash_card.dart';
@@ -56,7 +57,7 @@ class AshDatePicker extends StatelessWidget {
                 child: Text(
                   value == null
                       ? hint
-                      : '${value!.day}/${value!.month}/${value!.year}',
+                      : DateFormat('MMMM d, yyyy').format(value!),
                   style: AppTextStyles.bodyLarge.copyWith(
                     fontWeight:
                         value == null ? FontWeight.w400 : FontWeight.w600,

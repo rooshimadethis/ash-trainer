@@ -13,6 +13,9 @@ class AshTextField extends StatefulWidget {
   final int maxLines;
   final List<TextInputFormatter>? inputFormatters;
   final Widget? suffix;
+  final IconData? prefixIcon;
+  final bool showPrefixIcon;
+  final bool hideLabel;
 
   const AshTextField({
     super.key,
@@ -24,6 +27,9 @@ class AshTextField extends StatefulWidget {
     this.maxLines = 1,
     this.inputFormatters,
     this.suffix,
+    this.prefixIcon = Icons.edit_note_rounded,
+    this.showPrefixIcon = true,
+    this.hideLabel = false,
   });
 
   @override
@@ -57,19 +63,20 @@ class _AshTextFieldState extends State<AshTextField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
-          child: Text(
-            widget.label.toUpperCase(),
-            style: AppTextStyles.label.copyWith(
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondaryLight,
-              letterSpacing: 1.5,
-              fontSize: 11, // Slightly smaller label to match premium feel
+        if (!widget.hideLabel)
+          Padding(
+            padding: const EdgeInsets.only(left: 4, bottom: 8),
+            child: Text(
+              widget.label.toUpperCase(),
+              style: AppTextStyles.label.copyWith(
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondaryLight,
+                letterSpacing: 1.5,
+                fontSize: 11, // Slightly smaller label to match premium feel
+              ),
             ),
           ),
-        ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
@@ -109,14 +116,16 @@ class _AshTextFieldState extends State<AshTextField> {
                 color: AppColors.textMuted.withValues(alpha: 0.6),
                 fontWeight: FontWeight.w400,
               ),
-              prefixIcon: Padding(
-                padding: const EdgeInsets.only(left: 4),
-                child: Icon(
-                  Icons.edit_note_rounded,
-                  color: _isFocused ? primaryColor : AppColors.textMuted,
-                  size: 22,
-                ),
-              ),
+              prefixIcon: widget.showPrefixIcon
+                  ? Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Icon(
+                        widget.prefixIcon,
+                        color: _isFocused ? primaryColor : AppColors.textMuted,
+                        size: 22,
+                      ),
+                    )
+                  : null,
               suffixIcon: widget.suffix,
               filled: false, // EXPLICITLY REMOVE TINT
               border: InputBorder.none,

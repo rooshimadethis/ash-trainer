@@ -19,7 +19,8 @@ class AshScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
@@ -28,12 +29,23 @@ class AshScaffold extends StatelessWidget {
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
       ),
       child: Scaffold(
-        appBar: appBar,
-        backgroundColor: Colors.transparent, // Handle background via Container
-        body: Container(
-          color: Theme.of(context).scaffoldBackgroundColor,
-          child: useSafeArea ? SafeArea(child: body) : body,
-        ),
+        appBar: appBar != null
+            ? PreferredSize(
+                preferredSize: appBar!.preferredSize,
+                child: Theme(
+                  data: theme.copyWith(
+                    appBarTheme: theme.appBarTheme.copyWith(
+                      elevation: 0,
+                      surfaceTintColor: Colors.transparent,
+                      backgroundColor: Colors.transparent,
+                    ),
+                  ),
+                  child: appBar!,
+                ),
+              )
+            : null,
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: useSafeArea ? SafeArea(child: body) : body,
         bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton,
       ),

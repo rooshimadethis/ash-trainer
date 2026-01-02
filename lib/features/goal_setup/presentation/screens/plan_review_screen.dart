@@ -12,6 +12,7 @@ import '../../../../data/providers/repository_providers.dart';
 import '../providers/goal_setup_provider.dart';
 import 'first_workout_prompt_screen.dart';
 import '../../../../core/constants/workout_types.dart';
+import '../widgets/onboarding_progress.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
 
 final week1WorkoutsProvider =
@@ -40,20 +41,34 @@ class PlanReviewScreen extends ConsumerWidget {
     final workoutsAsync = ref.watch(week1WorkoutsProvider);
 
     return AshScaffold(
-      appBar: AppBar(
-          title: const Text('Your Plan'), backgroundColor: Colors.transparent),
       body: Padding(
-        padding: const EdgeInsets.all(24.0),
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const OnboardingProgress(
+              currentStep: 9, // Final step
+              totalSteps: 9,
+              label: 'Review Plan',
+            ),
+            const SizedBox(height: 32),
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text('Ready! 🎉', style: AppTextStyles.h2),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Here is your optimized training plan for the next 7 days.',
+                      style: AppTextStyles.bodyLarge.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
                     Consumer(builder: (context, ref, _) {
                       final goalAsync = ref.watch(activeGoalProvider);
                       return goalAsync.maybeWhen(
@@ -67,8 +82,11 @@ class PlanReviewScreen extends ConsumerWidget {
                       data: (workouts) {
                         if (workouts.isEmpty) {
                           return Center(
-                              child: Text('No workouts found',
-                                  style: AppTextStyles.bodyLarge));
+                              child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 32),
+                            child: Text('No workouts found',
+                                style: AppTextStyles.bodyLarge),
+                          ));
                         }
                         return ListView.builder(
                           shrinkWrap: true,

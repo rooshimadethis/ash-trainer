@@ -5,6 +5,8 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../shared/presentation/widgets/ash_text_field.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
+import '../../../shared/presentation/widgets/ash_option_slider.dart';
 import '../providers/goal_setup_provider.dart';
 import '../widgets/onboarding_navigation.dart';
 import '../widgets/onboarding_progress.dart';
@@ -157,8 +159,6 @@ class _TrainingContextScreenState extends ConsumerState<TrainingContextScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('TRAINING HISTORY', style: AppTextStyles.label),
-        const SizedBox(height: 16),
         AshTextField(
           label: 'Days per week (avg)',
           controller: _frequencyController,
@@ -166,7 +166,7 @@ class _TrainingContextScreenState extends ConsumerState<TrainingContextScreen> {
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           placeholder: 'e.g. 3',
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 24),
         AshTextField(
           label: 'Weekly Volume',
           controller: _volumeController,
@@ -175,7 +175,10 @@ class _TrainingContextScreenState extends ConsumerState<TrainingContextScreen> {
             FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
           ],
           placeholder: 'e.g. 25',
-          suffix: _buildUnitToggle(),
+          suffix: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _buildUnitToggle(),
+          ),
         ),
       ],
     );
@@ -185,128 +188,56 @@ class _TrainingContextScreenState extends ConsumerState<TrainingContextScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('PILLAR PRIORITIES (MAX 1 HIGH)', style: AppTextStyles.label),
+        Text('PILLAR PRIORITIES',
+            style: AppTextStyles.label.copyWith(letterSpacing: 1.5)),
         const SizedBox(height: 16),
-        _buildPriorityRow('Running', _runningPriority, Icons.directions_run),
-        const SizedBox(height: 12),
-        _buildPriorityRow('Strength', _strengthPriority, Icons.fitness_center),
-        const SizedBox(height: 12),
-        _buildPriorityRow(
-            'Mobility', _mobilityPriority, Icons.self_improvement),
+        _buildPriorityRow('Running', _runningPriority, Icons.directions_run,
+            AppColors.emerald),
+        const SizedBox(height: 16),
+        _buildPriorityRow('Strength', _strengthPriority, Icons.fitness_center,
+            AppColors.violet),
+        const SizedBox(height: 16),
+        _buildPriorityRow('Mobility', _mobilityPriority, Icons.self_improvement,
+            AppColors.cyan),
       ],
     );
   }
 
-  Widget _buildPriorityRow(
-      String pillar, String currentPriority, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColors.surfaceHighlight,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.divider),
-      ),
+  Widget _buildPriorityRow(String pillar, String currentPriority, IconData icon,
+      Color categoryColor) {
+    return AshCard(
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: AppColors.primary, size: 20),
-              const SizedBox(width: 8),
-              Text(pillar, style: AppTextStyles.h3.copyWith(fontSize: 16)),
+              Icon(icon, color: categoryColor, size: 22),
+              const SizedBox(width: 12),
+              Text(
+                pillar,
+                style: AppTextStyles.h3.copyWith(fontSize: 18),
+              ),
             ],
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: ['Low', 'Medium', 'High'].map((priority) {
-              final isSelected = currentPriority == priority;
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                  child: GestureDetector(
-                    onTap: () => _updatePriority(pillar, priority),
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? _getPriorityColor(priority)
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: isSelected
-                              ? _getPriorityColor(priority)
-                              : AppColors.divider,
-                        ),
-                      ),
-                      child: Center(
-                        child: Text(
-                          priority,
-                          style: AppTextStyles.bodySmall.copyWith(
-                            color: isSelected
-                                ? AppColors.white
-                                : AppColors.textSecondary,
-                            fontWeight: isSelected
-                                ? FontWeight.bold
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
+          const SizedBox(height: 16),
+          AshOptionSlider(
+            value: currentPriority,
+            options: const ['Low', 'Medium', 'High'],
+            onChanged: (val) => _updatePriority(pillar, val),
+            color: categoryColor,
           ),
         ],
       ),
     );
   }
 
-  Color _getPriorityColor(String priority) {
-    switch (priority) {
-      case 'High':
-        return AppColors.primary; // Or a specific "High" color if we have one
-      case 'Low':
-        return AppColors.textSecondary; // Or a muted color
-      default:
-        return AppColors.primary.withValues(alpha: 0.7);
-    }
-  }
-
   Widget _buildUnitToggle() {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: AppColors.divider),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: ['km', 'mi'].map((unit) {
-          final isSelected = _selectedUnit == unit;
-          return GestureDetector(
-            onTap: () {
-              setState(() {
-                _selectedUnit = unit;
-              });
-            },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.transparent,
-                borderRadius: BorderRadius.circular(7),
-              ),
-              child: Text(
-                unit.toUpperCase(),
-                style: AppTextStyles.bodySmall.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: isSelected ? AppColors.white : AppColors.textSecondary,
-                ),
-              ),
-            ),
-          );
-        }).toList(),
-      ),
+    return AshOptionSlider(
+      value: _selectedUnit,
+      options: const ['km', 'mi'],
+      onChanged: (unit) => setState(() => _selectedUnit = unit),
+      width: 100,
     );
   }
 }

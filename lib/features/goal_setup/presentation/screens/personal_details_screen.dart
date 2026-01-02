@@ -8,6 +8,8 @@ import '../providers/goal_setup_provider.dart';
 import '../widgets/onboarding_navigation.dart';
 import '../widgets/onboarding_progress.dart';
 import 'availability_screen.dart';
+import '../../../shared/presentation/widgets/ash_text_field.dart';
+import '../../../shared/presentation/widgets/ash_option_slider.dart';
 
 class PersonalDetailsScreen extends ConsumerStatefulWidget {
   const PersonalDetailsScreen({super.key});
@@ -21,7 +23,6 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
   final _ageController = TextEditingController();
   final _weightController = TextEditingController();
   final _heightController = TextEditingController();
-  // New controllers for split input
   final _feetController = TextEditingController();
   final _inchesController = TextEditingController();
 
@@ -36,23 +37,18 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
     if (state.age != null) _ageController.text = state.age.toString();
     if (state.weight != null) _weightController.text = state.weight.toString();
 
-    _gender = state.gender;
+    _gender = state.gender ?? 'Other';
     _weightUnit = state.preferredWeightUnit;
     _heightUnit = state.preferredHeightUnit;
 
-    // Handle height initialization
     if (state.height != null) {
       if (_heightUnit == 'cm') {
         _heightController.text = state.height.toString();
       } else {
-        // Convert stored total inches to feet/inches
-        // Assuming state.height is stored in the preferred unit (inches) if unit is 'in'
         final totalInches = state.height!;
         final feet = (totalInches / 12).floor();
         final inches = totalInches % 12;
         _feetController.text = feet.toString();
-        // Show inches with optional decimal, but usually 0 decimal for height is fine
-        // Using toStringAsFixed(0) or similar logic if integer preferred
         _inchesController.text = inches == inches.roundToDouble()
             ? inches.toInt().toString()
             : inches.toString();
@@ -72,18 +68,14 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
 
   void _updateHeightUnit(String newUnit) {
     if (_heightUnit == newUnit) return;
-
     setState(() {
       if (newUnit == 'in') {
-        // Convert FROM cm TO feet/inches
         final cmProfile = double.tryParse(_heightController.text);
         if (cmProfile != null) {
           final totalInches = cmProfile / 2.54;
           final feet = (totalInches / 12).floor();
           final inches = totalInches % 12;
-
           _feetController.text = feet.toString();
-          // Keep max 1 decimal place for cleaner UI
           _inchesController.text =
               inches.toStringAsFixed(1).replaceAll(RegExp(r'\.0$'), '');
         } else {
@@ -91,10 +83,8 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
           _inchesController.clear();
         }
       } else {
-        // Convert FROM feet/inches TO cm
         final feet = int.tryParse(_feetController.text) ?? 0;
         final inches = double.tryParse(_inchesController.text) ?? 0.0;
-
         if (feet > 0 || inches > 0) {
           final totalInches = (feet * 12) + inches;
           final cm = totalInches * 2.54;
@@ -142,77 +132,133 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                         const SizedBox(height: 32),
 
                         // Age
-                        _buildLabel('Age'),
-                        TextField(
+                        AshTextField(
+                          label: 'Age',
                           controller: _ageController,
                           keyboardType: TextInputType.number,
                           inputFormatters: [
                             FilteringTextInputFormatter.digitsOnly
                           ],
-                          style: AppTextStyles.bodyLarge,
-                          decoration:
-                              _buildInputDecoration('How many candle-blows?'),
+                          placeholder: 'How many candle-blows?',
                         ),
                         const SizedBox(height: 24),
 
                         // Gender
-                        _buildLabel('Gender'),
-                        Row(
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildGenderChip('Male'),
-                            const SizedBox(width: 8),
-                            _buildGenderChip('Female'),
-                            const SizedBox(width: 8),
-                            _buildGenderChip('Other'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 4, bottom: 8),
+                              child: Text(
+                                'GENDER',
+                                style: AppTextStyles.label
+                                    .copyWith(fontSize: 11, letterSpacing: 1.5),
+                              ),
+                            ),
+                            AshOptionSlider(
+                              value: _gender ?? 'Other',
+                              options: const ['Male', 'Female', 'Other'],
+                              onChanged: (val) => setState(() => _gender = val),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 24),
 
                         // Weight
-                        _buildLabel('Weight'),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: TextField(
-                                controller: _weightController,
-                                keyboardType:
-                                    const TextInputType.numberWithOptions(
-                                        decimal: true),
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'^\d*\.?\d*')),
-                                ],
-                                style: AppTextStyles.bodyLarge,
-                                decoration:
-                                    _buildInputDecoration('Current weight'),
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.surfaceHighlight,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.divider),
-                              ),
-                              child: Row(
-                                children: [
-                                  _buildUnitButton('kg'),
-                                  _buildUnitButton('lb'),
-                                ],
-                              ),
-                            ),
+                        AshTextField(
+                          label: 'Weight',
+                          controller: _weightController,
+                          showPrefixIcon: false,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                                RegExp(r'^\d*\.?\d*')),
                           ],
+                          placeholder: 'Current weight',
+                          suffix: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: AshOptionSlider(
+                              value: _weightUnit,
+                              options: const ['kg', 'lb'],
+                              onChanged: (val) =>
+                                  setState(() => _weightUnit = val),
+                              width: 100,
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 24),
 
                         // Height
-                        _buildLabel('Height'),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _heightUnit == 'cm'
-                                  ? TextField(
-                                      controller: _heightController,
+                        if (_heightUnit == 'cm')
+                          AshTextField(
+                            label: 'Height',
+                            controller: _heightController,
+                            showPrefixIcon: false,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d*\.?\d*')),
+                            ],
+                            placeholder: 'Your height (cm)',
+                            suffix: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: AshOptionSlider(
+                                value: _heightUnit,
+                                options: const ['cm', 'in'],
+                                onChanged: _updateHeightUnit,
+                                width: 100,
+                              ),
+                            ),
+                          )
+                        else
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.only(left: 4, bottom: 8),
+                                child: Text(
+                                  'HEIGHT',
+                                  style: AppTextStyles.label.copyWith(
+                                      fontSize: 11, letterSpacing: 1.5),
+                                ),
+                              ),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: AshTextField(
+                                      label: '',
+                                      hideLabel: true,
+                                      showPrefixIcon: false,
+                                      controller: _feetController,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly
+                                      ],
+                                      placeholder: 'Feet',
+                                      suffix: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 16),
+                                        alignment: Alignment.centerRight,
+                                        width: 40,
+                                        child: Text('ft',
+                                            style: AppTextStyles.bodyMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.textMuted)),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: AshTextField(
+                                      label: '',
+                                      hideLabel: true,
+                                      showPrefixIcon: false,
+                                      controller: _inchesController,
                                       keyboardType:
                                           const TextInputType.numberWithOptions(
                                               decimal: true),
@@ -220,62 +266,31 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
                                         FilteringTextInputFormatter.allow(
                                             RegExp(r'^\d*\.?\d*')),
                                       ],
-                                      style: AppTextStyles.bodyLarge,
-                                      decoration:
-                                          _buildInputDecoration('Your height'),
-                                    )
-                                  : Row(
-                                      children: [
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _feetController,
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter
-                                                  .digitsOnly
-                                            ],
-                                            style: AppTextStyles.bodyLarge,
-                                            decoration:
-                                                _buildInputDecoration('Feet')
-                                                    .copyWith(suffixText: "ft"),
-                                          ),
-                                        ),
-                                        const SizedBox(width: 12),
-                                        Expanded(
-                                          child: TextField(
-                                            controller: _inchesController,
-                                            keyboardType: const TextInputType
-                                                .numberWithOptions(
-                                                decimal: true),
-                                            inputFormatters: [
-                                              FilteringTextInputFormatter.allow(
-                                                  RegExp(r'^\d*\.?\d*')),
-                                            ],
-                                            style: AppTextStyles.bodyLarge,
-                                            decoration:
-                                                _buildInputDecoration('Inches')
-                                                    .copyWith(suffixText: "in"),
-                                          ),
-                                        ),
-                                      ],
+                                      placeholder: 'Inches',
+                                      suffix: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 16),
+                                        alignment: Alignment.centerRight,
+                                        width: 40,
+                                        child: Text('in',
+                                            style: AppTextStyles.bodyMedium
+                                                .copyWith(
+                                                    color:
+                                                        AppColors.textMuted)),
+                                      ),
                                     ),
-                            ),
-                            const SizedBox(width: 16),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: AppColors.surfaceHighlight,
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: AppColors.divider),
-                              ),
-                              child: Row(
-                                children: [
-                                  _buildHeightUnitButton('cm'),
-                                  _buildHeightUnitButton('in'),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  AshOptionSlider(
+                                    value: _heightUnit,
+                                    options: const ['cm', 'in'],
+                                    onChanged: _updateHeightUnit,
+                                    width: 100,
+                                  ),
                                 ],
                               ),
-                            ),
-                          ],
-                        ),
+                            ],
+                          ),
                       ],
                     ),
                   ),
@@ -291,14 +306,12 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
               onNext: () {
                 final age = int.tryParse(_ageController.text);
                 final weight = double.tryParse(_weightController.text);
-
                 double? height;
                 if (_heightUnit == 'cm') {
                   height = double.tryParse(_heightController.text);
                 } else {
                   final feet = double.tryParse(_feetController.text) ?? 0;
                   final inches = double.tryParse(_inchesController.text) ?? 0;
-                  // Only save if at least one value is entered to avoid saving 0.0 for empty form
                   if (feet > 0 || inches > 0) {
                     height = (feet * 12) + inches;
                   }
@@ -321,122 +334,6 @@ class _PersonalDetailsScreenState extends ConsumerState<PersonalDetailsScreen> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0, left: 4.0),
-      child: Text(
-        text.toUpperCase(),
-        style: AppTextStyles.label,
-      ),
-    );
-  }
-
-  InputDecoration _buildInputDecoration(String hint) {
-    return InputDecoration(
-      hintText: hint,
-      hintStyle: TextStyle(
-          color:
-              Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5)),
-      filled: true,
-      fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
-      ),
-      enabledBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Theme.of(context).colorScheme.outline),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
-      ),
-    );
-  }
-
-  Widget _buildGenderChip(String label) {
-    final isSelected = _gender == label;
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => setState(() => _gender = label),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected
-                ? Theme.of(context).primaryColor
-                : Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(
-              color: isSelected
-                  ? Theme.of(context).primaryColor
-                  : Theme.of(context).colorScheme.outline,
-            ),
-          ),
-          child: Center(
-            child: Text(
-              label,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: isSelected
-                    ? Colors.white
-                    : Theme.of(context).colorScheme.onSurface,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUnitButton(String unit) {
-    final isSelected = _weightUnit == unit;
-    return GestureDetector(
-      onTap: () => setState(() => _weightUnit = unit),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color:
-              isSelected ? Theme.of(context).primaryColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(
-          unit,
-          style: AppTextStyles.bodySmall.copyWith(
-            color: isSelected
-                ? Colors.white
-                : Theme.of(context).colorScheme.onSurface,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildHeightUnitButton(String unit) {
-    final isSelected = _heightUnit == unit;
-    return GestureDetector(
-      // Use the new update method
-      onTap: () => _updateHeightUnit(unit),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color:
-              isSelected ? Theme.of(context).primaryColor : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Text(
-          unit,
-          style: AppTextStyles.bodySmall.copyWith(
-            color: isSelected
-                ? Colors.white
-                : Theme.of(context).colorScheme.onSurface,
-            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          ),
-        ),
       ),
     );
   }
