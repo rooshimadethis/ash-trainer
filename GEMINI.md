@@ -90,4 +90,45 @@ Each feature folder should contain: `presentation/`, `application/`, `domain/`.
 *   **Documentation**: Summarize large modules in their respective `README.md`.
 *   **Analysis**: Always run `flutter analyze` after changes (see `flutter-rules.md`).
 
+### 7. Theming System
+
+The app uses a **centralized theming system** with constants for consistency and maintainability.
+
+#### Theme Constants Files
+*   **`lib/core/theme/colors.dart`**: Unified 6-color semantic palette + opacity constants
+*   **`lib/core/theme/dimensions.dart`**: Avatar sizes, spacing scale, icon sizes, chat bubble specs
+*   **`lib/core/theme/animations.dart`**: Duration constants, animation curves, specific use cases
+*   **`lib/core/theme/borders.dart`**: Border widths, radii, helper methods
+*   **`lib/core/theme/shadows.dart`**: Soft and retro shadow presets
+*   **`lib/core/theme/text_styles.dart`**: Typography scale
+
+#### Usage Guidelines
+```dart
+// ✅ Use theme constants
+padding: EdgeInsets.all(AppDimensions.spacingMd),
+duration: AppAnimations.normal,
+color: AppColors.primary.withValues(alpha: AppColors.opacityMedium),
+
+// ❌ Avoid hardcoded values
+padding: EdgeInsets.all(16),
+duration: Duration(milliseconds: 200),
+color: Colors.blue.withValues(alpha: 0.08),
+```
+
+**Quick Reference**: See `docs/theme_constants_reference.md` for complete guide.
+
+### 8. Logging System
+
+Use **`AppLogger`** (powered by `logger` package) for all debug output:
+
+```dart
+AppLogger.d('Debug message');                                    // Debug
+AppLogger.i('Info message');                                     // Info
+AppLogger.w('Warning message');                                  // Warning
+AppLogger.e('Error occurred', error: e, stackTrace: st);        // Error
+AppLogger.f('Fatal error', error: e, stackTrace: st);           // Fatal
+```
+
+**Never use `print()`** - it triggers linter warnings. All logs appear in debug console with colors and emojis.
+
 ---

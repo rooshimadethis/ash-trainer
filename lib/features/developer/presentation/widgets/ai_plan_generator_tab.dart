@@ -119,7 +119,7 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
         _output = 'Loaded context for Goal: ${selectedGoal.id}';
       });
     } catch (e, stack) {
-      AppLogger.error('Error loading data in AI Test Screen', e, stack);
+      AppLogger.e('Error loading data in AI Test Screen', error: e, stackTrace: stack);
       setState(() => _output = 'Error loading data: $e');
     }
   }
@@ -236,8 +236,8 @@ $contextJson
         _output = prettyOutput;
       });
 
-      AppLogger.info('--- AI INPUT JSON ---');
-      AppLogger.info(_inputJson);
+      AppLogger.i('--- AI INPUT JSON ---');
+      AppLogger.i(_inputJson);
     } catch (e, st) {
       if (e is AIProcessingException) {
         setState(() {
@@ -250,7 +250,7 @@ $contextJson
           _rawResponse = '';
         });
       }
-      AppLogger.error('AI Test Screen Analysis Error', e, st);
+      AppLogger.e('AI Test Screen Analysis Error', error: e, stackTrace: st);
     } finally {
       setState(() {
         _isLoading = false;

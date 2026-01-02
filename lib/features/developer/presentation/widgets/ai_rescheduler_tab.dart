@@ -76,7 +76,7 @@ Context: ${context.toJson()}
         _output = prettyOutput;
       });
     } catch (e, st) {
-      AppLogger.error('Reschedule Error', e, st);
+      AppLogger.e('Reschedule Error', error: e, stackTrace: st);
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);

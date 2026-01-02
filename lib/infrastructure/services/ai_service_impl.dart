@@ -47,8 +47,8 @@ class AIServiceImpl implements AIService {
     final content = [gemini.Content.text(prompt)];
 
     // DEBUG: Log Request
-    AppLogger.info('--- AI REQUEST (Generate Plan) ---');
-    AppLogger.info(prompt);
+    AppLogger.i('--- AI REQUEST (Generate Plan) ---');
+    AppLogger.i(prompt);
 
     final response = await _model.generateContent(
       content,
@@ -60,8 +60,8 @@ class AIServiceImpl implements AIService {
     }
 
     // DEBUG: Log raw response to console before parsing
-    AppLogger.info('--- RAW AI RESPONSE (Pre-Parsing) ---');
-    AppLogger.info(response.text!);
+    AppLogger.i('--- RAW AI RESPONSE (Pre-Parsing) ---');
+    AppLogger.i(response.text!);
 
     dynamic json;
     try {
@@ -83,7 +83,7 @@ class AIServiceImpl implements AIService {
         timestamp: DateTime.now(),
       );
     } catch (e, stack) {
-      AppLogger.error('AI Processing Error', e, stack);
+      AppLogger.e('AI Processing Error', error: e, stackTrace: stack);
       throw AIProcessingException(e.toString(), rawResponse: response.text);
     }
   }
@@ -113,8 +113,8 @@ class AIServiceImpl implements AIService {
     final content = [gemini.Content.text(prompt)];
 
     // DEBUG: Log Request
-    AppLogger.info('--- AI REQUEST (Adjust Workout) ---');
-    AppLogger.info(prompt);
+    AppLogger.i('--- AI REQUEST (Adjust Workout) ---');
+    AppLogger.i(prompt);
 
     final response = await _model.generateContent(
       content,
@@ -126,8 +126,8 @@ class AIServiceImpl implements AIService {
     }
 
     // DEBUG: Log Raw Response
-    AppLogger.info('--- AI RESPONSE (Adjust Workout) ---');
-    AppLogger.info(response.text!);
+    AppLogger.i('--- AI RESPONSE (Adjust Workout) ---');
+    AppLogger.i(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -172,8 +172,8 @@ class AIServiceImpl implements AIService {
     final content = [gemini.Content.text(prompt)];
 
     // DEBUG: Log Request
-    AppLogger.info('--- AI REQUEST (Reschedule Workouts) ---');
-    AppLogger.info(prompt);
+    AppLogger.i('--- AI REQUEST (Reschedule Workouts) ---');
+    AppLogger.i(prompt);
 
     final response = await _model.generateContent(
       content,
@@ -185,8 +185,8 @@ class AIServiceImpl implements AIService {
     }
 
     // DEBUG: Log Raw Response
-    AppLogger.info('--- AI RESPONSE (Reschedule Workouts) ---');
-    AppLogger.info(response.text!);
+    AppLogger.i('--- AI RESPONSE (Reschedule Workouts) ---');
+    AppLogger.i(response.text!);
 
     final json = _parseJson(response.text!);
 
@@ -236,16 +236,16 @@ class AIServiceImpl implements AIService {
     final chatSession = sessionModel.startChat(history: history);
 
     // DEBUG: Log Request
-    AppLogger.info('--- AI REQUEST (Chat) ---');
-    AppLogger.info('User: $userMessage');
-    AppLogger.info('System Instruction: $systemInstruction');
+    AppLogger.i('--- AI REQUEST (Chat) ---');
+    AppLogger.i('User: $userMessage');
+    AppLogger.i('System Instruction: $systemInstruction');
 
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
 
     // DEBUG: Log Response
-    AppLogger.info('--- AI RESPONSE (Chat) ---');
-    AppLogger.info(response.text ?? '[No Text]');
+    AppLogger.i('--- AI RESPONSE (Chat) ---');
+    AppLogger.i(response.text ?? '[No Text]');
 
     return AIResponse(
       data: response.text ?? '',
@@ -324,18 +324,18 @@ class AIServiceImpl implements AIService {
 
     final chatSession = sessionModel.startChat(history: history);
     // DEBUG: Log Request
-    AppLogger.info('--- AI REQUEST (Chat w/ Tools) ---');
-    AppLogger.info('User: $userMessage');
-    AppLogger.info('Tools: ${tools.map((t) => t.name).join(', ')}');
+    AppLogger.i('--- AI REQUEST (Chat w/ Tools) ---');
+    AppLogger.i('User: $userMessage');
+    AppLogger.i('Tools: ${tools.map((t) => t.name).join(', ')}');
 
     final response =
         await chatSession.sendMessage(gemini.Content.text(userMessage));
 
     // DEBUG: Log Response
-    AppLogger.info('--- AI RESPONSE (Chat w/ Tools) ---');
-    AppLogger.info(response.text ?? '[No Text]');
+    AppLogger.i('--- AI RESPONSE (Chat w/ Tools) ---');
+    AppLogger.i(response.text ?? '[No Text]');
     if (response.functionCalls.isNotEmpty) {
-      AppLogger.info(
+      AppLogger.i(
           'Function Call: ${response.functionCalls.first.name}(${response.functionCalls.first.args})');
     }
 

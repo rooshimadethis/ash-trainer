@@ -35,7 +35,7 @@ class StartupRouter extends ConsumerWidget {
 
         final state = snapshot.data ?? StartupState.noUser;
 
-        AppLogger.info('📍 Startup routing: state=$state');
+        AppLogger.i('📍 Startup routing: state=$state');
 
         switch (state) {
           case StartupState.noUser:
@@ -59,7 +59,7 @@ class StartupRouter extends ConsumerWidget {
 
       return StartupState.ready;
     } catch (e, stack) {
-      AppLogger.error('⚠️ Error checking startup state', e, stack);
+      AppLogger.e('⚠️ Error checking startup state', error: e, stackTrace: stack);
       return StartupState.noUser;
     }
   }

@@ -426,7 +426,7 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
         return int.parse(parts[0]) * 60;
       }
     } catch (e, stackTrace) {
-      AppLogger.warning('Failed to parse duration: $text', e, stackTrace);
+      AppLogger.w('Failed to parse duration: $text', error: e, stackTrace: stackTrace);
     }
     return null;
   }

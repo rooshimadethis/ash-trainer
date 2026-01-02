@@ -1,6 +1,7 @@
 import '../../../shared/domain/repositories/workout_repository.dart';
 import '../../../../core/utils/grid_optimizer.dart';
 import '../../../shared/domain/entities/training/workout.dart';
+import '../../../../core/utils/logger.dart';
 
 class ApplyRescheduleMatrix {
   final WorkoutRepository _workoutRepo;
@@ -24,13 +25,16 @@ class ApplyRescheduleMatrix {
     }).toList();
 
     if (missed.isEmpty) {
-      print('ApplyRescheduleMatrix: No missed or skipped key workouts found.');
+      AppLogger.d(
+          'ApplyRescheduleMatrix: No missed or skipped key workouts found.');
       return;
     }
 
-    print('ApplyRescheduleMatrix: Found ${missed.length} workouts to process:');
+    AppLogger.d(
+        'ApplyRescheduleMatrix: Found ${missed.length} workouts to process:');
     for (final m in missed) {
-      print(' - ${m.name} (${m.status}, ${_formatDate(m.scheduledDate)})');
+      AppLogger.d(
+          ' - ${m.name} (${m.status}, ${_formatDate(m.scheduledDate)})');
     }
 
     // 3. For each missed workout, identify its block and relevant buddies
@@ -59,13 +63,15 @@ class ApplyRescheduleMatrix {
 
     // 5. Save updates
     if (allUpdates.isNotEmpty) {
-      print('ApplyRescheduleMatrix: Saving ${allUpdates.length} updates:');
+      AppLogger.d(
+          'ApplyRescheduleMatrix: Saving ${allUpdates.length} updates:');
       for (final u in allUpdates) {
-        print(' - ${u.name} -> ${u.status} on ${_formatDate(u.scheduledDate)}');
+        AppLogger.d(
+            ' - ${u.name} -> ${u.status} on ${_formatDate(u.scheduledDate)}');
       }
       await _workoutRepo.batchUpdateWorkouts(allUpdates);
     } else {
-      print('ApplyRescheduleMatrix: No updates generated.');
+      AppLogger.d('ApplyRescheduleMatrix: No updates generated.');
     }
   }
 

@@ -1,4 +1,5 @@
 import '../../features/shared/domain/entities/training/workout.dart';
+import '../utils/logger.dart';
 
 /// Pure logic class to handle algorithmic rescheduling of missed workouts.
 /// Adheres to the "Fixed Grid" philosophy and the "Reschedule Decision Matrix".
@@ -42,34 +43,34 @@ class GridOptimizer {
   }
 
   _RescheduleResult? _rescheduleSingle(Workout missed, List<Workout> grid) {
-    print(
+    AppLogger.d(
         'GridOptimizer: Processing missed workout "${missed.name}" (${missed.type}, isKey: ${missed.isKey}) on ${_formatDate(missed.scheduledDate)}');
 
     // 1. Easy Run Rule: Delete (Mark as Skipped)
     if (_isEasyRun(missed)) {
-      print('GridOptimizer: - Rule: Easy Run (Non-Key) -> Delete (Skip)');
+      AppLogger.d('GridOptimizer: - Rule: Easy Run (Non-Key) -> Delete (Skip)');
       return _RescheduleResult([missed.copyWith(status: 'skipped')]);
     }
 
     // 2. Long Run Rule: Priority Priority
     if (_isLongRun(missed)) {
-      print('GridOptimizer: - Rule: Long Run -> Priority Move');
+      AppLogger.d('GridOptimizer: - Rule: Long Run -> Priority Move');
       return _handleLongRunPriority(missed, grid);
     }
 
     // 3. Speed/Tempo Run Rule: Swap
     if (_isHardRun(missed)) {
-      print('GridOptimizer: - Rule: Hard Run -> Swap');
+      AppLogger.d('GridOptimizer: - Rule: Hard Run -> Swap');
       return _handleHardRunSwap(missed, grid);
     }
 
     // 4. Strength Session Rule: Consolidate
     if (_isStrength(missed)) {
-      print('GridOptimizer: - Rule: Strength -> Consolidate');
+      AppLogger.d('GridOptimizer: - Rule: Strength -> Consolidate');
       return _handleStrengthConsolidation(missed, grid);
     }
 
-    print('GridOptimizer: - No matching rule found. Skipped.');
+    AppLogger.d('GridOptimizer: - No matching rule found. Skipped.');
     return null;
   }
 
@@ -79,11 +80,11 @@ class GridOptimizer {
     final nextAvailableDate =
         _findNextAvailableDate(missed.scheduledDate, grid);
     if (nextAvailableDate == null) {
-      print(
+      AppLogger.d(
           'GridOptimizer:   - No future dates available in block. Cannot reschedule.');
       return null;
     }
-    print(
+    AppLogger.d(
         'GridOptimizer:   - Found next date: ${_formatDate(nextAvailableDate)}');
 
     final updates = <Workout>[];
@@ -94,12 +95,12 @@ class GridOptimizer {
         .toList();
     for (final d in displaced) {
       if (!d.isKey) {
-        print(
+        AppLogger.d(
             'GridOptimizer:   - Displacing/Skipping existing non-key workout: "${d.name}"');
         updates.add(d.copyWith(status: 'skipped'));
       } else {
         // If it's another key workout, we have a conflict we can't solve algorithmically
-        print(
+        AppLogger.d(
             'GridOptimizer:   - Conflict: Target date has key workout "${d.name}". Cannot displace. Aborting move.');
         return null;
       }
@@ -122,12 +123,12 @@ class GridOptimizer {
         .toList();
 
     for (final s in strengthInWindow) {
-      print(
+      AppLogger.d(
           'GridOptimizer:   - 48h Recovery Rule: Skipping strength session "${s.name}" on ${_formatDate(s.scheduledDate)}');
       updates.add(s.copyWith(status: 'skipped'));
     }
 
-    print(
+    AppLogger.d(
         'GridOptimizer:   - Moving Long Run to ${_formatDate(nextAvailableDate)}');
     updates.add(missed.copyWith(
       scheduledDate: nextAvailableDate,
@@ -148,7 +149,7 @@ class GridOptimizer {
     potentialDays.sort();
 
     if (potentialDays.isEmpty) {
-      print('GridOptimizer:   - No future strength days found.');
+      AppLogger.d('GridOptimizer:   - No future strength days found.');
       return null;
     }
 
@@ -159,7 +160,7 @@ class GridOptimizer {
 
       final hasKeyRun = existingOnDay.any((w) => _isRun(w) && w.isKey);
       if (hasKeyRun) {
-        print(
+        AppLogger.d(
             'GridOptimizer:   - Skipping candidate date ${_formatDate(date)}: Has conflicting Key Run.');
         continue;
       }
@@ -172,7 +173,7 @@ class GridOptimizer {
         if (_isStrength(existing)) {
           updates.add(existing.copyWith(status: 'skipped'));
         } else if (_isRun(existing) && !existing.isKey) {
-          print(
+          AppLogger.d(
               'GridOptimizer:   - Also skipping existing non-key run "${existing.name}" to prevent 2 runs.');
           updates.add(existing.copyWith(status: 'skipped'));
         }
@@ -183,12 +184,12 @@ class GridOptimizer {
         status: 'planned',
       ));
 
-      print(
+      AppLogger.d(
           'GridOptimizer:   - Swapping with Strength day: ${_formatDate(date)}');
       return _RescheduleResult(updates);
     }
 
-    print(
+    AppLogger.d(
         'GridOptimizer:   - No valid strength day found (all had conflicts).');
     return null;
   }
@@ -202,12 +203,12 @@ class GridOptimizer {
     );
 
     if (nextHardRun.id == missed.id) {
-      print(
+      AppLogger.d(
           'GridOptimizer:   - No future Hard Run day found to consolidate with.');
       return null;
     }
 
-    print(
+    AppLogger.d(
         'GridOptimizer:   - Consolidating with Hard Run on ${_formatDate(nextHardRun.scheduledDate)} ("${nextHardRun.name}")');
 
     // Check separation rule (simplified to just same date, app manages timing)

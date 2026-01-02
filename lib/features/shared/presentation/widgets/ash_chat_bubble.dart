@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import 'package:ash_trainer/core/theme/shadows.dart';
+import 'package:ash_trainer/core/theme/dimensions.dart';
+import 'package:ash_trainer/core/theme/animations.dart';
 
 enum ChatBubbleSender { ash, user }
 
@@ -40,7 +42,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
     // Initial pop-in animation
     _popController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 400),
+      duration: AppAnimations.chatBubblePopIn,
     );
 
     _popAnimation = CurvedAnimation(
@@ -51,7 +53,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
     // Text fade-in animation (happens after bubble grows)
     _textFadeController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 300),
+      duration: AppAnimations.chatBubbleTextFade,
     );
 
     _textFadeAnimation = CurvedAnimation(
@@ -99,7 +101,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
     _textFadeController.value = 0.0;
 
     // After 1 second, start the growth animation
-    _typingTimer = Timer(const Duration(seconds: 1), () {
+    _typingTimer = Timer(AppAnimations.typingDelay, () {
       if (mounted) {
         // Start growing the bubble to full size
         setState(() {
@@ -107,7 +109,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
         });
 
         // After the bubble has grown (400ms for AnimatedSize), fade in the text
-        Timer(const Duration(milliseconds: 400), () {
+        Timer(AppAnimations.chatBubbleGrowth, () {
           if (mounted) {
             _hasAnimated = true;
             _textFadeController.forward(from: 0.0);
@@ -142,17 +144,21 @@ class _AshChatBubbleState extends State<AshChatBubble>
     );
 
     final borderRadius = BorderRadius.only(
-      topLeft: const Radius.circular(20),
-      topRight: const Radius.circular(20),
-      bottomLeft: Radius.circular(isAsh ? 4 : 20),
-      bottomRight: Radius.circular(isAsh ? 20 : 4),
+      topLeft: Radius.circular(AppDimensions.chatBubbleRadius),
+      topRight: Radius.circular(AppDimensions.chatBubbleRadius),
+      bottomLeft: Radius.circular(isAsh
+          ? AppDimensions.chatBubbleSmallRadius
+          : AppDimensions.chatBubbleRadius),
+      bottomRight: Radius.circular(isAsh
+          ? AppDimensions.chatBubbleRadius
+          : AppDimensions.chatBubbleSmallRadius),
     );
 
     final borderColor = isDark ? AppColors.retroAccent : Colors.black;
     final boxShadow = isDark ? AppShadows.retroDark : AppShadows.retro;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
+      padding: EdgeInsets.symmetric(vertical: AppDimensions.spacingXs),
       child: Row(
         mainAxisAlignment:
             isAsh ? MainAxisAlignment.start : MainAxisAlignment.end,
@@ -160,7 +166,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
         children: [
           if (isAsh) ...[
             _buildAvatar(context),
-            const SizedBox(width: 8),
+            SizedBox(width: AppDimensions.spacingSm),
           ],
           Expanded(
             child: Align(
@@ -171,16 +177,13 @@ class _AshChatBubbleState extends State<AshChatBubble>
                 child: FadeTransition(
                   opacity: _popAnimation,
                   child: AnimatedSize(
-                    duration: const Duration(milliseconds: 400),
-                    curve: Curves.easeOutQuart,
+                    duration: AppAnimations.chatBubbleGrowth,
+                    curve: AppAnimations.easeOutQuart,
                     alignment:
                         isAsh ? Alignment.bottomLeft : Alignment.bottomRight,
                     clipBehavior: Clip.none,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
+                      padding: AppDimensions.chatBubblePadding,
                       decoration: BoxDecoration(
                         color: isAsh ? ashBubbleColor : userBubbleColor,
                         borderRadius: borderRadius,
@@ -191,9 +194,9 @@ class _AshChatBubbleState extends State<AshChatBubble>
                         boxShadow: boxShadow,
                       ),
                       child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        switchInCurve: Curves.easeIn,
-                        switchOutCurve: Curves.easeOut,
+                        duration: AppAnimations.fast,
+                        switchInCurve: AppAnimations.easeIn,
+                        switchOutCurve: AppAnimations.easeOut,
                         transitionBuilder:
                             (Widget child, Animation<double> animation) {
                           return FadeTransition(
@@ -234,7 +237,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
             ),
           ),
           if (!isAsh) ...[
-            const SizedBox(width: 8),
+            SizedBox(width: AppDimensions.spacingSm),
             widget.icon ?? const SizedBox.shrink(),
           ],
         ],
@@ -245,8 +248,8 @@ class _AshChatBubbleState extends State<AshChatBubble>
   Widget _buildAvatar(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      width: 44,
-      height: 44,
+      width: AppDimensions.avatarMd,
+      height: AppDimensions.avatarMd,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary,
         shape: BoxShape.circle,
@@ -281,7 +284,7 @@ class _TypingIndicatorState extends State<_TypingIndicator>
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 1400),
+      duration: AppAnimations.typingCycle,
     )..repeat();
   }
 
@@ -294,15 +297,15 @@ class _TypingIndicatorState extends State<_TypingIndicator>
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 40,
-      height: 20,
+      width: AppDimensions.typingIndicatorWidth,
+      height: AppDimensions.typingIndicatorHeight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           _buildDot(0),
-          const SizedBox(width: 4),
+          SizedBox(width: AppDimensions.typingDotSpacing),
           _buildDot(1),
-          const SizedBox(width: 4),
+          SizedBox(width: AppDimensions.typingDotSpacing),
           _buildDot(2),
         ],
       ),
@@ -318,13 +321,13 @@ class _TypingIndicatorState extends State<_TypingIndicator>
         final progress = (_controller.value + delay) % 1.0;
 
         // Use sine wave for smooth up and down motion
-        final bounce = sin(progress * 2 * pi) * -4;
+        final bounce = sin(progress * 2 * pi) * -AppDimensions.typingDotBounce;
 
         return Transform.translate(
           offset: Offset(0, bounce),
           child: Container(
-            width: 6,
-            height: 6,
+            width: AppDimensions.typingDotSize,
+            height: AppDimensions.typingDotSize,
             decoration: BoxDecoration(
               color: widget.style.color,
               shape: BoxShape.circle,

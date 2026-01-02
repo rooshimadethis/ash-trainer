@@ -25,7 +25,7 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen> {
             MaterialPageRoute(builder: (_) => const PlanReviewScreen()),
           );
         } else {
-          AppLogger.error('Plan generation failed', next.error!, null);
+          AppLogger.e('Plan generation failed', error: next.error!, stackTrace: null);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('Error: ${next.error}')),
           );

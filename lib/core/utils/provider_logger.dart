@@ -10,10 +10,10 @@ class ProviderLogger extends ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    AppLogger.error(
+    AppLogger.e(
       'Provider ${provider.name ?? provider.runtimeType} failed',
-      error,
-      stackTrace,
+      error: error,
+      stackTrace: stackTrace,
     );
   }
 }

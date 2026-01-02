@@ -19,20 +19,21 @@ Future<void> main() async {
     try {
       await FlutterDisplayMode.setHighRefreshRate();
     } catch (e) {
-      AppLogger.error('Failed to set high refresh rate', e, StackTrace.current);
+      AppLogger.e('Failed to set high refresh rate',
+          error: e, stackTrace: StackTrace.current);
     }
   }
 
   // Catch Flutter framework errors
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
-    AppLogger.error(
-        'Flutter Framework Error', details.exception, details.stack);
+    AppLogger.e('Flutter Framework Error',
+        error: details.exception, stackTrace: details.stack);
   };
 
   // Catch asynchronous errors outside the Flutter framework
   PlatformDispatcher.instance.onError = (error, stack) {
-    AppLogger.error('Platform Dispatcher Error', error, stack);
+    AppLogger.e('Platform Dispatcher Error', error: error, stackTrace: stack);
     return true;
   };
 

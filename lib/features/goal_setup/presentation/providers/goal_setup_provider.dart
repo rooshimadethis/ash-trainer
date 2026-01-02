@@ -340,7 +340,7 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success
     } catch (e, stackTrace) {
-      AppLogger.error('Failed to submit goal', e, stackTrace);
+      AppLogger.e('Failed to submit goal', error: e, stackTrace: stackTrace);
       state = state.copyWith(isGenerating: false, error: e.toString());
     }
   }

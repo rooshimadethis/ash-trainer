@@ -92,7 +92,7 @@ Context: ${context.toJson()}
         _output = prettyOutput;
       });
     } catch (e, st) {
-      AppLogger.error('Adjustment Error', e, st);
+      AppLogger.e('Adjustment Error', error: e, stackTrace: st);
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);

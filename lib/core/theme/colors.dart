@@ -29,6 +29,32 @@ class AppColors {
   static const Color neutral = Color(0xFFA1A1AA);
 
   // ============================================================================
+  // OPACITY LEVELS
+  // ============================================================================
+  // Centralized opacity values for consistent transparency across the app.
+
+  /// Very subtle transparency (3%) - for barely visible backgrounds
+  static const double opacitySubtle = 0.03;
+
+  /// Light transparency (5%) - for subtle backgrounds
+  static const double opacityLight = 0.05;
+
+  /// Medium transparency (8%) - for visible but soft backgrounds
+  static const double opacityMedium = 0.08;
+
+  /// Strong transparency (15%) - for noticeable backgrounds
+  static const double opacityStrong = 0.15;
+
+  /// Very strong transparency (20%) - for prominent backgrounds
+  static const double opacityVeryStrong = 0.20;
+
+  /// Muted transparency (40%) - for dimmed elements
+  static const double opacityMuted = 0.40;
+
+  /// Dimmed transparency (70%) - for secondary text
+  static const double opacityDimmed = 0.70;
+
+  // ============================================================================
   // BRAND COLORS
   // ============================================================================
 

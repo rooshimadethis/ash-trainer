@@ -259,7 +259,7 @@ class _WorkoutLoggingScreenState extends ConsumerState<WorkoutLoggingScreen> {
         );
       }
     } catch (e, stack) {
-      AppLogger.error('Failed to log workout', e, stack);
+      AppLogger.e('Failed to log workout', error: e, stackTrace: stack);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to save workout: $e')),

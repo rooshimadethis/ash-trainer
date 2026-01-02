@@ -75,7 +75,7 @@ class _AICoachingChatTabState extends ConsumerState<AICoachingChatTab> {
         _chatLog.add('ASH: ${response.data}');
       });
     } catch (e, st) {
-      AppLogger.error('Chat Error', e, st);
+      AppLogger.e('Chat Error', error: e, stackTrace: st);
       setState(() {
         _chatLog.add('SYSTEM ERROR: $e');
       });

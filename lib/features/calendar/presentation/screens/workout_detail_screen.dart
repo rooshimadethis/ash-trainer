@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/theme_provider.dart';
+import '../../../../core/utils/logger.dart';
 
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
@@ -461,11 +462,11 @@ class WorkoutDetailScreen extends ConsumerWidget {
       final skippedWorkout = workout.copyWith(status: 'skipped');
       await ref.read(workoutRepositoryProvider).saveWorkout(skippedWorkout);
 
-      print('DEBUG: Workout skipped. Triggering rescheduling check...');
+      AppLogger.d('DEBUG: Workout skipped. Triggering rescheduling check...');
       await ref.read(trainingAutomationProvider).onWorkoutAction();
-      print('DEBUG: Rescheduling check complete.');
+      AppLogger.d('DEBUG: Rescheduling check complete.');
     } catch (e) {
-      print('DEBUG: Error skipping workout: $e');
+      AppLogger.e('DEBUG: Error skipping workout', error: e);
     }
   }
 
@@ -477,9 +478,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
     try {
       final plannedWorkout = workout.copyWith(status: 'planned');
       await ref.read(workoutRepositoryProvider).saveWorkout(plannedWorkout);
-      print('DEBUG: Workout unskipped (reverted to planned).');
+      AppLogger.d('DEBUG: Workout unskipped (reverted to planned).');
     } catch (e) {
-      print('DEBUG: Error unskipping workout: $e');
+      AppLogger.e('DEBUG: Error unskipping workout', error: e);
     }
   }
 
