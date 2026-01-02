@@ -5,6 +5,9 @@ import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../../../calendar/presentation/screens/today_view.dart';
 import '../../../calendar/presentation/screens/weekly_view.dart';
 import '../../../calendar/presentation/screens/monthly_view.dart';
+import '../../../../core/theme/shadows.dart';
+import '../../../developer/presentation/widgets/debug_overlay.dart';
+import 'package:flutter/foundation.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -26,6 +29,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return AshScaffold(
+      useSafeArea: false,
       body: Column(
         children: [
           _buildHeader(),
@@ -50,38 +54,77 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildHeader() {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
       decoration: BoxDecoration(
-        border: Border(
-          bottom: BorderSide(
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.5),
-            width: 1,
+        color: Theme.of(context).colorScheme.surface,
+        boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
+      ),
+      child: SafeArea(
+        bottom: false,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  _headerTab('Today', 0),
+                  const SizedBox(width: 20),
+                  _headerTab('Weekly', 1),
+                  const SizedBox(width: 20),
+                  _headerTab('Monthly', 2),
+                ],
+              ),
+              Row(
+                children: [
+                  if (kDebugMode) ...[
+                    _topActionButton(
+                      context,
+                      icon: Icons.bug_report,
+                      color: Colors.redAccent,
+                      onPressed: () {
+                        final navigatorKey =
+                            Navigator.of(context, rootNavigator: true)
+                                .widget
+                                .key as GlobalKey<NavigatorState>?;
+                        if (navigatorKey != null) {
+                          DebugOverlay.showDebugMenu(context, navigatorKey);
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                  ],
+                  _topActionButton(
+                    context,
+                    icon: Icons.person_outline_rounded,
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              _headerTab('Today', 0),
-              const SizedBox(width: 20),
-              _headerTab('Weekly', 1),
-              const SizedBox(width: 20),
-              _headerTab('Monthly', 2),
-            ],
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.notifications_none_rounded,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-              size: 24,
-            ),
-            onPressed: () {},
-          ),
-        ],
+    );
+  }
+
+  Widget _topActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required VoidCallback onPressed,
+    Color? color,
+  }) {
+    return IconButton(
+      onPressed: onPressed,
+      icon: Icon(
+        icon,
+        color: color ?? Theme.of(context).colorScheme.onSurface,
+        size: 24,
       ),
+      padding: EdgeInsets.zero,
+      constraints: const BoxConstraints(),
+      splashRadius: 24,
     );
   }
 

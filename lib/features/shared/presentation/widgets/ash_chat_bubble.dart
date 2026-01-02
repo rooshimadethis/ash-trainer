@@ -53,7 +53,7 @@ class AshChatBubble extends StatelessWidget {
                 ),
                 border: Border.all(
                   color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-                  width: 2.0,
+                  width: 1.5,
                 ),
                 boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
               ),
@@ -83,7 +83,7 @@ class AshChatBubble extends StatelessWidget {
         shape: BoxShape.circle,
         border: Border.all(
           color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-          width: 2,
+          width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
       ),
@@ -91,9 +91,9 @@ class AshChatBubble extends StatelessWidget {
         child: Text(
           'A',
           style: AppTextStyles.label.copyWith(
-            color: Colors.black, // Always black for that retro stamp look
+            color: Colors.black,
             fontWeight: FontWeight.w900,
-            fontSize: 16, // Slightly larger
+            fontSize: 18,
           ),
         ),
       ),

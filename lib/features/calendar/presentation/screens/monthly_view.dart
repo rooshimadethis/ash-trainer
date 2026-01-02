@@ -11,6 +11,7 @@ import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
 import 'package:ash_trainer/core/theme/shadows.dart';
 import 'workout_detail_screen.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -27,65 +28,71 @@ class MonthlyView extends ConsumerWidget {
         focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
 
     return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _navButton(
+                context,
+                icon: Icons.chevron_left_rounded,
+                onPressed: () {
+                  ref
+                      .read(monthlyMonthProvider.notifier)
+                      .update((date) => DateTime(date.year, date.month - 1, 1));
+                },
+              ),
+              Expanded(
+                child: Column(
                   children: [
+                    Text(
+                      'MONTHLY',
+                      style: AppTextStyles.label.copyWith(
+                        letterSpacing: 2.5,
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.w900,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
                     Text(
                       DateFormat('MMMM yyyy').format(focusedMonth),
                       style: AppTextStyles.h2,
                     ),
-                    const SizedBox(width: 8),
-                    if (!DateUtils.isSameMonth(focusedMonth, DateTime.now()))
-                      TextButton(
-                        onPressed: () {
-                          final now = DateTime.now();
-                          ref.read(monthlyMonthProvider.notifier).state =
-                              DateTime(now.year, now.month, 1);
-                        },
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: Text(
-                          'TODAY',
-                          style: AppTextStyles.label.copyWith(
-                            color: Theme.of(context).primaryColor,
-                            fontSize: 12,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                      ),
                   ],
                 ),
-                Row(
-                  children: [
-                    _MonthNavButton(
-                      icon: Icons.chevron_left_rounded,
-                      onTap: () {
-                        ref.read(monthlyMonthProvider.notifier).update(
-                            (date) => DateTime(date.year, date.month - 1, 1));
-                      },
-                    ),
-                    const SizedBox(width: 8),
-                    _MonthNavButton(
-                      icon: Icons.chevron_right_rounded,
-                      onTap: () {
-                        ref.read(monthlyMonthProvider.notifier).update(
-                            (date) => DateTime(date.year, date.month + 1, 1));
-                      },
-                    ),
-                  ],
-                ),
-              ],
-            ),
+              ),
+              _navButton(
+                context,
+                icon: Icons.chevron_right_rounded,
+                onPressed: () {
+                  ref
+                      .read(monthlyMonthProvider.notifier)
+                      .update((date) => DateTime(date.year, date.month + 1, 1));
+                },
+              ),
+            ],
           ),
+          if (!DateUtils.isSameMonth(focusedMonth, DateTime.now())) ...[
+            const SizedBox(height: 8),
+            GestureDetector(
+              onTap: () {
+                final now = DateTime.now();
+                ref.read(monthlyMonthProvider.notifier).state =
+                    DateTime(now.year, now.month, 1);
+              },
+              child: Text(
+                'BACK TO TODAY',
+                style: AppTextStyles.labelSmall.copyWith(
+                  color: Theme.of(context).primaryColor,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w800,
+                ),
+              ),
+            ),
+          ],
+          const SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: monthlyWorkoutsAsync.when(
@@ -105,10 +112,7 @@ class MonthlyView extends ConsumerWidget {
                   height: 200, child: Center(child: Text('Error: $err'))),
             ),
           ),
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Divider(height: 48),
-          ),
+          const SizedBox(height: 32),
           monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
               data: (blocks) =>
@@ -192,76 +196,81 @@ class MonthlyView extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    DateFormat('EEEE, MMM d').format(selectedDate),
-                    style: AppTextStyles.h3,
-                  ),
-                  if (DateUtils.isSameDay(selectedDate, DateTime.now())) ...[
-                    const SizedBox(width: 8),
-                    Text(
-                      '• Today',
-                      style: AppTextStyles.label.copyWith(
-                        color: Theme.of(context).primaryColor,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ],
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Text(
+              DateFormat('EEEE, MMM d').format(selectedDate),
+              style: AppTextStyles.h3,
+            ),
+            if (DateUtils.isSameDay(selectedDate, DateTime.now())) ...[
+              const SizedBox(width: 8),
+              Text(
+                '• Today',
+                style: AppTextStyles.label.copyWith(
+                  color: Theme.of(context).primaryColor,
+                  fontSize: 14,
+                ),
               ),
-              if (dayBlock != null) ...[
-                const SizedBox(height: 12),
+            ],
+          ],
+        ),
+        if (dayBlock != null) ...[
+          const SizedBox(height: 16),
+          AshCard(
+            backgroundColor: BlockUtils.getColorForIntent(
+                dayBlock.intent, dayBlock.blockNumber),
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 Container(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
+                    color: Colors.white.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
+                      width: 1.2,
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.layers_rounded,
                         size: 14,
-                        color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber),
+                        color: Colors.white,
                       ),
-                      const SizedBox(width: 8),
-                      Flexible(
-                        child: Text(
-                          dayBlock.intent.toUpperCase(),
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: BlockUtils.getColorForIntent(
-                                dayBlock.intent, dayBlock.blockNumber),
-                            fontSize: 10,
-                            fontWeight: FontWeight.w800,
-                            letterSpacing: 1.0,
-                          ),
+                      const SizedBox(width: 6),
+                      Text(
+                        'TRAINING BLOCK',
+                        style: AppTextStyles.label.copyWith(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 12),
+                Text(
+                  dayBlock.intent.toUpperCase(),
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w700,
+                    height: 1.4,
+                    letterSpacing: 0.5,
+                  ),
+                ),
               ],
-            ],
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
+        ],
+        const SizedBox(height: 24),
         dayWorkouts.isEmpty
             ? Padding(
                 padding: const EdgeInsets.symmetric(vertical: 48),
@@ -280,32 +289,50 @@ class MonthlyView extends ConsumerWidget {
                   ),
                 ),
               )
-            : Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: List.generate(dayWorkouts.length, (index) {
-                    final workout = dayWorkouts[index];
-                    return Padding(
-                      padding: EdgeInsets.only(
-                          bottom: index == dayWorkouts.length - 1 ? 0 : 16),
-                      child: WorkoutCard(
-                        workout: workout,
-                        useWorkoutColor: true,
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  WorkoutDetailScreen(workout: workout),
-                            ),
-                          );
-                        },
-                      ),
-                    );
-                  }),
-                ),
+            : Column(
+                children: List.generate(dayWorkouts.length, (index) {
+                  final workout = dayWorkouts[index];
+                  return Padding(
+                    padding: EdgeInsets.only(
+                        bottom: index == dayWorkouts.length - 1 ? 0 : 16),
+                    child: WorkoutCard(
+                      workout: workout,
+                      useWorkoutColor: true,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                WorkoutDetailScreen(workout: workout),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                }),
               ),
       ],
+    );
+  }
+
+  Widget _navButton(
+    BuildContext context, {
+    required IconData icon,
+    required VoidCallback onPressed,
+  }) {
+    return AshCard(
+      onTap: onPressed,
+      padding: EdgeInsets.zero,
+      borderRadius: 100,
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: Icon(
+          icon,
+          color: Theme.of(context).colorScheme.onSurface,
+          size: 24,
+        ),
+      ),
     );
   }
 }
@@ -397,17 +424,21 @@ class _WeekRow extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                     color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : isToday
-                            ? Theme.of(context)
-                                .primaryColor
-                                .withValues(alpha: 0.3)
-                            : Theme.of(context)
-                                .colorScheme
-                                .outline
-                                .withValues(alpha: 0.5),
-                    width: isSelected ? 1.5 : 1.0,
+                        ? (Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFFFF4D8C)
+                            : Colors.black)
+                        : (isToday
+                            ? Theme.of(context).primaryColor
+                            : (Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white.withValues(alpha: 0.1)
+                                : Colors.black.withValues(alpha: 0.1))),
+                    width: isSelected ? 2.0 : 1.5,
                   ),
+                  boxShadow: isSelected
+                      ? (Theme.of(context).brightness == Brightness.dark
+                          ? AppShadows.retroDark
+                          : AppShadows.retro)
+                      : [],
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(11),
@@ -488,41 +519,6 @@ class _WeekRow extends StatelessWidget {
             ),
           );
         }),
-      ),
-    );
-  }
-}
-
-class _MonthNavButton extends StatelessWidget {
-  final IconData icon;
-  final VoidCallback onTap;
-
-  const _MonthNavButton({
-    required this.icon,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          shape: BoxShape.circle,
-          border: Border.all(
-            color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-            width: 2.0,
-          ),
-          boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
-        ),
-        child: Icon(
-          icon,
-          color: Colors.black,
-          size: 20,
-        ),
       ),
     );
   }

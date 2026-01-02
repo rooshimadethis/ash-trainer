@@ -59,6 +59,9 @@ class RecoveryWidget extends ConsumerWidget {
               IconButton(
                 onPressed: () =>
                     ref.read(healthSyncProvider.notifier).refresh(),
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
                 icon: Icon(Icons.refresh,
                     color: Theme.of(context)
                         .colorScheme
@@ -68,9 +71,10 @@ class RecoveryWidget extends ConsumerWidget {
               ),
           ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 8),
         GridView.count(
           crossAxisCount: 2,
+          padding: EdgeInsets.zero,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           mainAxisSpacing: 12,
@@ -228,20 +232,34 @@ class _StatCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    Icon(icon, color: Colors.white, size: 24),
-                    const SizedBox(width: 8),
-                    Text(
-                      label.toUpperCase(),
-                      style: AppTextStyles.label.copyWith(
-                        fontSize: 14,
-                        color: Colors.white.withValues(alpha: 0.8),
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.2,
-                      ),
+                // Tag-style Header (Matching WorkoutCard)
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.08),
+                    borderRadius: BorderRadius.circular(100),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.15),
+                      width: 1.2,
                     ),
-                  ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(icon, color: Colors.white, size: 14),
+                      const SizedBox(width: 6),
+                      Text(
+                        label.toUpperCase(),
+                        style: AppTextStyles.label.copyWith(
+                          fontSize: 11,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,7 +272,7 @@ class _StatCard extends StatelessWidget {
                         maxLines: 1,
                         softWrap: false,
                         style: AppTextStyles.h3.copyWith(
-                          fontSize: 32,
+                          fontSize: 28,
                           color: Colors.white,
                           fontWeight: FontWeight.w900,
                           height: 1,
@@ -266,9 +284,10 @@ class _StatCard extends StatelessWidget {
                       Text(
                         status!,
                         style: AppTextStyles.labelSmall.copyWith(
-                          color: Colors.white.withValues(alpha: 0.6),
-                          fontWeight: FontWeight.bold,
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontWeight: FontWeight.w900,
                           fontSize: 10,
+                          letterSpacing: 0.5,
                         ),
                       ),
                     ],

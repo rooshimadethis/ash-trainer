@@ -14,8 +14,7 @@ import 'package:ash_trainer/features/training/presentation/providers/automation_
 import '../../../workout_logging/presentation/screens/workout_logging_screen.dart';
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../../../shared/domain/services/health_service.dart';
-import '../../../developer/presentation/widgets/debug_overlay.dart';
-import 'package:ash_trainer/core/theme/shadows.dart';
+import '../../../../core/theme/colors.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -45,104 +44,36 @@ class _TodayViewState extends ConsumerState<TodayView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'TODAY',
-                      style: AppTextStyles.label.copyWith(
-                        letterSpacing: 2.5,
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      dateStr,
-                      style: AppTextStyles.h2,
-                    ),
-                  ],
-                ),
-              ),
-              // Debug button (only in debug mode)
-              Builder(
-                builder: (context) {
-                  final isDark =
-                      Theme.of(context).brightness == Brightness.dark;
-                  Widget? debugButton;
-                  assert(() {
-                    debugButton = Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: isDark
-                              ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
-                              : Colors.black.withValues(alpha: 0.1),
-                          width: 1.5,
-                        ),
-                        boxShadow:
-                            isDark ? AppShadows.retroDark : AppShadows.retro,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          final navigatorKey =
-                              Navigator.of(context, rootNavigator: true)
-                                  .widget
-                                  .key as GlobalKey<NavigatorState>?;
-                          if (navigatorKey != null) {
-                            DebugOverlay.showDebugMenu(context, navigatorKey);
-                          }
-                        },
-                        icon: const Icon(Icons.bug_report,
-                            color: Colors.redAccent),
-                      ),
-                    );
-                    return true;
-                  }());
-                  return debugButton ?? const SizedBox.shrink();
-                },
-              ),
-              // Add spacing only in debug mode
-              Builder(
-                builder: (context) {
-                  Widget? spacing;
-                  assert(() {
-                    spacing = const SizedBox(width: 12);
-                    return true;
-                  }());
-                  return spacing ?? const SizedBox.shrink();
-                },
-              ),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
-                        : Colors.black.withValues(alpha: 0.1),
-                    width: 1.5,
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  'TODAY',
+                  style: AppTextStyles.label.copyWith(
+                    letterSpacing: 2.5,
+                    color: Theme.of(context).primaryColor,
+                    fontWeight: FontWeight.w900,
                   ),
-                  boxShadow: Theme.of(context).brightness == Brightness.dark
-                      ? AppShadows.retroDark
-                      : AppShadows.retro,
                 ),
-                child: IconButton(
-                  onPressed: null, // Open profile or settings
-                  icon: Icon(Icons.person_outline_rounded,
-                      color: Theme.of(context).colorScheme.onSurface),
+                const SizedBox(height: 8),
+                Text(
+                  dateStr,
+                  style: AppTextStyles.h2,
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
           _checkInCard(),
           const SizedBox(height: 32),
-          Text('Workout', style: AppTextStyles.h3),
+          Row(
+            children: [
+              const Icon(Icons.directions_run_rounded,
+                  color: AppColors.runIntervals, size: 20),
+              const SizedBox(width: 8),
+              Text('Workout', style: AppTextStyles.h4),
+            ],
+          ),
           const SizedBox(height: 12),
           todayWorkoutAsync.when(
             data: (workout) {
@@ -169,7 +100,14 @@ class _TodayViewState extends ConsumerState<TodayView> {
           const SizedBox(height: 32),
           const RecoveryWidget(),
           const SizedBox(height: 32),
-          Text('Progress', style: AppTextStyles.h3),
+          Row(
+            children: [
+              const Icon(Icons.analytics_outlined,
+                  color: AppColors.runLong, size: 20),
+              const SizedBox(width: 8),
+              Text('Progress', style: AppTextStyles.h4),
+            ],
+          ),
           const SizedBox(height: 12),
           ref.watch(activeGoalProvider).when(
                 data: (goal) {
@@ -189,7 +127,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 error: (_, __) => const SizedBox.shrink(),
               ),
           const SizedBox(height: 32),
-          // Also show at the bottom as requested
           _detectedWorkoutsSection(ref),
         ],
       ),
@@ -209,7 +146,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
 
     if (!context.mounted) return;
 
-    // Show confirmation dialog
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -230,7 +166,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
     );
 
     if (confirm == true && context.mounted) {
-      // Prepare workout with actuals
       final filledWorkout = todayWorkout.copyWith(
         actualDuration: extWorkout.durationSeconds,
         actualDistance: extWorkout.distanceKm,
@@ -251,7 +186,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
   Widget _detectedWorkoutsSection(WidgetRef ref) {
     final todayWorkout = ref.watch(todayWorkoutProvider).valueOrNull;
 
-    // If the workout is already completed, hide detected workouts to avoid confusion
     if (todayWorkout != null && todayWorkout.status == 'completed') {
       return const SizedBox.shrink();
     }
@@ -262,8 +196,6 @@ class _TodayViewState extends ConsumerState<TodayView> {
       data: (workouts) {
         if (workouts.isEmpty) return const SizedBox.shrink();
 
-        // Filter out very short workouts (less than 5 mins) to avoid noise
-        // or handle deduplication locally if needed.
         final validWorkouts =
             workouts.where((w) => w.durationSeconds > 300).toList();
 
@@ -283,43 +215,72 @@ class _TodayViewState extends ConsumerState<TodayView> {
                   padding: const EdgeInsets.only(bottom: 12),
                   child: AshCard(
                     onTap: () => _onMatchWorkout(ref.context, ref, w),
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 44,
+                          height: 44,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withValues(alpha: 0.1),
+                            shape: BoxShape.circle,
+                            border: Border.all(
                               color: Theme.of(context)
                                   .colorScheme
                                   .primary
-                                  .withValues(alpha: 0.1),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Icon(Icons.check_circle_outline,
-                                color: Theme.of(context).colorScheme.primary),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(w.type, style: AppTextStyles.bodyMedium),
-                                Text(
-                                  '${(w.durationSeconds / 60).round()} min • ${w.sourceName}',
-                                  style: AppTextStyles.bodySmall,
-                                ),
-                              ],
+                                  .withValues(alpha: 0.2),
+                              width: 1.5,
                             ),
                           ),
-                          Icon(Icons.arrow_forward_ios,
-                              size: 16,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withValues(alpha: 0.3)),
-                        ],
-                      ),
+                          child: Icon(Icons.check_circle_outline,
+                              color: Theme.of(context).colorScheme.primary),
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(w.type, style: AppTextStyles.h4),
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Text(
+                                    '${(w.durationSeconds / 60).round()} min',
+                                    style: AppTextStyles.bodySmall,
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 6, vertical: 2),
+                                    decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .outline
+                                          .withValues(alpha: 0.1),
+                                      borderRadius: BorderRadius.circular(4),
+                                    ),
+                                    child: Text(
+                                      w.sourceName.toUpperCase(),
+                                      style: AppTextStyles.labelSmall.copyWith(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.arrow_forward_ios,
+                            size: 16,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.3)),
+                      ],
                     ),
                   ),
                 )),
@@ -339,29 +300,44 @@ class _TodayViewState extends ConsumerState<TodayView> {
         const AshChatBubble(
           text: 'Good morning! Ready to tackle today? How are you feeling?',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         Row(
           children: [
             const SizedBox(width: 52), // Offset for Ash's avatar
             Expanded(
-              child: AshCard(
-                onTap: () {},
-                backgroundColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.1),
-                borderColor:
-                    Theme.of(context).primaryColor.withValues(alpha: 0.2),
-                child: Center(
-                  child: Text(
-                    'Quick Check-In',
-                    style: AppTextStyles.h4
-                        .copyWith(color: Theme.of(context).colorScheme.primary),
-                  ),
-                ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  _moodChip('Great 🚀', Colors.orange),
+                  _moodChip('Good 👍', Colors.green),
+                  _moodChip('Tired 🥱', Colors.blue),
+                  _moodChip('Sore 🤕', Colors.redAccent),
+                ],
               ),
             ),
           ],
         ),
       ],
+    );
+  }
+
+  Widget _moodChip(String label, Color color) {
+    return AshCard(
+      onTap: () {},
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+      backgroundColor: color,
+      borderColor: Colors.black.withValues(alpha: 0.8),
+      borderWidth: 1.5,
+      child: Text(
+        label,
+        style: AppTextStyles.label.copyWith(
+          color: Colors.white,
+          fontSize: 12,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 0.5,
+        ),
+      ),
     );
   }
 

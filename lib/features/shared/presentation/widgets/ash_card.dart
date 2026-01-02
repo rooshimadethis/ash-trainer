@@ -10,6 +10,7 @@ class AshCard extends StatefulWidget {
   final double borderWidth;
   final Color? backgroundColor;
   final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
   const AshCard({
     super.key,
@@ -20,6 +21,7 @@ class AshCard extends StatefulWidget {
     this.borderWidth = 1.5,
     this.backgroundColor,
     this.padding,
+    this.borderRadius,
   });
 
   @override
@@ -54,9 +56,8 @@ class _AshCardState extends State<AshCard> {
           0.0,
         ),
         decoration: BoxDecoration(
-          color: (widget.backgroundColor ?? theme.colorScheme.surface)
-              .withValues(alpha: 1.0),
-          borderRadius: BorderRadius.circular(24),
+          color: widget.backgroundColor ?? theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(widget.borderRadius ?? 24),
           border: Border.all(
             color: widget.borderColor ??
                 (isDark

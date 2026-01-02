@@ -35,10 +35,7 @@ class WorkoutCard extends ConsumerWidget {
 
     return AshCard(
       onTap: onTap,
-      borderWidth: 1.0,
-      borderColor: useWorkoutColor
-          ? typeColor.withValues(alpha: 0.3)
-          : Theme.of(context).colorScheme.outline,
+      borderWidth: 1.5,
       backgroundColor: useWorkoutColor
           ? typeColor // Use the strong color as requested
           : Theme.of(context).colorScheme.surface,

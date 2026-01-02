@@ -29,6 +29,7 @@ class AppTextStyles {
   static TextStyle get h4 => display.copyWith(
         fontSize: 16,
         fontWeight: FontWeight.w700,
+        height: 1.0,
         letterSpacing: -0.2,
       );
 

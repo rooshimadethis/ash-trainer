@@ -5,6 +5,7 @@ class AshScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
   final PreferredSizeWidget? appBar;
+  final bool useSafeArea;
   final Widget? floatingActionButton;
 
   const AshScaffold({
@@ -12,6 +13,7 @@ class AshScaffold extends StatelessWidget {
     required this.body,
     this.bottomNavigationBar,
     this.appBar,
+    this.useSafeArea = true,
     this.floatingActionButton,
   });
 
@@ -30,7 +32,7 @@ class AshScaffold extends StatelessWidget {
         backgroundColor: Colors.transparent, // Handle background via Container
         body: Container(
           color: Theme.of(context).scaffoldBackgroundColor,
-          child: SafeArea(child: body),
+          child: useSafeArea ? SafeArea(child: body) : body,
         ),
         bottomNavigationBar: bottomNavigationBar,
         floatingActionButton: floatingActionButton,
