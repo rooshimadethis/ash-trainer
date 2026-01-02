@@ -30,6 +30,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
   late Animation<double> _popAnimation;
   late Animation<double> _textFadeAnimation;
   bool _isTyping = true;
+  bool _hasAnimated = false; // Track if we've done the initial animation
   Timer? _typingTimer;
 
   @override
@@ -64,8 +65,13 @@ class _AshChatBubbleState extends State<AshChatBubble>
   @override
   void didUpdateWidget(AshChatBubble oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text) {
-      _startAnimation();
+    if (oldWidget.text != widget.text && widget.text.isNotEmpty) {
+      // If we've already animated once, just fade the text
+      if (_hasAnimated) {
+        _textFadeController.forward(from: 0.0);
+      } else {
+        _startAnimation();
+      }
     }
   }
 
@@ -76,6 +82,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
     if (widget.sender != ChatBubbleSender.ash) {
       setState(() {
         _isTyping = false;
+        _hasAnimated = true;
         _popController.value = 1.0;
         _textFadeController.value = 1.0;
       });
@@ -102,6 +109,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
         // After the bubble has grown (400ms for AnimatedSize), fade in the text
         Timer(const Duration(milliseconds: 400), () {
           if (mounted) {
+            _hasAnimated = true;
             _textFadeController.forward(from: 0.0);
           }
         });
