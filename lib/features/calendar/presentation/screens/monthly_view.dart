@@ -79,7 +79,7 @@ class MonthlyView extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
 
           // Ash context bubble
           monthlyWorkoutsAsync.when(

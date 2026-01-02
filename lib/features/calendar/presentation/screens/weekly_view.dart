@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
@@ -21,17 +20,12 @@ class WeeklyView extends ConsumerWidget {
     final weeklyWorkoutsAsync = ref.watch(weeklyWorkoutsProvider);
     final weeklyBlocksAsync = ref.watch(weeklyBlocksProvider);
 
-    final endOfWeek = startOfWeek.add(const Duration(days: 6));
-
-    final weekRangeStr =
-        '${DateFormat('MMM d').format(startOfWeek)} - ${DateFormat('MMM d').format(endOfWeek)}';
-
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeader(context, ref, startOfWeek, weekRangeStr),
+          _buildHeader(context, ref, startOfWeek),
           const SizedBox(height: 20),
 
           // Week grid
@@ -49,7 +43,7 @@ class WeeklyView extends ConsumerWidget {
             ),
           ),
 
-          const SizedBox(height: 24),
+          const SizedBox(height: 12),
 
           // Ash context bubble
           weeklyWorkoutsAsync.when(
@@ -123,7 +117,6 @@ class WeeklyView extends ConsumerWidget {
     BuildContext context,
     WidgetRef ref,
     DateTime startOfWeek,
-    String weekRangeStr,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,15 +141,6 @@ class WeeklyView extends ConsumerWidget {
               Text(
                 DateFormat('MMMM yyyy').format(startOfWeek),
                 style: AppTextStyles.h2,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                weekRangeStr.toUpperCase(),
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: AppColors.textMuted,
-                  letterSpacing: 1.5,
-                  fontWeight: FontWeight.w800,
-                ),
               ),
             ],
           ),

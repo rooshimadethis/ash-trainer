@@ -13,7 +13,7 @@ import '../providers/calendar_provider.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
-import '../../../shared/presentation/widgets/ash_surface_card.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
@@ -363,45 +363,51 @@ class WorkoutDetailScreen extends ConsumerWidget {
       }
     }
 
-    return AshSurfaceCard(
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 24),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 2.2, // Adjust for wide layout
-          mainAxisSpacing: 16,
-          crossAxisSpacing: 24,
-        ),
-        itemCount: stats.length,
-        itemBuilder: (context, index) {
-          final item = stats[index];
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        crossAxisSpacing: 16,
+        mainAxisSpacing: 16,
+        childAspectRatio: 2.0,
+      ),
+      itemCount: stats.length,
+      itemBuilder: (context, index) {
+        final item = stats[index];
+        return AshCard(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          borderRadius: 20,
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 item.label.toUpperCase(),
+                textAlign: TextAlign.center,
                 style: AppTextStyles.labelSmall.copyWith(
                   color: onSurface.withValues(alpha: 0.5),
-                  fontSize: 12, // Increased from 10
-                  letterSpacing: 1.0, // Increased for readability
-                  fontWeight: FontWeight.w700,
+                  fontSize: 11,
+                  letterSpacing: 1.2,
+                  fontWeight: FontWeight.w800,
                 ),
               ),
-              const SizedBox(height: 4),
-              Text(
-                item.value,
-                style: AppTextStyles.h2.copyWith(
-                  color: valueColor,
-                  fontSize: 24, // High glanceability
+              const SizedBox(height: 6),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  item.value,
+                  textAlign: TextAlign.center,
+                  style: AppTextStyles.h2.copyWith(
+                    color: valueColor,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w900,
+                  ),
                 ),
               ),
             ],
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
