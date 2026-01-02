@@ -12,6 +12,7 @@ import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
 import 'workout_detail_screen.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
+import '../../../shared/presentation/widgets/ash_surface_card.dart';
 
 class WeeklyView extends ConsumerWidget {
   const WeeklyView({super.key});
@@ -81,7 +82,7 @@ class WeeklyView extends ConsumerWidget {
           const SizedBox(height: 24),
           const SizedBox(height: 12),
           SizedBox(
-            height: 140, // Increased height for better proportions
+            height: 120, // Reduced height for better proportions
             child: weeklyWorkoutsAsync.when(
               data: (workouts) => weeklyBlocksAsync.when(
                 data: (blocks) =>
@@ -218,9 +219,7 @@ class WeeklyView extends ConsumerWidget {
         ),
         if (dayBlock != null) ...[
           const SizedBox(height: 16),
-          AshCard(
-            backgroundColor: BlockUtils.getColorForIntent(
-                dayBlock.intent, dayBlock.blockNumber),
+          AshSurfaceCard(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -229,26 +228,32 @@ class WeeklyView extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber)
+                          .withValues(alpha: 0.2),
                       width: 1.2,
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.layers_rounded,
                         size: 14,
-                        color: Colors.white,
+                        color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         'TRAINING BLOCK',
                         style: AppTextStyles.label.copyWith(
-                          color: Colors.white,
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,
@@ -261,7 +266,7 @@ class WeeklyView extends ConsumerWidget {
                 Text(
                   dayBlock.intent.toUpperCase(),
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w700,
                     height: 1.4,
                     letterSpacing: 0.5,
@@ -340,23 +345,20 @@ class _DayColumn extends ConsumerWidget {
 
     // Background tint logic for blocks (subtle)
     final Color blockTint =
-        blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
-    final Color baseBackground = isToday
-        ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-        : Theme.of(context)
-            .colorScheme
-            .surfaceContainerHighest
-            .withValues(alpha: 0.5);
+        blockColor?.withValues(alpha: 0.15) ?? Colors.transparent;
+    final Color baseBackground = isDark
+        ? AppColors.surface.withValues(alpha: 0.4)
+        : AppColors.surfaceLightSecondary.withValues(alpha: 0.6);
 
     return GestureDetector(
       onTap: () => ref.read(selectedDateProvider.notifier).state = day,
       child: AnimatedContainer(
         padding: const EdgeInsets.symmetric(vertical: 8),
         duration: const Duration(milliseconds: 200),
-        margin: const EdgeInsets.symmetric(horizontal: 3),
+        margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
         decoration: BoxDecoration(
           color: Color.alphaBlend(blockTint, baseBackground),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isSelected
                 ? (isDark ? const Color(0xFFFF4D8C) : Colors.black)
@@ -365,101 +367,70 @@ class _DayColumn extends ConsumerWidget {
                     : (isDark
                         ? Colors.white.withValues(alpha: 0.1)
                         : Colors.black.withValues(alpha: 0.1))),
-            width: isSelected ? 2.0 : 1.5,
+            width: isSelected ? 2.5 : 1.5,
           ),
           boxShadow: isSelected
               ? (isDark ? AppShadows.retroDark : AppShadows.retro)
               : [],
         ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(11),
-          child: Column(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    Text(
-                      DateFormat('E').format(day).toUpperCase(),
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: isToday
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withValues(alpha: 0.5),
-                        fontSize: 9,
-                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w600,
-                        letterSpacing: 0.5,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      day.day.toString(),
-                      style: AppTextStyles.h4.copyWith(
-                        fontSize: 16,
-                        color: isToday
-                            ? Theme.of(context).primaryColor
-                            : Theme.of(context).colorScheme.onSurface,
-                        fontWeight: isToday ? FontWeight.w800 : FontWeight.w700,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        physics: const NeverScrollableScrollPhysics(),
-                        child: Column(
-                          children: workouts.map((w) {
-                            final isCompleted = w.status == 'completed';
-                            final displayColor = WorkoutTypes.getColor(w.type);
-
-                            return Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: Container(
-                                width: 22,
-                                height: 22,
-                                decoration: BoxDecoration(
-                                  color: displayColor.withValues(alpha: 0.15),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: displayColor.withValues(alpha: 0.4),
-                                    width: 1,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    isCompleted
-                                        ? Icons.check_rounded
-                                        : WorkoutTypes.getIcon(w.type),
-                                    size: 11,
-                                    color: displayColor,
-                                  ),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              DateFormat('E').format(day).toUpperCase(),
+              style: AppTextStyles.labelSmall.copyWith(
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.4),
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.5,
               ),
-              if (blockColor != null)
-                Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: blockColor,
-                    boxShadow: [
-                      BoxShadow(
-                        color: blockColor.withValues(alpha: 0.4),
-                        blurRadius: 4,
-                        offset: const Offset(0, -1),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              day.day.toString(),
+              style: AppTextStyles.h4.copyWith(
+                fontSize: 18,
+                color: Theme.of(context).colorScheme.onSurface,
+                fontWeight: FontWeight.w900,
+                height: 1.1,
+              ),
+            ),
+            if (workouts.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              ...workouts.take(2).map((w) {
+                final isCompleted = w.status == 'completed';
+                final displayColor = WorkoutTypes.getColor(w.type);
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 2),
+                  child: Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: displayColor.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: displayColor.withValues(alpha: 0.4),
+                        width: 1,
                       ),
-                    ],
+                    ),
+                    child: Center(
+                      child: Icon(
+                        isCompleted
+                            ? Icons.check_rounded
+                            : WorkoutTypes.getIcon(w.type),
+                        size: 10,
+                        color: displayColor,
+                      ),
+                    ),
                   ),
-                ),
+                );
+              }),
             ],
-          ),
+          ],
         ),
       ),
     );

@@ -39,125 +39,142 @@ class WorkoutCard extends ConsumerWidget {
       backgroundColor: useWorkoutColor
           ? typeColor // Use the strong color as requested
           : Theme.of(context).colorScheme.surface,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Stack(
+        clipBehavior: Clip.none,
         children: [
-          Row(
+          Positioned(
+            right: -20,
+            bottom: -20,
+            child: Icon(
+              WorkoutTypes.getIcon(workout.type),
+              size: 100,
+              color: contentColor.withValues(alpha: 0.1),
+            ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: contentColor.withValues(alpha: 0.08),
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(
-                      color: contentColor.withValues(alpha: 0.15), width: 1.5),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      WorkoutTypes.getIcon(workout.type),
-                      size: 14,
-                      color: contentColor,
+              Row(
+                children: [
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: contentColor.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                          color: contentColor.withValues(alpha: 0.15),
+                          width: 1.5),
                     ),
-                    const SizedBox(width: 6),
-                    Text(
-                      WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
-                      style: AppTextStyles.labelLarge.copyWith(
-                        color: contentColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.0,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(
+                          WorkoutTypes.getIcon(workout.type),
+                          size: 14,
+                          color: contentColor,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          WorkoutTypes.getDisplayName(workout.type)
+                              .toUpperCase(),
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: contentColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(
+                    width: 28,
+                    height: 28,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: workout.status == 'completed' ||
+                              workout.status == 'skipped'
+                          ? contentColor.withValues(alpha: 0.2)
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: contentColor.withValues(alpha: 0.2),
+                        width: 1.5,
                       ),
                     ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Container(
-                width: 28,
-                height: 28,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: workout.status == 'completed' ||
-                          workout.status == 'skipped'
-                      ? contentColor.withValues(alpha: 0.2)
-                      : Colors.transparent,
-                  border: Border.all(
-                    color: contentColor.withValues(alpha: 0.2),
-                    width: 1.5,
-                  ),
-                ),
-                child: workout.status == 'completed'
-                    ? Icon(
-                        Icons.check_rounded,
-                        color: contentColor,
-                        size: 18,
-                      )
-                    : workout.status == 'skipped'
+                    child: workout.status == 'completed'
                         ? Icon(
-                            Icons.close_rounded,
+                            Icons.check_rounded,
                             color: contentColor,
                             size: 18,
                           )
-                        : null,
+                        : workout.status == 'skipped'
+                            ? Icon(
+                                Icons.close_rounded,
+                                color: contentColor,
+                                size: 18,
+                              )
+                            : null,
+                  ),
+                ],
               ),
+              const SizedBox(height: 16),
+              Text(
+                workout.name,
+                style: AppTextStyles.h3.copyWith(
+                  height: 1.2,
+                  color: contentColor,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Wrap(
+                spacing: 16,
+                runSpacing: 8,
+                children: [
+                  _infoTile(
+                    context,
+                    Icons.schedule_rounded,
+                    _formatDuration(workout.plannedDuration),
+                    secondaryContentColor,
+                  ),
+                  if (workout.plannedDistance != null &&
+                      workout.plannedDistance! > 0)
+                    _infoTile(
+                      context,
+                      Icons.route_rounded,
+                      UnitConverter.formatDistance(
+                          UnitConverter.convertDistanceFromKm(
+                              workout.plannedDistance!, preferredUnit),
+                          preferredUnit),
+                      secondaryContentColor,
+                    ),
+                  if (workout.intensity != null)
+                    _infoTile(
+                      context,
+                      Icons.bolt_rounded,
+                      'RPE ${workout.intensity}',
+                      secondaryContentColor,
+                    ),
+                ],
+              ),
+              if (workout.description != null &&
+                  workout.description!.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                Text(
+                  workout.description!,
+                  style: AppTextStyles.bodyMedium.copyWith(
+                    color: secondaryContentColor,
+                    height: 1.5,
+                    fontWeight:
+                        useWorkoutColor ? FontWeight.w600 : FontWeight.w500,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
             ],
           ),
-          const SizedBox(height: 16),
-          Text(
-            workout.name,
-            style: AppTextStyles.h3.copyWith(
-              height: 1.2,
-              color: contentColor,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 16,
-            runSpacing: 8,
-            children: [
-              _infoTile(
-                context,
-                Icons.schedule_rounded,
-                _formatDuration(workout.plannedDuration),
-                secondaryContentColor,
-              ),
-              if (workout.plannedDistance != null &&
-                  workout.plannedDistance! > 0)
-                _infoTile(
-                  context,
-                  Icons.route_rounded,
-                  UnitConverter.formatDistance(
-                      UnitConverter.convertDistanceFromKm(
-                          workout.plannedDistance!, preferredUnit),
-                      preferredUnit),
-                  secondaryContentColor,
-                ),
-              if (workout.intensity != null)
-                _infoTile(
-                  context,
-                  Icons.bolt_rounded,
-                  'RPE ${workout.intensity}',
-                  secondaryContentColor,
-                ),
-            ],
-          ),
-          if (workout.description != null &&
-              workout.description!.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            Text(
-              workout.description!,
-              style: AppTextStyles.bodyMedium.copyWith(
-                color: secondaryContentColor,
-                height: 1.5,
-                fontWeight: useWorkoutColor ? FontWeight.w600 : FontWeight.w500,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-          ],
         ],
       ),
     );

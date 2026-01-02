@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/theme/text_styles.dart';
-import 'package:ash_trainer/core/theme/shadows.dart';
 import '../../../../core/theme/theme_provider.dart';
+
 import '../../../../core/constants/workout_types.dart';
 import '../../../../core/utils/unit_converter.dart';
 import '../../../shared/presentation/widgets/ash_button.dart';
@@ -13,6 +13,7 @@ import '../providers/calendar_provider.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../training/presentation/providers/automation_provider.dart';
 import '../../../shared/presentation/providers/user_provider.dart';
+import '../../../shared/presentation/widgets/ash_surface_card.dart';
 
 class WorkoutDetailScreen extends ConsumerWidget {
   final Workout workout;
@@ -37,9 +38,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
 
   Widget _buildContent(BuildContext context, WidgetRef ref, Workout workout) {
     final typeColor = WorkoutTypes.getColor(workout.type);
-    final isToday = _isToday(workout.scheduledDate);
     final isCompleted = workout.status == 'completed';
     final isRunning = workout.type.contains('run');
+
     // Use workout-specific theme
     final workoutTheme = ref.watch(workoutThemeProvider(workout));
     // Get user's preferred distance unit
@@ -311,8 +312,8 @@ class WorkoutDetailScreen extends ConsumerWidget {
       bool isRunning, String preferredUnit,
       {bool isActual = false}) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final onSurface = theme.colorScheme.onSurface;
+
     final primary = theme.colorScheme.primary;
 
     // Determine if we need to adjust primary for contrast
@@ -364,19 +365,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
       }
     }
 
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark
-              ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
-              : Colors.black.withValues(alpha: 0.1),
-          width: 1.5,
-        ),
-        boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
-      ),
+    return AshSurfaceCard(
       child: GridView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
@@ -426,13 +415,6 @@ class WorkoutDetailScreen extends ConsumerWidget {
       return '$hours:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
     }
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
-  }
-
-  bool _isToday(DateTime date) {
-    final now = DateTime.now();
-    return date.year == now.year &&
-        date.month == now.month &&
-        date.day == now.day;
   }
 
   Future<void> _skipWorkout(

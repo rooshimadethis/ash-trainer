@@ -37,19 +37,36 @@ class CountdownCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'COUNTDOWN',
-                style: AppTextStyles.labelSmall.copyWith(letterSpacing: 1),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFBBF24).withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(100),
+              border: Border.all(
+                color: const Color(0xFFFBBF24).withValues(alpha: 0.2),
+                width: 1.2,
               ),
-              const Icon(
-                Icons.timer_outlined,
-                size: 16,
-                color: Color(0xFFFBBF24), // Amber 400
-              ),
-            ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.timer_outlined,
+                  size: 14,
+                  color: Color(0xFFFBBF24),
+                ),
+                const SizedBox(width: 6),
+                Text(
+                  'COUNTDOWN',
+                  style: AppTextStyles.labelSmall.copyWith(
+                    letterSpacing: 1.2,
+                    color: const Color(0xFFFBBF24),
+                    fontWeight: FontWeight.w900,
+                    fontSize: 10,
+                  ),
+                ),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
           Row(

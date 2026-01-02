@@ -12,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:ash_trainer/core/theme/shadows.dart';
 import 'workout_detail_screen.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
+import '../../../shared/presentation/widgets/ash_surface_card.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -217,9 +218,7 @@ class MonthlyView extends ConsumerWidget {
         ),
         if (dayBlock != null) ...[
           const SizedBox(height: 16),
-          AshCard(
-            backgroundColor: BlockUtils.getColorForIntent(
-                dayBlock.intent, dayBlock.blockNumber),
+          AshSurfaceCard(
             padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -228,26 +227,32 @@ class MonthlyView extends ConsumerWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.1),
+                    color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(100),
                     border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.2),
+                      color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber)
+                          .withValues(alpha: 0.2),
                       width: 1.2,
                     ),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.layers_rounded,
                         size: 14,
-                        color: Colors.white,
+                        color: BlockUtils.getColorForIntent(
+                            dayBlock.intent, dayBlock.blockNumber),
                       ),
                       const SizedBox(width: 6),
                       Text(
                         'TRAINING BLOCK',
                         style: AppTextStyles.label.copyWith(
-                          color: Colors.white,
+                          color: BlockUtils.getColorForIntent(
+                              dayBlock.intent, dayBlock.blockNumber),
                           fontSize: 10,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.2,
@@ -260,7 +265,7 @@ class MonthlyView extends ConsumerWidget {
                 Text(
                   dayBlock.intent.toUpperCase(),
                   style: AppTextStyles.bodyMedium.copyWith(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontWeight: FontWeight.w700,
                     height: 1.4,
                     letterSpacing: 0.5,
@@ -404,44 +409,39 @@ class _WeekRow extends StatelessWidget {
 
           // Background tint logic
           final Color blockTint =
-              blockColor?.withValues(alpha: 0.05) ?? Colors.transparent;
-          final Color baseBackground = isToday
-              ? Theme.of(context).primaryColor.withValues(alpha: 0.05)
-              : Theme.of(context)
-                  .colorScheme
-                  .surfaceContainerHighest
-                  .withValues(alpha: 0.5);
+              blockColor?.withValues(alpha: 0.15) ?? Colors.transparent;
+          final isDark = Theme.of(context).brightness == Brightness.dark;
+
+          final Color baseBackground = isDark
+              ? AppColors.surface.withValues(alpha: 0.4)
+              : AppColors.surfaceLightSecondary.withValues(alpha: 0.6);
 
           return Expanded(
             child: GestureDetector(
               onTap: () => ref.read(selectedDateProvider.notifier).state = day,
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.symmetric(horizontal: 3),
-                height: 72,
+                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                height: 78,
                 decoration: BoxDecoration(
                   color: Color.alphaBlend(blockTint, baseBackground),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(16),
                   border: Border.all(
                     color: isSelected
-                        ? (Theme.of(context).brightness == Brightness.dark
-                            ? const Color(0xFFFF4D8C)
-                            : Colors.black)
+                        ? (isDark ? const Color(0xFFFF4D8C) : Colors.black)
                         : (isToday
                             ? Theme.of(context).primaryColor
-                            : (Theme.of(context).brightness == Brightness.dark
+                            : (isDark
                                 ? Colors.white.withValues(alpha: 0.1)
                                 : Colors.black.withValues(alpha: 0.1))),
-                    width: isSelected ? 2.0 : 1.5,
+                    width: isSelected ? 2.5 : 1.5,
                   ),
                   boxShadow: isSelected
-                      ? (Theme.of(context).brightness == Brightness.dark
-                          ? AppShadows.retroDark
-                          : AppShadows.retro)
+                      ? (isDark ? AppShadows.retroDark : AppShadows.retro)
                       : [],
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(11),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Column(
                     children: [
                       Expanded(
@@ -451,29 +451,26 @@ class _WeekRow extends StatelessWidget {
                             Text(
                               DateFormat('E').format(day).substring(0, 1),
                               style: AppTextStyles.labelSmall.copyWith(
-                                color: isToday
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.5),
-                                fontSize: 9,
-                                fontWeight:
-                                    isToday ? FontWeight.w800 : FontWeight.w600,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.4),
+                                fontSize: 10,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 0.5,
                               ),
                             ),
-                            const SizedBox(height: 2),
+                            const SizedBox(height: 4),
                             Text(
                               day.day.toString(),
-                              style: AppTextStyles.bodyMedium.copyWith(
-                                color: isToday
-                                    ? Theme.of(context).primaryColor
-                                    : Theme.of(context).colorScheme.onSurface,
-                                fontWeight:
-                                    isToday ? FontWeight.w800 : FontWeight.w700,
+                              style: AppTextStyles.h4.copyWith(
+                                fontSize: 18,
+                                color: Theme.of(context).colorScheme.onSurface,
+                                fontWeight: FontWeight.w900,
+                                height: 1,
                               ),
                             ),
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 1),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: dayWorkouts.take(3).map((w) {
@@ -486,8 +483,15 @@ class _WeekRow extends StatelessWidget {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: displayColor,
+                                    color: isCompleted
+                                        ? displayColor
+                                        : displayColor.withValues(alpha: 0.2),
                                     shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color:
+                                          displayColor.withValues(alpha: 0.6),
+                                      width: 1,
+                                    ),
                                   ),
                                   child: isCompleted
                                       ? const Center(
@@ -504,14 +508,6 @@ class _WeekRow extends StatelessWidget {
                           ],
                         ),
                       ),
-                      if (blockColor != null)
-                        Container(
-                          height: 3,
-                          decoration: BoxDecoration(
-                            color: blockColor,
-                          ),
-                          width: double.infinity,
-                        ),
                     ],
                   ),
                 ),
