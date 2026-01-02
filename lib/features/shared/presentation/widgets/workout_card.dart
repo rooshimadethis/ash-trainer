@@ -22,8 +22,16 @@ class WorkoutCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final typeColor = WorkoutTypes.getColor(workout.type);
-    // Get user's preferred distance unit
     final preferredUnit = ref.watch(preferredDistanceUnitProvider);
+
+    // Simplified: Always white on tinted backgrounds as requested
+    final Color contentColor = useWorkoutColor
+        ? Colors.white
+        : Theme.of(context).colorScheme.onSurface;
+
+    final secondaryContentColor = useWorkoutColor
+        ? Colors.white.withValues(alpha: 0.7)
+        : Theme.of(context).colorScheme.onSurfaceVariant;
 
     return AshCard(
       onTap: onTap,
@@ -32,7 +40,7 @@ class WorkoutCard extends ConsumerWidget {
           ? typeColor.withValues(alpha: 0.3)
           : Theme.of(context).colorScheme.outline,
       backgroundColor: useWorkoutColor
-          ? typeColor.withValues(alpha: 0.1)
+          ? typeColor // Use the strong color as requested
           : Theme.of(context).colorScheme.surface,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,9 +51,10 @@ class WorkoutCard extends ConsumerWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: typeColor,
+                  color: contentColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: Colors.black, width: 2),
+                  border: Border.all(
+                      color: contentColor.withValues(alpha: 0.15), width: 1.5),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -53,16 +62,16 @@ class WorkoutCard extends ConsumerWidget {
                     Icon(
                       WorkoutTypes.getIcon(workout.type),
                       size: 14,
-                      color: Colors.white,
+                      color: contentColor,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       WorkoutTypes.getDisplayName(workout.type).toUpperCase(),
-                      style: AppTextStyles.labelSmall.copyWith(
-                        color: Colors.white,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 0.5,
+                      style: AppTextStyles.labelLarge.copyWith(
+                        color: contentColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.0,
                       ),
                     ),
                   ],
@@ -76,23 +85,23 @@ class WorkoutCard extends ConsumerWidget {
                   shape: BoxShape.circle,
                   color: workout.status == 'completed' ||
                           workout.status == 'skipped'
-                      ? typeColor
-                      : Colors.white,
+                      ? contentColor.withValues(alpha: 0.2)
+                      : Colors.transparent,
                   border: Border.all(
-                    color: Colors.black,
-                    width: 2,
+                    color: contentColor.withValues(alpha: 0.2),
+                    width: 1.5,
                   ),
                 ),
                 child: workout.status == 'completed'
-                    ? const Icon(
+                    ? Icon(
                         Icons.check_rounded,
-                        color: Colors.white,
+                        color: contentColor,
                         size: 18,
                       )
                     : workout.status == 'skipped'
-                        ? const Icon(
+                        ? Icon(
                             Icons.close_rounded,
-                            color: Colors.white,
+                            color: contentColor,
                             size: 18,
                           )
                         : null,
@@ -102,7 +111,10 @@ class WorkoutCard extends ConsumerWidget {
           const SizedBox(height: 16),
           Text(
             workout.name,
-            style: AppTextStyles.h3.copyWith(height: 1.2),
+            style: AppTextStyles.h3.copyWith(
+              height: 1.2,
+              color: contentColor,
+            ),
           ),
           const SizedBox(height: 12),
           Wrap(
@@ -113,6 +125,7 @@ class WorkoutCard extends ConsumerWidget {
                 context,
                 Icons.schedule_rounded,
                 _formatDuration(workout.plannedDuration),
+                secondaryContentColor,
               ),
               if (workout.plannedDistance != null &&
                   workout.plannedDistance! > 0)
@@ -123,12 +136,14 @@ class WorkoutCard extends ConsumerWidget {
                       UnitConverter.convertDistanceFromKm(
                           workout.plannedDistance!, preferredUnit),
                       preferredUnit),
+                  secondaryContentColor,
                 ),
               if (workout.intensity != null)
                 _infoTile(
                   context,
                   Icons.bolt_rounded,
                   'RPE ${workout.intensity}',
+                  secondaryContentColor,
                 ),
             ],
           ),
@@ -138,9 +153,7 @@ class WorkoutCard extends ConsumerWidget {
             Text(
               workout.description!,
               style: AppTextStyles.bodyMedium.copyWith(
-                color: useWorkoutColor
-                    ? Colors.black.withValues(alpha: 0.7)
-                    : Theme.of(context).colorScheme.onSurfaceVariant,
+                color: secondaryContentColor,
                 height: 1.5,
                 fontWeight: useWorkoutColor ? FontWeight.w600 : FontWeight.w500,
               ),
@@ -153,17 +166,16 @@ class WorkoutCard extends ConsumerWidget {
     );
   }
 
-  Widget _infoTile(BuildContext context, IconData icon, String text) {
+  Widget _infoTile(
+      BuildContext context, IconData icon, String text, Color color) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(icon,
-            size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+        Icon(icon, size: 16, color: color),
         const SizedBox(width: 4),
         Text(
           text,
-          style: AppTextStyles.bodySmall
-              .copyWith(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          style: AppTextStyles.bodySmall.copyWith(color: color),
         ),
       ],
     );

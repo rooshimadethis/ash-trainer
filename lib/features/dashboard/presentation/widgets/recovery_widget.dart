@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../shared/presentation/widgets/ash_glass_card.dart';
-import '../../../shared/presentation/widgets/ash_button.dart';
+import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/colors.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
 
@@ -21,10 +21,7 @@ class RecoveryWidget extends ConsumerWidget {
       data: (biomarker) {
         return isAuthorizedAsync.when(
           data: (isAuthorized) {
-            if (biomarker == null) {
-              return _buildConnectHealthPrompt(context, ref, isAuthorized);
-            }
-            return _buildRecoveryCard(context, biomarker, ref);
+            return _buildRecoveryGrid(context, biomarker, ref, isAuthorized);
           },
           loading: () => _buildLoadingSkeleton(),
           error: (_, __) => _buildErrorState(context),
@@ -35,128 +32,126 @@ class RecoveryWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecoveryCard(BuildContext context, biomarker, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        // Refresh health data on tap
-        ref.read(healthSyncProvider.notifier).refresh();
-      },
-      child: AshGlassCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildRecoveryGrid(
+      BuildContext context, biomarker, WidgetRef ref, bool isAuthorized) {
+    final readiness = _calculateReadiness(biomarker);
+    final readinessColor = _getReadinessColor(readiness);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                const Icon(Icons.favorite_outline,
-                    color: Color(0xFFA78BFA), size: 20), // Violet 400
-                const SizedBox(width: 8),
-                Text('Recovery', style: AppTextStyles.h4),
-                const Spacer(),
-                Icon(Icons.refresh,
+            const Icon(Icons.favorite_outline,
+                color: AppColors.strength, size: 20),
+            const SizedBox(width: 8),
+            Text('Recovery', style: AppTextStyles.h4),
+            const Spacer(),
+            if (!isAuthorized)
+              TextButton.icon(
+                onPressed: () => _requestPermissions(ref),
+                icon: const Icon(Icons.link, size: 16),
+                label: Text('Connect',
+                    style: AppTextStyles.labelSmall.copyWith(
+                        color: Theme.of(context).colorScheme.primary)),
+              )
+            else
+              IconButton(
+                onPressed: () =>
+                    ref.read(healthSyncProvider.notifier).refresh(),
+                icon: Icon(Icons.refresh,
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
                         .withValues(alpha: 0.3),
                     size: 16),
-              ],
+              ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        GridView.count(
+          crossAxisCount: 2,
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 1.5,
+          children: [
+            _StatCard(
+              label: 'HRV',
+              value: biomarker?.hrv?.toStringAsFixed(0) ?? '--',
+              icon: Icons.monitor_heart_outlined,
+              color: AppColors.runEasy,
             ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _statItem(
-                  context,
-                  biomarker.hrv?.toStringAsFixed(0) ?? '--',
-                  'HRV',
-                  Colors.green,
-                ),
-                _statItem(
-                  context,
-                  biomarker.sleepDurationFormatted,
-                  'Sleep',
-                  Colors.blue,
-                ),
-                _statItem(
-                  context,
-                  biomarker.rhr?.toString() ?? '--',
-                  'RHR',
-                  Colors.orange,
-                ),
-              ],
+            _StatCard(
+              label: 'Sleep',
+              value: biomarker?.sleepDurationFormatted ?? '--',
+              icon: Icons.bedtime_outlined,
+              color: AppColors.runLong,
             ),
-            const SizedBox(height: 12),
-            Text(
-              'Health data synced via Health Connect. Tap to refresh.',
-              style: AppTextStyles.bodySmall.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant),
+            _StatCard(
+              label: 'RHR',
+              value: biomarker?.rhr?.toString() ?? '--',
+              icon: Icons.favorite_outline,
+              color: AppColors.runTempo,
+            ),
+            _StatCard(
+              label: 'Readiness',
+              value: readiness,
+              icon: Icons.bolt_outlined,
+              color: readinessColor,
+              status: readiness == '--' ? null : 'OPTIMAL',
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _statItem(
-      BuildContext context, String value, String label, Color color) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: AppTextStyles.h2.copyWith(
-            color: color,
-            fontWeight: FontWeight.w900,
-            fontSize: 28,
+        if (isAuthorized && biomarker == null) ...[
+          const SizedBox(height: 8),
+          Text(
+            'No data for today yet. Use your wearable to sync.',
+            style: AppTextStyles.bodySmall.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
-        ),
-        Text(label,
-            style: AppTextStyles.labelSmall.copyWith(
-                fontWeight: FontWeight.w700,
-                color: Theme.of(context).colorScheme.onSurfaceVariant)),
+        ],
       ],
     );
   }
 
-  Widget _buildConnectHealthPrompt(
-      BuildContext context, WidgetRef ref, bool isAuthorized) {
-    return AshGlassCard(
-      child: Column(
-        children: [
-          Icon(
-            isAuthorized ? Icons.hourglass_empty : Icons.health_and_safety,
-            size: 48,
-            color: const Color(0xFFA78BFA), // Violet 400
-          ),
-          const SizedBox(height: 16),
-          Text(
-            isAuthorized ? 'No Data Today' : 'Connect Health Data',
-            style: AppTextStyles.h4,
-          ),
-          const SizedBox(height: 8),
-          Text(
-            isAuthorized
-                ? 'Permissions are granted, but no recovery data was found for today yet.'
-                : 'Connect Health Connect to track your recovery metrics',
-            textAlign: TextAlign.center,
-            style: AppTextStyles.bodyMedium.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 20),
-          AshButton(
-            onPressed: () => isAuthorized
-                ? ref.read(healthSyncProvider.notifier).refresh()
-                : _requestPermissions(ref),
-            icon: isAuthorized ? Icons.refresh : Icons.link,
-            label: isAuthorized ? 'Refresh' : 'Connect',
-            backgroundColor: const Color(0xFFA78BFA), // Violet 400
-          ),
-        ],
-      ),
-    );
+  String _calculateReadiness(biomarker) {
+    if (biomarker == null ||
+        (biomarker.hrv == null &&
+            biomarker.sleepDuration == null &&
+            biomarker.rhr == null)) {
+      return '--';
+    }
+    int goodCount = 0;
+    if ((biomarker.hrv ?? 0) > 45) goodCount++;
+    if ((biomarker.sleepDuration ?? 0) >= 420) goodCount++;
+    if ((biomarker.rhr ?? 100) <= 65) goodCount++;
+
+    if (goodCount == 3) return 'EXCELLENT';
+    if (goodCount == 2) return 'GOOD';
+    if (goodCount == 1) return 'FAIR';
+    return 'RECOVERY';
+  }
+
+  Color _getReadinessColor(String readiness) {
+    switch (readiness) {
+      case 'EXCELLENT':
+        return AppColors.runEasy;
+      case 'GOOD':
+        return AppColors.mobility;
+      case 'FAIR':
+        return AppColors.runTempo;
+      case 'RECOVERY':
+        return AppColors.runIntervals;
+      default:
+        return AppColors.rest;
+    }
   }
 
   Widget _buildLoadingSkeleton() {
-    return const AshGlassCard(
+    return const AshCard(
       child: SizedBox(
         height: 120,
         child: Center(
@@ -167,7 +162,7 @@ class RecoveryWidget extends ConsumerWidget {
   }
 
   Widget _buildErrorState(BuildContext context) {
-    return AshGlassCard(
+    return AshCard(
       child: Column(
         children: [
           Icon(
@@ -190,8 +185,100 @@ class RecoveryWidget extends ConsumerWidget {
     final granted = await healthService.requestPermissions();
 
     if (granted) {
-      // Trigger a refresh after permissions are granted
       ref.read(healthSyncProvider.notifier).refresh();
     }
+  }
+}
+
+class _StatCard extends StatelessWidget {
+  final String label;
+  final String value;
+  final IconData icon;
+  final Color color;
+  final String? status;
+
+  const _StatCard({
+    required this.label,
+    required this.value,
+    required this.icon,
+    required this.color,
+    this.status,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AshCard(
+      padding: EdgeInsets.zero,
+      backgroundColor: color,
+      child: Stack(
+        children: [
+          // Background Icon pattern
+          Positioned(
+            right: -10,
+            bottom: -10,
+            child: Icon(
+              icon,
+              size: 80,
+              color: Colors.white.withValues(alpha: 0.1),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, color: Colors.white, size: 24),
+                    const SizedBox(width: 8),
+                    Text(
+                      label.toUpperCase(),
+                      style: AppTextStyles.label.copyWith(
+                        fontSize: 14,
+                        color: Colors.white.withValues(alpha: 0.8),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        value,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: AppTextStyles.h3.copyWith(
+                          fontSize: 32,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                    if (status != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        status!,
+                        style: AppTextStyles.labelSmall.copyWith(
+                          color: Colors.white.withValues(alpha: 0.6),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 10,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

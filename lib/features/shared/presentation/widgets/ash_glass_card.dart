@@ -25,8 +25,10 @@ class AshGlassCard extends StatelessWidget {
         color: theme.colorScheme.surface.withValues(alpha: 1.0),
         borderRadius: radius,
         border: Border.all(
-          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-          width: 2.0,
+          color: isDark
+              ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+              : Colors.black.withValues(alpha: 0.1),
+          width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
       ),

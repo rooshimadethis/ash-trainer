@@ -79,14 +79,27 @@ class WorkoutDetailScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           color: typeColor,
                           borderRadius: BorderRadius.circular(100),
-                          border: Border.all(color: Colors.black, width: 2),
+                          border: Border.all(
+                            color: (typeColor.computeLuminance() > 0.45
+                                    ? HSLColor.fromColor(typeColor)
+                                        .withLightness(0.12)
+                                        .toColor()
+                                    : Colors.white)
+                                .withValues(alpha: 0.2),
+                            width: 1.5,
+                          ),
                         ),
                         child: Text(
                           WorkoutTypes.getDisplayName(workout.type)
                               .toUpperCase(),
-                          style: AppTextStyles.labelSmall.copyWith(
-                            color: Colors.white,
+                          style: AppTextStyles.labelLarge.copyWith(
+                            color: typeColor.computeLuminance() > 0.45
+                                ? HSLColor.fromColor(typeColor)
+                                    .withLightness(0.12)
+                                    .toColor()
+                                : Colors.white,
                             fontWeight: FontWeight.w900,
+                            letterSpacing: 1.5,
                           ),
                         ),
                       ),
@@ -101,13 +114,18 @@ class WorkoutDetailScreen extends ConsumerWidget {
                   const SizedBox(height: 16),
 
                   // Title & Description
-                  Text(workout.name, style: AppTextStyles.h1),
+                  Text(workout.name,
+                      style: AppTextStyles.h1.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface)),
                   const SizedBox(height: 12),
                   Text(
                     workout.description ??
                         'No description provided for this workout.',
                     style: AppTextStyles.bodyLarge.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.8)),
                   ),
 
                   const SizedBox(height: 32),
@@ -121,7 +139,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
                             .colorScheme
                             .onSurface
                             .withValues(alpha: 0.6),
+                        fontSize: 14,
                         letterSpacing: 2.0,
+                        fontWeight: FontWeight.w800,
                       )),
                   const SizedBox(height: 16),
                   _buildStatsDashboard(
@@ -139,7 +159,9 @@ class WorkoutDetailScreen extends ConsumerWidget {
                               .colorScheme
                               .onSurface
                               .withValues(alpha: 0.6),
+                          fontSize: 14,
                           letterSpacing: 2.0,
+                          fontWeight: FontWeight.w800,
                         )),
                     const SizedBox(height: 16),
                     _buildStatsDashboard(
@@ -290,6 +312,16 @@ class WorkoutDetailScreen extends ConsumerWidget {
       {bool isActual = false}) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final onSurface = theme.colorScheme.onSurface;
+    final primary = theme.colorScheme.primary;
+
+    // Determine if we need to adjust primary for contrast
+    final surfaceLuminance = theme.scaffoldBackgroundColor.computeLuminance();
+    final primaryLuminance = primary.computeLuminance();
+
+    // If primary has poor contrast against surface, use onSurface for values
+    final valueColor =
+        (primaryLuminance - surfaceLuminance).abs() > 0.3 ? primary : onSurface;
 
     // Prepare the stats list
     final stats = <_StatItem>[];
@@ -338,8 +370,10 @@ class WorkoutDetailScreen extends ConsumerWidget {
         color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-          width: 2.0,
+          color: isDark
+              ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+              : Colors.black.withValues(alpha: 0.1),
+          width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
       ),
@@ -363,7 +397,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
               Text(
                 item.label.toUpperCase(),
                 style: AppTextStyles.labelSmall.copyWith(
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+                  color: onSurface.withValues(alpha: 0.5),
                   fontSize: 12, // Increased from 10
                   letterSpacing: 1.0, // Increased for readability
                   fontWeight: FontWeight.w700,
@@ -373,7 +407,7 @@ class WorkoutDetailScreen extends ConsumerWidget {
               Text(
                 item.value,
                 style: AppTextStyles.h2.copyWith(
-                  color: theme.colorScheme.primary,
+                  color: valueColor,
                   fontSize: 24, // High glanceability
                 ),
               ),

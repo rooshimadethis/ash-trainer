@@ -37,32 +37,32 @@ class AppShadows {
         ),
       ];
 
-  /// retro: 4px 4px 0px 0px rgba(0,0,0,1)
+  /// retro: softer offset shadow
   static List<BoxShadow> get retro => [
-        const BoxShadow(
-          color: Colors.black,
-          offset: Offset(4, 4),
-          blurRadius: 0,
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.1),
+          offset: const Offset(4, 4),
+          blurRadius: 8,
           spreadRadius: 0,
         ),
       ];
 
-  /// retro-hover: 2px 2px 0px 0px rgba(0,0,0,1)
+  /// retro-hover: subtle pressed state
   static List<BoxShadow> get retroHover => [
-        const BoxShadow(
-          color: Colors.black,
-          offset: Offset(2, 2),
-          blurRadius: 0,
+        BoxShadow(
+          color: Colors.black.withValues(alpha: 0.08),
+          offset: const Offset(2, 2),
+          blurRadius: 4,
           spreadRadius: 0,
         ),
       ];
 
-  /// retro-dark: 4px 4px 0px 0px #FF4D8C
+  /// retro-dark: softer dark mode shadow
   static List<BoxShadow> get retroDark => [
         const BoxShadow(
-          color: Color(0xFFFF4D8C),
+          color: Color(0x40FF4D8C), // 25% opacity
           offset: Offset(4, 4),
-          blurRadius: 0,
+          blurRadius: 10,
           spreadRadius: 0,
         ),
       ];

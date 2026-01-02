@@ -9,6 +9,7 @@ class AshCard extends StatefulWidget {
   final Color? borderColor;
   final double borderWidth;
   final Color? backgroundColor;
+  final EdgeInsetsGeometry? padding;
 
   const AshCard({
     super.key,
@@ -16,8 +17,9 @@ class AshCard extends StatefulWidget {
     this.onTap,
     this.isSelected = false,
     this.borderColor,
-    this.borderWidth = 1.0,
+    this.borderWidth = 1.5,
     this.backgroundColor,
+    this.padding,
   });
 
   @override
@@ -45,7 +47,7 @@ class _AshCardState extends State<AshCard> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),
         curve: Curves.easeOutCubic,
-        padding: const EdgeInsets.all(16),
+        padding: widget.padding ?? const EdgeInsets.all(16),
         transform: Matrix4.translationValues(
           _isPressed ? 2.0 : 0.0,
           _isPressed ? 2.0 : 0.0,
@@ -54,13 +56,16 @@ class _AshCardState extends State<AshCard> {
         decoration: BoxDecoration(
           color: (widget.backgroundColor ?? theme.colorScheme.surface)
               .withValues(alpha: 1.0),
-          borderRadius: BorderRadius.circular(24), // Slightly tighter for retro
+          borderRadius: BorderRadius.circular(24),
           border: Border.all(
-            color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-            width: 2.0,
+            color: widget.borderColor ??
+                (isDark
+                    ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                    : Colors.black.withValues(alpha: 0.8)),
+            width: widget.borderWidth,
           ),
           boxShadow: _isPressed
-              ? AppShadows.retroHover
+              ? AppShadows.softMd
               : (isDark ? AppShadows.retroDark : AppShadows.retro),
         ),
         child: widget.child,

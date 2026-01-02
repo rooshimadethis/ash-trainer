@@ -64,8 +64,10 @@ class _AshButtonState extends State<AshButton> {
               : theme.colorScheme.surfaceContainerHighest
                   .withValues(alpha: 0.5),
           border: Border.all(
-            color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-            width: 2.0,
+            color: isDark
+                ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                : Colors.black.withValues(alpha: 0.1),
+            width: 1.5,
           ),
           boxShadow: isEnabled
               ? (_isPressed
@@ -82,7 +84,7 @@ class _AshButtonState extends State<AshButton> {
                 style: AppTextStyles.buttonText.copyWith(
                   color: isEnabled
                       ? (isPrimary
-                          ? Colors.black // High contrast black on bright colors
+                          ? (isDark ? Colors.black : Colors.white)
                           : theme.colorScheme.onSurface)
                       : theme.colorScheme.onSurface.withValues(alpha: 0.38),
                 ),
@@ -94,7 +96,7 @@ class _AshButtonState extends State<AshButton> {
                   size: 20,
                   color: isEnabled
                       ? (isPrimary
-                          ? Colors.black // High contrast black on bright colors
+                          ? (isDark ? Colors.black : Colors.white)
                           : theme.colorScheme.onSurface)
                       : theme.colorScheme.onSurface.withValues(alpha: 0.38),
                 ),

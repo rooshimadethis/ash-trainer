@@ -28,6 +28,7 @@ dependencies:
   intl: ^0.20.2
   flutter_displaymode: ^0.7.0
   confetti: ^0.8.0
+  device_info_plus: ^12.3.0
 
 dev_dependencies:
   flutter_test:

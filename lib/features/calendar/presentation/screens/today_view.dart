@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
@@ -80,9 +79,10 @@ class _TodayViewState extends ConsumerState<TodayView> {
                         color: Colors.white,
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color:
-                              isDark ? const Color(0xFFFF4D8C) : Colors.black,
-                          width: 2.0,
+                          color: isDark
+                              ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                              : Colors.black.withValues(alpha: 0.1),
+                          width: 1.5,
                         ),
                         boxShadow:
                             isDark ? AppShadows.retroDark : AppShadows.retro,
@@ -123,9 +123,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
                   shape: BoxShape.circle,
                   border: Border.all(
                     color: Theme.of(context).brightness == Brightness.dark
-                        ? const Color(0xFFFF4D8C)
-                        : Colors.black,
-                    width: 2.0,
+                        ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                        : Colors.black.withValues(alpha: 0.1),
+                    width: 1.5,
                   ),
                   boxShadow: Theme.of(context).brightness == Brightness.dark
                       ? AppShadows.retroDark
@@ -353,7 +353,8 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 child: Center(
                   child: Text(
                     'Quick Check-In',
-                    style: AppTextStyles.h4.copyWith(color: AppColors.primary),
+                    style: AppTextStyles.h4
+                        .copyWith(color: Theme.of(context).colorScheme.primary),
                   ),
                 ),
               ),
