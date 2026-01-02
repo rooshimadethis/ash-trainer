@@ -70,42 +70,43 @@ class RecoveryWidget extends ConsumerWidget {
               ),
           ],
         ),
-        const SizedBox(height: 8),
-        GridView.count(
-          crossAxisCount: 2,
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.5,
-          children: [
-            _StatCard(
-              label: 'HRV',
-              value: biomarker?.hrv?.toStringAsFixed(0) ?? '--',
-              icon: Icons.monitor_heart_outlined,
-              color: AppColors.statHrv, // Amber from unified palette
-            ),
-            _StatCard(
-              label: 'Sleep',
-              value: biomarker?.sleepDurationFormatted ?? '--',
-              icon: Icons.bedtime_outlined,
-              color: AppColors.statSleep, // Blue from unified palette
-            ),
-            _StatCard(
-              label: 'RHR',
-              value: biomarker?.rhr?.toString() ?? '--',
-              icon: Icons.favorite_outline,
-              color: AppColors.statRhr, // Rose from unified palette
-            ),
-            _StatCard(
-              label: 'Readiness',
-              value: readiness,
-              icon: Icons.bolt_outlined,
-              color: readinessColor,
-              status: readiness == '--' ? null : 'OPTIMAL',
-            ),
-          ],
+        const SizedBox(height: 12),
+        SizedBox(
+          height: 110,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.zero,
+            children: [
+              _StatCard(
+                label: 'Readiness',
+                value: readiness,
+                icon: Icons.bolt_outlined,
+                color: readinessColor,
+                status: readiness == '--' ? null : 'OPTIMAL',
+              ),
+              const SizedBox(width: 12),
+              _StatCard(
+                label: 'Sleep',
+                value: biomarker?.sleepDurationFormatted ?? '--',
+                icon: Icons.bedtime_outlined,
+                color: AppColors.statSleep,
+              ),
+              const SizedBox(width: 12),
+              _StatCard(
+                label: 'RHR',
+                value: biomarker?.rhr?.toString() ?? '--',
+                icon: Icons.favorite_outline,
+                color: AppColors.statRhr,
+              ),
+              const SizedBox(width: 12),
+              _StatCard(
+                label: 'HRV',
+                value: biomarker?.hrv?.toStringAsFixed(0) ?? '--',
+                icon: Icons.monitor_heart_outlined,
+                color: AppColors.statHrv,
+              ),
+            ],
+          ),
         ),
         if (isAuthorized && biomarker == null) ...[
           const SizedBox(height: 8),
@@ -210,92 +211,95 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AshCard(
-      padding: EdgeInsets.zero,
-      backgroundColor: color,
-      child: Stack(
-        children: [
-          // Background Icon pattern
-          Positioned(
-            right: -10,
-            bottom: -10,
-            child: Icon(
-              icon,
-              size: 80,
-              color: Colors.white.withValues(alpha: 0.1),
+    return SizedBox(
+      width: 160,
+      child: AshCard(
+        padding: EdgeInsets.zero,
+        backgroundColor: color,
+        child: Stack(
+          children: [
+            // Background Icon pattern
+            Positioned(
+              right: -10,
+              bottom: -10,
+              child: Icon(
+                icon,
+                size: 80,
+                color: Colors.white.withValues(alpha: 0.1),
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Tag-style Header (Matching WorkoutCard)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.08),
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      width: 1.2,
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // Tag-style Header (Matching WorkoutCard)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        width: 1.2,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(icon, color: Colors.white, size: 14),
+                        const SizedBox(width: 6),
+                        Text(
+                          label.toUpperCase(),
+                          style: AppTextStyles.label.copyWith(
+                            fontSize: 11,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.0,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(icon, color: Colors.white, size: 14),
-                      const SizedBox(width: 6),
-                      Text(
-                        label.toUpperCase(),
-                        style: AppTextStyles.label.copyWith(
-                          fontSize: 11,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.0,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          value,
+                          maxLines: 1,
+                          softWrap: false,
+                          style: AppTextStyles.h3.copyWith(
+                            fontSize: 28,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            height: 1,
+                          ),
                         ),
                       ),
+                      if (status != null) ...[
+                        const SizedBox(height: 4),
+                        Text(
+                          status!,
+                          style: AppTextStyles.labelSmall.copyWith(
+                            color: Colors.white.withValues(alpha: 0.7),
+                            fontWeight: FontWeight.w900,
+                            fontSize: 10,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                      ],
                     ],
                   ),
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        value,
-                        maxLines: 1,
-                        softWrap: false,
-                        style: AppTextStyles.h3.copyWith(
-                          fontSize: 28,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          height: 1,
-                        ),
-                      ),
-                    ),
-                    if (status != null) ...[
-                      const SizedBox(height: 4),
-                      Text(
-                        status!,
-                        style: AppTextStyles.labelSmall.copyWith(
-                          color: Colors.white.withValues(alpha: 0.7),
-                          fontWeight: FontWeight.w900,
-                          fontSize: 10,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

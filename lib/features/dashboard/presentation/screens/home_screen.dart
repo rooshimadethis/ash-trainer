@@ -8,6 +8,8 @@ import '../../../calendar/presentation/screens/monthly_view.dart';
 import '../../../../core/theme/shadows.dart';
 import '../../../developer/presentation/widgets/debug_overlay.dart';
 import 'package:flutter/foundation.dart';
+import '../../../shared/presentation/widgets/ash_bottom_action_bar.dart';
+import '../../../../core/theme/colors.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -50,6 +52,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
+      bottomAppBar: _buildBottomActionBar(),
     );
   }
 
@@ -168,6 +171,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildBottomActionBar() {
+    return AshBottomActionBar(
+      actions: [
+        ActionBarItem(
+          icon: Icons.add_circle_outline,
+          label: 'Log Custom Workout',
+          color: AppColors.primary,
+          onTap: () {
+            // TODO: Navigate to add workout screen
+          },
+        ),
+        ActionBarItem(
+          icon: Icons.event_busy_outlined,
+          label: 'Add Time Off',
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+          onTap: () {
+            // TODO: Navigate to time off screen
+          },
+        ),
+      ],
     );
   }
 }

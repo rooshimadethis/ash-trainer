@@ -63,9 +63,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
               ],
             ),
           ),
-          const SizedBox(height: 24),
-          _checkInCard(),
           const SizedBox(height: 32),
+          _checkInCard(),
+          const SizedBox(height: 48),
           Row(
             children: [
               const Icon(Icons.directions_run_rounded,
@@ -98,9 +98,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Text('Error loading workout: $err'),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           const RecoveryWidget(),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           Row(
             children: [
               const Icon(Icons.analytics_outlined,
@@ -128,7 +128,7 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 ),
                 error: (_, __) => const SizedBox.shrink(),
               ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 48),
           _detectedWorkoutsSection(ref),
         ],
       ),
@@ -311,10 +311,10 @@ class _TodayViewState extends ConsumerState<TodayView> {
                 spacing: 8,
                 runSpacing: 8,
                 children: [
-                  _moodChip('Great 🚀'),
                   _moodChip('Good 👍'),
                   _moodChip('Tired 🥱'),
                   _moodChip('Sore 🤕'),
+                  _moodChip('Sick 😷'),
                 ],
               ),
             ),

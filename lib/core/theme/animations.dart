@@ -35,7 +35,7 @@ class AppAnimations {
   static const Duration chatBubbleGrowth = Duration(milliseconds: 400);
 
   /// Typing indicator delay before showing text
-  static const Duration typingDelay = Duration(seconds: 1);
+  static const Duration typingDelay = Duration(milliseconds: 900);
 
   /// Typing indicator animation cycle
   static const Duration typingCycle = Duration(milliseconds: 1400);

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 class AshScaffold extends StatelessWidget {
   final Widget body;
   final Widget? bottomNavigationBar;
+  final Widget? bottomAppBar;
   final PreferredSizeWidget? appBar;
   final bool useSafeArea;
   final Widget? floatingActionButton;
@@ -12,6 +13,7 @@ class AshScaffold extends StatelessWidget {
     super.key,
     required this.body,
     this.bottomNavigationBar,
+    this.bottomAppBar,
     this.appBar,
     this.useSafeArea = true,
     this.floatingActionButton,
@@ -46,7 +48,7 @@ class AshScaffold extends StatelessWidget {
             : null,
         backgroundColor: theme.scaffoldBackgroundColor,
         body: useSafeArea ? SafeArea(child: body) : body,
-        bottomNavigationBar: bottomNavigationBar,
+        bottomNavigationBar: bottomAppBar ?? bottomNavigationBar,
         floatingActionButton: floatingActionButton,
       ),
     );
