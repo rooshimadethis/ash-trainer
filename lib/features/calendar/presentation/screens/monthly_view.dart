@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/utils/block_utils.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
-import '../../../../core/constants/workout_types.dart';
-import '../../../shared/presentation/widgets/workout_card.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
+import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../providers/calendar_provider.dart';
 import 'package:intl/intl.dart';
-import 'package:ash_trainer/core/theme/shadows.dart';
-import 'workout_detail_screen.dart';
-import '../../../shared/presentation/widgets/ash_card.dart';
-import '../../../shared/presentation/widgets/ash_surface_card.dart';
+import '../widgets/calendar_nav_button.dart';
+import '../widgets/calendar_day_cell.dart';
+import '../widgets/calendar_progress_summary.dart';
+import '../widgets/selected_day_workout_list.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -33,48 +30,7 @@ class MonthlyView extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _navButton(
-                context,
-                icon: Icons.chevron_left_rounded,
-                onPressed: () {
-                  ref
-                      .read(monthlyMonthProvider.notifier)
-                      .update((date) => DateTime(date.year, date.month - 1, 1));
-                },
-              ),
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      'MONTHLY',
-                      style: AppTextStyles.label.copyWith(
-                        letterSpacing: 2.5,
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      DateFormat('MMMM yyyy').format(focusedMonth),
-                      style: AppTextStyles.h2,
-                    ),
-                  ],
-                ),
-              ),
-              _navButton(
-                context,
-                icon: Icons.chevron_right_rounded,
-                onPressed: () {
-                  ref
-                      .read(monthlyMonthProvider.notifier)
-                      .update((date) => DateTime(date.year, date.month + 1, 1));
-                },
-              ),
-            ],
-          ),
+          _buildHeader(context, ref, focusedMonth),
           if (!DateUtils.isSameMonth(focusedMonth, DateTime.now())) ...[
             const SizedBox(height: 8),
             GestureDetector(
@@ -83,23 +39,54 @@ class MonthlyView extends ConsumerWidget {
                 ref.read(monthlyMonthProvider.notifier).state =
                     DateTime(now.year, now.month, 1);
               },
-              child: Text(
-                'BACK TO TODAY',
-                style: AppTextStyles.labelSmall.copyWith(
-                  color: Theme.of(context).primaryColor,
-                  letterSpacing: 1.2,
-                  fontWeight: FontWeight.w800,
+              child: Center(
+                child: Text(
+                  'BACK TO TODAY',
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: Theme.of(context).primaryColor,
+                    letterSpacing: 1.2,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ),
             ),
           ],
+
+          const SizedBox(height: 20),
+
+          // Ash context bubble
+          monthlyWorkoutsAsync.when(
+            data: (workouts) => _buildContextBubble(workouts, focusedMonth),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+
+          const SizedBox(height: 20),
+
+          // Progress summary cards
+          monthlyWorkoutsAsync.when(
+            data: (workouts) => CalendarProgressSummary(
+              workouts: workouts,
+              periodLabel: 'This Month',
+            ),
+            loading: () => const SizedBox(height: 80),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
+
           const SizedBox(height: 24),
+
+          // Month grid
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: monthlyWorkoutsAsync.when(
               data: (workouts) => monthlyBlocksAsync.when(
-                data: (blocks) => _buildMonthlyGrid(startOfRange, focusedMonth,
-                    workouts, blocks, selectedDate, ref),
+                data: (blocks) => _buildMonthlyGrid(
+                  startOfRange,
+                  focusedMonth,
+                  workouts,
+                  blocks,
+                  selectedDate,
+                ),
                 loading: () => const SizedBox(
                     height: 200,
                     child: Center(child: CircularProgressIndicator())),
@@ -114,36 +101,136 @@ class MonthlyView extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 32),
+
+          // Selected day workout list
           monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
-              data: (blocks) =>
-                  _buildWorkoutList(context, selectedDate, workouts, blocks),
+              data: (blocks) => SelectedDayWorkoutList(
+                selectedDate: selectedDate,
+                allWorkouts: workouts,
+                blocks: blocks,
+              ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (err, stack) => Center(child: Text('Error: $err')),
           ),
-          const SizedBox(height: 32), // Bottom padding for scrollability
+          const SizedBox(height: 32),
         ],
       ),
     );
   }
 
+  Widget _buildContextBubble(List<Workout> workouts, DateTime focusedMonth) {
+    final completed = workouts.where((w) => w.status == 'completed').length;
+    final total = workouts.length;
+
+    // Check if this is current month
+    final now = DateTime.now();
+    final isCurrentMonth =
+        now.month == focusedMonth.month && now.year == focusedMonth.year;
+
+    // Get month name
+    final monthName = DateFormat('MMMM').format(focusedMonth);
+
+    String message;
+    if (total == 0) {
+      message =
+          "No workouts planned for $monthName. Time to set some goals! 🎯";
+    } else if (completed == total) {
+      message =
+          "You completed every workout in $monthName! Incredible consistency! 🏆";
+    } else if (isCurrentMonth) {
+      final progress = ((completed / total) * 100).round();
+      if (progress == 0) {
+        message =
+            "$total workouts planned for $monthName. Let's build that momentum! 🚀";
+      } else if (progress >= 75) {
+        message =
+            "$progress% complete! You're crushing $monthName! Keep it up! 💪";
+      } else if (progress >= 50) {
+        message =
+            "Halfway through! $completed of $total workouts done. Strong progress! 🔥";
+      } else {
+        message =
+            "$completed workouts down, ${total - completed} to go this month. You've got this!";
+      }
+    } else {
+      final successRate = total > 0 ? ((completed / total) * 100).round() : 0;
+      if (successRate >= 80) {
+        message =
+            "Great month! You hit $successRate% of your workouts in $monthName. 🌟";
+      } else if (successRate >= 50) {
+        message =
+            "Solid effort in $monthName - $completed of $total workouts completed.";
+      } else {
+        message =
+            "$monthName had $total planned workouts. Every step counts! 🏃";
+      }
+    }
+
+    return AshChatBubble(text: message);
+  }
+
+  Widget _buildHeader(
+      BuildContext context, WidgetRef ref, DateTime focusedMonth) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        CalendarNavButton(
+          icon: Icons.chevron_left_rounded,
+          onPressed: () {
+            ref
+                .read(monthlyMonthProvider.notifier)
+                .update((date) => DateTime(date.year, date.month - 1, 1));
+          },
+        ),
+        Expanded(
+          child: Column(
+            children: [
+              Text(
+                'MONTHLY',
+                style: AppTextStyles.label.copyWith(
+                  letterSpacing: 2.5,
+                  color: Theme.of(context).primaryColor,
+                  fontWeight: FontWeight.w900,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                DateFormat('MMMM yyyy').format(focusedMonth),
+                style: AppTextStyles.h2,
+              ),
+            ],
+          ),
+        ),
+        CalendarNavButton(
+          icon: Icons.chevron_right_rounded,
+          onPressed: () {
+            ref
+                .read(monthlyMonthProvider.notifier)
+                .update((date) => DateTime(date.year, date.month + 1, 1));
+          },
+        ),
+      ],
+    );
+  }
+
   Widget _buildMonthlyGrid(
-      DateTime startOfRange,
-      DateTime focusedMonth,
-      List<Workout> workouts,
-      List<TrainingBlock> blocks,
-      DateTime selectedDate,
-      WidgetRef ref) {
+    DateTime startOfRange,
+    DateTime focusedMonth,
+    List<Workout> workouts,
+    List<TrainingBlock> blocks,
+    DateTime selectedDate,
+  ) {
     // Calculate total weeks needed for this month
     final lastDay = DateTime(focusedMonth.year, focusedMonth.month + 1, 0).day;
     final offset = focusedMonth.weekday - 1;
     final totalWeeks = ((offset + lastDay) / 7).ceil();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: List.generate(totalWeeks, (weekIndex) {
@@ -164,179 +251,8 @@ class MonthlyView extends ConsumerWidget {
             workouts: weekWorkouts,
             blocks: blocks,
             selectedDate: selectedDate,
-            ref: ref,
           );
         }),
-      ),
-    );
-  }
-
-  Widget _buildWorkoutList(BuildContext context, DateTime selectedDate,
-      List<Workout> allWorkouts, List<TrainingBlock> blocks) {
-    final dayWorkouts = allWorkouts
-        .where((w) => DateUtils.isSameDay(w.scheduledDate, selectedDate))
-        .toList();
-
-    final dayBlock = blocks.cast<TrainingBlock?>().firstWhere(
-      (b) {
-        if (b == null || b.startDate == null || b.endDate == null) {
-          return false;
-        }
-        final start =
-            DateTime(b.startDate!.year, b.startDate!.month, b.startDate!.day);
-        final end = DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
-            .add(const Duration(days: 1));
-        final d =
-            DateTime(selectedDate.year, selectedDate.month, selectedDate.day);
-        return (d.isAtSameMomentAs(start) || d.isAfter(start)) &&
-            d.isBefore(end);
-      },
-      orElse: () => null,
-    );
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              DateFormat('EEEE, MMM d').format(selectedDate),
-              style: AppTextStyles.h3,
-            ),
-            if (DateUtils.isSameDay(selectedDate, DateTime.now())) ...[
-              const SizedBox(width: 8),
-              Text(
-                '• Today',
-                style: AppTextStyles.label.copyWith(
-                  color: Theme.of(context).primaryColor,
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ],
-        ),
-        if (dayBlock != null) ...[
-          const SizedBox(height: 16),
-          AshSurfaceCard(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber)
-                        .withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber)
-                          .withValues(alpha: 0.2),
-                      width: 1.2,
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.layers_rounded,
-                        size: 14,
-                        color: BlockUtils.getColorForIntent(
-                            dayBlock.intent, dayBlock.blockNumber),
-                      ),
-                      const SizedBox(width: 6),
-                      Text(
-                        'TRAINING BLOCK',
-                        style: AppTextStyles.label.copyWith(
-                          color: BlockUtils.getColorForIntent(
-                              dayBlock.intent, dayBlock.blockNumber),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Text(
-                  dayBlock.intent.toUpperCase(),
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                    height: 1.4,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-        const SizedBox(height: 24),
-        dayWorkouts.isEmpty
-            ? Padding(
-                padding: const EdgeInsets.symmetric(vertical: 48),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.nightlight_round,
-                          size: 48,
-                          color: AppColors.textMuted.withValues(alpha: 0.5)),
-                      const SizedBox(height: 16),
-                      Text('No workouts scheduled',
-                          style: AppTextStyles.bodyLarge
-                              .copyWith(color: AppColors.textMuted)),
-                    ],
-                  ),
-                ),
-              )
-            : Column(
-                children: List.generate(dayWorkouts.length, (index) {
-                  final workout = dayWorkouts[index];
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        bottom: index == dayWorkouts.length - 1 ? 0 : 16),
-                    child: WorkoutCard(
-                      workout: workout,
-                      useWorkoutColor: true,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                WorkoutDetailScreen(workout: workout),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-              ),
-      ],
-    );
-  }
-
-  Widget _navButton(
-    BuildContext context, {
-    required IconData icon,
-    required VoidCallback onPressed,
-  }) {
-    return AshCard(
-      onTap: onPressed,
-      padding: EdgeInsets.zero,
-      borderRadius: 100,
-      child: SizedBox(
-        width: 44,
-        height: 44,
-        child: Icon(
-          icon,
-          color: Theme.of(context).colorScheme.onSurface,
-          size: 24,
-        ),
       ),
     );
   }
@@ -348,7 +264,6 @@ class _WeekRow extends StatelessWidget {
   final List<Workout> workouts;
   final List<TrainingBlock> blocks;
   final DateTime selectedDate;
-  final WidgetRef ref;
 
   const _WeekRow({
     required this.weekStart,
@@ -356,7 +271,6 @@ class _WeekRow extends StatelessWidget {
     required this.workouts,
     required this.blocks,
     required this.selectedDate,
-    required this.ref,
   });
 
   @override
@@ -373,7 +287,7 @@ class _WeekRow extends StatelessWidget {
             return const Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 3),
-                child: SizedBox(height: 72),
+                child: SizedBox(height: 78),
               ),
             );
           }
@@ -382,140 +296,40 @@ class _WeekRow extends StatelessWidget {
               .where((w) => DateUtils.isSameDay(w.scheduledDate, day))
               .toList();
           final isSelected = DateUtils.isSameDay(day, selectedDate);
-          final isToday = DateUtils.isSameDay(day, DateTime.now());
 
           // Find block for this day
-          final dayBlock = blocks.cast<TrainingBlock?>().firstWhere(
-            (b) {
-              if (b == null || b.startDate == null || b.endDate == null) {
-                return false;
-              }
-              final start = DateTime(
-                  b.startDate!.year, b.startDate!.month, b.startDate!.day);
-              final end =
-                  DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
-                      .add(const Duration(days: 1));
-              final d = DateTime(day.year, day.month, day.day);
-              return (d.isAtSameMomentAs(start) || d.isAfter(start)) &&
-                  d.isBefore(end);
-            },
-            orElse: () => null,
-          );
-
-          final blockColor = dayBlock != null
-              ? BlockUtils.getColorForIntent(
-                  dayBlock.intent, dayBlock.blockNumber)
-              : null;
-
-          // Background tint logic
-          final Color blockTint =
-              blockColor?.withValues(alpha: 0.15) ?? Colors.transparent;
-          final isDark = Theme.of(context).brightness == Brightness.dark;
-
-          final Color baseBackground = isDark
-              ? AppColors.surface.withValues(alpha: 0.4)
-              : AppColors.surfaceLightSecondary.withValues(alpha: 0.6);
+          final dayBlock = _findBlockForDay(day);
 
           return Expanded(
-            child: GestureDetector(
-              onTap: () => ref.read(selectedDateProvider.notifier).state = day,
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                height: 78,
-                decoration: BoxDecoration(
-                  color: Color.alphaBlend(blockTint, baseBackground),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: isSelected
-                        ? (isDark ? const Color(0xFFFF4D8C) : Colors.black)
-                        : (isToday
-                            ? Theme.of(context).primaryColor
-                            : (isDark
-                                ? Colors.white.withValues(alpha: 0.1)
-                                : Colors.black.withValues(alpha: 0.1))),
-                    width: isSelected ? 2.5 : 1.5,
-                  ),
-                  boxShadow: isSelected
-                      ? (isDark ? AppShadows.retroDark : AppShadows.retro)
-                      : [],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              DateFormat('E').format(day).substring(0, 1),
-                              style: AppTextStyles.labelSmall.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurface
-                                    .withValues(alpha: 0.4),
-                                fontSize: 10,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 0.5,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              day.day.toString(),
-                              style: AppTextStyles.h4.copyWith(
-                                fontSize: 18,
-                                color: Theme.of(context).colorScheme.onSurface,
-                                fontWeight: FontWeight.w900,
-                                height: 1,
-                              ),
-                            ),
-                            const SizedBox(height: 1),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: dayWorkouts.take(3).map((w) {
-                                final isCompleted = w.status == 'completed';
-                                final displayColor =
-                                    WorkoutTypes.getColor(w.type);
-                                return Container(
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 1.5),
-                                  width: 8,
-                                  height: 8,
-                                  decoration: BoxDecoration(
-                                    color: isCompleted
-                                        ? displayColor
-                                        : displayColor.withValues(alpha: 0.2),
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color:
-                                          displayColor.withValues(alpha: 0.6),
-                                      width: 1,
-                                    ),
-                                  ),
-                                  child: isCompleted
-                                      ? const Center(
-                                          child: Icon(
-                                            Icons.check,
-                                            size: 6,
-                                            color: Colors.white,
-                                          ),
-                                        )
-                                      : null,
-                                );
-                              }).toList(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+            child: CalendarDayCell(
+              day: day,
+              workouts: dayWorkouts,
+              block: dayBlock,
+              isSelected: isSelected,
+              style: CalendarDayCellStyle.compact,
+              height: 78,
             ),
           );
         }),
       ),
+    );
+  }
+
+  TrainingBlock? _findBlockForDay(DateTime day) {
+    return blocks.cast<TrainingBlock?>().firstWhere(
+      (b) {
+        if (b == null || b.startDate == null || b.endDate == null) {
+          return false;
+        }
+        final start =
+            DateTime(b.startDate!.year, b.startDate!.month, b.startDate!.day);
+        final end = DateTime(b.endDate!.year, b.endDate!.month, b.endDate!.day)
+            .add(const Duration(days: 1));
+        final d = DateTime(day.year, day.month, day.day);
+        return (d.isAtSameMomentAs(start) || d.isAfter(start)) &&
+            d.isBefore(end);
+      },
+      orElse: () => null,
     );
   }
 }

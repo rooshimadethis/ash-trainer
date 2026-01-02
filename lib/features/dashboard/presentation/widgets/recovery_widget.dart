@@ -42,8 +42,7 @@ class RecoveryWidget extends ConsumerWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.favorite_outline,
-                color: AppColors.strength, size: 20),
+            const Icon(Icons.favorite_outline, color: AppColors.rose, size: 20),
             const SizedBox(width: 8),
             Text('Recovery', style: AppTextStyles.h4),
             const Spacer(),
@@ -85,19 +84,19 @@ class RecoveryWidget extends ConsumerWidget {
               label: 'HRV',
               value: biomarker?.hrv?.toStringAsFixed(0) ?? '--',
               icon: Icons.monitor_heart_outlined,
-              color: AppColors.runEasy,
+              color: AppColors.statHrv, // Amber from unified palette
             ),
             _StatCard(
               label: 'Sleep',
               value: biomarker?.sleepDurationFormatted ?? '--',
               icon: Icons.bedtime_outlined,
-              color: AppColors.runLong,
+              color: AppColors.statSleep, // Blue from unified palette
             ),
             _StatCard(
               label: 'RHR',
               value: biomarker?.rhr?.toString() ?? '--',
               icon: Icons.favorite_outline,
-              color: AppColors.runTempo,
+              color: AppColors.statRhr, // Rose from unified palette
             ),
             _StatCard(
               label: 'Readiness',
@@ -142,15 +141,15 @@ class RecoveryWidget extends ConsumerWidget {
   Color _getReadinessColor(String readiness) {
     switch (readiness) {
       case 'EXCELLENT':
-        return AppColors.runEasy;
+        return AppColors.emerald; // Green for excellent
       case 'GOOD':
-        return AppColors.mobility;
+        return AppColors.cyan; // Cyan for good
       case 'FAIR':
-        return AppColors.runTempo;
+        return AppColors.amber; // Amber for fair
       case 'RECOVERY':
-        return AppColors.runIntervals;
+        return AppColors.rose; // Rose for needs recovery
       default:
-        return AppColors.rest;
+        return AppColors.neutral;
     }
   }
 

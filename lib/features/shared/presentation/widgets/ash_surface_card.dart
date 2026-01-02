@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/shadows.dart';
 import '../../../../core/utils/haptics.dart';
 
@@ -53,7 +54,7 @@ class _AshSurfaceCardState extends State<AshSurfaceCard> {
           borderRadius: BorderRadius.circular(widget.borderRadius),
           border: Border.all(
             color: isDark
-                ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                ? AppColors.retroAccent.withValues(alpha: 0.5)
                 : Colors.black.withValues(alpha: 0.1),
             width: 1.5,
           ),

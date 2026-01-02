@@ -52,7 +52,7 @@ class AshChatBubble extends StatelessWidget {
                   bottomRight: Radius.circular(isAsh ? 20 : 4),
                 ),
                 border: Border.all(
-                  color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+                  color: isDark ? AppColors.retroAccent : Colors.black,
                   width: 1.5,
                 ),
                 boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
@@ -82,7 +82,7 @@ class AshChatBubble extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
         shape: BoxShape.circle,
         border: Border.all(
-          color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
+          color: isDark ? AppColors.retroAccent : Colors.black,
           width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,

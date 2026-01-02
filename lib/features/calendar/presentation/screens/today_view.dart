@@ -69,7 +69,8 @@ class _TodayViewState extends ConsumerState<TodayView> {
           Row(
             children: [
               const Icon(Icons.directions_run_rounded,
-                  color: AppColors.runIntervals, size: 20),
+                  color: AppColors.rose,
+                  size: 20), // Rose for workout intensity
               const SizedBox(width: 8),
               Text('Workout', style: AppTextStyles.h4),
             ],
@@ -103,7 +104,8 @@ class _TodayViewState extends ConsumerState<TodayView> {
           Row(
             children: [
               const Icon(Icons.analytics_outlined,
-                  color: AppColors.runLong, size: 20),
+                  color: AppColors.blue,
+                  size: 20), // Blue for progress/analytics
               const SizedBox(width: 8),
               Text('Progress', style: AppTextStyles.h4),
             ],

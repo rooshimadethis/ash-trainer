@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/haptics.dart';
-import 'package:ash_trainer/core/theme/shadows.dart';
+import '../../../../core/theme/colors.dart';
+import '../../../../core/theme/shadows.dart';
 
 class AshCard extends StatefulWidget {
   final Widget child;
@@ -61,7 +62,7 @@ class _AshCardState extends State<AshCard> {
           border: Border.all(
             color: widget.borderColor ??
                 (isDark
-                    ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
+                    ? AppColors.retroAccent.withValues(alpha: 0.5)
                     : Colors.black.withValues(alpha: 0.8)),
             width: widget.borderWidth,
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'colors.dart';
 
 class AppShadows {
   /// soft-sm: 0 2px 4px rgba(0,0,0,0.06)
@@ -57,11 +58,11 @@ class AppShadows {
         ),
       ];
 
-  /// retro-dark: softer dark mode shadow
+  /// retro-dark: softer dark mode shadow using retroAccent
   static List<BoxShadow> get retroDark => [
-        const BoxShadow(
-          color: Color(0x40FF4D8C), // 25% opacity
-          offset: Offset(4, 4),
+        BoxShadow(
+          color: AppColors.retroAccent.withValues(alpha: 0.25),
+          offset: const Offset(4, 4),
           blurRadius: 10,
           spreadRadius: 0,
         ),

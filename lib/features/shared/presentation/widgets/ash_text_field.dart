@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/shadows.dart';
 
-class AshTextField extends StatelessWidget {
+class AshTextField extends StatefulWidget {
   final String label;
   final String? placeholder;
   final TextEditingController? controller;
@@ -26,47 +27,104 @@ class AshTextField extends StatelessWidget {
   });
 
   @override
+  State<AshTextField> createState() => _AshTextFieldState();
+}
+
+class _AshTextFieldState extends State<AshTextField> {
+  final FocusNode _focusNode = FocusNode();
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() => _isFocused = _focusNode.hasFocus);
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final primaryColor = theme.primaryColor;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.only(left: 4, bottom: 8),
           child: Text(
-            label.toUpperCase(),
-            style: AppTextStyles.label,
+            widget.label.toUpperCase(),
+            style: AppTextStyles.label.copyWith(
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondaryLight,
+              letterSpacing: 1.5,
+              fontSize: 11, // Slightly smaller label to match premium feel
+            ),
           ),
         ),
-        TextField(
-          controller: controller,
-          keyboardType: keyboardType,
-          onChanged: onChanged,
-          maxLines: maxLines,
-          inputFormatters: inputFormatters,
-          style: AppTextStyles.bodyLarge,
-          decoration: InputDecoration(
-            hintText: placeholder,
-            hintStyle: TextStyle(
-                color: AppColors.textSecondary.withValues(alpha: 0.5)),
-            filled: true,
-            fillColor: Theme.of(context).inputDecorationTheme.fillColor,
-            suffixIcon: suffix, // Using suffixIcon for the widget
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide: BorderSide.none,
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: isDark ? AppColors.surface : AppColors.white,
+            borderRadius: BorderRadius.circular(24),
+            border: Border.all(
+              color: _isFocused
+                  ? primaryColor
+                  : (isDark ? AppColors.border : AppColors.borderLight),
+              width: _isFocused ? 2.0 : 1.5,
             ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: Theme.of(context).colorScheme.outline),
+            boxShadow: _isFocused
+                ? [
+                    BoxShadow(
+                      color: primaryColor.withValues(alpha: 0.15),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    )
+                  ]
+                : (isDark ? AppShadows.retroDark : AppShadows.retro),
+          ),
+          child: TextField(
+            focusNode: _focusNode,
+            controller: widget.controller,
+            keyboardType: widget.keyboardType,
+            onChanged: widget.onChanged,
+            maxLines: widget.maxLines,
+            inputFormatters: widget.inputFormatters,
+            style: AppTextStyles.bodyLarge.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+              color: isDark ? AppColors.white : AppColors.black,
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(12),
-              borderSide:
-                  BorderSide(color: Theme.of(context).primaryColor, width: 2),
+            decoration: InputDecoration(
+              hintText: widget.placeholder,
+              hintStyle: AppTextStyles.bodyLarge.copyWith(
+                color: AppColors.textMuted.withValues(alpha: 0.6),
+                fontWeight: FontWeight.w400,
+              ),
+              prefixIcon: Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Icon(
+                  Icons.edit_note_rounded,
+                  color: _isFocused ? primaryColor : AppColors.textMuted,
+                  size: 22,
+                ),
+              ),
+              suffixIcon: widget.suffix,
+              filled: false, // EXPLICITLY REMOVE TINT
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
             ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
           ),
         ),
       ],

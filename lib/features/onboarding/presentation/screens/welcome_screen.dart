@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ash_trainer/core/theme/text_styles.dart';
-import 'package:ash_trainer/core/theme/shadows.dart';
+import 'package:ash_trainer/core/theme/colors.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_button.dart';
 import 'package:ash_trainer/features/shared/presentation/widgets/ash_scaffold.dart';
+import 'package:ash_trainer/features/shared/presentation/widgets/ash_card.dart';
 import 'package:ash_trainer/features/goal_setup/presentation/providers/goal_setup_provider.dart';
 import 'package:ash_trainer/features/goal_setup/presentation/screens/goal_type_selection_screen.dart';
 
@@ -13,53 +14,84 @@ class WelcomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AshScaffold(
-      body: Center(
+      body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(),
-              // Logo
+              // Mascot Container with a subtle glow
               Center(
-                child: Image.asset(
-                  'assets/images/ash.png',
-                  height: 120, // Increased size slightly for the character
+                child: Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    color:
+                        Theme.of(context).primaryColor.withValues(alpha: 0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/ash_red_panda.png',
+                      height: 180,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 40),
 
-              Text(
-                'Hey there! I\'m Ash, your AI running coach 👋',
-                style: AppTextStyles.h1,
-                textAlign: TextAlign.center,
+              Column(
+                children: [
+                  Text(
+                    "I'M ASH",
+                    style: AppTextStyles.labelLarge.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      letterSpacing: 4.0,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    'Your Personal\nRunning Mascot',
+                    style: AppTextStyles.h1.copyWith(
+                      fontSize: 36,
+                      height: 1.1,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
               ),
               const SizedBox(height: 48),
 
-              // Value Propositions
+              // Value Propositions in stylized cards
               _buildValueProp(
-                context: context,
-                icon: Icons.auto_awesome,
-                text: 'Personalized training plans that adapt to YOU',
+                context,
+                icon: Icons.auto_awesome_rounded,
+                title: 'Adaptive Plans',
+                description:
+                    'Tailored to your life, schedule, and performance.',
               ),
               const SizedBox(height: 16),
               _buildValueProp(
-                context: context,
-                icon: Icons.school,
-                text: 'Smart coaching that learns from every run',
+                context,
+                icon: Icons.insights_rounded,
+                title: 'Smart Insights',
+                description: 'I learn from every run to keep you on track.',
               ),
               const SizedBox(height: 16),
               _buildValueProp(
-                context: context,
-                icon: Icons.calendar_today,
-                text: 'Your goals, your schedule, your pace',
+                context,
+                icon: Icons.emoji_events_rounded,
+                title: 'Goal Focused',
+                description: 'From 5Ks to Marathons, we crush them together.',
               ),
 
-              const Spacer(),
+              const Spacer(flex: 2),
 
               AshButton(
-                label: 'Let\'s do this!',
+                label: "LET'S GET RUNNING",
                 onPressed: () {
                   ref.read(goalSetupProvider.notifier).nextStep();
                   Navigator.of(context).push(
@@ -68,7 +100,6 @@ class WelcomeScreen extends ConsumerWidget {
                   );
                 },
               ),
-              const SizedBox(height: 16),
             ],
           ),
         ),
@@ -77,37 +108,51 @@ class WelcomeScreen extends ConsumerWidget {
   }
 
   Widget _buildValueProp(
-      {required BuildContext context,
-      required IconData icon,
-      required String text}) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Theme.of(context).primaryColor,
-            borderRadius: BorderRadius.circular(100),
-            border: Border.all(
-              color: isDark ? const Color(0xFFFF4D8C) : Colors.black,
-              width: 2.0,
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String description,
+  }) {
+    return AshCard(
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(12),
             ),
-            boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
+            child: Icon(
+              icon,
+              color: Theme.of(context).primaryColor,
+              size: 24,
+            ),
           ),
-          child: Icon(
-            icon,
-            color: isDark ? Colors.black : Colors.white,
-            size: 24,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.h4.copyWith(
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  description,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textMuted,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(width: 16),
-        Expanded(
-          child: Text(
-            text,
-            style: AppTextStyles.bodyLarge,
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

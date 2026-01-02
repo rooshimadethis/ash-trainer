@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../shared/domain/entities/goal.dart';
@@ -10,6 +9,9 @@ import '../providers/goal_setup_provider.dart';
 import '../widgets/onboarding_navigation.dart';
 import '../widgets/onboarding_progress.dart';
 import 'training_context_screen.dart';
+import '../../../shared/presentation/widgets/ash_dropdown.dart';
+import '../../../shared/presentation/widgets/ash_checkbox.dart';
+import '../../../shared/presentation/widgets/ash_date_picker.dart';
 
 class GoalDetailsScreen extends ConsumerStatefulWidget {
   const GoalDetailsScreen({super.key});
@@ -184,35 +186,20 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
           ),
         ],
         const SizedBox(height: 24),
-        Text('Target Date (Optional)', style: AppTextStyles.h3),
-        const SizedBox(height: 8),
-        _buildDatePicker(GoalType.distanceMilestone,
-            distance: _selectedDistance),
+        AshDatePicker(
+          label: 'Target Date',
+          hint: 'When do we hit the milestone?',
+          value: _selectedDate,
+          onTap: () => _showDatePicker(GoalType.distanceMilestone,
+              distance: _selectedDistance),
+        ),
         const SizedBox(height: 24),
-        _buildFirstTimeCheckbox(),
+        AshCheckbox(
+          value: _isFirstTime,
+          onChanged: (val) => setState(() => _isFirstTime = val),
+          label: 'First time attempting this distance?',
+        ),
       ],
-    );
-  }
-
-  Widget _buildFirstTimeCheckbox() {
-    return InkWell(
-      onTap: () => setState(() => _isFirstTime = !_isFirstTime),
-      child: Row(
-        children: [
-          Checkbox(
-            value: _isFirstTime,
-            onChanged: (val) => setState(() => _isFirstTime = val ?? false),
-            activeColor: AppColors.primary,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              'First time attempting this distance?',
-              style: AppTextStyles.body,
-            ),
-          ),
-        ],
-      ),
     );
   }
 
@@ -260,8 +247,13 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
           placeholder: 'e.g. Austin Marathon',
         ),
         const SizedBox(height: 16),
-        _buildLabel('Race Date'),
-        _buildDatePicker(GoalType.event, distance: _selectedDistance),
+        AshDatePicker(
+          label: 'Race Date',
+          hint: 'When is the big day?',
+          value: _selectedDate,
+          onTap: () =>
+              _showDatePicker(GoalType.event, distance: _selectedDistance),
+        ),
         const SizedBox(height: 16),
         _buildLabel('Race Distance'),
         _buildDistanceDropdown(),
@@ -311,8 +303,13 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
               setState(() => _maintenanceDuration = val.round()),
         ),
         const SizedBox(height: 16),
-        _buildLabel('Maintaining until (Optional)'),
-        _buildDatePicker(GoalType.maintenance),
+        const SizedBox(height: 16),
+        AshDatePicker(
+          label: 'Maintaining until',
+          hint: 'Optional date',
+          value: _selectedDate,
+          onTap: () => _showDatePicker(GoalType.maintenance),
+        ),
       ],
     );
   }
@@ -327,84 +324,44 @@ class _GoalDetailsScreenState extends ConsumerState<GoalDetailsScreen> {
     );
   }
 
-  Widget _buildDatePicker(GoalType type, {double? distance}) {
-    return GestureDetector(
-      onTap: () async {
-        final now = DateTime.now();
-        final defaultFutureDate =
-            _getDefaultDateForType(type, now, distance: distance);
+  Future<void> _showDatePicker(GoalType type, {double? distance}) async {
+    final now = DateTime.now();
+    final defaultFutureDate =
+        _getDefaultDateForType(type, now, distance: distance);
 
-        final date = await showDatePicker(
-          context: context,
-          initialDate: _selectedDate ?? defaultFutureDate,
-          firstDate: now,
-          lastDate: now.add(const Duration(days: 365 * 2)),
+    final date = await showDatePicker(
+      context: context,
+      initialDate: _selectedDate ?? defaultFutureDate,
+      firstDate: now,
+      lastDate: now.add(const Duration(days: 365 * 2)),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: Theme.of(context).colorScheme.copyWith(
+                  primary: Theme.of(context).primaryColor,
+                  onPrimary: Colors.white,
+                  surface: Theme.of(context).cardTheme.color,
+                ),
+          ),
+          child: child!,
         );
-        if (date != null) setState(() => _selectedDate = date);
       },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Theme.of(context).colorScheme.outline),
-          borderRadius: BorderRadius.circular(12),
-          color: Theme.of(context).colorScheme.surface,
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.calendar_today,
-                color: AppColors.textSecondary, size: 20),
-            const SizedBox(width: 12),
-            Text(
-              _selectedDate == null
-                  ? 'Select Date'
-                  : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}',
-              style: AppTextStyles.body,
-            ),
-          ],
-        ),
-      ),
     );
-  }
-
-  Widget _buildDropdown<T>({
-    required T? value,
-    required List<DropdownMenuItem<T>> items,
-    required ValueChanged<T?> onChanged,
-    required String hint,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).colorScheme.outline),
-      ),
-      child: DropdownButtonHideUnderline(
-        child: DropdownButton<T>(
-          value: value,
-          items: items,
-          onChanged: onChanged,
-          hint: Text(hint, style: TextStyle(color: AppColors.textSecondary)),
-          dropdownColor: Theme.of(context).colorScheme.surface,
-          style: AppTextStyles.body,
-          isExpanded: true,
-        ),
-      ),
-    );
+    if (date != null) setState(() => _selectedDate = date);
   }
 
   Widget _buildDistanceDropdown() {
-    return _buildDropdown<double>(
+    return AshDropdown<double>(
       value: _selectedDistance,
+      hint: 'Select Distance',
       items: const [
-        DropdownMenuItem(value: 5.0, child: Text('5K (3.1 mi)')),
-        DropdownMenuItem(value: 10.0, child: Text('10K (6.2 mi)')),
-        DropdownMenuItem(value: 21.1, child: Text('Half Marathon (13.1 mi)')),
-        DropdownMenuItem(value: 42.2, child: Text('Marathon (26.2 mi)')),
-        DropdownMenuItem(value: -1.0, child: Text('Custom Distance')),
+        AshDropdownItem(value: 5.0, label: '5K (3.1 mi)'),
+        AshDropdownItem(value: 10.0, label: '10K (6.2 mi)'),
+        AshDropdownItem(value: 21.1, label: 'Half Marathon (13.1 mi)'),
+        AshDropdownItem(value: 42.2, label: 'Marathon (26.2 mi)'),
+        AshDropdownItem(value: -1.0, label: 'Custom Distance'),
       ],
       onChanged: (val) => setState(() => _selectedDistance = val),
-      hint: 'Select Distance',
     );
   }
 
