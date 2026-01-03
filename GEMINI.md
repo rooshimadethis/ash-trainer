@@ -2,6 +2,8 @@
 
 Welcome to the **Ash Trainer** project knowledge base. This file serves as the central index (Map of Content) for our documentation.
 
+> **Note for AI Agents**: When updating this or any other documentation file, always describe the system **as it currently exists**. Avoid "change logs," "update history," or descriptions of "replacing X with Y." Focus on the present state and design.
+
 ## 📂 Documentation Structure
 
 All documentation is located in the `docs/` directory.
@@ -9,13 +11,13 @@ All documentation is located in the `docs/` directory.
 ### 🧠 AI & Personality
 * **[Prompts & Persona](docs/ai/prompts.md)** (`docs/ai/prompts.md`): System prompts, personality guidelines ("Ash"), and LLM strategy.
 * **[AI Backlog](docs/ai/backlog.md)** (`docs/ai/backlog.md`): Implementation checklist, missing components, and AI-specific technical debt.
-* **[Philosophy Context Architecture](docs/TODO/philosophy_context_architecture.md)** (`docs/TODO/philosophy_context_architecture.md`): Structured philosophy guidance for AI plan generation, replacing single-string approach with principle-based context models.
+* **[Philosophy Context Architecture](docs/TODO/philosophy_context_architecture.md)** (`docs/TODO/philosophy_context_architecture.md`): Structured philosophy guidance for AI plan generation using principle-based context models.
 
 #### Philosophy Context Strategy
-The AI receives structured philosophy guidance through context models rather than a single string. This enables:
-* **Principle-based guidance**: Provides constraints and principles, not prescriptions - AI reasons about optimal plan structure
-* **Three-pillar integration**: Running, strength (Phase 1 MVP), and mobility (Phase 1 MVP) prescription logic
-* **AI autonomy**: AI has creative freedom within safety constraints (max volume increase, recovery frequency, pillar coordination)
+The AI receives structured philosophy guidance through context models. This enables:
+* **Principle-based guidance**: Provides constraints and principles, not prescriptions - AI reasons about optimal plan structure.
+* **Three-pillar integration**: Running, strength (Phase 1 MVP), and mobility (Phase 1 MVP) prescription logic.
+* **AI autonomy**: AI has creative freedom within safety constraints (max volume increase, recovery frequency, pillar coordination).
 
 **Key Philosophy Docs**:
 * Running: `docs/ux/training_philosophy.md`, `docs/ux/product_spec/training/running/training_plans.md`
@@ -26,6 +28,7 @@ The AI receives structured philosophy guidance through context models rather tha
 
 ### 🏗️ Architecture & Data
 * **[Data Models](docs/architecture/data_models/_index.md)** (`docs/architecture/data_models/_index.md`): Schema definitions, core entities (User, Goals, Workouts), and database strategy.
+  * **Current Schema**: Includes detailed tables for `StrengthExercises`, `MobilityModules`, and `MobilityPhases`. The `MobilityPhases` table supports structured intensity tracking with `intensityNotes` and `irradiationPct` fields.
 * **[System Architecture](docs/architecture/system_architecture.md)** (`docs/architecture/system_architecture.md`): High-level overview of the 5-layer Clean Architecture and component interaction.
 * **[Interfaces & Contracts](docs/architecture/interfaces.md)** (`docs/architecture/interfaces.md`): Definitions for cross-layer communication, repository patterns, and service contracts.
 * **[Folder Structure](docs/architecture/folder_structure.md)** (`docs/architecture/folder_structure.md`): Logical and physical organization of the codebase.

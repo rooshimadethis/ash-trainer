@@ -119,34 +119,14 @@ class MonthlyView extends ConsumerWidget {
       DateTime selectedDate) {
     final currentBlock = _findBlockForDay(selectedDate, blocks);
 
-    // Get month name
-    final monthName = DateFormat('MMMM').format(selectedDate);
-
     String message;
-    if (currentBlock != null) {
-      final intent = currentBlock.intent.toLowerCase();
-      if (intent.contains('base')) {
-        message =
-            "For $monthName, we're focusing on the Base phase. Steady aerobic miles to build your foundation. 🏃‍♂️";
-      } else if (intent.contains('build')) {
-        message =
-            "$monthName is a Build phase. We're ramping up volume and intensity to take your fitness to the next level. 🔥";
-      } else if (intent.contains('peak')) {
-        message =
-            "It's the Peak phase in $monthName! Things will get tough, but this is where the biggest gains happen. 🏆";
-      } else if (intent.contains('taper')) {
-        message =
-            "We're in the Taper phase for $monthName. Sharpening up and resting for peak performance. ⚡";
-      } else if (intent.contains('recover')) {
-        message =
-            "$monthName includes a Recovery phase. Essential rest to make sure your body is absorbing all your training. 🧘";
-      } else {
-        message =
-            "In $monthName, we're currently in the ${currentBlock.intent} block. Stick to the process! 💪";
-      }
+    if (currentBlock != null && currentBlock.intent.isNotEmpty) {
+      // Show the direct intent from the AI (which is now conversational)
+      message = currentBlock.intent;
     } else {
+      // Use the consistent motivational fallback string
       message =
-          "No specific training block defined for $monthName yet. Let's keep a consistent routine! 🏃";
+          "No specific training block active right now. Let's keep moving and stay healthy! 🏃";
     }
 
     return AshChatBubble(text: message);

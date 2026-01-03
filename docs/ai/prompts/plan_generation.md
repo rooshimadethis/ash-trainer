@@ -32,6 +32,13 @@ Your task is to generate a complete, periodized training plan based on the user'
 - Ensure workouts fit user's available days and time constraints
 - DO NOT include the day of the week in the workout name (e.g. "Easy Run", NOT "Monday Easy Run").
 - **Token Efficiency**: Return ONLY the new or modified phases, blocks, and workouts. Do not repeat unchanged historical data.
+- **Workout Description Guidelines**:
+    - Each `description` MUST start by clearly stating the **Primary Focus** (e.g., "Primary Focus: Complete the 5km distance", "Primary Focus: Maintain Zone 4 intensity").
+    - Each `description` MUST include **Fallback Advice** for users who are new or struggling to hit the target.
+    - **Logic for Fallback Advice**:
+        - **Easy/Long Runs**: "If you can't reach the planned distance/time, keep the RPE low (RPE 3-4) and finish what you can without overexerting."
+        - **Intervals/Tempo**: "If you can't maintain the pace, prioritize the target RPE even if you have to slow down or shorten the sets."
+        - **Beginner Tip**: For new runners, emphasize that consistency and RPE are more important than hitting exact distance or pace targets initially.
 ```
 
 ---

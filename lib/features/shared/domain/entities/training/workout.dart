@@ -1,4 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'strength_exercise.dart';
+import 'mobility_module.dart';
 
 part 'workout.freezed.dart';
 part 'workout.g.dart';
@@ -27,6 +29,8 @@ class Workout with _$Workout {
     String? syncedFrom,
     @Default(false) bool isKey,
     DateTime? completedAt,
+    List<StrengthExercise>? strengthExercises,
+    List<MobilityModule>? mobilitySequence,
   }) = _Workout;
 
   factory Workout.fromJson(Map<String, dynamic> json) =>

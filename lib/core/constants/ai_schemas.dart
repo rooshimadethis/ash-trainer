@@ -80,6 +80,55 @@ class AISchemas {
             },
             "description": {"type": "string"},
             "isKey": {"type": "boolean", "default": false},
+            "strengthExercises": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {"type": "string"},
+                  "sets": {"type": "integer"},
+                  "reps": {"type": "string"},
+                  "rpe": {"type": "integer"},
+                  "notes": {"type": "string"}
+                },
+                "required": ["name", "sets", "reps", "rpe"]
+              }
+            },
+            "mobilitySequence": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "exerciseName": {"type": "string"},
+                  "targetJoint": {"type": "string"},
+                  "setupInstructions": {"type": "string"},
+                  "totalCycles": {"type": "integer"},
+                  "phases": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "phaseType": {"type": "string"},
+                        "durationSeconds": {"type": "integer"},
+                        "intensityNotes": {"type": "string"},
+                        "irradiationPct": {"type": "integer"},
+                        "instruction": {"type": "string"},
+                        "reps": {"type": "integer"},
+                        "holdTimeSeconds": {"type": "integer"}
+                      },
+                      "required": ["phaseType"]
+                    }
+                  }
+                },
+                "required": [
+                  "exerciseName",
+                  "targetJoint",
+                  "setupInstructions",
+                  "phases",
+                  "totalCycles"
+                ]
+              }
+            }
           },
           "required": [
             "id",

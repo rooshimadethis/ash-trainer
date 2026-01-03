@@ -84,28 +84,11 @@ class WeeklyView extends ConsumerWidget {
     final currentBlock = _findBlockForDay(selectedDate, blocks);
 
     String message;
-    if (currentBlock != null) {
-      final intent = currentBlock.intent.toLowerCase();
-      if (intent.contains('base')) {
-        message =
-            "We're in a Base phase. Focus on building an aerobic foundation with steady, easy efforts. 🏃‍♂️";
-      } else if (intent.contains('build')) {
-        message =
-            "It's the Build phase! We're increasing volume and adding some intensity to sharpen your fitness. 🔥";
-      } else if (intent.contains('peak')) {
-        message =
-            "Peak week! This is where we push the limits. Trust your training and stay focused. 🏆";
-      } else if (intent.contains('taper')) {
-        message =
-            "Taper time. We're cutting back volume so you're fresh and ready for race day. ⚡";
-      } else if (intent.contains('recover')) {
-        message =
-            "Recovery week. Prioritize sleep, mobility, and let your body absorb the hard work. 🧘";
-      } else {
-        message =
-            "Currently in the ${currentBlock.intent} block. Let's stay consistent and stick to the plan! 💪";
-      }
+    if (currentBlock != null && currentBlock.intent.isNotEmpty) {
+      // Show the direct intent from the AI (which is now conversational)
+      message = currentBlock.intent;
     } else {
+      // The exact motivational fallback string you liked
       message =
           "No specific training block active right now. Let's keep moving and stay healthy! 🏃";
     }

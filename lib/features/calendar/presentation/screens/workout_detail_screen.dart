@@ -128,6 +128,284 @@ class WorkoutDetailScreen extends ConsumerWidget {
                         'No description provided for this workout.',
                   ),
 
+                  // Strength Exercises Section
+                  if (workout.strengthExercises != null &&
+                      workout.strengthExercises!.isNotEmpty) ...[
+                    const SizedBox(height: 32),
+                    Text('STRENGTH ROUTINE',
+                        style: (Theme.of(context).textTheme.labelLarge ??
+                                const TextStyle())
+                            .copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                          fontSize: 14,
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.w800,
+                        )),
+                    const SizedBox(height: 16),
+                    ...workout.strengthExercises!.map((exercise) => Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: AshCard(
+                            padding: const EdgeInsets.all(16),
+                            borderRadius: 16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  exercise.name,
+                                  style: AppTextStyles.h4.copyWith(
+                                    color:
+                                        Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    _buildExerciseDetail(
+                                        context, '${exercise.sets} sets'),
+                                    const SizedBox(width: 16),
+                                    _buildExerciseDetail(
+                                        context, '${exercise.reps} reps'),
+                                    const SizedBox(width: 16),
+                                    _buildExerciseDetail(
+                                        context, 'RPE ${exercise.rpe}'),
+                                  ],
+                                ),
+                                if (exercise.notes != null &&
+                                    exercise.notes!.isNotEmpty) ...[
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    exercise.notes!,
+                                    style: AppTextStyles.bodySmall.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurfaceVariant,
+                                      fontStyle: FontStyle.italic,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        )),
+                  ],
+
+                  // Mobility Sequence Section
+                  if (workout.mobilitySequence != null &&
+                      workout.mobilitySequence!.isNotEmpty) ...[
+                    const SizedBox(height: 32),
+                    Text('MOBILITY FLOW',
+                        style: (Theme.of(context).textTheme.labelLarge ??
+                                const TextStyle())
+                            .copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
+                          fontSize: 14,
+                          letterSpacing: 2.0,
+                          fontWeight: FontWeight.w800,
+                        )),
+                    const SizedBox(height: 16),
+                    ...workout.mobilitySequence!.map((module) => Padding(
+                          padding: const EdgeInsets.only(bottom: 16),
+                          child: AshCard(
+                            padding: const EdgeInsets.all(16),
+                            borderRadius: 16,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        module.exerciseName,
+                                        style: AppTextStyles.h4.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onSurface,
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color:
+                                            typeColor.withValues(alpha: 0.15),
+                                        borderRadius: BorderRadius.circular(8),
+                                        border: Border.all(
+                                          color:
+                                              typeColor.withValues(alpha: 0.3),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        module.targetJoint,
+                                        style:
+                                            AppTextStyles.labelSmall.copyWith(
+                                          color: typeColor.computeLuminance() >
+                                                  0.5
+                                              ? HSLColor.fromColor(typeColor)
+                                                  .withLightness(0.2)
+                                                  .toColor()
+                                              : typeColor,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Setup: ${module.setupInstructions}',
+                                  style: AppTextStyles.bodySmall.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurfaceVariant,
+                                  ),
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  '${module.totalCycles} cycles',
+                                  style: AppTextStyles.labelSmall.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.7),
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                ...module.phases.map((phase) => Padding(
+                                      padding: const EdgeInsets.only(bottom: 8),
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Container(
+                                            width: 6,
+                                            height: 6,
+                                            margin: const EdgeInsets.only(
+                                                top: 6, right: 8),
+                                            decoration: BoxDecoration(
+                                              color: typeColor,
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      phase.phaseType
+                                                          .toUpperCase(),
+                                                      style: AppTextStyles
+                                                          .labelSmall
+                                                          .copyWith(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurface,
+                                                        fontWeight:
+                                                            FontWeight.w800,
+                                                        letterSpacing: 1.0,
+                                                      ),
+                                                    ),
+                                                    if (phase.durationSeconds !=
+                                                        null) ...[
+                                                      const SizedBox(width: 8),
+                                                      Text(
+                                                        '${phase.durationSeconds}s',
+                                                        style: AppTextStyles
+                                                            .bodySmall
+                                                            .copyWith(
+                                                          color: Theme.of(
+                                                                  context)
+                                                              .colorScheme
+                                                              .onSurfaceVariant,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                    if (phase.irradiationPct !=
+                                                        null) ...[
+                                                      const SizedBox(width: 8),
+                                                      Container(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .symmetric(
+                                                                horizontal: 6,
+                                                                vertical: 2),
+                                                        decoration:
+                                                            BoxDecoration(
+                                                          color: typeColor
+                                                              .withValues(
+                                                                  alpha: 0.15),
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(4),
+                                                        ),
+                                                        child: Text(
+                                                          '${phase.irradiationPct}% tension',
+                                                          style: AppTextStyles
+                                                              .labelSmall
+                                                              .copyWith(
+                                                            color: typeColor,
+                                                            fontSize: 10,
+                                                            fontWeight:
+                                                                FontWeight.w700,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ],
+                                                ),
+                                                if (phase.instruction !=
+                                                    null) ...[
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    phase.instruction!,
+                                                    style: AppTextStyles
+                                                        .bodySmall
+                                                        .copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
+                                                    ),
+                                                  ),
+                                                ],
+                                                if (phase.intensityNotes !=
+                                                    null) ...[
+                                                  const SizedBox(height: 4),
+                                                  Text(
+                                                    '💡 ${phase.intensityNotes}',
+                                                    style: AppTextStyles
+                                                        .bodySmall
+                                                        .copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurfaceVariant,
+                                                      fontStyle:
+                                                          FontStyle.italic,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )),
+                              ],
+                            ),
+                          ),
+                        )),
+                  ],
+
                   const SizedBox(height: 32),
 
                   // Planned Metrics Section
@@ -493,6 +771,27 @@ class WorkoutDetailScreen extends ConsumerWidget {
     final paceSeconds = UnitConverter.calculatePace(durationSeconds, distance);
     // Format for display
     return UnitConverter.formatPace(paceSeconds, preferredUnit);
+  }
+
+  Widget _buildExerciseDetail(BuildContext context, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
+          width: 1,
+        ),
+      ),
+      child: Text(
+        text,
+        style: AppTextStyles.labelSmall.copyWith(
+          color: Theme.of(context).colorScheme.primary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
   }
 }
 

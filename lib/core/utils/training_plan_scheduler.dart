@@ -3,6 +3,8 @@ import '../../features/shared/domain/entities/ai/training_plan_response.dart';
 import '../../features/shared/domain/entities/training/phase.dart';
 import '../../features/shared/domain/entities/training/training_block.dart';
 import '../../features/shared/domain/entities/training/workout.dart';
+import '../../features/shared/domain/entities/training/strength_exercise.dart';
+import '../../features/shared/domain/entities/training/mobility_module.dart';
 
 class TrainingPlanScheduler {
   TrainingPlanHydrationResult hydratePlan({
@@ -93,8 +95,10 @@ class TrainingPlanScheduler {
               ? workoutSkeleton.plannedDistance
               : null;
 
+          final workoutId = const Uuid().v4();
+
           final workout = Workout(
-            id: const Uuid().v4(),
+            id: workoutId,
             userId: userId,
             goalId: goalId,
             phaseId: newPhaseId,
@@ -105,9 +109,48 @@ class TrainingPlanScheduler {
             plannedDuration: workoutSkeleton.plannedDuration,
             plannedDistance: sanitizedDistance,
             intensity: workoutSkeleton.intensity,
-            description: workoutSkeleton.description,
+            description: _formatDescription(workoutSkeleton),
             status: 'planned',
             isKey: workoutSkeleton.isKey,
+            strengthExercises: workoutSkeleton.strengthExercises
+                ?.map((s) => StrengthExercise(
+                      id: const Uuid().v4(),
+                      workoutId:
+                          workoutId, // Need the workout ID here. It's 'id' variable.
+                      name: s.name,
+                      sets: s.sets,
+                      reps: s.reps,
+                      rpe: s.rpe,
+                      notes: s.notes,
+                    ))
+                .toList(),
+            mobilitySequence: workoutSkeleton.mobilitySequence?.map((m) {
+              final moduleId = const Uuid().v4();
+              int phaseOrder = 0;
+              return MobilityModule(
+                id: moduleId,
+                workoutId: workoutId,
+                exerciseName: m.exerciseName,
+                targetJoint: m.targetJoint,
+                setupInstructions: m.setupInstructions,
+                totalCycles: m.totalCycles,
+                phases: m.phases
+                    .map((p) => MobilityPhase(
+                          id: const Uuid().v4(),
+                          moduleId: moduleId,
+                          phaseType: p.phaseType,
+                          durationSeconds: p.durationSeconds,
+                          reps: p.reps,
+                          holdTimeSeconds: p.holdTimeSeconds,
+                          instruction: p.instruction,
+                          intensityNotes: p.intensityNotes,
+                          irradiationPct: p.irradiationPct,
+                          notes: null, // Can be populated later if needed
+                          sequenceOrder: phaseOrder++,
+                        ))
+                    .toList(),
+              );
+            }).toList(),
           );
           hydratedWorkouts.add(workout);
         }
@@ -123,6 +166,12 @@ class TrainingPlanScheduler {
       blocks: hydratedBlocks,
       workouts: hydratedWorkouts,
     );
+  }
+
+  String _formatDescription(WorkoutSkeleton skeleton) {
+    // Return only the main description - detailed exercises/mobility
+    // are now displayed in dedicated UI sections
+    return skeleton.description.trim();
   }
 }
 

@@ -30,6 +30,12 @@ _$WorkoutImpl _$$WorkoutImplFromJson(Map<String, dynamic> json) =>
       completedAt: json['completedAt'] == null
           ? null
           : DateTime.parse(json['completedAt'] as String),
+      strengthExercises: (json['strengthExercises'] as List<dynamic>?)
+          ?.map((e) => StrengthExercise.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      mobilitySequence: (json['mobilitySequence'] as List<dynamic>?)
+          ?.map((e) => MobilityModule.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$WorkoutImplToJson(_$WorkoutImpl instance) =>
@@ -54,4 +60,6 @@ Map<String, dynamic> _$$WorkoutImplToJson(_$WorkoutImpl instance) =>
       'syncedFrom': instance.syncedFrom,
       'isKey': instance.isKey,
       'completedAt': instance.completedAt?.toIso8601String(),
+      'strengthExercises': instance.strengthExercises,
+      'mobilitySequence': instance.mobilitySequence,
     };

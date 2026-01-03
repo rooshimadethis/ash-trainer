@@ -64,6 +64,8 @@ class WorkoutSkeleton with _$WorkoutSkeleton {
     required int intensity, // RPE (1-10)
     required String description,
     @Default(false) bool isKey,
+    List<StrengthExerciseSkeleton>? strengthExercises,
+    List<MobilityModuleSkeleton>? mobilitySequence,
   }) = _WorkoutSkeleton;
 
   factory WorkoutSkeleton.fromJson(Map<String, dynamic> json) =>
@@ -81,4 +83,48 @@ class PlanRationale with _$PlanRationale {
 
   factory PlanRationale.fromJson(Map<String, dynamic> json) =>
       _$PlanRationaleFromJson(json);
+}
+
+@freezed
+class StrengthExerciseSkeleton with _$StrengthExerciseSkeleton {
+  const factory StrengthExerciseSkeleton({
+    required String name,
+    required int sets,
+    required String reps,
+    required int rpe,
+    String? notes,
+  }) = _StrengthExerciseSkeleton;
+
+  factory StrengthExerciseSkeleton.fromJson(Map<String, dynamic> json) =>
+      _$StrengthExerciseSkeletonFromJson(json);
+}
+
+@freezed
+class MobilityModuleSkeleton with _$MobilityModuleSkeleton {
+  const factory MobilityModuleSkeleton({
+    required String exerciseName,
+    required String targetJoint,
+    required String setupInstructions,
+    required int totalCycles,
+    required List<MobilityPhaseSkeleton> phases,
+  }) = _MobilityModuleSkeleton;
+
+  factory MobilityModuleSkeleton.fromJson(Map<String, dynamic> json) =>
+      _$MobilityModuleSkeletonFromJson(json);
+}
+
+@freezed
+class MobilityPhaseSkeleton with _$MobilityPhaseSkeleton {
+  const factory MobilityPhaseSkeleton({
+    required String phaseType,
+    int? durationSeconds,
+    String? intensityNotes,
+    int? irradiationPct,
+    String? instruction,
+    int? reps,
+    int? holdTimeSeconds,
+  }) = _MobilityPhaseSkeleton;
+
+  factory MobilityPhaseSkeleton.fromJson(Map<String, dynamic> json) =>
+      _$MobilityPhaseSkeletonFromJson(json);
 }

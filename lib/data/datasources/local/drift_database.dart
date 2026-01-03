@@ -19,6 +19,7 @@ import 'tables/workouts_table.dart';
 import 'tables/phases_table.dart';
 import 'tables/training_blocks_table.dart';
 import 'tables/biomarkers_table.dart';
+import 'tables/workout_details_tables.dart';
 import 'daos/workout_dao.dart';
 import 'daos/training_plan_dao.dart';
 import 'daos/biomarker_dao.dart';
@@ -36,6 +37,9 @@ part 'drift_database.g.dart';
   Phases,
   TrainingBlocks,
   Biomarkers,
+  StrengthExercises,
+  MobilityModules,
+  MobilityPhases,
 ], daos: [
   UserDao,
   GoalDao,
@@ -57,7 +61,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -85,6 +89,17 @@ class AppDatabase extends _$AppDatabase {
               await m.addColumn(goals, goals.rationaleIntensityDistribution);
               await m.addColumn(goals, goals.rationaleKeyWorkouts);
               await m.addColumn(goals, goals.rationaleRecoveryStrategy);
+            }
+            if (i == 5) {
+              // Add detailed tables for Strength and Mobility (Phase 2 Refactor)
+              await m.createTable(strengthExercises);
+              await m.createTable(mobilityModules);
+              await m.createTable(mobilityPhases);
+            }
+            if (i == 6) {
+              // Add structured fields for mobility phase intensity tracking
+              await m.addColumn(mobilityPhases, mobilityPhases.intensityNotes);
+              await m.addColumn(mobilityPhases, mobilityPhases.irradiationPct);
             }
           }
         },

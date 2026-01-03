@@ -41,7 +41,6 @@ class AIServiceImpl implements AIService {
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
       context: PlanGenerationContext.activeToJson(context),
-      responseSchema: responseSchema,
     );
 
     final content = [gemini.Content.text(prompt)];
@@ -50,9 +49,19 @@ class AIServiceImpl implements AIService {
     AppLogger.i('--- AI REQUEST (Generate Plan) ---');
     AppLogger.i(prompt);
 
+    final schema = _mapJsonSchemaToSdkSchema(responseSchema);
+
     final response = await _model.generateContent(
       content,
-      generationConfig: AIConfig.getConfig(AITaskType.planGeneration),
+      generationConfig: gemini.GenerationConfig(
+        responseMimeType: 'application/json',
+        responseSchema: schema,
+        temperature: AIConfig.getConfig(AITaskType.planGeneration).temperature,
+        topK: AIConfig.getConfig(AITaskType.planGeneration).topK,
+        topP: AIConfig.getConfig(AITaskType.planGeneration).topP,
+        maxOutputTokens:
+            AIConfig.getConfig(AITaskType.planGeneration).maxOutputTokens,
+      ),
     );
 
     if (response.text == null) {
@@ -107,7 +116,6 @@ class AIServiceImpl implements AIService {
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
       context: contextMap,
-      responseSchema: responseSchema,
     );
 
     final content = [gemini.Content.text(prompt)];
@@ -116,9 +124,20 @@ class AIServiceImpl implements AIService {
     AppLogger.i('--- AI REQUEST (Adjust Workout) ---');
     AppLogger.i(prompt);
 
+    final schema = _mapJsonSchemaToSdkSchema(responseSchema);
+
     final response = await _model.generateContent(
       content,
-      generationConfig: AIConfig.getConfig(AITaskType.workoutAdjustment),
+      generationConfig: gemini.GenerationConfig(
+        responseMimeType: 'application/json',
+        responseSchema: schema,
+        temperature:
+            AIConfig.getConfig(AITaskType.workoutAdjustment).temperature,
+        topK: AIConfig.getConfig(AITaskType.workoutAdjustment).topK,
+        topP: AIConfig.getConfig(AITaskType.workoutAdjustment).topP,
+        maxOutputTokens:
+            AIConfig.getConfig(AITaskType.workoutAdjustment).maxOutputTokens,
+      ),
     );
 
     if (response.text == null) {
@@ -166,7 +185,6 @@ class AIServiceImpl implements AIService {
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
       context: contextMap,
-      responseSchema: responseSchema,
     );
 
     final content = [gemini.Content.text(prompt)];
@@ -175,9 +193,19 @@ class AIServiceImpl implements AIService {
     AppLogger.i('--- AI REQUEST (Reschedule Workouts) ---');
     AppLogger.i(prompt);
 
+    final schema = _mapJsonSchemaToSdkSchema(responseSchema);
+
     final response = await _model.generateContent(
       content,
-      generationConfig: AIConfig.getConfig(AITaskType.rescheduling),
+      generationConfig: gemini.GenerationConfig(
+        responseMimeType: 'application/json',
+        responseSchema: schema,
+        temperature: AIConfig.getConfig(AITaskType.rescheduling).temperature,
+        topK: AIConfig.getConfig(AITaskType.rescheduling).topK,
+        topP: AIConfig.getConfig(AITaskType.rescheduling).topP,
+        maxOutputTokens:
+            AIConfig.getConfig(AITaskType.rescheduling).maxOutputTokens,
+      ),
     );
 
     if (response.text == null) {
@@ -420,7 +448,6 @@ class AIServiceImpl implements AIService {
     required String systemPrompt,
     required String taskPrompt,
     required Map<String, dynamic> context,
-    required Map<String, dynamic> responseSchema,
   }) {
     return '''
 System: $systemPrompt
@@ -429,11 +456,6 @@ Context:
 ${jsonEncode(context)}
 
 Task: $taskPrompt
-
-Response Schema:
-${jsonEncode(responseSchema)}
-
-Please output strictly in JSON.
 ''';
   }
 
@@ -476,6 +498,7 @@ ${jsonEncode(context)}
   gemini.Schema _mapJsonSchemaToSdkSchema(Map<String, dynamic> jsonSchema) {
     final type = jsonSchema['type'] as String?;
     final description = jsonSchema['description'] as String?;
+    final requiredList = (jsonSchema['required'] as List?)?.cast<String>();
 
     if (type == 'object') {
       final properties =
@@ -490,6 +513,7 @@ ${jsonEncode(context)}
         properties: schemaProps,
         description: description,
         nullable: false,
+        requiredProperties: requiredList,
       );
     } else if (type == 'array') {
       final items = jsonSchema['items'] as Map<String, dynamic>?;

@@ -8,6 +8,8 @@ import '../models/workout_mapper.dart';
 import '../models/phase_mapper.dart';
 import '../models/training_block_mapper.dart';
 
+import '../datasources/local/drift_database.dart';
+
 class WorkoutRepositoryImpl implements WorkoutRepository {
   final WorkoutDao _workoutDao;
   final TrainingPlanDao _trainingPlanDao;
@@ -20,7 +22,7 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
     required DateTime endDate,
   }) async {
     final dtos = await _workoutDao.getWorkoutsForDateRange(startDate, endDate);
-    return dtos.map((dto) => dto.toEntity()).toList();
+    return _hydrateWorkouts(dtos);
   }
 
   @override
@@ -30,7 +32,7 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }) {
     return _workoutDao
         .watchWorkoutsForDateRange(startDate, endDate)
-        .map((dtos) => dtos.map((dto) => dto.toEntity()).toList());
+        .asyncMap((dtos) => _hydrateWorkouts(dtos));
   }
 
   @override
@@ -48,17 +50,60 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   @override
   Future<Workout?> getWorkout(String id) async {
     final dto = await _workoutDao.getWorkoutById(id);
-    return dto?.toEntity();
+    if (dto == null) return null;
+
+    final strengthDtos = await _workoutDao.getStrengthExercises(id);
+    final mobilityData = await _workoutDao.getMobilityDetails(id);
+
+    return dto.toEntity(
+      strengthExercises: strengthDtos.map((d) => d.toEntity()).toList(),
+      mobilitySequence: mobilityData.entries.map((e) {
+        return e.key.toEntity(e.value);
+      }).toList(),
+    );
   }
 
   @override
   Stream<Workout?> watchWorkout(String id) {
-    return _workoutDao.watchWorkoutById(id).map((dto) => dto?.toEntity());
+    return _workoutDao.watchWorkoutById(id).asyncMap((dto) async {
+      if (dto == null) return null;
+
+      final strengthDtos = await _workoutDao.getStrengthExercises(id);
+      final mobilityData = await _workoutDao.getMobilityDetails(id);
+
+      return dto.toEntity(
+        strengthExercises: strengthDtos.map((d) => d.toEntity()).toList(),
+        mobilitySequence: mobilityData.entries.map((e) {
+          return e.key.toEntity(e.value);
+        }).toList(),
+      );
+    });
   }
 
   @override
   Future<void> saveWorkout(Workout workout) async {
-    await _workoutDao.insertWorkout(workout.toCompanion());
+    await _workoutDao.transaction(() async {
+      await _workoutDao.insertWorkout(workout.toCompanion());
+
+      if (workout.strengthExercises != null) {
+        await _workoutDao.replaceStrengthExercises(
+          workout.id,
+          workout.strengthExercises!.map((e) => e.toCompanion()).toList(),
+        );
+      }
+
+      if (workout.mobilitySequence != null) {
+        final modules = <MobilityModulesCompanion>[];
+        final phases = <MobilityPhasesCompanion>[];
+
+        for (var mod in workout.mobilitySequence!) {
+          modules.add(mod.toCompanion());
+          phases.addAll(mod.phases.map((p) => p.toCompanion()));
+        }
+
+        await _workoutDao.replaceMobilityDetails(workout.id, modules, phases);
+      }
+    });
   }
 
   @override
@@ -147,6 +192,28 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
     await _trainingPlanDao.insertPhases(phaseCompanions);
     await _trainingPlanDao.insertBlocks(blockCompanions);
     await _workoutDao.batchInsertWorkouts(workoutCompanions);
+
+    // Save details for each workout
+    for (var w in workouts) {
+      if (w.strengthExercises != null) {
+        await _workoutDao.replaceStrengthExercises(
+          w.id,
+          w.strengthExercises!.map((e) => e.toCompanion()).toList(),
+        );
+      }
+
+      if (w.mobilitySequence != null) {
+        final modules = <MobilityModulesCompanion>[];
+        final phases = <MobilityPhasesCompanion>[];
+
+        for (var mod in w.mobilitySequence!) {
+          modules.add(mod.toCompanion());
+          phases.addAll(mod.phases.map((p) => p.toCompanion()));
+        }
+
+        await _workoutDao.replaceMobilityDetails(w.id, modules, phases);
+      }
+    }
   }
 
   @override
@@ -161,7 +228,7 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   @override
   Future<List<Workout>> getWorkoutsForGoal(String goalId) async {
     final dtos = await _workoutDao.getWorkoutsForGoal(int.parse(goalId));
-    return dtos.map((dto) => dto.toEntity()).toList();
+    return _hydrateWorkouts(dtos);
   }
 
   @override
@@ -185,5 +252,32 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   Future<void> deleteFutureWorkouts(
       {required String goalId, required DateTime fromDate}) {
     return _workoutDao.deleteFutureWorkouts(int.parse(goalId), fromDate);
+  }
+
+  /// Helper method to batch-load workout details for multiple workouts.
+  /// This prevents N+1 query problems when loading workout lists.
+  Future<List<Workout>> _hydrateWorkouts(List<WorkoutDTO> dtos) async {
+    if (dtos.isEmpty) return [];
+
+    final workoutIds = dtos.map((dto) => dto.id).toList();
+
+    // Batch load all details
+    final strengthMap =
+        await _workoutDao.getStrengthExercisesForWorkouts(workoutIds);
+    final mobilityMap =
+        await _workoutDao.getMobilityDetailsForWorkouts(workoutIds);
+
+    // Map DTOs to entities with their details
+    return dtos.map((dto) {
+      final strengthDtos = strengthMap[dto.id] ?? [];
+      final mobilityData = mobilityMap[dto.id] ?? {};
+
+      return dto.toEntity(
+        strengthExercises: strengthDtos.map((d) => d.toEntity()).toList(),
+        mobilitySequence: mobilityData.entries.map((e) {
+          return e.key.toEntity(e.value);
+        }).toList(),
+      );
+    }).toList();
   }
 }

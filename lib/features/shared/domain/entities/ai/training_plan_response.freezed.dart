@@ -811,6 +811,10 @@ mixin _$WorkoutSkeleton {
   int get intensity => throw _privateConstructorUsedError; // RPE (1-10)
   String get description => throw _privateConstructorUsedError;
   bool get isKey => throw _privateConstructorUsedError;
+  List<StrengthExerciseSkeleton>? get strengthExercises =>
+      throw _privateConstructorUsedError;
+  List<MobilityModuleSkeleton>? get mobilitySequence =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this WorkoutSkeleton to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -839,7 +843,9 @@ abstract class $WorkoutSkeletonCopyWith<$Res> {
       double? plannedDistance,
       int intensity,
       String description,
-      bool isKey});
+      bool isKey,
+      List<StrengthExerciseSkeleton>? strengthExercises,
+      List<MobilityModuleSkeleton>? mobilitySequence});
 }
 
 /// @nodoc
@@ -868,6 +874,8 @@ class _$WorkoutSkeletonCopyWithImpl<$Res, $Val extends WorkoutSkeleton>
     Object? intensity = null,
     Object? description = null,
     Object? isKey = null,
+    Object? strengthExercises = freezed,
+    Object? mobilitySequence = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -914,6 +922,14 @@ class _$WorkoutSkeletonCopyWithImpl<$Res, $Val extends WorkoutSkeleton>
           ? _value.isKey
           : isKey // ignore: cast_nullable_to_non_nullable
               as bool,
+      strengthExercises: freezed == strengthExercises
+          ? _value.strengthExercises
+          : strengthExercises // ignore: cast_nullable_to_non_nullable
+              as List<StrengthExerciseSkeleton>?,
+      mobilitySequence: freezed == mobilitySequence
+          ? _value.mobilitySequence
+          : mobilitySequence // ignore: cast_nullable_to_non_nullable
+              as List<MobilityModuleSkeleton>?,
     ) as $Val);
   }
 }
@@ -937,7 +953,9 @@ abstract class _$$WorkoutSkeletonImplCopyWith<$Res>
       double? plannedDistance,
       int intensity,
       String description,
-      bool isKey});
+      bool isKey,
+      List<StrengthExerciseSkeleton>? strengthExercises,
+      List<MobilityModuleSkeleton>? mobilitySequence});
 }
 
 /// @nodoc
@@ -964,6 +982,8 @@ class __$$WorkoutSkeletonImplCopyWithImpl<$Res>
     Object? intensity = null,
     Object? description = null,
     Object? isKey = null,
+    Object? strengthExercises = freezed,
+    Object? mobilitySequence = freezed,
   }) {
     return _then(_$WorkoutSkeletonImpl(
       id: null == id
@@ -1010,6 +1030,14 @@ class __$$WorkoutSkeletonImplCopyWithImpl<$Res>
           ? _value.isKey
           : isKey // ignore: cast_nullable_to_non_nullable
               as bool,
+      strengthExercises: freezed == strengthExercises
+          ? _value._strengthExercises
+          : strengthExercises // ignore: cast_nullable_to_non_nullable
+              as List<StrengthExerciseSkeleton>?,
+      mobilitySequence: freezed == mobilitySequence
+          ? _value._mobilitySequence
+          : mobilitySequence // ignore: cast_nullable_to_non_nullable
+              as List<MobilityModuleSkeleton>?,
     ));
   }
 }
@@ -1028,7 +1056,11 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
       this.plannedDistance,
       required this.intensity,
       required this.description,
-      this.isKey = false});
+      this.isKey = false,
+      final List<StrengthExerciseSkeleton>? strengthExercises,
+      final List<MobilityModuleSkeleton>? mobilitySequence})
+      : _strengthExercises = strengthExercises,
+        _mobilitySequence = mobilitySequence;
 
   factory _$WorkoutSkeletonImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutSkeletonImplFromJson(json);
@@ -1061,10 +1093,31 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
   @override
   @JsonKey()
   final bool isKey;
+  final List<StrengthExerciseSkeleton>? _strengthExercises;
+  @override
+  List<StrengthExerciseSkeleton>? get strengthExercises {
+    final value = _strengthExercises;
+    if (value == null) return null;
+    if (_strengthExercises is EqualUnmodifiableListView)
+      return _strengthExercises;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<MobilityModuleSkeleton>? _mobilitySequence;
+  @override
+  List<MobilityModuleSkeleton>? get mobilitySequence {
+    final value = _mobilitySequence;
+    if (value == null) return null;
+    if (_mobilitySequence is EqualUnmodifiableListView)
+      return _mobilitySequence;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'WorkoutSkeleton(id: $id, phaseId: $phaseId, blockId: $blockId, dayNumber: $dayNumber, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, isKey: $isKey)';
+    return 'WorkoutSkeleton(id: $id, phaseId: $phaseId, blockId: $blockId, dayNumber: $dayNumber, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, isKey: $isKey, strengthExercises: $strengthExercises, mobilitySequence: $mobilitySequence)';
   }
 
   @override
@@ -1087,7 +1140,11 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
                 other.intensity == intensity) &&
             (identical(other.description, description) ||
                 other.description == description) &&
-            (identical(other.isKey, isKey) || other.isKey == isKey));
+            (identical(other.isKey, isKey) || other.isKey == isKey) &&
+            const DeepCollectionEquality()
+                .equals(other._strengthExercises, _strengthExercises) &&
+            const DeepCollectionEquality()
+                .equals(other._mobilitySequence, _mobilitySequence));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1104,7 +1161,9 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
       plannedDistance,
       intensity,
       description,
-      isKey);
+      isKey,
+      const DeepCollectionEquality().hash(_strengthExercises),
+      const DeepCollectionEquality().hash(_mobilitySequence));
 
   /// Create a copy of WorkoutSkeleton
   /// with the given fields replaced by the non-null parameter values.
@@ -1125,17 +1184,20 @@ class _$WorkoutSkeletonImpl implements _WorkoutSkeleton {
 
 abstract class _WorkoutSkeleton implements WorkoutSkeleton {
   const factory _WorkoutSkeleton(
-      {required final String id,
-      required final String phaseId,
-      required final String blockId,
-      required final int dayNumber,
-      required final String type,
-      required final String name,
-      required final int plannedDuration,
-      final double? plannedDistance,
-      required final int intensity,
-      required final String description,
-      final bool isKey}) = _$WorkoutSkeletonImpl;
+          {required final String id,
+          required final String phaseId,
+          required final String blockId,
+          required final int dayNumber,
+          required final String type,
+          required final String name,
+          required final int plannedDuration,
+          final double? plannedDistance,
+          required final int intensity,
+          required final String description,
+          final bool isKey,
+          final List<StrengthExerciseSkeleton>? strengthExercises,
+          final List<MobilityModuleSkeleton>? mobilitySequence}) =
+      _$WorkoutSkeletonImpl;
 
   factory _WorkoutSkeleton.fromJson(Map<String, dynamic> json) =
       _$WorkoutSkeletonImpl.fromJson;
@@ -1165,6 +1227,10 @@ abstract class _WorkoutSkeleton implements WorkoutSkeleton {
   String get description;
   @override
   bool get isKey;
+  @override
+  List<StrengthExerciseSkeleton>? get strengthExercises;
+  @override
+  List<MobilityModuleSkeleton>? get mobilitySequence;
 
   /// Create a copy of WorkoutSkeleton
   /// with the given fields replaced by the non-null parameter values.
@@ -1390,4 +1456,774 @@ abstract class _PlanRationale implements PlanRationale {
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PlanRationaleImplCopyWith<_$PlanRationaleImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+StrengthExerciseSkeleton _$StrengthExerciseSkeletonFromJson(
+    Map<String, dynamic> json) {
+  return _StrengthExerciseSkeleton.fromJson(json);
+}
+
+/// @nodoc
+mixin _$StrengthExerciseSkeleton {
+  String get name => throw _privateConstructorUsedError;
+  int get sets => throw _privateConstructorUsedError;
+  String get reps => throw _privateConstructorUsedError;
+  int get rpe => throw _privateConstructorUsedError;
+  String? get notes => throw _privateConstructorUsedError;
+
+  /// Serializes this StrengthExerciseSkeleton to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of StrengthExerciseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $StrengthExerciseSkeletonCopyWith<StrengthExerciseSkeleton> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $StrengthExerciseSkeletonCopyWith<$Res> {
+  factory $StrengthExerciseSkeletonCopyWith(StrengthExerciseSkeleton value,
+          $Res Function(StrengthExerciseSkeleton) then) =
+      _$StrengthExerciseSkeletonCopyWithImpl<$Res, StrengthExerciseSkeleton>;
+  @useResult
+  $Res call({String name, int sets, String reps, int rpe, String? notes});
+}
+
+/// @nodoc
+class _$StrengthExerciseSkeletonCopyWithImpl<$Res,
+        $Val extends StrengthExerciseSkeleton>
+    implements $StrengthExerciseSkeletonCopyWith<$Res> {
+  _$StrengthExerciseSkeletonCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of StrengthExerciseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? sets = null,
+    Object? reps = null,
+    Object? rpe = null,
+    Object? notes = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      sets: null == sets
+          ? _value.sets
+          : sets // ignore: cast_nullable_to_non_nullable
+              as int,
+      reps: null == reps
+          ? _value.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as String,
+      rpe: null == rpe
+          ? _value.rpe
+          : rpe // ignore: cast_nullable_to_non_nullable
+              as int,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$StrengthExerciseSkeletonImplCopyWith<$Res>
+    implements $StrengthExerciseSkeletonCopyWith<$Res> {
+  factory _$$StrengthExerciseSkeletonImplCopyWith(
+          _$StrengthExerciseSkeletonImpl value,
+          $Res Function(_$StrengthExerciseSkeletonImpl) then) =
+      __$$StrengthExerciseSkeletonImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, int sets, String reps, int rpe, String? notes});
+}
+
+/// @nodoc
+class __$$StrengthExerciseSkeletonImplCopyWithImpl<$Res>
+    extends _$StrengthExerciseSkeletonCopyWithImpl<$Res,
+        _$StrengthExerciseSkeletonImpl>
+    implements _$$StrengthExerciseSkeletonImplCopyWith<$Res> {
+  __$$StrengthExerciseSkeletonImplCopyWithImpl(
+      _$StrengthExerciseSkeletonImpl _value,
+      $Res Function(_$StrengthExerciseSkeletonImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of StrengthExerciseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? sets = null,
+    Object? reps = null,
+    Object? rpe = null,
+    Object? notes = freezed,
+  }) {
+    return _then(_$StrengthExerciseSkeletonImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      sets: null == sets
+          ? _value.sets
+          : sets // ignore: cast_nullable_to_non_nullable
+              as int,
+      reps: null == reps
+          ? _value.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as String,
+      rpe: null == rpe
+          ? _value.rpe
+          : rpe // ignore: cast_nullable_to_non_nullable
+              as int,
+      notes: freezed == notes
+          ? _value.notes
+          : notes // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$StrengthExerciseSkeletonImpl implements _StrengthExerciseSkeleton {
+  const _$StrengthExerciseSkeletonImpl(
+      {required this.name,
+      required this.sets,
+      required this.reps,
+      required this.rpe,
+      this.notes});
+
+  factory _$StrengthExerciseSkeletonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$StrengthExerciseSkeletonImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final int sets;
+  @override
+  final String reps;
+  @override
+  final int rpe;
+  @override
+  final String? notes;
+
+  @override
+  String toString() {
+    return 'StrengthExerciseSkeleton(name: $name, sets: $sets, reps: $reps, rpe: $rpe, notes: $notes)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$StrengthExerciseSkeletonImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.sets, sets) || other.sets == sets) &&
+            (identical(other.reps, reps) || other.reps == reps) &&
+            (identical(other.rpe, rpe) || other.rpe == rpe) &&
+            (identical(other.notes, notes) || other.notes == notes));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, sets, reps, rpe, notes);
+
+  /// Create a copy of StrengthExerciseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$StrengthExerciseSkeletonImplCopyWith<_$StrengthExerciseSkeletonImpl>
+      get copyWith => __$$StrengthExerciseSkeletonImplCopyWithImpl<
+          _$StrengthExerciseSkeletonImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$StrengthExerciseSkeletonImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _StrengthExerciseSkeleton implements StrengthExerciseSkeleton {
+  const factory _StrengthExerciseSkeleton(
+      {required final String name,
+      required final int sets,
+      required final String reps,
+      required final int rpe,
+      final String? notes}) = _$StrengthExerciseSkeletonImpl;
+
+  factory _StrengthExerciseSkeleton.fromJson(Map<String, dynamic> json) =
+      _$StrengthExerciseSkeletonImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  int get sets;
+  @override
+  String get reps;
+  @override
+  int get rpe;
+  @override
+  String? get notes;
+
+  /// Create a copy of StrengthExerciseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$StrengthExerciseSkeletonImplCopyWith<_$StrengthExerciseSkeletonImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+MobilityModuleSkeleton _$MobilityModuleSkeletonFromJson(
+    Map<String, dynamic> json) {
+  return _MobilityModuleSkeleton.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MobilityModuleSkeleton {
+  String get exerciseName => throw _privateConstructorUsedError;
+  String get targetJoint => throw _privateConstructorUsedError;
+  String get setupInstructions => throw _privateConstructorUsedError;
+  int get totalCycles => throw _privateConstructorUsedError;
+  List<MobilityPhaseSkeleton> get phases => throw _privateConstructorUsedError;
+
+  /// Serializes this MobilityModuleSkeleton to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of MobilityModuleSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $MobilityModuleSkeletonCopyWith<MobilityModuleSkeleton> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MobilityModuleSkeletonCopyWith<$Res> {
+  factory $MobilityModuleSkeletonCopyWith(MobilityModuleSkeleton value,
+          $Res Function(MobilityModuleSkeleton) then) =
+      _$MobilityModuleSkeletonCopyWithImpl<$Res, MobilityModuleSkeleton>;
+  @useResult
+  $Res call(
+      {String exerciseName,
+      String targetJoint,
+      String setupInstructions,
+      int totalCycles,
+      List<MobilityPhaseSkeleton> phases});
+}
+
+/// @nodoc
+class _$MobilityModuleSkeletonCopyWithImpl<$Res,
+        $Val extends MobilityModuleSkeleton>
+    implements $MobilityModuleSkeletonCopyWith<$Res> {
+  _$MobilityModuleSkeletonCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of MobilityModuleSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? exerciseName = null,
+    Object? targetJoint = null,
+    Object? setupInstructions = null,
+    Object? totalCycles = null,
+    Object? phases = null,
+  }) {
+    return _then(_value.copyWith(
+      exerciseName: null == exerciseName
+          ? _value.exerciseName
+          : exerciseName // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetJoint: null == targetJoint
+          ? _value.targetJoint
+          : targetJoint // ignore: cast_nullable_to_non_nullable
+              as String,
+      setupInstructions: null == setupInstructions
+          ? _value.setupInstructions
+          : setupInstructions // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalCycles: null == totalCycles
+          ? _value.totalCycles
+          : totalCycles // ignore: cast_nullable_to_non_nullable
+              as int,
+      phases: null == phases
+          ? _value.phases
+          : phases // ignore: cast_nullable_to_non_nullable
+              as List<MobilityPhaseSkeleton>,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MobilityModuleSkeletonImplCopyWith<$Res>
+    implements $MobilityModuleSkeletonCopyWith<$Res> {
+  factory _$$MobilityModuleSkeletonImplCopyWith(
+          _$MobilityModuleSkeletonImpl value,
+          $Res Function(_$MobilityModuleSkeletonImpl) then) =
+      __$$MobilityModuleSkeletonImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String exerciseName,
+      String targetJoint,
+      String setupInstructions,
+      int totalCycles,
+      List<MobilityPhaseSkeleton> phases});
+}
+
+/// @nodoc
+class __$$MobilityModuleSkeletonImplCopyWithImpl<$Res>
+    extends _$MobilityModuleSkeletonCopyWithImpl<$Res,
+        _$MobilityModuleSkeletonImpl>
+    implements _$$MobilityModuleSkeletonImplCopyWith<$Res> {
+  __$$MobilityModuleSkeletonImplCopyWithImpl(
+      _$MobilityModuleSkeletonImpl _value,
+      $Res Function(_$MobilityModuleSkeletonImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of MobilityModuleSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? exerciseName = null,
+    Object? targetJoint = null,
+    Object? setupInstructions = null,
+    Object? totalCycles = null,
+    Object? phases = null,
+  }) {
+    return _then(_$MobilityModuleSkeletonImpl(
+      exerciseName: null == exerciseName
+          ? _value.exerciseName
+          : exerciseName // ignore: cast_nullable_to_non_nullable
+              as String,
+      targetJoint: null == targetJoint
+          ? _value.targetJoint
+          : targetJoint // ignore: cast_nullable_to_non_nullable
+              as String,
+      setupInstructions: null == setupInstructions
+          ? _value.setupInstructions
+          : setupInstructions // ignore: cast_nullable_to_non_nullable
+              as String,
+      totalCycles: null == totalCycles
+          ? _value.totalCycles
+          : totalCycles // ignore: cast_nullable_to_non_nullable
+              as int,
+      phases: null == phases
+          ? _value._phases
+          : phases // ignore: cast_nullable_to_non_nullable
+              as List<MobilityPhaseSkeleton>,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MobilityModuleSkeletonImpl implements _MobilityModuleSkeleton {
+  const _$MobilityModuleSkeletonImpl(
+      {required this.exerciseName,
+      required this.targetJoint,
+      required this.setupInstructions,
+      required this.totalCycles,
+      required final List<MobilityPhaseSkeleton> phases})
+      : _phases = phases;
+
+  factory _$MobilityModuleSkeletonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MobilityModuleSkeletonImplFromJson(json);
+
+  @override
+  final String exerciseName;
+  @override
+  final String targetJoint;
+  @override
+  final String setupInstructions;
+  @override
+  final int totalCycles;
+  final List<MobilityPhaseSkeleton> _phases;
+  @override
+  List<MobilityPhaseSkeleton> get phases {
+    if (_phases is EqualUnmodifiableListView) return _phases;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_phases);
+  }
+
+  @override
+  String toString() {
+    return 'MobilityModuleSkeleton(exerciseName: $exerciseName, targetJoint: $targetJoint, setupInstructions: $setupInstructions, totalCycles: $totalCycles, phases: $phases)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MobilityModuleSkeletonImpl &&
+            (identical(other.exerciseName, exerciseName) ||
+                other.exerciseName == exerciseName) &&
+            (identical(other.targetJoint, targetJoint) ||
+                other.targetJoint == targetJoint) &&
+            (identical(other.setupInstructions, setupInstructions) ||
+                other.setupInstructions == setupInstructions) &&
+            (identical(other.totalCycles, totalCycles) ||
+                other.totalCycles == totalCycles) &&
+            const DeepCollectionEquality().equals(other._phases, _phases));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      exerciseName,
+      targetJoint,
+      setupInstructions,
+      totalCycles,
+      const DeepCollectionEquality().hash(_phases));
+
+  /// Create a copy of MobilityModuleSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MobilityModuleSkeletonImplCopyWith<_$MobilityModuleSkeletonImpl>
+      get copyWith => __$$MobilityModuleSkeletonImplCopyWithImpl<
+          _$MobilityModuleSkeletonImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MobilityModuleSkeletonImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MobilityModuleSkeleton implements MobilityModuleSkeleton {
+  const factory _MobilityModuleSkeleton(
+          {required final String exerciseName,
+          required final String targetJoint,
+          required final String setupInstructions,
+          required final int totalCycles,
+          required final List<MobilityPhaseSkeleton> phases}) =
+      _$MobilityModuleSkeletonImpl;
+
+  factory _MobilityModuleSkeleton.fromJson(Map<String, dynamic> json) =
+      _$MobilityModuleSkeletonImpl.fromJson;
+
+  @override
+  String get exerciseName;
+  @override
+  String get targetJoint;
+  @override
+  String get setupInstructions;
+  @override
+  int get totalCycles;
+  @override
+  List<MobilityPhaseSkeleton> get phases;
+
+  /// Create a copy of MobilityModuleSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MobilityModuleSkeletonImplCopyWith<_$MobilityModuleSkeletonImpl>
+      get copyWith => throw _privateConstructorUsedError;
+}
+
+MobilityPhaseSkeleton _$MobilityPhaseSkeletonFromJson(
+    Map<String, dynamic> json) {
+  return _MobilityPhaseSkeleton.fromJson(json);
+}
+
+/// @nodoc
+mixin _$MobilityPhaseSkeleton {
+  String get phaseType => throw _privateConstructorUsedError;
+  int? get durationSeconds => throw _privateConstructorUsedError;
+  String? get intensityNotes => throw _privateConstructorUsedError;
+  int? get irradiationPct => throw _privateConstructorUsedError;
+  String? get instruction => throw _privateConstructorUsedError;
+  int? get reps => throw _privateConstructorUsedError;
+  int? get holdTimeSeconds => throw _privateConstructorUsedError;
+
+  /// Serializes this MobilityPhaseSkeleton to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of MobilityPhaseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $MobilityPhaseSkeletonCopyWith<MobilityPhaseSkeleton> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $MobilityPhaseSkeletonCopyWith<$Res> {
+  factory $MobilityPhaseSkeletonCopyWith(MobilityPhaseSkeleton value,
+          $Res Function(MobilityPhaseSkeleton) then) =
+      _$MobilityPhaseSkeletonCopyWithImpl<$Res, MobilityPhaseSkeleton>;
+  @useResult
+  $Res call(
+      {String phaseType,
+      int? durationSeconds,
+      String? intensityNotes,
+      int? irradiationPct,
+      String? instruction,
+      int? reps,
+      int? holdTimeSeconds});
+}
+
+/// @nodoc
+class _$MobilityPhaseSkeletonCopyWithImpl<$Res,
+        $Val extends MobilityPhaseSkeleton>
+    implements $MobilityPhaseSkeletonCopyWith<$Res> {
+  _$MobilityPhaseSkeletonCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of MobilityPhaseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? phaseType = null,
+    Object? durationSeconds = freezed,
+    Object? intensityNotes = freezed,
+    Object? irradiationPct = freezed,
+    Object? instruction = freezed,
+    Object? reps = freezed,
+    Object? holdTimeSeconds = freezed,
+  }) {
+    return _then(_value.copyWith(
+      phaseType: null == phaseType
+          ? _value.phaseType
+          : phaseType // ignore: cast_nullable_to_non_nullable
+              as String,
+      durationSeconds: freezed == durationSeconds
+          ? _value.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+      intensityNotes: freezed == intensityNotes
+          ? _value.intensityNotes
+          : intensityNotes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      irradiationPct: freezed == irradiationPct
+          ? _value.irradiationPct
+          : irradiationPct // ignore: cast_nullable_to_non_nullable
+              as int?,
+      instruction: freezed == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String?,
+      reps: freezed == reps
+          ? _value.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as int?,
+      holdTimeSeconds: freezed == holdTimeSeconds
+          ? _value.holdTimeSeconds
+          : holdTimeSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$MobilityPhaseSkeletonImplCopyWith<$Res>
+    implements $MobilityPhaseSkeletonCopyWith<$Res> {
+  factory _$$MobilityPhaseSkeletonImplCopyWith(
+          _$MobilityPhaseSkeletonImpl value,
+          $Res Function(_$MobilityPhaseSkeletonImpl) then) =
+      __$$MobilityPhaseSkeletonImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String phaseType,
+      int? durationSeconds,
+      String? intensityNotes,
+      int? irradiationPct,
+      String? instruction,
+      int? reps,
+      int? holdTimeSeconds});
+}
+
+/// @nodoc
+class __$$MobilityPhaseSkeletonImplCopyWithImpl<$Res>
+    extends _$MobilityPhaseSkeletonCopyWithImpl<$Res,
+        _$MobilityPhaseSkeletonImpl>
+    implements _$$MobilityPhaseSkeletonImplCopyWith<$Res> {
+  __$$MobilityPhaseSkeletonImplCopyWithImpl(_$MobilityPhaseSkeletonImpl _value,
+      $Res Function(_$MobilityPhaseSkeletonImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of MobilityPhaseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? phaseType = null,
+    Object? durationSeconds = freezed,
+    Object? intensityNotes = freezed,
+    Object? irradiationPct = freezed,
+    Object? instruction = freezed,
+    Object? reps = freezed,
+    Object? holdTimeSeconds = freezed,
+  }) {
+    return _then(_$MobilityPhaseSkeletonImpl(
+      phaseType: null == phaseType
+          ? _value.phaseType
+          : phaseType // ignore: cast_nullable_to_non_nullable
+              as String,
+      durationSeconds: freezed == durationSeconds
+          ? _value.durationSeconds
+          : durationSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+      intensityNotes: freezed == intensityNotes
+          ? _value.intensityNotes
+          : intensityNotes // ignore: cast_nullable_to_non_nullable
+              as String?,
+      irradiationPct: freezed == irradiationPct
+          ? _value.irradiationPct
+          : irradiationPct // ignore: cast_nullable_to_non_nullable
+              as int?,
+      instruction: freezed == instruction
+          ? _value.instruction
+          : instruction // ignore: cast_nullable_to_non_nullable
+              as String?,
+      reps: freezed == reps
+          ? _value.reps
+          : reps // ignore: cast_nullable_to_non_nullable
+              as int?,
+      holdTimeSeconds: freezed == holdTimeSeconds
+          ? _value.holdTimeSeconds
+          : holdTimeSeconds // ignore: cast_nullable_to_non_nullable
+              as int?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$MobilityPhaseSkeletonImpl implements _MobilityPhaseSkeleton {
+  const _$MobilityPhaseSkeletonImpl(
+      {required this.phaseType,
+      this.durationSeconds,
+      this.intensityNotes,
+      this.irradiationPct,
+      this.instruction,
+      this.reps,
+      this.holdTimeSeconds});
+
+  factory _$MobilityPhaseSkeletonImpl.fromJson(Map<String, dynamic> json) =>
+      _$$MobilityPhaseSkeletonImplFromJson(json);
+
+  @override
+  final String phaseType;
+  @override
+  final int? durationSeconds;
+  @override
+  final String? intensityNotes;
+  @override
+  final int? irradiationPct;
+  @override
+  final String? instruction;
+  @override
+  final int? reps;
+  @override
+  final int? holdTimeSeconds;
+
+  @override
+  String toString() {
+    return 'MobilityPhaseSkeleton(phaseType: $phaseType, durationSeconds: $durationSeconds, intensityNotes: $intensityNotes, irradiationPct: $irradiationPct, instruction: $instruction, reps: $reps, holdTimeSeconds: $holdTimeSeconds)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$MobilityPhaseSkeletonImpl &&
+            (identical(other.phaseType, phaseType) ||
+                other.phaseType == phaseType) &&
+            (identical(other.durationSeconds, durationSeconds) ||
+                other.durationSeconds == durationSeconds) &&
+            (identical(other.intensityNotes, intensityNotes) ||
+                other.intensityNotes == intensityNotes) &&
+            (identical(other.irradiationPct, irradiationPct) ||
+                other.irradiationPct == irradiationPct) &&
+            (identical(other.instruction, instruction) ||
+                other.instruction == instruction) &&
+            (identical(other.reps, reps) || other.reps == reps) &&
+            (identical(other.holdTimeSeconds, holdTimeSeconds) ||
+                other.holdTimeSeconds == holdTimeSeconds));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, phaseType, durationSeconds,
+      intensityNotes, irradiationPct, instruction, reps, holdTimeSeconds);
+
+  /// Create a copy of MobilityPhaseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$MobilityPhaseSkeletonImplCopyWith<_$MobilityPhaseSkeletonImpl>
+      get copyWith => __$$MobilityPhaseSkeletonImplCopyWithImpl<
+          _$MobilityPhaseSkeletonImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$MobilityPhaseSkeletonImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _MobilityPhaseSkeleton implements MobilityPhaseSkeleton {
+  const factory _MobilityPhaseSkeleton(
+      {required final String phaseType,
+      final int? durationSeconds,
+      final String? intensityNotes,
+      final int? irradiationPct,
+      final String? instruction,
+      final int? reps,
+      final int? holdTimeSeconds}) = _$MobilityPhaseSkeletonImpl;
+
+  factory _MobilityPhaseSkeleton.fromJson(Map<String, dynamic> json) =
+      _$MobilityPhaseSkeletonImpl.fromJson;
+
+  @override
+  String get phaseType;
+  @override
+  int? get durationSeconds;
+  @override
+  String? get intensityNotes;
+  @override
+  int? get irradiationPct;
+  @override
+  String? get instruction;
+  @override
+  int? get reps;
+  @override
+  int? get holdTimeSeconds;
+
+  /// Create a copy of MobilityPhaseSkeleton
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$MobilityPhaseSkeletonImplCopyWith<_$MobilityPhaseSkeletonImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }

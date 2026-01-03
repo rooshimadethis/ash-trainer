@@ -85,6 +85,14 @@ _$WorkoutSkeletonImpl _$$WorkoutSkeletonImplFromJson(
       intensity: (json['intensity'] as num).toInt(),
       description: json['description'] as String,
       isKey: json['isKey'] as bool? ?? false,
+      strengthExercises: (json['strengthExercises'] as List<dynamic>?)
+          ?.map((e) =>
+              StrengthExerciseSkeleton.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      mobilitySequence: (json['mobilitySequence'] as List<dynamic>?)
+          ?.map(
+              (e) => MobilityModuleSkeleton.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$$WorkoutSkeletonImplToJson(
@@ -101,6 +109,8 @@ Map<String, dynamic> _$$WorkoutSkeletonImplToJson(
       'intensity': instance.intensity,
       'description': instance.description,
       'isKey': instance.isKey,
+      'strengthExercises': instance.strengthExercises,
+      'mobilitySequence': instance.mobilitySequence,
     };
 
 _$PlanRationaleImpl _$$PlanRationaleImplFromJson(Map<String, dynamic> json) =>
@@ -117,4 +127,70 @@ Map<String, dynamic> _$$PlanRationaleImplToJson(_$PlanRationaleImpl instance) =>
       'intensityDistribution': instance.intensityDistribution,
       'keyWorkouts': instance.keyWorkouts,
       'recoveryStrategy': instance.recoveryStrategy,
+    };
+
+_$StrengthExerciseSkeletonImpl _$$StrengthExerciseSkeletonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$StrengthExerciseSkeletonImpl(
+      name: json['name'] as String,
+      sets: (json['sets'] as num).toInt(),
+      reps: json['reps'] as String,
+      rpe: (json['rpe'] as num).toInt(),
+      notes: json['notes'] as String?,
+    );
+
+Map<String, dynamic> _$$StrengthExerciseSkeletonImplToJson(
+        _$StrengthExerciseSkeletonImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'sets': instance.sets,
+      'reps': instance.reps,
+      'rpe': instance.rpe,
+      'notes': instance.notes,
+    };
+
+_$MobilityModuleSkeletonImpl _$$MobilityModuleSkeletonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MobilityModuleSkeletonImpl(
+      exerciseName: json['exerciseName'] as String,
+      targetJoint: json['targetJoint'] as String,
+      setupInstructions: json['setupInstructions'] as String,
+      totalCycles: (json['totalCycles'] as num).toInt(),
+      phases: (json['phases'] as List<dynamic>)
+          .map((e) => MobilityPhaseSkeleton.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$$MobilityModuleSkeletonImplToJson(
+        _$MobilityModuleSkeletonImpl instance) =>
+    <String, dynamic>{
+      'exerciseName': instance.exerciseName,
+      'targetJoint': instance.targetJoint,
+      'setupInstructions': instance.setupInstructions,
+      'totalCycles': instance.totalCycles,
+      'phases': instance.phases,
+    };
+
+_$MobilityPhaseSkeletonImpl _$$MobilityPhaseSkeletonImplFromJson(
+        Map<String, dynamic> json) =>
+    _$MobilityPhaseSkeletonImpl(
+      phaseType: json['phaseType'] as String,
+      durationSeconds: (json['durationSeconds'] as num?)?.toInt(),
+      intensityNotes: json['intensityNotes'] as String?,
+      irradiationPct: (json['irradiationPct'] as num?)?.toInt(),
+      instruction: json['instruction'] as String?,
+      reps: (json['reps'] as num?)?.toInt(),
+      holdTimeSeconds: (json['holdTimeSeconds'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$$MobilityPhaseSkeletonImplToJson(
+        _$MobilityPhaseSkeletonImpl instance) =>
+    <String, dynamic>{
+      'phaseType': instance.phaseType,
+      'durationSeconds': instance.durationSeconds,
+      'intensityNotes': instance.intensityNotes,
+      'irradiationPct': instance.irradiationPct,
+      'instruction': instance.instruction,
+      'reps': instance.reps,
+      'holdTimeSeconds': instance.holdTimeSeconds,
     };

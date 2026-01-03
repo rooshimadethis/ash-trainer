@@ -44,6 +44,10 @@ mixin _$Workout {
   String? get syncedFrom => throw _privateConstructorUsedError;
   bool get isKey => throw _privateConstructorUsedError;
   DateTime? get completedAt => throw _privateConstructorUsedError;
+  List<StrengthExercise>? get strengthExercises =>
+      throw _privateConstructorUsedError;
+  List<MobilityModule>? get mobilitySequence =>
+      throw _privateConstructorUsedError;
 
   /// Serializes this Workout to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -79,7 +83,9 @@ abstract class $WorkoutCopyWith<$Res> {
       int? rpe,
       String? syncedFrom,
       bool isKey,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      List<StrengthExercise>? strengthExercises,
+      List<MobilityModule>? mobilitySequence});
 }
 
 /// @nodoc
@@ -117,6 +123,8 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
     Object? syncedFrom = freezed,
     Object? isKey = null,
     Object? completedAt = freezed,
+    Object? strengthExercises = freezed,
+    Object? mobilitySequence = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -199,6 +207,14 @@ class _$WorkoutCopyWithImpl<$Res, $Val extends Workout>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      strengthExercises: freezed == strengthExercises
+          ? _value.strengthExercises
+          : strengthExercises // ignore: cast_nullable_to_non_nullable
+              as List<StrengthExercise>?,
+      mobilitySequence: freezed == mobilitySequence
+          ? _value.mobilitySequence
+          : mobilitySequence // ignore: cast_nullable_to_non_nullable
+              as List<MobilityModule>?,
     ) as $Val);
   }
 }
@@ -230,7 +246,9 @@ abstract class _$$WorkoutImplCopyWith<$Res> implements $WorkoutCopyWith<$Res> {
       int? rpe,
       String? syncedFrom,
       bool isKey,
-      DateTime? completedAt});
+      DateTime? completedAt,
+      List<StrengthExercise>? strengthExercises,
+      List<MobilityModule>? mobilitySequence});
 }
 
 /// @nodoc
@@ -266,6 +284,8 @@ class __$$WorkoutImplCopyWithImpl<$Res>
     Object? syncedFrom = freezed,
     Object? isKey = null,
     Object? completedAt = freezed,
+    Object? strengthExercises = freezed,
+    Object? mobilitySequence = freezed,
   }) {
     return _then(_$WorkoutImpl(
       id: null == id
@@ -348,6 +368,14 @@ class __$$WorkoutImplCopyWithImpl<$Res>
           ? _value.completedAt
           : completedAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      strengthExercises: freezed == strengthExercises
+          ? _value._strengthExercises
+          : strengthExercises // ignore: cast_nullable_to_non_nullable
+              as List<StrengthExercise>?,
+      mobilitySequence: freezed == mobilitySequence
+          ? _value._mobilitySequence
+          : mobilitySequence // ignore: cast_nullable_to_non_nullable
+              as List<MobilityModule>?,
     ));
   }
 }
@@ -375,7 +403,11 @@ class _$WorkoutImpl implements _Workout {
       this.rpe,
       this.syncedFrom,
       this.isKey = false,
-      this.completedAt});
+      this.completedAt,
+      final List<StrengthExercise>? strengthExercises,
+      final List<MobilityModule>? mobilitySequence})
+      : _strengthExercises = strengthExercises,
+        _mobilitySequence = mobilitySequence;
 
   factory _$WorkoutImpl.fromJson(Map<String, dynamic> json) =>
       _$$WorkoutImplFromJson(json);
@@ -427,10 +459,31 @@ class _$WorkoutImpl implements _Workout {
   final bool isKey;
   @override
   final DateTime? completedAt;
+  final List<StrengthExercise>? _strengthExercises;
+  @override
+  List<StrengthExercise>? get strengthExercises {
+    final value = _strengthExercises;
+    if (value == null) return null;
+    if (_strengthExercises is EqualUnmodifiableListView)
+      return _strengthExercises;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
+
+  final List<MobilityModule>? _mobilitySequence;
+  @override
+  List<MobilityModule>? get mobilitySequence {
+    final value = _mobilitySequence;
+    if (value == null) return null;
+    if (_mobilitySequence is EqualUnmodifiableListView)
+      return _mobilitySequence;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(value);
+  }
 
   @override
   String toString() {
-    return 'Workout(id: $id, userId: $userId, goalId: $goalId, phaseId: $phaseId, blockId: $blockId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, syncedFrom: $syncedFrom, isKey: $isKey, completedAt: $completedAt)';
+    return 'Workout(id: $id, userId: $userId, goalId: $goalId, phaseId: $phaseId, blockId: $blockId, scheduledDate: $scheduledDate, type: $type, name: $name, plannedDuration: $plannedDuration, plannedDistance: $plannedDistance, intensity: $intensity, description: $description, status: $status, actualDuration: $actualDuration, actualDistance: $actualDistance, actualPace: $actualPace, rpe: $rpe, syncedFrom: $syncedFrom, isKey: $isKey, completedAt: $completedAt, strengthExercises: $strengthExercises, mobilitySequence: $mobilitySequence)';
   }
 
   @override
@@ -467,7 +520,11 @@ class _$WorkoutImpl implements _Workout {
                 other.syncedFrom == syncedFrom) &&
             (identical(other.isKey, isKey) || other.isKey == isKey) &&
             (identical(other.completedAt, completedAt) ||
-                other.completedAt == completedAt));
+                other.completedAt == completedAt) &&
+            const DeepCollectionEquality()
+                .equals(other._strengthExercises, _strengthExercises) &&
+            const DeepCollectionEquality()
+                .equals(other._mobilitySequence, _mobilitySequence));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -493,7 +550,9 @@ class _$WorkoutImpl implements _Workout {
         rpe,
         syncedFrom,
         isKey,
-        completedAt
+        completedAt,
+        const DeepCollectionEquality().hash(_strengthExercises),
+        const DeepCollectionEquality().hash(_mobilitySequence)
       ]);
 
   /// Create a copy of Workout
@@ -533,7 +592,9 @@ abstract class _Workout implements Workout {
       final int? rpe,
       final String? syncedFrom,
       final bool isKey,
-      final DateTime? completedAt}) = _$WorkoutImpl;
+      final DateTime? completedAt,
+      final List<StrengthExercise>? strengthExercises,
+      final List<MobilityModule>? mobilitySequence}) = _$WorkoutImpl;
 
   factory _Workout.fromJson(Map<String, dynamic> json) = _$WorkoutImpl.fromJson;
 
@@ -578,6 +639,10 @@ abstract class _Workout implements Workout {
   bool get isKey;
   @override
   DateTime? get completedAt;
+  @override
+  List<StrengthExercise>? get strengthExercises;
+  @override
+  List<MobilityModule>? get mobilitySequence;
 
   /// Create a copy of Workout
   /// with the given fields replaced by the non-null parameter values.
