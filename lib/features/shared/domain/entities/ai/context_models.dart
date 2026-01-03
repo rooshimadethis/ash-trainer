@@ -24,9 +24,13 @@ class PlanGenerationContext with _$PlanGenerationContext {
 
   // Custom toJson for token optimization
   static Map<String, dynamic> activeToJson(PlanGenerationContext instance) {
+    // Establish "today" as the reference point (midnight)
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+
     return {
       'user': UserContext.activeToJson(instance.user),
-      'goal': GoalContext.activeToJson(instance.goal),
+      'goal': GoalContext.activeToJson(instance.goal, referenceDate: today),
       'trainingHistory': instance.trainingHistory
           .map((w) => WorkoutSummary.activeToJson(w))
           .toList(),
@@ -34,15 +38,25 @@ class PlanGenerationContext with _$PlanGenerationContext {
           .map((w) => WorkoutSummary.activeToJson(w))
           .toList(),
       'scheduledTimeOff': instance.scheduledTimeOff.map((t) {
+        // Normalize to midnight for consistent day calculations
+        final startDay =
+            DateTime(t.startDate.year, t.startDate.month, t.startDate.day);
+        final endDay = DateTime(t.endDate.year, t.endDate.month, t.endDate.day);
+
+        final startsInDays = startDay.difference(today).inDays;
+        final durationDays =
+            endDay.difference(startDay).inDays + 1; // +1 to include end day
+
         return {
-          'startDate': t.startDate.toIso8601String().split('T')[0],
-          'endDate': t.endDate.toIso8601String().split('T')[0],
+          'startsInDays': startsInDays,
+          'durationDays': durationDays,
           if (t.reason != null) 'reason': t.reason,
         };
       }).toList(),
       'config': {
-        ...instance.config.toJson(),
-        'startDate': instance.config.startDate.toIso8601String().split('T')[0],
+        'mode': instance.config.mode.name,
+        'upcomingWeekdays': instance.config.upcomingWeekdays,
+        'instruction': instance.config.instruction,
       },
       'philosophy': instance.philosophy.toJson(),
     };
@@ -216,10 +230,25 @@ class GoalContext with _$GoalContext {
   }
 
   // Custom toJson for token optimization
-  static Map<String, dynamic> activeToJson(GoalContext instance) {
-    return instance.toJson()
+  static Map<String, dynamic> activeToJson(GoalContext instance,
+      {DateTime? referenceDate}) {
+    final json = instance.toJson()
       ..removeWhere(
           (key, value) => value == null || (value is Map && value.isEmpty));
+
+    // Convert absolute deadline to relative offset if referenceDate provided
+    if (referenceDate != null && json.containsKey('deadline')) {
+      final deadline = instance.deadline;
+      final deadlineDay = DateTime(deadline.year, deadline.month, deadline.day);
+      final today =
+          DateTime(referenceDate.year, referenceDate.month, referenceDate.day);
+      final daysUntilDeadline = deadlineDay.difference(today).inDays;
+
+      json['daysUntilDeadline'] = daysUntilDeadline;
+      json.remove('deadline'); // Remove absolute timestamp
+    }
+
+    return json;
   }
 }
 

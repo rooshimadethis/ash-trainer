@@ -99,22 +99,10 @@ class BuildPlanningContext {
         startDate =
             hasTimeOffToday ? today : today.add(const Duration(days: 1));
 
-        // Find if there's an immediate (within 7 days) upcoming break
-        final nearFutureBreak = scheduledTimeOff.firstWhere(
-            (t) =>
-                t.startDate.difference(startDate).inDays <= 7 &&
-                t.startDate.isAfter(today),
-            orElse: () => TimeOffContext(
-                startDate: DateTime(2100),
-                endDate: DateTime(2100))); // Dummy default
-
-        if (nearFutureBreak.startDate.year != 2100) {
-          instruction =
-              "User has scheduled time off starting in ${nearFutureBreak.startDate.difference(startDate).inDays} days. Re-plan from ${hasTimeOffToday ? 'today' : 'tomorrow'}. Adjust volume leading into the break, and ensure safe return after.";
-        } else {
-          instruction =
-              "User schedule has changed. Re-plan from ${hasTimeOffToday ? 'today' : 'tomorrow'} onwards.";
-        }
+        // Simplified instruction - the AI gets explicit timing from scheduledTimeOff structure
+        instruction = scheduledTimeOff.isNotEmpty
+            ? "Adjust plan to accommodate scheduled time off. Taper volume before breaks and ramp safely after."
+            : "User schedule has changed. Re-plan from ${hasTimeOffToday ? 'today' : 'tomorrow'} onwards.";
         break;
     }
 

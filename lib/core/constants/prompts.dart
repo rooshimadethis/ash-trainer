@@ -111,7 +111,7 @@ CRITICAL: Use the provided JSON schema.
 - Create 'Phases' (Base, Build, etc.) with weekly volume targets.
 - Create 'Blocks' (logical chunks of 3-10 days) within those phases.
 - Create 'Workouts' linked to specific Blocks.
-- Use 'dayNumber' relative to the start of the BLOCK.
+- Use 'dayNumber' relative to the start of the BLOCK (1-indexed: first day of block = dayNumber 1, not 0).
 - JSON SCHEMA: Strictly adhere to the provided JSON schema. 
   - WORKOUT NAMES: Never include the day of the week (e.g., "Monday") in names (e.g. "Easy Run", NOT "Monday Easy Run").
   - KEY WORKOUTS (isKey): 
@@ -122,12 +122,14 @@ CRITICAL: Use the provided JSON schema.
     - Use the `upcomingWeekdays` list from the config to map `dayNumber` to real days (Index 0 = `startDate`).
     - **CRITICAL**: Respect the `scheduledTimeOff` context.
     - **NO WORKOUTS ON TIME OFF**: Do NOT generate any workouts (Run, Strength, Mobility, OR Rest Days) for dates that fall within a scheduled time off period. Leave these days completely empty in your `workouts` list. The UI handles the "Time Off" display.
+    - **TIME OFF FORMAT**: Each time off entry has `startsInDays` (relative to today, can be negative for past) and `durationDays` (length of break). For example, `startsInDays: 1, durationDays: 8` means an 8-day break starting tomorrow. Skip dayNumber 1-8 in your workout generation.
     - **VOLUME ADAPTATION**: Focus your effort on adjusting the training volume and intensity in the days LEADING INTO the break and the days immediately FOLLOWING the break to ensure a safe transition.
     - **ALIGNMENT**: Align your `dayNumber` selection with the user's `availableDays` and prefer weekends for Long Runs.
 9. SCHEDULE CONSISTENCY (Adjust/Repair Mode):
     - If `futurePlan` is provided, use it to balance stability with optimization:
-    - **IMMEDIATE STABILITY (Days 1-4)**: Prioritize keeping the training days and workout types from the `futurePlan`. Only modify volume/intensity if required by the adjustment/repair logic. Do NOT move a Thursday session to Friday if it falls within this window.
-    - **OPTIMIZATION HORIZON (Days 5+)**: You have more freedom to re-calculate and shift workouts to better fit the phase goals and user's `availableDays`. Consistency with the original training rhythm is still preferred but is secondary to optimizing the plan for the objective.
+    - **CONTEXT MAPPING**: The `futurePlan` uses `daysAgo` relative to today. A workout with `daysAgo: -1` is tomorrow (your dayNumber 1 in the new plan). Use this to understand the existing schedule.
+    - **IMMEDIATE STABILITY (Days 1-4)**: Prioritize keeping the training days and workout types from the `futurePlan` for workouts with `daysAgo: -1 to -4`. Only modify volume/intensity if required by the adjustment/repair logic. Do NOT move a Thursday session to Friday if it falls within this window.
+    - **OPTIMIZATION HORIZON (Days 5+)**: For workouts with `daysAgo: -5` and beyond, you have more freedom to re-calculate and shift workouts to better fit the phase goals and user's `availableDays`. Consistency with the original training rhythm is still preferred but is secondary to optimizing the plan for the objective.
 ''';
 
   static const String adjustWorkoutTask = '''
