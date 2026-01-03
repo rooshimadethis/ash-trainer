@@ -52,11 +52,11 @@ TIER 2 - MEDIUM-TERM (Current Phase Blocks Only):
   - "Recovery week! We're cutting back to let you absorb all the hard work. Prioritize sleep and mobility. 🧘"
 - Do NOT generate all blocks for future phases yet - they will be created closer to when needed
 
-TIER 3 - SHORT-TERM (Next 2 Blocks Only):
-- Generate detailed workouts ONLY for the FIRST 1-2 BLOCKS
-- Include full workout details: type, name, duration, distance, intensity, description
-- Do NOT generate workouts for blocks beyond the first 2
-- This gives ~7-14 days of detailed planning while staying adaptive
+TIER 3 - SHORT-TERM (Detailed Planning):
+- Generate detailed workouts for the FIRST 2-3 BLOCKS.
+- **CRITICAL**: If a Time Off block exists soon, you MUST generate workouts for the "Return to Training" block immediately following it.
+- Include full workout details: type, name, duration, distance, intensity, description.
+- Ensure at least 14 days of *active training* are planned.
 
 RATIONALE: This phased approach allows for adaptation as the user progresses. Future blocks and workouts will be generated closer to when they're needed, accounting for actual progress, injuries, and life changes.
 
@@ -118,13 +118,18 @@ CRITICAL: Use the provided JSON schema.
     - Set `isKey: true` for important "Long Runs" and high-intensity "Quality" sessions (Intervals, Tempo, Hills).
     - For Strength sessions, set `isKey: true` if the user's Strength priority is 'High' or use best judgement. 
     - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
-8. SCHEDULED TIME OFF & CALENDAR ALIGNMENT:
-    - Use the `upcomingWeekdays` list from the config to map `dayNumber` to real days (Index 0 = `startDate`).
+8. SCHEDULED TIME OFF & BLOCK SEGMENTATION:
     - **CRITICAL**: Respect the `scheduledTimeOff` context.
-    - **NO WORKOUTS ON TIME OFF**: Do NOT generate any workouts (Run, Strength, Mobility, OR Rest Days) for dates that fall within a scheduled time off period. Leave these days completely empty in your `workouts` list. The UI handles the "Time Off" display.
-    - **TIME OFF FORMAT**: Each time off entry has `startsInDays` (relative to today, can be negative for past) and `durationDays` (length of break). For example, `startsInDays: 1, durationDays: 8` means an 8-day break starting tomorrow. Skip dayNumber 1-8 in your workout generation.
-    - **VOLUME ADAPTATION**: Focus your effort on adjusting the training volume and intensity in the days LEADING INTO the break and the days immediately FOLLOWING the break to ensure a safe transition.
-    - **ALIGNMENT**: Align your `dayNumber` selection with the user's `availableDays` and prefer weekends for Long Runs.
+    - **MANDATORY BLOCK SEGMENTATION**:
+      - You **MUST** segment your Training Blocks around Time Off periods.
+      - **NEVER** create a Block that contains both Training Days and Time Off Days.
+      - **Structure**:
+        1. **Training Block A**: Ends the day before Time Off starts.
+        2. **Time Off Block**: Covers the exact duration of the Time Off.
+        3. **Training Block B**: Starts the day after Time Off ends.
+    - **NO WORKOUTS ON TIME OFF**: For the 'Time Off Block', do NOT generate any workouts in the `workouts` list. Leave those dayNumbers empty.
+    - **CALENDAR ALIGNMENT**: Use the `upcomingWeekdays` list and `startsInDays`/`durationDays` to map `dayNumber` strictly.
+    - **VOLUME ADAPTATION**: Adjust volume in the days LEADING INTO and FOLLOWING the break.
 9. SCHEDULE CONSISTENCY (Adjust/Repair Mode):
     - If `futurePlan` is provided, use it to balance stability with optimization:
     - **CONTEXT MAPPING**: The `futurePlan` uses `daysAgo` relative to today. A workout with `daysAgo: -1` is tomorrow (your dayNumber 1 in the new plan). Use this to understand the existing schedule.
