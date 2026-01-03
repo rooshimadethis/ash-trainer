@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ash_trainer/features/onboarding/presentation/screens/welcome_screen.dart';
 import 'package:ash_trainer/features/goal_setup/presentation/screens/goal_type_selection_screen.dart';
+import 'package:ash_trainer/features/goal_setup/presentation/screens/plan_generation_screen.dart';
 import '../screens/ai_test_screen.dart';
 import 'package:ash_trainer/infrastructure/providers/service_providers.dart';
 import 'package:ash_trainer/data/providers/repository_providers.dart';
@@ -172,6 +173,19 @@ class DebugOverlay extends StatelessWidget {
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              ListTile(
+                leading: const Icon(Icons.rocket_launch, color: Colors.purple),
+                title: const Text('Direct: Plan Generation'),
+                textColor: Colors.purple,
+                onTap: () {
+                  Navigator.pop(dialogContext);
+                  navigatorKey.currentState?.push(
+                    MaterialPageRoute(
+                      builder: (_) => const PlanGenerationScreen(),
+                    ),
+                  );
+                },
+              ),
               ListTile(
                 leading: const Icon(Icons.calendar_month),
                 title: const Text('AI: Plan Generator'),
