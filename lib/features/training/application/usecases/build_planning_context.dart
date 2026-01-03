@@ -2,17 +2,20 @@ import 'package:ash_trainer/features/shared/domain/repositories/user_repository.
 import 'package:ash_trainer/features/shared/domain/repositories/goal_repository.dart';
 import 'package:ash_trainer/features/shared/domain/repositories/workout_repository.dart';
 import 'package:ash_trainer/features/shared/domain/entities/ai/context_models.dart';
+import 'package:ash_trainer/features/shared/domain/repositories/time_off_repository.dart';
 import 'build_plan_philosophy.dart';
 
 class BuildPlanningContext {
   final UserRepository _userRepo;
   final GoalRepository _goalRepo;
   final WorkoutRepository _workoutRepo;
+  final TimeOffRepository _timeOffRepo;
 
   BuildPlanningContext(
     this._userRepo,
     this._goalRepo,
     this._workoutRepo,
+    this._timeOffRepo,
   );
 
   Future<PlanGenerationContext> execute({
@@ -47,12 +50,27 @@ class BuildPlanningContext {
         // For now, raw logic: missed + 14 days
         historyDuration = Duration(days: missedDays + 14);
         break;
+
+      case PlanningMode.adjust:
+        // 30 days history is enough for adjustment context
+        historyDuration = const Duration(days: 30);
+        break;
     }
 
     final historyWorkouts = await _workoutRepo.getWorkoutsForDateRange(
       startDate: DateTime.now().subtract(historyDuration),
       endDate: DateTime.now(),
     );
+
+    // 1.5 Fetch scheduled Time Off
+    final timeOffEntries = await _timeOffRepo.getAllTimeOffs();
+    final scheduledTimeOff = timeOffEntries
+        .map((e) => TimeOffContext(
+              startDate: e.startDate,
+              endDate: e.endDate,
+              reason: e.reason,
+            ))
+        .toList();
 
     // 2. Mode-Specific Instructions & Start Date
     String instruction;
@@ -76,6 +94,27 @@ class BuildPlanningContext {
         startDate = DateTime.now().add(const Duration(days: 1));
         instruction =
             "User missed $missedDays days. Create a 'Return to Training' bridge block starting tomorrow.";
+        break;
+
+      case PlanningMode.adjust:
+        startDate = DateTime.now().add(const Duration(days: 1));
+
+        // Find if there's an immediate (within 7 days) upcoming break
+        final nearFutureBreak = scheduledTimeOff.firstWhere(
+            (t) =>
+                t.startDate.difference(startDate).inDays <= 7 &&
+                t.startDate.isAfter(startDate),
+            orElse: () => TimeOffContext(
+                startDate: DateTime(2100),
+                endDate: DateTime(2100))); // Dummy default
+
+        if (nearFutureBreak.startDate.year != 2100) {
+          instruction =
+              "User has scheduled time off starting in ${nearFutureBreak.startDate.difference(startDate).inDays} days. Re-plan from tomorrow. Adjust volume leading into the break, and ensure safe return after.";
+        } else {
+          instruction =
+              "User schedule has changed. Re-plan from tomorrow onwards.";
+        }
         break;
     }
 
@@ -106,7 +145,19 @@ class BuildPlanningContext {
       weeklyVolume: currentVolume ?? goal.initialWeeklyVolume ?? 20.0,
     );
 
-    // 4. Build Context
+    // 4. Fetch Future Plan (for Adjust/Repair Context)
+    List<WorkoutSummary> futurePlan = [];
+    if (mode == PlanningMode.adjust || mode == PlanningMode.repair) {
+      final futureWorkouts = await _workoutRepo.getWorkoutsForDateRange(
+        startDate: startDate,
+        endDate: startDate.add(const Duration(days: 30)),
+      );
+      futurePlan = futureWorkouts
+          .map((w) => WorkoutSummary.fromEntity(w, DateTime.now()))
+          .toList();
+    }
+
+    // 5. Build Context
     return PlanGenerationContext(
       user: UserContext.fromEntity(user),
       goal: GoalContext.fromEntity(goal,
@@ -114,6 +165,8 @@ class BuildPlanningContext {
       trainingHistory: historyWorkouts
           .map((w) => WorkoutSummary.fromEntity(w, DateTime.now()))
           .toList(),
+      futurePlan: futurePlan,
+      scheduledTimeOff: scheduledTimeOff,
       config: PlanningConfig(
         mode: mode,
         startDate: startDate,

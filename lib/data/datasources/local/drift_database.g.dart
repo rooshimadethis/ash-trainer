@@ -7419,6 +7419,342 @@ class MobilityPhasesCompanion extends UpdateCompanion<MobilityPhaseDTO> {
   }
 }
 
+class $TimeOffsTable extends TimeOffs
+    with TableInfo<$TimeOffsTable, TimeOffDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TimeOffsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<int> id = GeneratedColumn<int>(
+      'id', aliasedName, false,
+      hasAutoIncrement: true,
+      type: DriftSqlType.int,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('PRIMARY KEY AUTOINCREMENT'));
+  static const VerificationMeta _startDateMeta =
+      const VerificationMeta('startDate');
+  @override
+  late final GeneratedColumn<DateTime> startDate = GeneratedColumn<DateTime>(
+      'start_date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _endDateMeta =
+      const VerificationMeta('endDate');
+  @override
+  late final GeneratedColumn<DateTime> endDate = GeneratedColumn<DateTime>(
+      'end_date', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _reasonMeta = const VerificationMeta('reason');
+  @override
+  late final GeneratedColumn<String> reason = GeneratedColumn<String>(
+      'reason', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _isSyncedMeta =
+      const VerificationMeta('isSynced');
+  @override
+  late final GeneratedColumn<bool> isSynced = GeneratedColumn<bool>(
+      'is_synced', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: false,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("is_synced" IN (0, 1))'),
+      defaultValue: const Constant(false));
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime,
+      requiredDuringInsert: false,
+      defaultValue: currentDateAndTime);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, startDate, endDate, reason, isSynced, createdAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'time_offs';
+  @override
+  VerificationContext validateIntegrity(Insertable<TimeOffDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    }
+    if (data.containsKey('start_date')) {
+      context.handle(_startDateMeta,
+          startDate.isAcceptableOrUnknown(data['start_date']!, _startDateMeta));
+    } else if (isInserting) {
+      context.missing(_startDateMeta);
+    }
+    if (data.containsKey('end_date')) {
+      context.handle(_endDateMeta,
+          endDate.isAcceptableOrUnknown(data['end_date']!, _endDateMeta));
+    } else if (isInserting) {
+      context.missing(_endDateMeta);
+    }
+    if (data.containsKey('reason')) {
+      context.handle(_reasonMeta,
+          reason.isAcceptableOrUnknown(data['reason']!, _reasonMeta));
+    }
+    if (data.containsKey('is_synced')) {
+      context.handle(_isSyncedMeta,
+          isSynced.isAcceptableOrUnknown(data['is_synced']!, _isSyncedMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TimeOffDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TimeOffDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.int, data['${effectivePrefix}id'])!,
+      startDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}start_date'])!,
+      endDate: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}end_date'])!,
+      reason: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}reason']),
+      isSynced: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_synced'])!,
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+    );
+  }
+
+  @override
+  $TimeOffsTable createAlias(String alias) {
+    return $TimeOffsTable(attachedDatabase, alias);
+  }
+}
+
+class TimeOffDTO extends DataClass implements Insertable<TimeOffDTO> {
+  final int id;
+  final DateTime startDate;
+  final DateTime endDate;
+  final String? reason;
+  final bool isSynced;
+  final DateTime createdAt;
+  const TimeOffDTO(
+      {required this.id,
+      required this.startDate,
+      required this.endDate,
+      this.reason,
+      required this.isSynced,
+      required this.createdAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<int>(id);
+    map['start_date'] = Variable<DateTime>(startDate);
+    map['end_date'] = Variable<DateTime>(endDate);
+    if (!nullToAbsent || reason != null) {
+      map['reason'] = Variable<String>(reason);
+    }
+    map['is_synced'] = Variable<bool>(isSynced);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    return map;
+  }
+
+  TimeOffsCompanion toCompanion(bool nullToAbsent) {
+    return TimeOffsCompanion(
+      id: Value(id),
+      startDate: Value(startDate),
+      endDate: Value(endDate),
+      reason:
+          reason == null && nullToAbsent ? const Value.absent() : Value(reason),
+      isSynced: Value(isSynced),
+      createdAt: Value(createdAt),
+    );
+  }
+
+  factory TimeOffDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TimeOffDTO(
+      id: serializer.fromJson<int>(json['id']),
+      startDate: serializer.fromJson<DateTime>(json['startDate']),
+      endDate: serializer.fromJson<DateTime>(json['endDate']),
+      reason: serializer.fromJson<String?>(json['reason']),
+      isSynced: serializer.fromJson<bool>(json['isSynced']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<int>(id),
+      'startDate': serializer.toJson<DateTime>(startDate),
+      'endDate': serializer.toJson<DateTime>(endDate),
+      'reason': serializer.toJson<String?>(reason),
+      'isSynced': serializer.toJson<bool>(isSynced),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+    };
+  }
+
+  TimeOffDTO copyWith(
+          {int? id,
+          DateTime? startDate,
+          DateTime? endDate,
+          Value<String?> reason = const Value.absent(),
+          bool? isSynced,
+          DateTime? createdAt}) =>
+      TimeOffDTO(
+        id: id ?? this.id,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        reason: reason.present ? reason.value : this.reason,
+        isSynced: isSynced ?? this.isSynced,
+        createdAt: createdAt ?? this.createdAt,
+      );
+  TimeOffDTO copyWithCompanion(TimeOffsCompanion data) {
+    return TimeOffDTO(
+      id: data.id.present ? data.id.value : this.id,
+      startDate: data.startDate.present ? data.startDate.value : this.startDate,
+      endDate: data.endDate.present ? data.endDate.value : this.endDate,
+      reason: data.reason.present ? data.reason.value : this.reason,
+      isSynced: data.isSynced.present ? data.isSynced.value : this.isSynced,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimeOffDTO(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('reason: $reason, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, startDate, endDate, reason, isSynced, createdAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TimeOffDTO &&
+          other.id == this.id &&
+          other.startDate == this.startDate &&
+          other.endDate == this.endDate &&
+          other.reason == this.reason &&
+          other.isSynced == this.isSynced &&
+          other.createdAt == this.createdAt);
+}
+
+class TimeOffsCompanion extends UpdateCompanion<TimeOffDTO> {
+  final Value<int> id;
+  final Value<DateTime> startDate;
+  final Value<DateTime> endDate;
+  final Value<String?> reason;
+  final Value<bool> isSynced;
+  final Value<DateTime> createdAt;
+  const TimeOffsCompanion({
+    this.id = const Value.absent(),
+    this.startDate = const Value.absent(),
+    this.endDate = const Value.absent(),
+    this.reason = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  });
+  TimeOffsCompanion.insert({
+    this.id = const Value.absent(),
+    required DateTime startDate,
+    required DateTime endDate,
+    this.reason = const Value.absent(),
+    this.isSynced = const Value.absent(),
+    this.createdAt = const Value.absent(),
+  })  : startDate = Value(startDate),
+        endDate = Value(endDate);
+  static Insertable<TimeOffDTO> custom({
+    Expression<int>? id,
+    Expression<DateTime>? startDate,
+    Expression<DateTime>? endDate,
+    Expression<String>? reason,
+    Expression<bool>? isSynced,
+    Expression<DateTime>? createdAt,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (startDate != null) 'start_date': startDate,
+      if (endDate != null) 'end_date': endDate,
+      if (reason != null) 'reason': reason,
+      if (isSynced != null) 'is_synced': isSynced,
+      if (createdAt != null) 'created_at': createdAt,
+    });
+  }
+
+  TimeOffsCompanion copyWith(
+      {Value<int>? id,
+      Value<DateTime>? startDate,
+      Value<DateTime>? endDate,
+      Value<String?>? reason,
+      Value<bool>? isSynced,
+      Value<DateTime>? createdAt}) {
+    return TimeOffsCompanion(
+      id: id ?? this.id,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      reason: reason ?? this.reason,
+      isSynced: isSynced ?? this.isSynced,
+      createdAt: createdAt ?? this.createdAt,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<int>(id.value);
+    }
+    if (startDate.present) {
+      map['start_date'] = Variable<DateTime>(startDate.value);
+    }
+    if (endDate.present) {
+      map['end_date'] = Variable<DateTime>(endDate.value);
+    }
+    if (reason.present) {
+      map['reason'] = Variable<String>(reason.value);
+    }
+    if (isSynced.present) {
+      map['is_synced'] = Variable<bool>(isSynced.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TimeOffsCompanion(')
+          ..write('id: $id, ')
+          ..write('startDate: $startDate, ')
+          ..write('endDate: $endDate, ')
+          ..write('reason: $reason, ')
+          ..write('isSynced: $isSynced, ')
+          ..write('createdAt: $createdAt')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7440,6 +7776,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $MobilityModulesTable mobilityModules =
       $MobilityModulesTable(this);
   late final $MobilityPhasesTable mobilityPhases = $MobilityPhasesTable(this);
+  late final $TimeOffsTable timeOffs = $TimeOffsTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final ConversationDao conversationDao =
@@ -7449,6 +7786,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final TrainingPlanDao trainingPlanDao =
       TrainingPlanDao(this as AppDatabase);
   late final BiomarkerDao biomarkerDao = BiomarkerDao(this as AppDatabase);
+  late final TimeOffDao timeOffDao = TimeOffDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7466,7 +7804,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         biomarkers,
         strengthExercises,
         mobilityModules,
-        mobilityPhases
+        mobilityPhases,
+        timeOffs
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -12719,6 +13058,180 @@ typedef $$MobilityPhasesTableProcessedTableManager = ProcessedTableManager<
     (MobilityPhaseDTO, $$MobilityPhasesTableReferences),
     MobilityPhaseDTO,
     PrefetchHooks Function({bool moduleId})>;
+typedef $$TimeOffsTableCreateCompanionBuilder = TimeOffsCompanion Function({
+  Value<int> id,
+  required DateTime startDate,
+  required DateTime endDate,
+  Value<String?> reason,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+});
+typedef $$TimeOffsTableUpdateCompanionBuilder = TimeOffsCompanion Function({
+  Value<int> id,
+  Value<DateTime> startDate,
+  Value<DateTime> endDate,
+  Value<String?> reason,
+  Value<bool> isSynced,
+  Value<DateTime> createdAt,
+});
+
+class $$TimeOffsTableFilterComposer
+    extends Composer<_$AppDatabase, $TimeOffsTable> {
+  $$TimeOffsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get reason => $composableBuilder(
+      column: $table.reason, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$TimeOffsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TimeOffsTable> {
+  $$TimeOffsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<int> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get startDate => $composableBuilder(
+      column: $table.startDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get endDate => $composableBuilder(
+      column: $table.endDate, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get reason => $composableBuilder(
+      column: $table.reason, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<bool> get isSynced => $composableBuilder(
+      column: $table.isSynced, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$TimeOffsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TimeOffsTable> {
+  $$TimeOffsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<int> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get startDate =>
+      $composableBuilder(column: $table.startDate, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get endDate =>
+      $composableBuilder(column: $table.endDate, builder: (column) => column);
+
+  GeneratedColumn<String> get reason =>
+      $composableBuilder(column: $table.reason, builder: (column) => column);
+
+  GeneratedColumn<bool> get isSynced =>
+      $composableBuilder(column: $table.isSynced, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+}
+
+class $$TimeOffsTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $TimeOffsTable,
+    TimeOffDTO,
+    $$TimeOffsTableFilterComposer,
+    $$TimeOffsTableOrderingComposer,
+    $$TimeOffsTableAnnotationComposer,
+    $$TimeOffsTableCreateCompanionBuilder,
+    $$TimeOffsTableUpdateCompanionBuilder,
+    (TimeOffDTO, BaseReferences<_$AppDatabase, $TimeOffsTable, TimeOffDTO>),
+    TimeOffDTO,
+    PrefetchHooks Function()> {
+  $$TimeOffsTableTableManager(_$AppDatabase db, $TimeOffsTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TimeOffsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TimeOffsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TimeOffsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            Value<DateTime> startDate = const Value.absent(),
+            Value<DateTime> endDate = const Value.absent(),
+            Value<String?> reason = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              TimeOffsCompanion(
+            id: id,
+            startDate: startDate,
+            endDate: endDate,
+            reason: reason,
+            isSynced: isSynced,
+            createdAt: createdAt,
+          ),
+          createCompanionCallback: ({
+            Value<int> id = const Value.absent(),
+            required DateTime startDate,
+            required DateTime endDate,
+            Value<String?> reason = const Value.absent(),
+            Value<bool> isSynced = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+          }) =>
+              TimeOffsCompanion.insert(
+            id: id,
+            startDate: startDate,
+            endDate: endDate,
+            reason: reason,
+            isSynced: isSynced,
+            createdAt: createdAt,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$TimeOffsTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $TimeOffsTable,
+    TimeOffDTO,
+    $$TimeOffsTableFilterComposer,
+    $$TimeOffsTableOrderingComposer,
+    $$TimeOffsTableAnnotationComposer,
+    $$TimeOffsTableCreateCompanionBuilder,
+    $$TimeOffsTableUpdateCompanionBuilder,
+    (TimeOffDTO, BaseReferences<_$AppDatabase, $TimeOffsTable, TimeOffDTO>),
+    TimeOffDTO,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -12749,4 +13262,6 @@ class $AppDatabaseManager {
       $$MobilityModulesTableTableManager(_db, _db.mobilityModules);
   $$MobilityPhasesTableTableManager get mobilityPhases =>
       $$MobilityPhasesTableTableManager(_db, _db.mobilityPhases);
+  $$TimeOffsTableTableManager get timeOffs =>
+      $$TimeOffsTableTableManager(_db, _db.timeOffs);
 }

@@ -8,6 +8,7 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
+import '../../../shared/domain/entities/time_off_entry.dart';
 import '../providers/calendar_provider.dart';
 
 /// Visual style variant for calendar day cells.
@@ -31,11 +32,14 @@ class CalendarDayCell extends ConsumerWidget {
   final CalendarDayCellStyle style;
   final double? height;
 
+  final TimeOffEntry? timeOff;
+
   const CalendarDayCell({
     super.key,
     required this.day,
     required this.workouts,
     this.block,
+    this.timeOff,
     required this.isSelected,
     this.style = CalendarDayCellStyle.expanded,
     this.height,
@@ -45,15 +49,22 @@ class CalendarDayCell extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isToday = DateUtils.isSameDay(day, DateTime.now());
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isTimeOff = timeOff != null;
 
-    // Background color – always neutral white/surface as per user request
-    final Color backgroundColor =
-        isDark ? AppColors.surface : AppColors.surfaceLight;
+    // Background color
+    // Background color
+    Color backgroundColor = isDark ? AppColors.surface : AppColors.surfaceLight;
+    if (isTimeOff) {
+      backgroundColor = isDark
+          ? const Color(0xFF2A2A2A) // Slightly lighter dark
+          : const Color(0xFFF1F1F1); // Light grey for disabled look
+    }
 
     // Cells are no longer bold colored, so pips/text should use standard colors
     const bool hasBoldColor = false;
 
     // Border color for selection/today states
+    // If Time Off, use a subtle dashed effect or just a muted border (we simulate dashed with opacity for now)
     final Color borderColor = isSelected
         ? (isDark ? AppColors.retroAccent : Colors.black)
         : isToday
@@ -79,6 +90,7 @@ class CalendarDayCell extends ConsumerWidget {
           border: Border.all(
             color: borderColor,
             width: borderWidth,
+            // If we could do dashed borders easily with BoxDecoration we would, but solid is fine.
           ),
           boxShadow: isSelected
               ? (isDark ? AppShadows.retroDark : AppShadows.retro)
@@ -115,12 +127,14 @@ class CalendarDayCell extends ConsumerWidget {
           day.day.toString(),
           style: AppTextStyles.h4.copyWith(
             fontSize: 18,
-            color: textColor,
+            color: timeOff != null
+                ? textColor.withValues(alpha: 0.5)
+                : textColor, // Fade number if off
             fontWeight: FontWeight.w900,
             height: 1.1,
           ),
         ),
-        if (workouts.isNotEmpty) ...[
+        if (workouts.isNotEmpty && timeOff == null) ...[
           const SizedBox(height: 6),
           ...workouts
               .take(2)
@@ -157,19 +171,22 @@ class CalendarDayCell extends ConsumerWidget {
                 day.day.toString(),
                 style: AppTextStyles.h4.copyWith(
                   fontSize: 18,
-                  color: textColor,
+                  color: timeOff != null
+                      ? textColor.withValues(alpha: 0.5)
+                      : textColor,
                   fontWeight: FontWeight.w900,
                   height: 1,
                 ),
               ),
               const SizedBox(height: 2),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: workouts
-                    .take(3)
-                    .map((w) => _buildWorkoutPip(context, w, hasBoldColor))
-                    .toList(),
-              ),
+              if (timeOff == null)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: workouts
+                      .take(3)
+                      .map((w) => _buildWorkoutPip(context, w, hasBoldColor))
+                      .toList(),
+                ),
             ],
           ),
         ),

@@ -10,6 +10,7 @@ import '../../../developer/presentation/widgets/debug_overlay.dart';
 import 'package:flutter/foundation.dart';
 import '../../../shared/presentation/widgets/ash_bottom_action_bar.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../calendar/presentation/mixins/time_off_handler_mixin.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -18,7 +19,8 @@ class HomeScreen extends ConsumerStatefulWidget {
   ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends ConsumerState<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen>
+    with TimeOffHandlerMixin {
   final PageController _pageController = PageController(initialPage: 0);
   int _currentPage = 0;
 
@@ -190,7 +192,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           label: 'Add Time Off',
           color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
           onTap: () {
-            // TODO: Navigate to time off screen
+            handlePlanTimeOff(context, ref);
           },
         ),
       ],

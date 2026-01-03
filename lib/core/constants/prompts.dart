@@ -9,6 +9,7 @@ CORE DIRECTIVES:
 2. PHASE SKELETON: View plans as a sequence of Phases (Base, Build, Peak, Taper). If a plan is disrupted, re-balance the remaining phases to protect the goal.
 3. THE HONESTY PROTOCOL: If a user's consistency makes their goal unsafe/unreachable, you MUST proactively suggest a safer alternative goal.
 4. ADAPTIVE REPAIR: For disruptions > 3 days, perform a "Strategic Repair" by re-generating the current and future blocks rather than just sliding dates.
+5. SCHEDULED TIME OFF: Respect the `scheduledTimeOff` context. Do NOT schedule any workouts during these dates. Adjust the volume before and after these gaps to maintain progression safely.
 
 STRENGTH PRINCIPLES:
 - Focus on runner-specific bodyweight and functional exercises.
@@ -122,6 +123,11 @@ CRITICAL: Use the provided JSON schema.
     - Index 0 corresponds to `dayNumber: 1`. 
     - Example: If `upcomingWeekdays[0]` is 'Saturday' and you want a Long Run, schedule it on `dayNumber: 1`.
     - You MUST align your `dayNumber` selection with the user's `availableDays` and prefer weekends for Long Runs.
+
+8. SCHEDULE CONSISTENCY (Adjust/Repair Mode):
+    - If `futurePlan` is provided, use it to balance stability with optimization:
+    - **IMMEDIATE STABILITY (Days 1-4)**: Prioritize keeping the training days and workout types from the `futurePlan`. Only modify volume/intensity if required by the adjustment/repair logic. Do NOT move a Thursday session to Friday if it falls within this window.
+    - **OPTIMIZATION HORIZON (Days 5+)**: You have more freedom to re-calculate and shift workouts to better fit the phase goals and user's `availableDays`. Consistency with the original training rhythm is still preferred but is secondary to optimizing the plan for the objective.
 ''';
 
   static const String adjustWorkoutTask = '''
@@ -136,6 +142,26 @@ Reschedule the provided workouts based on the user's constraints.
 Ensure adequate recovery between key sessions.
 Avoid prohibited stacking (e.g., Hard Run + Leg Strength).
 Return an array of objects with 'id' and new 'scheduledDate'.
+''';
+
+  static const String strategicRepairTask = '''
+The user has missed significant time or is returning from a disruption.
+Last completed workout: [Context Dependent].
+
+TASK:
+Generate a "Return to Training" block starting tomorrow.
+1. BRIDGE BLOCK: Create a short (3-7 day) block to ramp volume back up.
+   - Use "Return-to-Training" volume reduction (start at ~50-70% of previous volume).
+   - Focus on easy aerobic volume and mobility.
+2. RESUME PLAN: After the bridge, resume the original plan structure, but adjust starting intensity if needed to match the new fitness level.
+
+CONSTRAINTS:
+- First workout MUST be [Easy Run / Mobility] to test readiness.
+- NO high-intensity intervals in the first 3 days of return.
+- If the break was for Time Off, prioritize building back to the original phase intensity gradually.
+- REFERENCE ORIGINAL PLAN: Look at the `futurePlan` in context.
+    - For the **first 4 days**, keep the training days and workout types (e.g., Saturday Long Run remains on Saturday) to maintain immediate stability. 
+    - For **days 5 onwards**, you may re-calculate and optimize the schedule more freely to best serve the training objective.
 ''';
 
   static const String coachingChatTask = '''

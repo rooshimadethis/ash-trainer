@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
+import '../../../shared/domain/entities/time_off_entry.dart';
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../providers/calendar_provider.dart';
+import '../providers/time_off_provider.dart';
+import 'package:collection/collection.dart';
 import 'package:intl/intl.dart';
 import '../widgets/calendar_nav_button.dart';
 import '../widgets/calendar_day_cell.dart';
@@ -19,6 +22,7 @@ class WeeklyView extends ConsumerWidget {
     final selectedDate = ref.watch(selectedDateProvider);
     final weeklyWorkoutsAsync = ref.watch(weeklyWorkoutsProvider);
     final weeklyBlocksAsync = ref.watch(weeklyBlocksProvider);
+    final timeOffAsync = ref.watch(timeOffControllerProvider);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
@@ -33,8 +37,13 @@ class WeeklyView extends ConsumerWidget {
             height: 120,
             child: weeklyWorkoutsAsync.when(
               data: (workouts) => weeklyBlocksAsync.when(
-                data: (blocks) =>
-                    _buildWeekGrid(startOfWeek, workouts, blocks, selectedDate),
+                data: (blocks) => timeOffAsync.when(
+                  data: (timeOffs) => _buildWeekGrid(
+                      startOfWeek, workouts, blocks, timeOffs, selectedDate),
+                  loading: () =>
+                      const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (err, stack) => Center(child: Text('Error: $err')),
               ),
@@ -62,10 +71,15 @@ class WeeklyView extends ConsumerWidget {
           // Selected day workout list
           weeklyWorkoutsAsync.when(
             data: (workouts) => weeklyBlocksAsync.when(
-              data: (blocks) => SelectedDayWorkoutList(
-                selectedDate: selectedDate,
-                allWorkouts: workouts,
-                blocks: blocks,
+              data: (blocks) => timeOffAsync.when(
+                data: (timeOffs) => SelectedDayWorkoutList(
+                  selectedDate: selectedDate,
+                  allWorkouts: workouts,
+                  blocks: blocks,
+                  timeOffs: timeOffs,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
@@ -141,10 +155,12 @@ class WeeklyView extends ConsumerWidget {
     DateTime startOfWeek,
     List<Workout> workouts,
     List<TrainingBlock> blocks,
+    List<TimeOffEntry> timeOffs,
     DateTime selectedDate,
   ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: List.generate(7, (index) {
         final day = startOfWeek.add(Duration(days: index));
         final dayWorkouts = workouts
@@ -154,11 +170,20 @@ class WeeklyView extends ConsumerWidget {
         // Find block for this day
         final dayBlock = _findBlockForDay(day, blocks);
 
+        // Find time off for this day
+        final dayTimeOff = timeOffs.firstWhereOrNull((t) {
+          final isStart = DateUtils.isSameDay(day, t.startDate);
+          final isEnd = DateUtils.isSameDay(day, t.endDate);
+          final isBetween = day.isAfter(t.startDate) && day.isBefore(t.endDate);
+          return isStart || isEnd || isBetween;
+        });
+
         return Expanded(
           child: CalendarDayCell(
             day: day,
             workouts: dayWorkouts,
             block: dayBlock,
+            timeOff: dayTimeOff,
             isSelected: DateUtils.isSameDay(day, selectedDate),
             style: CalendarDayCellStyle.expanded,
           ),

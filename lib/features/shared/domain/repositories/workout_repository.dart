@@ -63,4 +63,7 @@ abstract class WorkoutRepository {
     required String goalId,
     required DateTime fromDate,
   });
+
+  /// Delete a single workout by ID
+  Future<void> deleteWorkout(String id);
 }

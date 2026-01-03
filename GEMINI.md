@@ -26,6 +26,15 @@ The AI receives structured philosophy guidance through context models. This enab
 
 **Context Models**: `PlanGenerationPhilosophy` includes `StrengthGuidance` and `MobilityGuidance` for balanced three-pillar plans.
 
+#### Planning Strategy
+*   **Modes**:
+    *   `PlanningMode.initial`: Standard generation for new plans.
+    *   `PlanningMode.repair`: Reactive repair for past missed workouts (Bridge Block).
+    *   `PlanningMode.adjust`: Proactive adjustment for future schedule changes (e.g., upcoming Time Off).
+*   **Time Off Handling**:
+    *   Adding Time Off > 2 days automatically triggers `PlanningMode.adjust`.
+    *   Context building logic (`BuildPlanningContext`) generates specific instructions to taper volume before the break and ramp up safely after.
+
 ### 🏗️ Architecture & Data
 * **[Data Models](docs/architecture/data_models/_index.md)** (`docs/architecture/data_models/_index.md`): Schema definitions, core entities (User, Goals, Workouts), and database strategy.
   * **Current Schema**: Includes detailed tables for `StrengthExercises`, `MobilityModules`, and `MobilityPhases`. The `MobilityPhases` table supports structured intensity tracking with `intensityNotes` and `irradiationPct` fields.

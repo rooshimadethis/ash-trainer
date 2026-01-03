@@ -9,6 +9,9 @@ import 'package:intl/intl.dart';
 import '../widgets/calendar_nav_button.dart';
 import '../widgets/calendar_day_cell.dart';
 import '../widgets/selected_day_workout_list.dart';
+import '../../../shared/domain/entities/time_off_entry.dart';
+import '../providers/time_off_provider.dart';
+import 'package:collection/collection.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -19,6 +22,7 @@ class MonthlyView extends ConsumerWidget {
     final monthlyBlocksAsync = ref.watch(monthlyBlocksProvider);
     final focusedMonth = ref.watch(monthlyMonthProvider);
     final selectedDate = ref.watch(selectedDateProvider);
+    final timeOffAsync = ref.watch(timeOffControllerProvider);
 
     // Calculate start of range: Monday of the week containing the first of the month
     final startOfRange =
@@ -30,6 +34,7 @@ class MonthlyView extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _buildHeader(context, ref, focusedMonth),
+
           if (!DateUtils.isSameMonth(focusedMonth, DateTime.now())) ...[
             const SizedBox(height: 8),
             GestureDetector(
@@ -58,12 +63,20 @@ class MonthlyView extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(vertical: 8),
             child: monthlyWorkoutsAsync.when(
               data: (workouts) => monthlyBlocksAsync.when(
-                data: (blocks) => _buildMonthlyGrid(
-                  startOfRange,
-                  focusedMonth,
-                  workouts,
-                  blocks,
-                  selectedDate,
+                data: (blocks) => timeOffAsync.when(
+                  data: (timeOffs) => _buildMonthlyGrid(
+                    startOfRange,
+                    focusedMonth,
+                    workouts,
+                    blocks,
+                    timeOffs,
+                    selectedDate,
+                  ),
+                  loading: () => const SizedBox(
+                      height: 200,
+                      child: Center(child: CircularProgressIndicator())),
+                  error: (err, stack) => SizedBox(
+                      height: 200, child: Center(child: Text('Error: $err'))),
                 ),
                 loading: () => const SizedBox(
                     height: 200,
@@ -98,10 +111,15 @@ class MonthlyView extends ConsumerWidget {
           // Selected day workout list
           monthlyWorkoutsAsync.when(
             data: (workouts) => monthlyBlocksAsync.when(
-              data: (blocks) => SelectedDayWorkoutList(
-                selectedDate: selectedDate,
-                allWorkouts: workouts,
-                blocks: blocks,
+              data: (blocks) => timeOffAsync.when(
+                data: (timeOffs) => SelectedDayWorkoutList(
+                  selectedDate: selectedDate,
+                  allWorkouts: workouts,
+                  blocks: blocks,
+                  timeOffs: timeOffs,
+                ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(child: Text('Error: $err')),
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
@@ -200,6 +218,7 @@ class MonthlyView extends ConsumerWidget {
     DateTime focusedMonth,
     List<Workout> workouts,
     List<TrainingBlock> blocks,
+    List<TimeOffEntry> timeOffs,
     DateTime selectedDate,
   ) {
     // Calculate total weeks needed for this month
@@ -228,6 +247,7 @@ class MonthlyView extends ConsumerWidget {
             focusedMonth: focusedMonth,
             workouts: weekWorkouts,
             blocks: blocks,
+            timeOffs: timeOffs,
             selectedDate: selectedDate,
           );
         }),
@@ -241,6 +261,7 @@ class _WeekRow extends StatelessWidget {
   final DateTime focusedMonth;
   final List<Workout> workouts;
   final List<TrainingBlock> blocks;
+  final List<TimeOffEntry> timeOffs;
   final DateTime selectedDate;
 
   const _WeekRow({
@@ -248,6 +269,7 @@ class _WeekRow extends StatelessWidget {
     required this.focusedMonth,
     required this.workouts,
     required this.blocks,
+    required this.timeOffs,
     required this.selectedDate,
   });
 
@@ -278,11 +300,21 @@ class _WeekRow extends StatelessWidget {
           // Find block for this day
           final dayBlock = _findBlockForDay(day);
 
+          // Find time off for this day
+          final dayTimeOff = timeOffs.firstWhereOrNull((t) {
+            final isStart = DateUtils.isSameDay(day, t.startDate);
+            final isEnd = DateUtils.isSameDay(day, t.endDate);
+            final isBetween =
+                day.isAfter(t.startDate) && day.isBefore(t.endDate);
+            return isStart || isEnd || isBetween;
+          });
+
           return Expanded(
             child: CalendarDayCell(
               day: day,
               workouts: dayWorkouts,
               block: dayBlock,
+              timeOff: dayTimeOff,
               isSelected: isSelected,
               style: CalendarDayCellStyle.compact,
               height: 78,

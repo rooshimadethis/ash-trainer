@@ -84,6 +84,7 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
         ref.read(userRepositoryProvider),
         ref.read(goalRepositoryProvider),
         ref.read(workoutRepositoryProvider),
+        ref.read(timeOffRepositoryProvider),
       );
 
       final contextData = await builder.execute(
@@ -119,7 +120,8 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
         _output = 'Loaded context for Goal: ${selectedGoal.id}';
       });
     } catch (e, stack) {
-      AppLogger.e('Error loading data in AI Test Screen', error: e, stackTrace: stack);
+      AppLogger.e('Error loading data in AI Test Screen',
+          error: e, stackTrace: stack);
       setState(() => _output = 'Error loading data: $e');
     }
   }
@@ -181,6 +183,8 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
           },
         ),
         trainingHistory: [],
+        futurePlan: [],
+        scheduledTimeOff: [],
         philosophy: buildPlanPhilosophy(
           goal: Goal(
             id: 'test-goal',

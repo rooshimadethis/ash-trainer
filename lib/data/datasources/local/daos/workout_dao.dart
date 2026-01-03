@@ -63,6 +63,10 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
     return (delete(workouts)..where((t) => t.goalId.equals(goalId))).go();
   }
 
+  Future<int> deleteWorkout(String id) {
+    return (delete(workouts)..where((t) => t.id.equals(id))).go();
+  }
+
   Future<DateTime?> getLastScheduledWorkoutDate(int goalId) {
     return (select(workouts)
           ..where((t) => t.goalId.equals(goalId))

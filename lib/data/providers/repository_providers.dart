@@ -5,6 +5,7 @@ import '../../features/shared/domain/repositories/workout_repository.dart';
 import '../../features/shared/domain/repositories/conversation_repository.dart';
 import '../../features/shared/domain/repositories/context_repository.dart';
 import '../../features/shared/domain/repositories/biomarker_repository.dart';
+import '../../features/shared/domain/repositories/time_off_repository.dart';
 import '../../infrastructure/providers/service_providers.dart';
 import '../repositories/user_repository_impl.dart';
 import '../repositories/goal_repository_impl.dart';
@@ -12,6 +13,7 @@ import '../repositories/workout_repository_impl.dart';
 import '../repositories/conversation_repository_impl.dart';
 import '../repositories/context_repository_impl.dart';
 import '../repositories/biomarker_repository_impl.dart';
+import '../repositories/time_off_repository_impl.dart';
 
 final userRepositoryProvider = Provider<UserRepository>((ref) {
   final db = ref.read(driftDatabaseProvider);
@@ -42,4 +44,9 @@ final biomarkerRepositoryProvider = Provider<BiomarkerRepository>((ref) {
   final db = ref.read(driftDatabaseProvider);
   // Single-user assumption: userId = 1
   return BiomarkerRepositoryImpl(db.biomarkerDao, 1);
+});
+
+final timeOffRepositoryProvider = Provider<TimeOffRepository>((ref) {
+  final db = ref.read(driftDatabaseProvider);
+  return TimeOffRepositoryImpl(db.timeOffDao);
 });

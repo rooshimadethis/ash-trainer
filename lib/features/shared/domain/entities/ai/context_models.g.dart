@@ -14,6 +14,12 @@ _$PlanGenerationContextImpl _$$PlanGenerationContextImplFromJson(
       trainingHistory: (json['trainingHistory'] as List<dynamic>)
           .map((e) => WorkoutSummary.fromJson(e as Map<String, dynamic>))
           .toList(),
+      futurePlan: (json['futurePlan'] as List<dynamic>)
+          .map((e) => WorkoutSummary.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      scheduledTimeOff: (json['scheduledTimeOff'] as List<dynamic>)
+          .map((e) => TimeOffContext.fromJson(e as Map<String, dynamic>))
+          .toList(),
       config: PlanningConfig.fromJson(json['config'] as Map<String, dynamic>),
       philosophy: PlanGenerationPhilosophy.fromJson(
           json['philosophy'] as Map<String, dynamic>),
@@ -25,6 +31,8 @@ Map<String, dynamic> _$$PlanGenerationContextImplToJson(
       'user': instance.user,
       'goal': instance.goal,
       'trainingHistory': instance.trainingHistory,
+      'futurePlan': instance.futurePlan,
+      'scheduledTimeOff': instance.scheduledTimeOff,
       'config': instance.config,
       'philosophy': instance.philosophy,
     };
@@ -52,6 +60,7 @@ const _$PlanningModeEnumMap = {
   PlanningMode.initial: 'initial',
   PlanningMode.extend: 'extend',
   PlanningMode.repair: 'repair',
+  PlanningMode.adjust: 'adjust',
 };
 
 _$PlanGenerationPhilosophyImpl _$$PlanGenerationPhilosophyImplFromJson(
@@ -235,6 +244,21 @@ Map<String, dynamic> _$$WorkoutSummaryImplToJson(
       'plannedDistance': instance.plannedDistance,
       'actualDistance': instance.actualDistance,
       'rpe': instance.rpe,
+    };
+
+_$TimeOffContextImpl _$$TimeOffContextImplFromJson(Map<String, dynamic> json) =>
+    _$TimeOffContextImpl(
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      reason: json['reason'] as String?,
+    );
+
+Map<String, dynamic> _$$TimeOffContextImplToJson(
+        _$TimeOffContextImpl instance) =>
+    <String, dynamic>{
+      'startDate': instance.startDate.toIso8601String(),
+      'endDate': instance.endDate.toIso8601String(),
+      'reason': instance.reason,
     };
 
 _$CoachingChatContextImpl _$$CoachingChatContextImplFromJson(

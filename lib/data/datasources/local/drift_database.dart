@@ -23,6 +23,8 @@ import 'tables/workout_details_tables.dart';
 import 'daos/workout_dao.dart';
 import 'daos/training_plan_dao.dart';
 import 'daos/biomarker_dao.dart';
+import 'tables/time_off_table.dart';
+import 'daos/time_off_dao.dart';
 
 part 'drift_database.g.dart';
 
@@ -40,6 +42,7 @@ part 'drift_database.g.dart';
   StrengthExercises,
   MobilityModules,
   MobilityPhases,
+  TimeOffs,
 ], daos: [
   UserDao,
   GoalDao,
@@ -48,6 +51,7 @@ part 'drift_database.g.dart';
   WorkoutDao,
   TrainingPlanDao,
   BiomarkerDao,
+  TimeOffDao,
 ])
 class AppDatabase extends _$AppDatabase {
   static int _instanceCount = 0;
@@ -61,7 +65,7 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -100,6 +104,10 @@ class AppDatabase extends _$AppDatabase {
               // Add structured fields for mobility phase intensity tracking
               await m.addColumn(mobilityPhases, mobilityPhases.intensityNotes);
               await m.addColumn(mobilityPhases, mobilityPhases.irradiationPct);
+            }
+            if (i == 7) {
+              // Add Time Off table
+              await m.createTable(timeOffs);
             }
           }
         },

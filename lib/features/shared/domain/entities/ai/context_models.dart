@@ -8,12 +8,13 @@ part 'context_models.freezed.dart';
 part 'context_models.g.dart';
 
 @freezed
-@freezed
 class PlanGenerationContext with _$PlanGenerationContext {
   const factory PlanGenerationContext({
     required UserContext user,
     required GoalContext goal,
     required List<WorkoutSummary> trainingHistory,
+    required List<WorkoutSummary> futurePlan, // Original plan for reference
+    required List<TimeOffContext> scheduledTimeOff,
     required PlanningConfig config,
     required PlanGenerationPhilosophy philosophy,
   }) = _PlanGenerationContext;
@@ -29,6 +30,11 @@ class PlanGenerationContext with _$PlanGenerationContext {
       'trainingHistory': instance.trainingHistory
           .map((w) => WorkoutSummary.activeToJson(w))
           .toList(),
+      'futurePlan': instance.futurePlan
+          .map((w) => WorkoutSummary.activeToJson(w))
+          .toList(),
+      'scheduledTimeOff':
+          instance.scheduledTimeOff.map((t) => t.toJson()).toList(),
       'config': instance.config.toJson(),
       'philosophy': instance.philosophy.toJson(),
     };
@@ -38,7 +44,8 @@ class PlanGenerationContext with _$PlanGenerationContext {
 enum PlanningMode {
   initial, // Start from scratch
   extend, // Append to existing plan
-  repair // Overwrite future due to missed days
+  repair, // Overwrite future due to missed days
+  adjust, // Re-plan due to schedule changes (e.g. Time Off)
 }
 
 @freezed
@@ -273,6 +280,18 @@ class WorkoutSummary with _$WorkoutSummary {
       ..removeWhere(
           (key, value) => value == null || (value is Map && value.isEmpty));
   }
+}
+
+@freezed
+class TimeOffContext with _$TimeOffContext {
+  const factory TimeOffContext({
+    required DateTime startDate,
+    required DateTime endDate,
+    String? reason,
+  }) = _TimeOffContext;
+
+  factory TimeOffContext.fromJson(Map<String, dynamic> json) =>
+      _$TimeOffContextFromJson(json);
 }
 
 @freezed

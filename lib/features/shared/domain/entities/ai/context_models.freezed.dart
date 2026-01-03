@@ -25,6 +25,10 @@ mixin _$PlanGenerationContext {
   GoalContext get goal => throw _privateConstructorUsedError;
   List<WorkoutSummary> get trainingHistory =>
       throw _privateConstructorUsedError;
+  List<WorkoutSummary> get futurePlan =>
+      throw _privateConstructorUsedError; // Original plan for reference
+  List<TimeOffContext> get scheduledTimeOff =>
+      throw _privateConstructorUsedError;
   PlanningConfig get config => throw _privateConstructorUsedError;
   PlanGenerationPhilosophy get philosophy => throw _privateConstructorUsedError;
 
@@ -48,6 +52,8 @@ abstract class $PlanGenerationContextCopyWith<$Res> {
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
+      List<WorkoutSummary> futurePlan,
+      List<TimeOffContext> scheduledTimeOff,
       PlanningConfig config,
       PlanGenerationPhilosophy philosophy});
 
@@ -76,6 +82,8 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
+    Object? futurePlan = null,
+    Object? scheduledTimeOff = null,
     Object? config = null,
     Object? philosophy = null,
   }) {
@@ -92,6 +100,14 @@ class _$PlanGenerationContextCopyWithImpl<$Res,
           ? _value.trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
+      futurePlan: null == futurePlan
+          ? _value.futurePlan
+          : futurePlan // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutSummary>,
+      scheduledTimeOff: null == scheduledTimeOff
+          ? _value.scheduledTimeOff
+          : scheduledTimeOff // ignore: cast_nullable_to_non_nullable
+              as List<TimeOffContext>,
       config: null == config
           ? _value.config
           : config // ignore: cast_nullable_to_non_nullable
@@ -157,6 +173,8 @@ abstract class _$$PlanGenerationContextImplCopyWith<$Res>
       {UserContext user,
       GoalContext goal,
       List<WorkoutSummary> trainingHistory,
+      List<WorkoutSummary> futurePlan,
+      List<TimeOffContext> scheduledTimeOff,
       PlanningConfig config,
       PlanGenerationPhilosophy philosophy});
 
@@ -187,6 +205,8 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
     Object? user = null,
     Object? goal = null,
     Object? trainingHistory = null,
+    Object? futurePlan = null,
+    Object? scheduledTimeOff = null,
     Object? config = null,
     Object? philosophy = null,
   }) {
@@ -203,6 +223,14 @@ class __$$PlanGenerationContextImplCopyWithImpl<$Res>
           ? _value._trainingHistory
           : trainingHistory // ignore: cast_nullable_to_non_nullable
               as List<WorkoutSummary>,
+      futurePlan: null == futurePlan
+          ? _value._futurePlan
+          : futurePlan // ignore: cast_nullable_to_non_nullable
+              as List<WorkoutSummary>,
+      scheduledTimeOff: null == scheduledTimeOff
+          ? _value._scheduledTimeOff
+          : scheduledTimeOff // ignore: cast_nullable_to_non_nullable
+              as List<TimeOffContext>,
       config: null == config
           ? _value.config
           : config // ignore: cast_nullable_to_non_nullable
@@ -222,9 +250,13 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
       {required this.user,
       required this.goal,
       required final List<WorkoutSummary> trainingHistory,
+      required final List<WorkoutSummary> futurePlan,
+      required final List<TimeOffContext> scheduledTimeOff,
       required this.config,
       required this.philosophy})
-      : _trainingHistory = trainingHistory;
+      : _trainingHistory = trainingHistory,
+        _futurePlan = futurePlan,
+        _scheduledTimeOff = scheduledTimeOff;
 
   factory _$PlanGenerationContextImpl.fromJson(Map<String, dynamic> json) =>
       _$$PlanGenerationContextImplFromJson(json);
@@ -241,6 +273,25 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
     return EqualUnmodifiableListView(_trainingHistory);
   }
 
+  final List<WorkoutSummary> _futurePlan;
+  @override
+  List<WorkoutSummary> get futurePlan {
+    if (_futurePlan is EqualUnmodifiableListView) return _futurePlan;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_futurePlan);
+  }
+
+// Original plan for reference
+  final List<TimeOffContext> _scheduledTimeOff;
+// Original plan for reference
+  @override
+  List<TimeOffContext> get scheduledTimeOff {
+    if (_scheduledTimeOff is EqualUnmodifiableListView)
+      return _scheduledTimeOff;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_scheduledTimeOff);
+  }
+
   @override
   final PlanningConfig config;
   @override
@@ -248,7 +299,7 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
 
   @override
   String toString() {
-    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, config: $config, philosophy: $philosophy)';
+    return 'PlanGenerationContext(user: $user, goal: $goal, trainingHistory: $trainingHistory, futurePlan: $futurePlan, scheduledTimeOff: $scheduledTimeOff, config: $config, philosophy: $philosophy)';
   }
 
   @override
@@ -260,6 +311,10 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
             (identical(other.goal, goal) || other.goal == goal) &&
             const DeepCollectionEquality()
                 .equals(other._trainingHistory, _trainingHistory) &&
+            const DeepCollectionEquality()
+                .equals(other._futurePlan, _futurePlan) &&
+            const DeepCollectionEquality()
+                .equals(other._scheduledTimeOff, _scheduledTimeOff) &&
             (identical(other.config, config) || other.config == config) &&
             (identical(other.philosophy, philosophy) ||
                 other.philosophy == philosophy));
@@ -272,6 +327,8 @@ class _$PlanGenerationContextImpl implements _PlanGenerationContext {
       user,
       goal,
       const DeepCollectionEquality().hash(_trainingHistory),
+      const DeepCollectionEquality().hash(_futurePlan),
+      const DeepCollectionEquality().hash(_scheduledTimeOff),
       config,
       philosophy);
 
@@ -297,6 +354,8 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
           {required final UserContext user,
           required final GoalContext goal,
           required final List<WorkoutSummary> trainingHistory,
+          required final List<WorkoutSummary> futurePlan,
+          required final List<TimeOffContext> scheduledTimeOff,
           required final PlanningConfig config,
           required final PlanGenerationPhilosophy philosophy}) =
       _$PlanGenerationContextImpl;
@@ -310,6 +369,10 @@ abstract class _PlanGenerationContext implements PlanGenerationContext {
   GoalContext get goal;
   @override
   List<WorkoutSummary> get trainingHistory;
+  @override
+  List<WorkoutSummary> get futurePlan; // Original plan for reference
+  @override
+  List<TimeOffContext> get scheduledTimeOff;
   @override
   PlanningConfig get config;
   @override
@@ -2629,6 +2692,193 @@ abstract class _WorkoutSummary implements WorkoutSummary {
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
   _$$WorkoutSummaryImplCopyWith<_$WorkoutSummaryImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+TimeOffContext _$TimeOffContextFromJson(Map<String, dynamic> json) {
+  return _TimeOffContext.fromJson(json);
+}
+
+/// @nodoc
+mixin _$TimeOffContext {
+  DateTime get startDate => throw _privateConstructorUsedError;
+  DateTime get endDate => throw _privateConstructorUsedError;
+  String? get reason => throw _privateConstructorUsedError;
+
+  /// Serializes this TimeOffContext to a JSON map.
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+
+  /// Create a copy of TimeOffContext
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  $TimeOffContextCopyWith<TimeOffContext> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $TimeOffContextCopyWith<$Res> {
+  factory $TimeOffContextCopyWith(
+          TimeOffContext value, $Res Function(TimeOffContext) then) =
+      _$TimeOffContextCopyWithImpl<$Res, TimeOffContext>;
+  @useResult
+  $Res call({DateTime startDate, DateTime endDate, String? reason});
+}
+
+/// @nodoc
+class _$TimeOffContextCopyWithImpl<$Res, $Val extends TimeOffContext>
+    implements $TimeOffContextCopyWith<$Res> {
+  _$TimeOffContextCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  /// Create a copy of TimeOffContext
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? startDate = null,
+    Object? endDate = null,
+    Object? reason = freezed,
+  }) {
+    return _then(_value.copyWith(
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      reason: freezed == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$TimeOffContextImplCopyWith<$Res>
+    implements $TimeOffContextCopyWith<$Res> {
+  factory _$$TimeOffContextImplCopyWith(_$TimeOffContextImpl value,
+          $Res Function(_$TimeOffContextImpl) then) =
+      __$$TimeOffContextImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({DateTime startDate, DateTime endDate, String? reason});
+}
+
+/// @nodoc
+class __$$TimeOffContextImplCopyWithImpl<$Res>
+    extends _$TimeOffContextCopyWithImpl<$Res, _$TimeOffContextImpl>
+    implements _$$TimeOffContextImplCopyWith<$Res> {
+  __$$TimeOffContextImplCopyWithImpl(
+      _$TimeOffContextImpl _value, $Res Function(_$TimeOffContextImpl) _then)
+      : super(_value, _then);
+
+  /// Create a copy of TimeOffContext
+  /// with the given fields replaced by the non-null parameter values.
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? startDate = null,
+    Object? endDate = null,
+    Object? reason = freezed,
+  }) {
+    return _then(_$TimeOffContextImpl(
+      startDate: null == startDate
+          ? _value.startDate
+          : startDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      endDate: null == endDate
+          ? _value.endDate
+          : endDate // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+      reason: freezed == reason
+          ? _value.reason
+          : reason // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$TimeOffContextImpl implements _TimeOffContext {
+  const _$TimeOffContextImpl(
+      {required this.startDate, required this.endDate, this.reason});
+
+  factory _$TimeOffContextImpl.fromJson(Map<String, dynamic> json) =>
+      _$$TimeOffContextImplFromJson(json);
+
+  @override
+  final DateTime startDate;
+  @override
+  final DateTime endDate;
+  @override
+  final String? reason;
+
+  @override
+  String toString() {
+    return 'TimeOffContext(startDate: $startDate, endDate: $endDate, reason: $reason)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$TimeOffContextImpl &&
+            (identical(other.startDate, startDate) ||
+                other.startDate == startDate) &&
+            (identical(other.endDate, endDate) || other.endDate == endDate) &&
+            (identical(other.reason, reason) || other.reason == reason));
+  }
+
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  int get hashCode => Object.hash(runtimeType, startDate, endDate, reason);
+
+  /// Create a copy of TimeOffContext
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$TimeOffContextImplCopyWith<_$TimeOffContextImpl> get copyWith =>
+      __$$TimeOffContextImplCopyWithImpl<_$TimeOffContextImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$TimeOffContextImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _TimeOffContext implements TimeOffContext {
+  const factory _TimeOffContext(
+      {required final DateTime startDate,
+      required final DateTime endDate,
+      final String? reason}) = _$TimeOffContextImpl;
+
+  factory _TimeOffContext.fromJson(Map<String, dynamic> json) =
+      _$TimeOffContextImpl.fromJson;
+
+  @override
+  DateTime get startDate;
+  @override
+  DateTime get endDate;
+  @override
+  String? get reason;
+
+  /// Create a copy of TimeOffContext
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
+  _$$TimeOffContextImplCopyWith<_$TimeOffContextImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
 

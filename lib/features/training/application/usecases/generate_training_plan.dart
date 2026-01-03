@@ -38,7 +38,9 @@ class GenerateTrainingPlan {
     final response = await _aiService.generatePlan(
       context: context,
       systemPrompt: AIPrompts.ashPersona,
-      taskPrompt: AIPrompts.generatePlanTask,
+      taskPrompt: mode == PlanningMode.repair
+          ? AIPrompts.strategicRepairTask
+          : AIPrompts.generatePlanTask,
       responseSchema: AISchemas.trainingPlan,
     );
 

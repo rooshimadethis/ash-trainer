@@ -14,6 +14,7 @@ final buildPlanningContextProvider = Provider<BuildPlanningContext>((ref) {
     ref.watch(userRepositoryProvider),
     ref.watch(goalRepositoryProvider),
     ref.watch(workoutRepositoryProvider),
+    ref.watch(timeOffRepositoryProvider),
   );
 });
 

@@ -254,6 +254,11 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
     return _workoutDao.deleteFutureWorkouts(int.parse(goalId), fromDate);
   }
 
+  @override
+  Future<void> deleteWorkout(String id) {
+    return _workoutDao.deleteWorkout(id);
+  }
+
   /// Helper method to batch-load workout details for multiple workouts.
   /// This prevents N+1 query problems when loading workout lists.
   Future<List<Workout>> _hydrateWorkouts(List<WorkoutDTO> dtos) async {
