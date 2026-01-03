@@ -402,6 +402,18 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
             'Plan generation timed out. Ash is taking longer than expected.');
       }
 
+      // CRITICAL: Manually notify the main isolate's database instance that tables have changed.
+      // Since the background task (running in a separate Isolate via Workmanager) modified the DB file,
+      // the streams in this isolate won't know about it automatically.
+      final db = ref.read(driftDatabaseProvider);
+      db.markTablesUpdated({
+        db.workouts,
+        db.trainingBlocks,
+        db.phases,
+        db.goals,
+        db.aiTasks // Just in case
+      });
+
       ref.read(uiThinkingProvider.notifier).state = false;
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success

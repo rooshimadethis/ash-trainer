@@ -70,40 +70,8 @@ class TimeOffController extends _$TimeOffController {
         final activeGoal =
             await ref.read(goalRepositoryProvider).getActiveGoal();
         if (activeGoal != null) {
-          final taskId = "plan_gen_${activeGoal.id}";
           await _triggerAIAdjustment(duration: duration);
-
-          // Polling loop to wait for background task completion in foreground
-          // This ensures the UI stays in 'thinking' mode and refreshes once done
-          bool isDone = false;
-          int attempts = 0;
-          final dao = ref.read(aiTaskDaoProvider);
-
-          while (!isDone && attempts < 60) {
-            await Future.delayed(const Duration(seconds: 2));
-            try {
-              final task = await dao.getTask(taskId);
-              if (task == null) {
-                isDone = true;
-              }
-            } catch (e) {
-              AppLogger.w(
-                  'Polling task status failed (could be transient lock): $e');
-            }
-            attempts++;
-          }
-
-          // After AI task completes, invalidate the workouts providers to fetch fresh data
-          // from the disk (since background isolate's Drift doesn't trigger foreground streams)
-          ref.invalidate(monthlyWorkoutsProvider);
-          ref.invalidate(weeklyWorkoutsProvider);
-          ref.invalidate(todayWorkoutProvider);
-          ref.invalidate(monthlyBlocksProvider);
-          ref.invalidate(weeklyBlocksProvider);
-          ref.invalidate(todayBlockProvider);
-          ref.invalidate(selectedWeekProvider); // Force re-calc
         }
-
         ref.read(uiThinkingProvider.notifier).state = false;
       }
 
@@ -193,6 +161,7 @@ class TimeOffController extends _$TimeOffController {
         AppLogger.i(
             'Time off changed ($duration days). Triggering AI Adjustment...');
 
+        ref.read(uiThinkingProvider.notifier).state = true;
         final taskId = "plan_gen_${activeGoal.id}";
 
         // 1. Manually insert 'running' task from foreground isolate
@@ -207,7 +176,7 @@ class TimeOffController extends _$TimeOffController {
           updatedAt: Value(DateTime.now()),
         ));
 
-        // 2. Schedule the background job for reliability
+        // 2. Schedule the background job
         await BackgroundTasks.schedulePlanGeneration(
           goalId: activeGoal.id,
           userId: currentUser.id,
@@ -215,8 +184,43 @@ class TimeOffController extends _$TimeOffController {
           useMockAi: ref.read(debugUseMockAiProvider),
           alternateMockPlan: ref.read(debugAlternateMockPlanProvider),
         );
+
+        // 3. Polling loop to wait for background task completion
+        bool isDone = false;
+        int attempts = 0;
+
+        while (!isDone && attempts < 90) {
+          // 3 minutes timeout
+          await Future.delayed(const Duration(seconds: 2));
+          try {
+            final task = await dao.getTask(taskId);
+            if (task == null) {
+              isDone = true;
+            }
+          } catch (e) {
+            AppLogger.w('Polling task status failed: $e');
+          }
+          attempts++;
+        }
+
+        // 4. CRITICAL: Manually notify Main Isolate's database about external changes
+        final db = ref.read(driftDatabaseProvider);
+        db.markTablesUpdated(
+            {db.workouts, db.trainingBlocks, db.phases, db.goals, db.aiTasks});
+
+        // 5. Invalidate Providers for safety
+        ref.invalidate(monthlyWorkoutsProvider);
+        ref.invalidate(weeklyWorkoutsProvider);
+        ref.invalidate(todayWorkoutProvider);
+        ref.invalidate(monthlyBlocksProvider);
+        ref.invalidate(weeklyBlocksProvider);
+        ref.invalidate(todayBlockProvider);
+        ref.invalidate(selectedWeekProvider);
+
+        ref.read(uiThinkingProvider.notifier).state = false;
       }
     } catch (e, st) {
+      ref.read(uiThinkingProvider.notifier).state = false;
       AppLogger.e('Failed to trigger AI adjustment for time off changes',
           error: e, stackTrace: st);
     }

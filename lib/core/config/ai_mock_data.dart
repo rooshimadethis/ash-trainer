@@ -2,77 +2,119 @@ import 'dart:convert';
 
 class AIMockData {
   static String get planA => jsonEncode({
-        "plan_name": "Marathon Base Builder A",
+        "phases": [
+          {
+            "id": "phase_1",
+            "phaseNumber": 1,
+            "phaseType": "Base",
+            "durationWeeks": 4,
+            "targetWeeklyVolume": "20-25km",
+            "targetWeeklyDuration": "180-240min",
+            "description": "Building aerobic capacity."
+          }
+        ],
         "blocks": [
           {
             "id": "block_1",
+            "phaseId": "phase_1",
+            "blockNumber": 1,
             "name": "Base Foundation",
             "intent":
                 "Focus on high volume, low intensity aerobic work to build your engine.",
-            "start_date": "2026-01-05T00:00:00Z",
-            "end_date": "2026-02-01T00:00:00Z"
+            "durationDays": 28
           }
         ],
         "workouts": [
           {
             "id": "mock_w1",
+            "phaseId": "phase_1",
+            "blockId": "block_1",
+            "dayNumber": 1,
             "name": "Easy Recovery Run",
             "description": "Slow and steady, stay in Zone 2.",
-            "scheduled_date": "2026-01-05T08:00:00Z",
-            "workout_type": "running",
-            "intensity": "low",
-            "status": "planned",
-            "target_duration_seconds": 2400,
-            "target_distance_km": 5.0
+            "type": "running",
+            "intensity": 2, // RPE
+            "plannedDuration": 2400,
+            "plannedDistance": 5.0,
+            "isKey": false
           },
           {
             "id": "mock_w2",
+            "phaseId": "phase_1",
+            "blockId": "block_1",
+            "dayNumber": 3,
             "name": "Long Aerobic Run",
             "description": "Build that endurance.",
-            "scheduled_date": "2026-01-07T08:00:00Z",
-            "workout_type": "running",
-            "intensity": "medium",
-            "status": "planned",
-            "target_duration_seconds": 5400,
-            "target_distance_km": 12.0
+            "type": "running",
+            "intensity": 4, // RPE
+            "plannedDuration": 5400,
+            "plannedDistance": 12.0,
+            "isKey": true
           }
-        ]
+        ],
+        "rationale": {
+          "overallApproach": "Gradual volume increase.",
+          "intensityDistribution": "80/20 Polarized",
+          "keyWorkouts": "Long runs on weekends.",
+          "recoveryStrategy": "Active recovery on Mondays."
+        }
       });
 
   static String get planB => jsonEncode({
-        "plan_name": "Speed & Strength Plan B",
+        "phases": [
+          {
+            "id": "phase_2",
+            "phaseNumber": 1,
+            "phaseType": "Build",
+            "durationWeeks": 4,
+            "targetWeeklyVolume": "30km",
+            "targetWeeklyDuration": "300min",
+            "description": "Increasing intensity."
+          }
+        ],
         "blocks": [
           {
             "id": "block_2",
+            "phaseId": "phase_2",
+            "blockNumber": 1,
             "name": "Power Phase",
             "intent":
                 "Intense intervals and heavy lifting to increase your peak performance.",
-            "start_date": "2026-01-05T00:00:00Z",
-            "end_date": "2026-02-01T00:00:00Z"
+            "durationDays": 28
           }
         ],
         "workouts": [
           {
             "id": "mock_w3",
+            "phaseId": "phase_2",
+            "blockId": "block_2",
+            "dayNumber": 1,
             "name": "VO2 Max Intervals",
             "description": "4x800m at max effort with 2 min rest.",
-            "scheduled_date": "2026-01-05T08:00:00Z",
-            "workout_type": "running",
-            "intensity": "high",
-            "status": "planned",
-            "target_duration_seconds": 3600,
-            "target_distance_km": 8.0
+            "type": "running",
+            "intensity": 9,
+            "plannedDuration": 3600,
+            "plannedDistance": 8.0,
+            "isKey": true
           },
           {
             "id": "mock_w4",
+            "phaseId": "phase_2",
+            "blockId": "block_2",
+            "dayNumber": 2,
             "name": "Full Body Power",
             "description": "Heavy squats, deadlifts, and presses.",
-            "scheduled_date": "2026-01-06T17:00:00Z",
-            "workout_type": "strength",
-            "intensity": "high",
-            "status": "planned",
-            "target_duration_seconds": 3600
+            "type": "strength",
+            "intensity": 8,
+            "plannedDuration": 3600,
+            "isKey": false
           }
-        ]
+        ],
+        "rationale": {
+          "overallApproach": "Focus on power and speed.",
+          "intensityDistribution": "Pyramidal",
+          "keyWorkouts": "Intervals and Strength.",
+          "recoveryStrategy": "Full rest days."
+        }
       });
 }

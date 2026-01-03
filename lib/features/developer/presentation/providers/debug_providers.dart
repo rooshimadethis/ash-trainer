@@ -14,7 +14,7 @@ class DebugShowShimmerSkeleton extends _$DebugShowShimmerSkeleton {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DebugUseMockAi extends _$DebugUseMockAi {
   @override
   bool build() {
@@ -26,7 +26,7 @@ class DebugUseMockAi extends _$DebugUseMockAi {
   }
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 class DebugAlternateMockPlan extends _$DebugAlternateMockPlan {
   @override
   bool build() {

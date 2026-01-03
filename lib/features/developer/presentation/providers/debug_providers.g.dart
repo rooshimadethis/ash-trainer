@@ -23,12 +23,11 @@ final debugShowShimmerSkeletonProvider =
 );
 
 typedef _$DebugShowShimmerSkeleton = AutoDisposeNotifier<bool>;
-String _$debugUseMockAiHash() => r'377bc5dec732894a5bcb4460300faf554371ca90';
+String _$debugUseMockAiHash() => r'4d5e57d1f3bddbba6f3bc7e5651ba422da723721';
 
 /// See also [DebugUseMockAi].
 @ProviderFor(DebugUseMockAi)
-final debugUseMockAiProvider =
-    AutoDisposeNotifierProvider<DebugUseMockAi, bool>.internal(
+final debugUseMockAiProvider = NotifierProvider<DebugUseMockAi, bool>.internal(
   DebugUseMockAi.new,
   name: r'debugUseMockAiProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -38,14 +37,14 @@ final debugUseMockAiProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugUseMockAi = AutoDisposeNotifier<bool>;
+typedef _$DebugUseMockAi = Notifier<bool>;
 String _$debugAlternateMockPlanHash() =>
-    r'd107c62c8f031d4010159539dbf3c0077108dced';
+    r'59c5301c7bf74129e88453aa8e38fcfc15a6a115';
 
 /// See also [DebugAlternateMockPlan].
 @ProviderFor(DebugAlternateMockPlan)
 final debugAlternateMockPlanProvider =
-    AutoDisposeNotifierProvider<DebugAlternateMockPlan, bool>.internal(
+    NotifierProvider<DebugAlternateMockPlan, bool>.internal(
   DebugAlternateMockPlan.new,
   name: r'debugAlternateMockPlanProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -55,6 +54,6 @@ final debugAlternateMockPlanProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$DebugAlternateMockPlan = AutoDisposeNotifier<bool>;
+typedef _$DebugAlternateMockPlan = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

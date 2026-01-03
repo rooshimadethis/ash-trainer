@@ -37,23 +37,82 @@ class AIServiceImpl implements AIService {
     required Map<String, dynamic> responseSchema,
   }) async {
     if (useMockAi) {
-      AppLogger.i('--- MOCK AI REQUEST (Generate Plan) ---');
-      await Future.delayed(const Duration(seconds: 2));
+      AppLogger.i('--- MOCK AI REQUEST DETECTED ---');
+      try {
+        await Future.delayed(const Duration(seconds: 2));
 
-      final mockPlanJson = alternateMockPlan
-          ? jsonDecode(AIMockData.planB)
-          : jsonDecode(AIMockData.planA);
+        var mockPlanJson = alternateMockPlan
+            ? jsonDecode(AIMockData.planB)
+            : jsonDecode(AIMockData.planA);
 
-      final plan = TrainingPlan.fromJson(mockPlanJson);
+        AppLogger.i('Mock AI: Loaded raw JSON.');
 
-      return AIResponse(
-        data: plan,
-        text: alternateMockPlan ? AIMockData.planB : AIMockData.planA,
-        functionCall: null,
-        tokensUsed: 0,
-        totalCost: 0,
-        timestamp: DateTime.now(),
-      );
+        // 1. Dynamic Filtering for Time Off
+        // ...
+        if (mockPlanJson['workouts'] != null) {
+          final workouts = mockPlanJson['workouts'] as List;
+          final filteredWorkouts = [];
+
+          // Debug date shifting
+          AppLogger.i(
+              'Mock AI: Context Start Date: ${context.config.startDate}');
+
+          // ... (existing logic) ...
+          // Just re-use logic but add logging if list is filtered to empty
+          // Copied logic below for clarity in replacement
+          final planStartDate = context.config.startDate;
+
+          for (var w in workouts) {
+            final dayNum = w['dayNumber'] as int;
+            final workoutDate = planStartDate.add(Duration(days: dayNum - 1));
+            final wDateOnly =
+                DateTime(workoutDate.year, workoutDate.month, workoutDate.day);
+
+            bool isConflict = false;
+
+            for (var to in context.scheduledTimeOff) {
+              // ... (logic) ...
+              final startOnly = DateTime(
+                  to.startDate.year, to.startDate.month, to.startDate.day);
+              final endOnly =
+                  DateTime(to.endDate.year, to.endDate.month, to.endDate.day);
+
+              if ((wDateOnly.isAtSameMomentAs(startOnly) ||
+                      wDateOnly.isAfter(startOnly)) &&
+                  (wDateOnly.isAtSameMomentAs(endOnly) ||
+                      wDateOnly.isBefore(endOnly))) {
+                isConflict = true;
+                break;
+              }
+            }
+
+            if (!isConflict) {
+              filteredWorkouts.add(w);
+            } else {
+              AppLogger.i(
+                  'Mock AI: Removed workout "${w['name']}" (Day $dayNum) due to Time Off conflict on ${wDateOnly.toIso8601String()}');
+            }
+          }
+          mockPlanJson['workouts'] = filteredWorkouts;
+          AppLogger.i(
+              'Mock AI: Final workout count: ${filteredWorkouts.length}');
+        }
+
+        final plan = TrainingPlan.fromJson(mockPlanJson);
+        AppLogger.i('Mock AI: TrainingPlan parsed successfully.');
+
+        return AIResponse(
+          data: plan,
+          text: alternateMockPlan ? AIMockData.planB : AIMockData.planA,
+          functionCall: null,
+          tokensUsed: 0,
+          totalCost: 0,
+          timestamp: DateTime.now(),
+        );
+      } catch (e, st) {
+        AppLogger.e('Mock AI Processing Failed', error: e, stackTrace: st);
+        rethrow;
+      }
     }
 
     final prompt = _buildPrompt(
