@@ -73,6 +73,54 @@ class AIServiceImpl implements AIService {
       throw Exception('Empty response from AI');
     }
 
+    // DEBUG: Log detailed usage metadata
+    if (response.usageMetadata != null) {
+      final usage = response.usageMetadata!;
+      final promptTokens = usage.promptTokenCount ?? 0;
+      final responseTokens = usage.candidatesTokenCount ?? 0;
+      final totalTokens = usage.totalTokenCount ?? 0;
+
+      // Gemini 3.0 Flash pricing (as of Jan 2026)
+      const inputCostPerMillion = 0.50;
+      const outputCostPerMillion = 3.00;
+
+      final inputCost = (promptTokens / 1000000) * inputCostPerMillion;
+      final outputCost = (responseTokens / 1000000) * outputCostPerMillion;
+      var totalCost = inputCost + outputCost;
+
+      AppLogger.i('--- AI USAGE METADATA ---');
+      AppLogger.i(
+          'Prompt tokens: $promptTokens (\$${inputCost.toStringAsFixed(6)})');
+      AppLogger.i(
+          'Response tokens: $responseTokens (\$${outputCost.toStringAsFixed(6)})');
+
+      // Check for thinking tokens (Gemini 3.0 feature)
+      // Using try-catch to handle SDK versions that don't have this field yet
+      try {
+        final usageReflection = usage as dynamic;
+        final thinkingTokens = usageReflection.thoughtsTokenCount as int?;
+        if (thinkingTokens != null && thinkingTokens > 0) {
+          final thinkingCost =
+              (thinkingTokens / 1000000) * outputCostPerMillion;
+          totalCost += thinkingCost;
+          AppLogger.i(
+              'Thinking tokens: $thinkingTokens (\$${thinkingCost.toStringAsFixed(6)})');
+        }
+      } catch (_) {
+        // Field not available in current SDK version - will be logged when SDK is updated
+      }
+
+      AppLogger.i('Total tokens: $totalTokens');
+      AppLogger.i('Total cost: \$${totalCost.toStringAsFixed(6)}');
+      AppLogger.i('--- END USAGE METADATA ---');
+    }
+
+    // DEBUG: Log finish reason
+    if (response.candidates.isNotEmpty) {
+      final finishReason = response.candidates.first.finishReason;
+      AppLogger.i('Finish reason: ${finishReason?.name ?? "UNKNOWN"}');
+    }
+
     // DEBUG: Log raw response to console before parsing
     AppLogger.i('--- RAW AI RESPONSE (Pre-Parsing) ---');
     AppLogger.i(response.text!);
