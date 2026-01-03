@@ -15,6 +15,8 @@ import '../../../workout_logging/presentation/screens/workout_logging_screen.dar
 import '../../../shared/presentation/widgets/ash_chat_bubble.dart';
 import '../../../shared/domain/services/health_service.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../core/theme/animations.dart';
+import '../../../shared/presentation/widgets/animated_entry.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -76,27 +78,40 @@ class _TodayViewState extends ConsumerState<TodayView> {
             ],
           ),
           const SizedBox(height: 12),
-          todayWorkoutAsync.when(
-            data: (workout) {
-              if (workout == null) {
-                return _restDayCard();
-              }
-              return WorkoutCard(
-                workout: workout,
-                useWorkoutColor: true,
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          WorkoutDetailScreen(workout: workout),
-                    ),
-                  );
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Text('Error loading workout: $err'),
+          AnimatedSwitcher(
+            duration: AppAnimations.normal,
+            child: todayWorkoutAsync.when(
+              data: (workout) {
+                if (workout == null) {
+                  return _restDayCard();
+                }
+                return AnimatedEntry(
+                  key:
+                      ValueKey('today_workout_${workout.id}_${workout.status}'),
+                  child: WorkoutCard(
+                    workout: workout,
+                    useWorkoutColor: true,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              WorkoutDetailScreen(workout: workout),
+                        ),
+                      );
+                    },
+                  ),
+                );
+              },
+              loading: () => const Center(
+                key: ValueKey('loading'),
+                child: CircularProgressIndicator(),
+              ),
+              error: (err, stack) => Text(
+                'Error loading workout: $err',
+                key: const ValueKey('error'),
+              ),
+            ),
           ),
           const SizedBox(height: 48),
           const RecoveryWidget(),
@@ -213,8 +228,13 @@ class _TodayViewState extends ConsumerState<TodayView> {
               Text('Detected Workouts', style: AppTextStyles.h4),
             ]),
             const SizedBox(height: 12),
-            ...validWorkouts.map((w) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
+            ...validWorkouts.asMap().entries.map((entry) {
+              final index = entry.key;
+              final w = entry.value;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: AnimatedEntry(
+                  index: index,
                   child: AshCard(
                     onTap: () => _onMatchWorkout(ref.context, ref, w),
                     child: Row(
@@ -285,7 +305,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
                       ],
                     ),
                   ),
-                )),
+                ),
+              );
+            }),
             const SizedBox(height: 32),
           ],
         );

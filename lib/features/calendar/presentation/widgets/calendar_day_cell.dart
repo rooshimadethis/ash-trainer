@@ -5,6 +5,7 @@ import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/borders.dart';
 import '../../../../core/theme/shadows.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/animations.dart';
 import '../../../../core/constants/workout_types.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
@@ -136,9 +137,18 @@ class CalendarDayCell extends ConsumerWidget {
         ),
         if (workouts.isNotEmpty && timeOff == null) ...[
           const SizedBox(height: 6),
-          ...workouts
-              .take(2)
-              .map((w) => _buildWorkoutPip(context, w, hasBoldColor)),
+          AnimatedSwitcher(
+            duration: AppAnimations.fast,
+            child: Column(
+              key: ValueKey(
+                  'expanded_pips_${day.millisecondsSinceEpoch}_${workouts.length}'),
+              mainAxisSize: MainAxisSize.min,
+              children: workouts
+                  .take(2)
+                  .map((w) => _buildWorkoutPip(context, w, hasBoldColor))
+                  .toList(),
+            ),
+          ),
         ],
       ],
     );
@@ -180,12 +190,17 @@ class CalendarDayCell extends ConsumerWidget {
               ),
               const SizedBox(height: 2),
               if (timeOff == null)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: workouts
-                      .take(3)
-                      .map((w) => _buildWorkoutPip(context, w, hasBoldColor))
-                      .toList(),
+                AnimatedSwitcher(
+                  duration: AppAnimations.fast,
+                  child: Row(
+                    key: ValueKey(
+                        'compact_pips_${day.millisecondsSinceEpoch}_${workouts.length}'),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: workouts
+                        .take(3)
+                        .map((w) => _buildWorkoutPip(context, w, hasBoldColor))
+                        .toList(),
+                  ),
                 ),
             ],
           ),

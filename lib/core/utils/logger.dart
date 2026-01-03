@@ -34,7 +34,29 @@ class AppLogger {
   /// Log an info message
   /// Use for general informational messages
   static void i(dynamic message, {Object? error, StackTrace? stackTrace}) {
-    _logger.i(message, error: error, stackTrace: stackTrace);
+    if (message is String && message.length > 800) {
+      _logLargeString(message, Level.info);
+    } else {
+      _logger.i(message, error: error, stackTrace: stackTrace);
+    }
+  }
+
+  static void _logLargeString(String message, Level level) {
+    // Split into 800 char chunks to stay well within most console/ADB limits (1024)
+    final int chunkSize = 800;
+    for (int i = 0; i < message.length; i += chunkSize) {
+      final int end =
+          (i + chunkSize < message.length) ? i + chunkSize : message.length;
+      final String chunk = message.substring(i, end);
+
+      // We use simple print for chunks to avoid the PrettyPrinter adding borders to every single chunk
+      // which would make it very hard to reassemble
+      if (level == Level.info) {
+        _logger.i(chunk);
+      } else if (level == Level.debug) {
+        _logger.d(chunk);
+      }
+    }
   }
 
   /// Log a warning message

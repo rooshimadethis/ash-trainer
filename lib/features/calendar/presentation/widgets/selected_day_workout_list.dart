@@ -3,11 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/text_styles.dart';
+import '../../../../core/theme/animations.dart';
 import '../../../shared/domain/entities/time_off_entry.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/entities/training/training_block.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
+import '../../../shared/presentation/widgets/animated_entry.dart';
 import '../providers/time_off_provider.dart';
 import '../screens/workout_detail_screen.dart';
 import 'package:collection/collection.dart';
@@ -57,7 +59,12 @@ class SelectedDayWorkoutList extends ConsumerWidget {
         if (dayWorkouts.isEmpty && timeOffEntry == null)
           _buildEmptyState()
         else
-          _buildWorkoutCards(context, dayWorkouts),
+          AnimatedSwitcher(
+            duration: AppAnimations.normal,
+            switchInCurve: Curves.easeOut,
+            switchOutCurve: Curves.easeIn,
+            child: _buildWorkoutCards(context, dayWorkouts),
+          ),
       ],
     );
   }
@@ -297,23 +304,34 @@ class SelectedDayWorkoutList extends ConsumerWidget {
   }
 
   Widget _buildWorkoutCards(BuildContext context, List<Workout> workouts) {
+    // Unique key that changes when workouts change significantly
+    final contentHash = workouts.fold(
+        '',
+        (prev, w) =>
+            '$prev${w.id}${w.status}${w.scheduledDate.millisecondsSinceEpoch}');
+
     return Column(
+      key: ValueKey(
+          'workouts_${selectedDate.millisecondsSinceEpoch}_$contentHash'),
       children: List.generate(workouts.length, (index) {
         final workout = workouts[index];
         return Padding(
           padding:
               EdgeInsets.only(bottom: index == workouts.length - 1 ? 0 : 16),
-          child: WorkoutCard(
-            workout: workout,
-            useWorkoutColor: true,
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => WorkoutDetailScreen(workout: workout),
-                ),
-              );
-            },
+          child: AnimatedEntry(
+            index: index,
+            child: WorkoutCard(
+              workout: workout,
+              useWorkoutColor: true,
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => WorkoutDetailScreen(workout: workout),
+                  ),
+                );
+              },
+            ),
           ),
         );
       }),

@@ -1,0 +1,513 @@
+Restarted application in 1,327ms.
+I/flutter (23386): 🚀 App starting...
+I/flutter (23386): 🔵 Database instance #1 created
+I/Choreographer(23386): Skipped 64 frames!  The application may be doing too much work on its main thread.
+I/flutter (23386): 💾 Database path: /data/user/0/com.example.ash_trainer/app_flutter/db.sqlite
+I/flutter (23386): 💾 Database file exists: true
+I/flutter (23386): 💾 Database file size: 122880 bytes
+W/WindowOnBackDispatcher(23386): sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@25ddf23
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   StartupRouter.build.<anonymous closure> (package:ash_trainer/core/routing/startup_router.dart:38:19)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:50:34.046 (+0:00:00.001598)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 📍 Startup routing: state=StartupState.ready
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): DEBUG: Fetching recovery data (Sleep/HRV/RHR) from 2025-12-31 20:50:34.378245 to 2026-01-02 21:50:34.378245
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.d (package:ash_trainer/core/utils/logger.dart:31:13)
+I/flutter (23386): │ #1   ApplyRescheduleMatrix.execute (package:ash_trainer/features/training/application/usecases/apply_reschedule_matrix.dart:28:17)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:50:34.389 (+0:00:00.344582)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 🐛 ApplyRescheduleMatrix: No missed or skipped key workouts found.
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_ASLEEP with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_SESSION with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_DEEP with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_LIGHT with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_REM with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for SLEEP_AWAKE with unit MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for RESTING_HEART_RATE with unit BEATS_PER_MINUTE between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/FLUTTER_HEALTH(23386): Getting data for HEART_RATE_VARIABILITY_RMSSD with unit MILLISECOND between 2026-01-01T02:50:34.378Z and 2026-01-03T03:50:34.378Z, filtering by []
+I/flutter (23386): DEBUG: Fetched 0 recovery data points.
+I/flutter (23386): DEBUG: Final results -> Sleep: 0 min, HRV: null, RHR: null
+W/WindowOnBackDispatcher(23386): sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@25ddf23
+W/WindowOnBackDispatcher(23386): sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@25ddf23
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   TimeOffController.addTimeOff.<anonymous closure> (package:ash_trainer/features/calendar/presentation/providers/time_off_provider.dart:66:23)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:50:45.097 (+0:00:11.052222)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 Time off > 2 days (3 days). Triggering AI Adjustment with full context...
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   AIServiceImpl.generatePlan (package:ash_trainer/infrastructure/services/ai_service_impl.dart:49:15)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:50:45.135 (+0:00:11.090807)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 --- AI REQUEST (Generate Plan) ---
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   AIServiceImpl.generatePlan (package:ash_trainer/infrastructure/services/ai_service_impl.dart:50:15)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:50:45.136 (+0:00:11.091454)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 System: You are Ash, an expert AI running coach. You are knowledgeable, encouraging, and data-driven.
+I/flutter (23386): │ 💡 Your philosophy combines Jack Daniels' VDOT principles with modern adaptive training, integrating running, strength, and mobility as three essential pillars.
+I/flutter (23386): │ 💡 You speak in a concise, friendly, and motivating tone.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 CORE DIRECTIVES:
+I/flutter (23386): │ 💡 1. THREE-PILLAR APPROACH: Every plan must balance Running, Strength, and Mobility based on the provided philosophy context.
+I/flutter (23386): │ 💡 2. PHASE SKELETON: View plans as a sequence of Phases (Base, Build, Peak, Taper). If a plan is disrupted, re-balance the remaining phases to protect the goal.
+I/flutter (23386): │ 💡 3. THE HONESTY PROTOCOL: If a user's consistency makes their goal unsafe/unreachable, you MUST proactively suggest a safer alternative goal.
+I/flutter (23386): │ 💡 4. ADAPTIVE REPAIR: For disruptions > 3 days, perform a "Strategic Repair" by re-generating the current and future blocks rather than just sliding dates.
+I/flutter (23386): │ 💡 5. SCHEDULED TIME OFF: Respect the `scheduledTimeOff` context. Do NOT schedule any workouts during these dates. Adjust the volume before and after these gaps to maintain progression safely.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 STRENGTH PRINCIPLES:
+I/flutter (23386): │ 💡 - Focus on runner-specific bodyweight and functional exercises.
+I/flutter (23386): │ 💡 - Prescription MUST use the `strengthExercises` schema: Name, Sets, Reps, RPE.
+I/flutter (23386): │ 💡 - Default Reps: 8-12 or 30-45s for core. Rest: 60-90s.
+I/flutter (23386): │ 💡 - Target RPE 7 (Moderate effort, 2-3 reps in reserve).
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 MOBILITY PRINCIPLES:
+I/flutter (23386): │ 💡 - Philosophy: Mobility is defined as usable range of motion. We do not just "stretch" (passive); we "expand and load" (active).
+I/flutter (23386): │ 💡 - Principle: "Cells respond to load." If a joint cannot actively control a position, it is an injury risk.
+I/flutter (23386): │ 💡 - Goal: Increase Internal Tension and End-Range Strength.
+I/flutter (23386): │ 💡 - Prescription MUST use the `mobilitySequence` schema based on FRC principles (PAILs/RAILs, CARs).
+I/flutter (23386): │ 💡 - Terminology: Use "Cycles" instead of "Sets", "Tension/MVC" instead of "Weight". NO bouncing.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 RUNNING DESCRIPTION GUIDELINES:
+I/flutter (23386): │ 💡 - **Primary Focus**: Start description with the main goal (e.g., "Primary Focus: Maintain Zone 2").
+I/flutter (23386): │ 💡 - **Fallback Advice**:
+I/flutter (23386): │ 💡     - Easy/Long: "If struggling with distance, prioritize Time on Feet and keep RPE low (3-4)."
+I/flutter (23386): │ 💡     - Intervals: "If struggling with pace, prioritize hitting the RPE target."
+I/flutter (23386): │ 💡     - Beginners: Emphasize consistency over metrics.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 Context:
+I/flutter (23386): │ 💡 {"user":{"age":27,"gender":"Male","availableDays":["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]},"goal":{"type":"distanceMilestone","target":"Run 42.2km","deadline":"2026-05-22T00:00:00.000","priorities":{"running":"Medium","strength":"Medium","mobility":"Medium"}},"trainingHistory":[{"daysAgo":0,"type":"strength","isKey":false,"status":"planned","planned":{"duration":600}}],"futurePlan":[{"daysAgo":-1,"type":"long_run","isKey":true,"status":"planned","planned":{"duration":2100,"distance":5.26}},{"daysAgo":-2,"type":"mobility","isKey":false,"status":"planned","planned":{"duration":900}},{"daysAgo":-3,"type":"easy_run","isKey":false,"status":"planned","planned":{"duration":1200,"distance":3.0}},{"daysAgo":-4,"type":"strength","isKey":false,"status":"planned","planned":{"duration":600}},{"daysAgo":-5,"type":"mobility","isKey":false,"status":"planned","planned":{"duration":900}},{"daysAgo":-6,"type":"strength","isKey":false,"status":"planned","planned":{"duration":6
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 Task: Generate a complete training plan based on the user's context, goal, and history.
+I/flutter (23386): │ 💡 The plan must balance three pillars: Running, Strength, and Mobility.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 CRITICAL: Use a THREE-TIER planning approach to avoid over-planning:
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 TIER 1 - LONG-TERM (All Phases):
+I/flutter (23386): │ 💡 - Generate ALL phase outlines (Base, Build, Peak, Taper) for the ENTIRE training period
+I/flutter (23386): │ 💡 - Include: phaseType, durationWeeks, targetWeeklyVolume, targetWeeklyDuration, description
+I/flutter (23386): │ 💡 - This provides the strategic roadmap for the full training cycle
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 TIER 2 - MEDIUM-TERM (Current Phase Blocks Only):
+I/flutter (23386): │ 💡 - Generate block structure mainly for the FIRST/CURRENT phase, but you may generate future blocks if it helps with your planning
+I/flutter (23386): │ 💡 - Include: blockNumber, intent, durationDays
+I/flutter (23386): │ 💡 - **INTENT FIELD**: Write the `intent` as if you (Ash) are speaking directly to the user in a chat bubble. Use first-person plural ("we're", "let's") and make it motivating and conversational. Examples:
+I/flutter (23386): │ 💡   - "We're building your aerobic base this week. Focus on easy, conversational efforts! 🏃"
+I/flutter (23386): │ 💡   - "Let's ramp up the volume gradually. Your body is adapting to the increased load. 💪"
+I/flutter (23386): │ 💡   - "Recovery week! We're cutting back to let you absorb all the hard work. Prioritize sleep and mobility. 🧘"
+I/flutter (23386): │ 💡 - Do NOT generate all blocks for future phases yet - they will be created closer to when needed
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 TIER 3 - SHORT-TERM (Next 2 Blocks Only):
+I/flutter (23386): │ 💡 - Generate detailed workouts ONLY for the FIRST 1-2 BLOCKS
+I/flutter (23386): │ 💡 - Include full workout details: type, name, duration, distance, intensity, description
+I/flutter (23386): │ 💡 - Do NOT generate workouts for blocks beyond the first 2
+I/flutter (23386): │ 💡 - This gives ~7-14 days of detailed planning while staying adaptive
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 RATIONALE: This phased approach allows for adaptation as the user progresses. Future blocks and workouts will be generated closer to when they're needed, accounting for actual progress, injuries, and life changes.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 PLANNING PRINCIPLES:
+I/flutter (23386): │ 💡 1. PHASE STRUCTURE: Use a sequence of Phases (Base, Build, Peak, Taper) as defined by the goal type.
+I/flutter (23386): │ 💡 2. RECOVERY BLOCKS: Ensure adequate recovery blocks (every 3-4 weeks) with reduced volume as per `recoveryVolumeReduction`.
+I/flutter (23386): │ 💡 3. INTENSITY: Follow the `intensityStrategy` and `intensityBreakdown` provided in the `philosophy` context.
+I/flutter (23386): │ 💡 4. THREE-PILLAR SCHEDULING: 
+I/flutter (23386): │ 💡    - Prescribe Running workouts first.
+I/flutter (23386): │ 💡    - Schedule Strength sessions as per `strengthGuidance`.
+I/flutter (23386): │ 💡    - Schedule Mobility sessions as per `mobilityGuidance`.
+I/flutter (23386): │ 💡    - Respect safety constraints (e.g., no hard leg strength before key runs).
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 5. SAME-DAY WORKOUT STACKING:
+I/flutter (23386): │ 💡    Core Principle: "Hard Days Hard, Easy Days Easy"
+I/flutter (23386): │ 💡    
+I/flutter (23386): │ 💡    ALLOWED Stacks:
+I/flutter (23386): │ 💡    - Mobility can pair with ANY workout (enhances performance/recovery)
+I/flutter (23386): │ 💡    - Easy Run (≤60 min) + Light Strength (RPE ≤7) → Run first, avoid heavy legs
+I/flutter (23386): │ 💡    - Strength + Strength (if different muscle groups)
+I/flutter (23386): │ 💡    
+I/flutter (23386): │ 💡    PROHIBITED Stacks:
+I/flutter (23386): │ 💡    - NEVER 2x Running workouts (injury risk, excessive impact)
+I/flutter (23386): │ 💡    - NEVER Hard Run + Strength (compromises both quality)
+I/flutter (23386): │ 💡    - NEVER Heavy Leg Strength + Any Run (form degradation risk)
+I/flutter (23386): │ 💡    
+I/flutter (23386): │ 💡    Guidelines:
+I/flutter (23386): │ 💡    - Prefer separate days when schedule allows (cleaner recovery)
+I/flutter (23386): │ 💡    - Stack only when necessary to fit volume in available days
+I/flutter (23386): │ 💡    - Respect Recovery Blocks: passive mobility only
+I/flutter (23386): │ 💡    - If volume doesn't fit safely, suggest adding training days OR reducing duration
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 6. RPE (RATE OF PERCEIVED EXERTION):
+I/flutter (23386): │ 💡    CRITICAL: The `intensity` field MUST be a single integer between 1 and 10 (NOT a string like "RPE 7").
+I/flutter (23386): │ 💡    
+I/flutter (23386): │ 💡    RPE Guidelines:
+I/flutter (23386): │ 💡    - 1-3: Very light (warm-up, cool-down, gentle mobility)
+I/flutter (23386): │ 💡    - 4-5: Easy (conversational pace, recovery runs)
+I/flutter (23386): │ 💡    - 6-7: Moderate (tempo runs, general strength training)
+I/flutter (23386): │ 💡    - 8-9: Hard (intervals, hill repeats, max effort strength)
+I/flutter (23386): │ 💡    - 10: Maximum effort (race pace, all-out sprints)
+I/flutter (23386): │ 💡    
+I/flutter (23386): │ 💡    Examples:
+I/flutter (23386): │ 💡    - Easy Run: 4 or 5
+I/flutter (23386): │ 💡    - Tempo Run: 7 or 8
+I/flutter (23386): │ 💡    - Interval Session: 8 or 9
+I/flutter (23386): │ 💡    - Strength Training: 7 (moderate effort, 2-3 reps in reserve)
+I/flutter (23386): │ 💡    - Mobility/Recovery: 2 or 3
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 CRITICAL: Use the provided JSON schema. 
+I/flutter (23386): │ 💡 - Create 'Phases' (Base, Build, etc.) with weekly volume targets.
+I/flutter (23386): │ 💡 - Create 'Blocks' (logical chunks of 3-10 days) within those phases.
+I/flutter (23386): │ 💡 - Create 'Workouts' linked to specific Blocks.
+I/flutter (23386): │ 💡 - Use 'dayNumber' relative to the start of the BLOCK.
+I/flutter (23386): │ 💡 - JSON SCHEMA: Strictly adhere to the provided JSON schema. 
+I/flutter (23386): │ 💡   - WORKOUT NAMES: Never include the day of the week (e.g., "Monday") in names (e.g. "Easy Run", NOT "Monday Easy Run").
+I/flutter (23386): │ 💡   - KEY WORKOUTS (isKey): 
+I/flutter (23386): │ 💡     - Set `isKey: true` for important "Long Runs" and high-intensity "Quality" sessions (Intervals, Tempo, Hills).
+I/flutter (23386): │ 💡     - For Strength sessions, set `isKey: true` if the user's Strength priority is 'High' or use best judgement. 
+I/flutter (23386): │ 💡     - For all other sessions (Easy Run, Mobility, Recovery), set `isKey: false`.
+I/flutter (23386): │ 💡 7. CALENDAR ALIGNMENT:
+I/flutter (23386): │ 💡     - Use the `upcomingWeekdays` list from the config to map `dayNumber` to real days.
+I/flutter (23386): │ 💡     - Index 0 corresponds to `dayNumber: 1`. 
+I/flutter (23386): │ 💡     - Example: If `upcomingWeekdays[0]` is 'Saturday' and you want a Long Run, schedule it on `dayNumber: 1`.
+I/flutter (23386): │ 💡     - You MUST align your `dayNumber` selection with the user's `availableDays` and prefer weekends for Long Runs.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 8. SCHEDULE CONSISTENCY (Adjust/Repair Mode):
+I/flutter (23386): │ 💡     - If `futurePlan` is provided, use it to balance stability with optimization:
+I/flutter (23386): │ 💡     - **IMMEDIATE STABILITY (Days 1-4)**: Prioritize keeping the training days and workout types from the `futurePlan`. Only modify volume/intensity if required by the adjustment/repair logic. Do NOT move a Thursday session to Friday if it falls within this window.
+I/flutter (23386): │ 💡     - **OPTIMIZATION HORIZON (Days 5+)**: You have more freedom to re-calculate and shift workouts to better fit the phase goals and user's `availableDays`. Consistency with the original training rhythm is still preferred but is secondary to optimizing the plan for the objective.
+I/flutter (23386): │ 💡 
+I/flutter (23386): │ 💡 
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   AIServiceImpl.generatePlan (package:ash_trainer/infrastructure/services/ai_service_impl.dart:72:15)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:51:18.212 (+0:00:44.167598)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 --- RAW AI RESPONSE (Pre-Parsing) ---
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   AIServiceImpl.generatePlan (package:ash_trainer/infrastructure/services/ai_service_impl.dart:73:15)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:51:18.214 (+0:00:44.169643)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 {
+I/flutter (23386): │ 💡   "phases": [
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "base_phase_1",
+I/flutter (23386): │ 💡       "phaseNumber": 1,
+I/flutter (23386): │ 💡       "phaseType": "base",
+I/flutter (23386): │ 💡       "durationWeeks": 6,
+I/flutter (23386): │ 💡       "targetWeeklyVolume": "25-35 km",
+I/flutter (23386): │ 💡       "targetWeeklyDuration": "3-4 hours",
+I/flutter (23386): │ 💡       "description": "Building the aerobic foundation and musculoskeletal resilience needed for marathon training."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "build_phase_1",
+I/flutter (23386): │ 💡       "phaseNumber": 2,
+I/flutter (23386): │ 💡       "phaseType": "build",
+I/flutter (23386): │ 💡       "durationWeeks": 8,
+I/flutter (23386): │ 💡       "targetWeeklyVolume": "35-55 km",
+I/flutter (23386): │ 💡       "targetWeeklyDuration": "4-6 hours",
+I/flutter (23386): │ 💡       "description": "Increasing weekly mileage and introducing marathon-specific intensity and longer endurance runs."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "peak_phase_1",
+I/flutter (23386): │ 💡       "phaseNumber": 3,
+I/flutter (23386): │ 💡       "phaseType": "peak",
+I/flutter (23386): │ 💡       "durationWeeks": 4,
+I/flutter (23386): │ 💡       "targetWeeklyVolume": "55-70 km",
+I/flutter (23386): │ 💡       "targetWeeklyDuration": "6-8 hours",
+I/flutter (23386): │ 💡       "description": "Maximum volume and peak long runs to simulate race-day demands and build mental toughness."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "taper_phase_1",
+I/flutter (23386): │ 💡       "phaseNumber": 4,
+I/flutter (23386): │ 💡       "phaseType": "taper",
+I/flutter (23386): │ 💡       "durationWeeks": 2,
+I/flutter (23386): │ 💡       "targetWeeklyVolume": "20-30 km",
+I/flutter (23386): │ 💡       "targetWeeklyDuration": "2-3 hours",
+I/flutter (23386): │ 💡       "description": "Reducing volume to allow full recovery and glycogen replenishment for race day."
+I/flutter (23386): │ 💡     }
+I/flutter (23386): │ 💡   ],
+I/flutter (23386): │ 💡   "blocks": [
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "block_1_transition",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockNumber": 1,
+I/flutter (23386): │ 💡       "intent": "We're kicking things off with a steady effort before your scheduled break. Let's get moving and then enjoy the rest! 🏃‍♂️",
+I/flutter (23386): │ 💡       "durationDays": 4
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "block_2_return",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockNumber": 2,
+I/flutter (23386): │ 💡       "intent": "Welcome back! We're easing back into the rhythm with a focus on consistency across all three pillars. 💪",
+I/flutter (23386): │ 💡       "durationDays": 7
+I/flutter (23386): │ 💡     }
+I/flutter (23386): │ 💡   ],
+I/flutter (23386): │ 💡   "workouts": [
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w1_long_run",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_1_transition",
+I/flutter (23386): │ 💡       "dayNumber": 1,
+I/flutter (23386): │ 💡       "type": "long_run",
+I/flutter (23386): │ 💡       "name": "Steady Foundation Run",
+I/flutter (23386): │ 💡       "plannedDuration": 2100,
+I/flutter (23386): │ 💡       "intensity": 4,
+I/flutter (23386): │ 💡       "description": "Primary Focus: Maintain Zone 2. Keep the effort conversational. If struggling with distance, prioritize Time on Feet and keep RPE low (3-4).",
+I/flutter (23386): │ 💡       "isKey": true,
+I/flutter (23386): │ 💡       "plannedDistance": 5.2
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w2_rest",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_1_transition",
+I/flutter (23386): │ 💡       "dayNumber": 2,
+I/flutter (23386): │ 💡       "type": "rest",
+I/flutter (23386): │ 💡       "name": "Scheduled Rest Day",
+I/flutter (23386): │ 💡       "plannedDuration": 0,
+I/flutter (23386): │ 💡       "intensity": 1,
+I/flutter (23386): │ 💡       "description": "User scheduled time off. Prioritize recovery."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w3_rest",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_1_transition",
+I/flutter (23386): │ 💡       "dayNumber": 3,
+I/flutter (23386): │ 💡       "type": "rest",
+I/flutter (23386): │ 💡       "name": "Scheduled Rest Day",
+I/flutter (23386): │ 💡       "plannedDuration": 0,
+I/flutter (23386): │ 💡       "intensity": 1,
+I/flutter (23386): │ 💡       "description": "User scheduled time off. Prioritize recovery."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w4_rest",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_1_transition",
+I/flutter (23386): │ 💡       "dayNumber": 4,
+I/flutter (23386): │ 💡       "type": "rest",
+I/flutter (23386): │ 💡       "name": "Scheduled Rest Day",
+I/flutter (23386): │ 💡       "plannedDuration": 0,
+I/flutter (23386): │ 💡       "intensity": 1,
+I/flutter (23386): │ 💡       "description": "User scheduled time off. Prioritize recovery."
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w5_easy_run",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 1,
+I/flutter (23386): │ 💡       "type": "easy_run",
+I/flutter (23386): │ 💡       "name": "Post-Break Easy Run",
+I/flutter (23386): │ 💡       "plannedDuration": 1500,
+I/flutter (23386): │ 💡       "intensity": 4,
+I/flutter (23386): │ 💡       "description": "Primary Focus: Gentle return to running. Focus on form and rhythm. Keep heart rate in check.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "plannedDistance": 3.5,
+I/flutter (23386): │ 💡       "strengthExercises": [
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "name": "Bodyweight Squats",
+I/flutter (23386): │ 💡           "sets": 2,
+I/flutter (23386): │ 💡           "reps": "12",
+I/flutter (23386): │ 💡           "rpe": 7,
+I/flutter (23386): │ 💡           "notes": "Focus on driving through the heels."
+I/flutter (23386): │ 💡         },
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "name": "Plank",
+I/flutter (23386): │ 💡           "sets": 2,
+I/flutter (23386): │ 💡           "reps": "45s",
+I/flutter (23386): │ 💡           "rpe": 7,
+I/flutter (23386): │ 💡           "notes": "Maintain a neutral spine."
+I/flutter (23386): │ 💡         }
+I/flutter (23386): │ 💡       ]
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w6_mobility",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 2,
+I/flutter (23386): │ 💡       "type": "mobility",
+I/flutter (23386): │ 💡       "name": "Hip and Ankle Resilience",
+I/flutter (23386): │ 💡       "plannedDuration": 900,
+I/flutter (23386): │ 💡       "intensity": 3,
+I/flutter (23386): │ 💡       "description": "Focus on expanding usable range in the lower chain.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "mobilitySequence": [
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "exerciseName": "Hip CARs",
+I/flutter (23386): │ 💡           "targetJoint": "Hip",
+I/flutter (23386): │ 💡           "setupInstructions": "Standing or quadruped position, maintain a braced core.",
+I/flutter (23386): │ 💡           "phases": [
+I/flutter (23386): │ 💡             {
+I/flutter (23386): │ 💡               "phaseType": "controlled_rotation",
+I/flutter (23386): │ 💡               "durationSeconds": 30,
+I/flutter (23386): │ 💡               "instruction": "Slowly rotate the hip through its full pain-free range of motion.",
+I/flutter (23386): │ 💡               "irradiationPct": 20
+I/flutter (23386): │ 💡             }
+I/flutter (23386): │ 💡           ],
+I/flutter (23386): │ 💡           "totalCycles": 3
+I/flutter (23386): │ 💡         },
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "exerciseName": "Ankle PAILs/RAILs",
+I/flutter (23386): │ 💡           "targetJoint": "Ankle",
+I/flutter (23386): │ 💡           "setupInstructions": "Half-kneeling position with front foot flat.",
+I/flutter (23386): │ 💡           "phases": [
+I/flutter (23386): │ 💡             {
+I/flutter (23386): │ 💡               "phaseType": "stretch",
+I/flutter (23386): │ 💡               "durationSeconds": 60,
+I/flutter (23386): │ 💡               "instruction": "Lean forward to find a stretch in the calf/Achilles."
+I/flutter (23386): │ 💡             },
+I/flutter (23386): │ 💡             {
+I/flutter (23386): │ 💡               "phaseType": "PAILs",
+I/flutter (23386): │ 💡               "durationSeconds": 10,
+I/flutter (23386): │ 💡               "instruction": "Push the ball of the foot into the floor.",
+I/flutter (23386): │ 💡               "irradiationPct": 50
+I/flutter (23386): │ 💡             },
+I/flutter (23386): │ 💡             {
+I/flutter (23386): │ 💡               "phaseType": "RAILs",
+I/flutter (23386): │ 💡               "durationSeconds": 10,
+I/flutter (23386): │ 💡               "instruction": "Try to lift the toes/top of foot toward the shin.",
+I/flutter (23386): │ 💡               "irradiationPct": 50
+I/flutter (23386): │ 💡             }
+I/flutter (23386): │ 💡           ],
+I/flutter (23386): │ 💡           "totalCycles": 2
+I/flutter (23386): │ 💡         }
+I/flutter (23386): │ 💡       ]
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w7_easy_run",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 3,
+I/flutter (23386): │ 💡       "type": "easy_run",
+I/flutter (23386): │ 💡       "name": "Aerobic Maintenance",
+I/flutter (23386): │ 💡       "plannedDuration": 1200,
+I/flutter (23386): │ 💡       "intensity": 4,
+I/flutter (23386): │ 💡       "description": "Primary Focus: Maintain Zone 2. If struggling with pace, prioritize hitting the RPE target.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "plannedDistance": 3.0
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w8_long_run",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 4,
+I/flutter (23386): │ 💡       "type": "long_run",
+I/flutter (23386): │ 💡       "name": "Endurance Builder",
+I/flutter (23386): │ 💡       "plannedDuration": 2400,
+I/flutter (23386): │ 💡       "intensity": 5,
+I/flutter (23386): │ 💡       "description": "Primary Focus: Increase time on feet. This is a key session for building marathon stamina.",
+I/flutter (23386): │ 💡       "isKey": true,
+I/flutter (23386): │ 💡       "plannedDistance": 6.0
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w9_strength",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 5,
+I/flutter (23386): │ 💡       "type": "strength",
+I/flutter (23386): │ 💡       "name": "Runner Foundation Strength",
+I/flutter (23386): │ 💡       "plannedDuration": 600,
+I/flutter (23386): │ 💡       "intensity": 7,
+I/flutter (23386): │ 💡       "description": "Functional movements to support running economy.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "strengthExercises": [
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "name": "Reverse Lunges",
+I/flutter (23386): │ 💡           "sets": 2,
+I/flutter (23386): │ 💡           "reps": "10 per side",
+I/flutter (23386): │ 💡           "rpe": 7,
+I/flutter (23386): │ 💡           "notes": "Keep torso upright."
+I/flutter (23386): │ 💡         },
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "name": "Bird-Dog",
+I/flutter (23386): │ 💡           "sets": 2,
+I/flutter (23386): │ 💡           "reps": "12",
+I/flutter (23386): │ 💡           "rpe": 6,
+I/flutter (23386): │ 💡           "notes": "Focus on stability, not height."
+I/flutter (23386): │ 💡         }
+I/flutter (23386): │ 💡       ]
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w10_easy_run",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 6,
+I/flutter (23386): │ 💡       "type": "easy_run",
+I/flutter (23386): │ 💡       "name": "Recovery Flow Run",
+I/flutter (23386): │ 💡       "plannedDuration": 1500,
+I/flutter (23386): │ 💡       "intensity": 4,
+I/flutter (23386): │ 💡       "description": "Primary Focus: Active recovery. Keep it very easy.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "plannedDistance": 3.5
+I/flutter (23386): │ 💡     },
+I/flutter (23386): │ 💡     {
+I/flutter (23386): │ 💡       "id": "w11_mobility",
+I/flutter (23386): │ 💡       "phaseId": "base_phase_1",
+I/flutter (23386): │ 💡       "blockId": "block_2_return",
+I/flutter (23386): │ 💡       "dayNumber": 7,
+I/flutter (23386): │ 💡       "type": "mobility",
+I/flutter (23386): │ 💡       "name": "Full Body Reset",
+I/flutter (23386): │ 💡       "plannedDuration": 900,
+I/flutter (23386): │ 💡       "intensity": 2,
+I/flutter (23386): │ 💡       "description": "Active recovery mobility to prep for the next week.",
+I/flutter (23386): │ 💡       "isKey": false,
+I/flutter (23386): │ 💡       "mobilitySequence": [
+I/flutter (23386): │ 💡         {
+I/flutter (23386): │ 💡           "exerciseName": "Thoracic CARs",
+I/flutter (23386): │ 💡           "targetJoint": "Thoracic Spine",
+I/flutter (23386): │ 💡           "setupInstructions": "Seated or standing, arms crossed over chest.",
+I/flutter (23386): │ 💡           "phases": [
+I/flutter (23386): │ 💡             {
+I/flutter (23386): │ 💡               "phaseType": "rotation",
+I/flutter (23386): │ 💡               "durationSeconds": 45,
+I/flutter (23386): │ 💡               "instruction": "Slowly rotate and flex the upper spine without moving the hips."
+I/flutter (23386): │ 💡             }
+I/flutter (23386): │ 💡           ],
+I/flutter (23386): │ 💡           "totalCycles": 3
+I/flutter (23386): │ 💡         }
+I/flutter (23386): │ 💡       ]
+I/flutter (23386): │ 💡     }
+I/flutter (23386): │ 💡   ],
+I/flutter (23386): │ 💡   "rationale": {
+I/flutter (23386): │ 💡     "overallApproach": "The plan uses a 20-week pyramidal structure to safely bridge the gap from current 6km long runs to a 42.2km marathon. We start with a 6-week Base phase to establish consistency.",
+I/flutter (23386): │ 💡     "intensityDistribution": "Following an 80/15/5 distribution, the majority of the runs are kept at RPE 4-5 to build the aerobic engine without excessive fatigue.",
+I/flutter (23386): │ 💡     "keyWorkouts": "The Sunday Long Runs are the primary drivers of progress, gradually increasing in duration. These are supported by twice-weekly strength and four mobility sessions to ensure durability.",
+I/flutter (23386): │ 💡     "recoveryStrategy": "The plan respects the user's scheduled time off in early January by reducing volume immediately before and providing a gradual re-entry. Recovery weeks are scheduled every 4 weeks."
+I/flutter (23386): │ 💡   }
+I/flutter (23386): │ 💡 }
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): 📊 Plan Generation Summary (Three-Tier Approach):
+I/flutter (23386):   ✅ TIER 1 - Phases: 4
+I/flutter (23386):     - base (6 weeks)
+I/flutter (23386):     - build (8 weeks)
+I/flutter (23386):     - peak (4 weeks)
+I/flutter (23386):     - taper (2 weeks)
+I/flutter (23386):   ✅ TIER 2 - Blocks: 2
+I/flutter (23386):     - Blocks in first phase: 2
+I/flutter (23386):   ✅ TIER 3 - Workouts: 11
+I/flutter (23386):     - Workouts in Block 1: 4
+I/flutter (23386):     - Workouts in Block 2: 7
+I/flutter (23386): ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+I/flutter (23386): │ #0   AppLogger.i (package:ash_trainer/core/utils/logger.dart:37:13)
+I/flutter (23386): │ #1   TimeOffController.addTimeOff.<anonymous closure> (package:ash_trainer/features/calendar/presentation/providers/time_off_provider.dart:74:23)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 20:51:18.540 (+0:00:44.495642)
+I/flutter (23386): ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+I/flutter (23386): │ 💡 AI Adjustment complete.
+I/flutter (23386): └───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+W/WindowOnBackDispatcher(23386): sendCancelIfRunning: isInProgress=false callback=androidx.activity.OnBackPressedDispatcher$Api34Impl$createOnBackAnimationCallback$1@25ddf23

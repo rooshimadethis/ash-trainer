@@ -35,8 +35,14 @@ class TimeOffController extends _$TimeOffController {
       {bool deleteConflicts = true}) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      // 1. Delete conflicts if requested
-      if (deleteConflicts) {
+      final duration = end.difference(start).inDays + 1;
+      final isLongBreak = duration > 2;
+
+      // 1. Delete conflicts only for short breaks without AI adjustment.
+      // For long breaks, we WANT the AI to see the workouts we are displacing
+      // so it can intelligently reschedule them. The AI 'adjust' mode will
+      // clear the future plan once it has finished generating the new one.
+      if (deleteConflicts && !isLongBreak) {
         final workoutRepo = ref.read(workoutRepositoryProvider);
         final conflicts = await workoutRepo.getWorkoutsForDateRange(
             startDate: start, endDate: end);
@@ -45,34 +51,16 @@ class TimeOffController extends _$TimeOffController {
         }
       }
 
-      // 2. Add Time Off
+      // 2. Add Time Off entry - AI will see this as part of the context
       await ref.read(timeOffRepositoryProvider).addTimeOff(start, end, reason);
 
       // 3. Trigger Re-plan if duration > 2 days
-      final duration = end.difference(start).inDays + 1;
-      if (duration > 2) {
-        try {
-          final goalRepo = ref.read(goalRepositoryProvider);
-          final userRepo = ref.read(userRepositoryProvider);
-          final activeGoal = await goalRepo.getActiveGoal();
-          final currentUser = await userRepo.getCurrentUser();
-
-          if (activeGoal != null && currentUser != null) {
-            AppLogger.i(
-                'Time off > 2 days ($duration days). Triggering AI Adjustment...');
-            final generatePlan = ref.read(generateTrainingPlanProvider);
-            await generatePlan.execute(
-              goalId: activeGoal.id,
-              userId: currentUser.id,
-              mode: PlanningMode.adjust,
-            );
-            AppLogger.i('AI Adjustment complete.');
-          }
-        } catch (e, st) {
-          AppLogger.e('Failed to trigger AI adjustment for time off',
-              error: e, stackTrace: st);
-          // Non-fatal, continued to refresh list
-        }
+      if (isLongBreak) {
+        await _triggerAIAdjustment(
+          duration: duration,
+          fallbackStart: deleteConflicts ? start : null,
+          fallbackEnd: deleteConflicts ? end : null,
+        );
       }
 
       // 4. Refresh list
@@ -83,8 +71,20 @@ class TimeOffController extends _$TimeOffController {
   Future<void> deleteTimeOff(int id) async {
     state = const AsyncValue.loading();
     state = await AsyncValue.guard(() async {
-      await ref.read(timeOffRepositoryProvider).deleteTimeOff(id);
-      return ref.read(timeOffRepositoryProvider).getAllTimeOffs();
+      final repo = ref.read(timeOffRepositoryProvider);
+      final allTimeOffs = await repo.getAllTimeOffs();
+      final entry = allTimeOffs.firstWhere((e) => e.id == id);
+
+      final duration = entry.endDate.difference(entry.startDate).inDays + 1;
+
+      await repo.deleteTimeOff(id);
+
+      // Trigger re-plan if we are removing a significant break
+      if (duration > 2) {
+        await _triggerAIAdjustment(duration: duration);
+      }
+
+      return repo.getAllTimeOffs();
     });
   }
 
@@ -102,7 +102,6 @@ class TimeOffController extends _$TimeOffController {
       }
       // Case 2: Remove start day - update start date
       else if (isStart) {
-        // We delete and re-add because we don't have update yet, simpler
         await repo.deleteTimeOff(entry.id);
         await repo.addTimeOff(entry.startDate.add(const Duration(days: 1)),
             entry.endDate, entry.reason ?? '');
@@ -118,15 +117,57 @@ class TimeOffController extends _$TimeOffController {
       // Case 4: Middle day - split into two
       else {
         await repo.deleteTimeOff(entry.id);
-        // First segment
         await repo.addTimeOff(entry.startDate,
             dayToRemove.subtract(const Duration(days: 1)), entry.reason ?? '');
-        // Second segment
         await repo.addTimeOff(dayToRemove.add(const Duration(days: 1)),
             entry.endDate, entry.reason ?? '');
       }
 
+      // If the original entry was a long break, shifting it might require a re-plan
+      final duration = entry.endDate.difference(entry.startDate).inDays + 1;
+      if (duration > 2) {
+        await _triggerAIAdjustment(duration: duration);
+      }
+
       return repo.getAllTimeOffs();
     });
+  }
+
+  Future<void> _triggerAIAdjustment({
+    required int duration,
+    DateTime? fallbackStart,
+    DateTime? fallbackEnd,
+  }) async {
+    try {
+      final goalRepo = ref.read(goalRepositoryProvider);
+      final userRepo = ref.read(userRepositoryProvider);
+      final activeGoal = await goalRepo.getActiveGoal();
+      final currentUser = await userRepo.getCurrentUser();
+
+      if (activeGoal != null && currentUser != null) {
+        AppLogger.i(
+            'Time off changed ($duration days). Triggering AI Adjustment...');
+        final generatePlan = ref.read(generateTrainingPlanProvider);
+        await generatePlan.execute(
+          goalId: activeGoal.id,
+          userId: currentUser.id,
+          mode: PlanningMode.adjust,
+        );
+        AppLogger.i('AI Adjustment complete.');
+      }
+    } catch (e, st) {
+      AppLogger.e('Failed to trigger AI adjustment for time off changes',
+          error: e, stackTrace: st);
+
+      // Fallback: If AI fails and we have a range to clear, do it manually
+      if (fallbackStart != null && fallbackEnd != null) {
+        final workoutRepo = ref.read(workoutRepositoryProvider);
+        final conflicts = await workoutRepo.getWorkoutsForDateRange(
+            startDate: fallbackStart, endDate: fallbackEnd);
+        for (var workout in conflicts) {
+          await workoutRepo.deleteWorkout(workout.id);
+        }
+      }
+    }
   }
 }

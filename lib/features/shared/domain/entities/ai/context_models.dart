@@ -33,9 +33,17 @@ class PlanGenerationContext with _$PlanGenerationContext {
       'futurePlan': instance.futurePlan
           .map((w) => WorkoutSummary.activeToJson(w))
           .toList(),
-      'scheduledTimeOff':
-          instance.scheduledTimeOff.map((t) => t.toJson()).toList(),
-      'config': instance.config.toJson(),
+      'scheduledTimeOff': instance.scheduledTimeOff.map((t) {
+        return {
+          'startDate': t.startDate.toIso8601String().split('T')[0],
+          'endDate': t.endDate.toIso8601String().split('T')[0],
+          if (t.reason != null) 'reason': t.reason,
+        };
+      }).toList(),
+      'config': {
+        ...instance.config.toJson(),
+        'startDate': instance.config.startDate.toIso8601String().split('T')[0],
+      },
       'philosophy': instance.philosophy.toJson(),
     };
   }
@@ -234,7 +242,13 @@ class WorkoutSummary with _$WorkoutSummary {
       _$WorkoutSummaryFromJson(json);
 
   factory WorkoutSummary.fromEntity(Workout w, DateTime now) {
-    final daysAgo = now.difference(w.scheduledDate).inDays;
+    // Standardize to midnight for "days ago/ahead" calculation to avoid off-by-one errors
+    // from time-of-day differences and truncate-towards-zero behavior in Duration.inDays
+    final today = DateTime(now.year, now.month, now.day);
+    final workoutDay = DateTime(
+        w.scheduledDate.year, w.scheduledDate.month, w.scheduledDate.day);
+
+    final daysAgo = today.difference(workoutDay).inDays;
 
     // Filter metrics based on type relevance to save tokens
     final isRun = !['strength', 'mobility', 'yoga', 'cross_training']

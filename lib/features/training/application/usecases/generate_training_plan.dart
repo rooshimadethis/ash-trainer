@@ -100,10 +100,9 @@ class GenerateTrainingPlan {
     );
 
     // 4. Save Plan
-    // If Repair, we might need to clear future workouts first?
-    // The builder determines the start date for the new block.
-    // Ideally, we clear anything overlapping or future from that date.
-    if (mode == PlanningMode.repair) {
+    // If Repair or Adjust, we clear future workouts from the start date onwards
+    // to prevent duplicates when the new plan is saved.
+    if (mode == PlanningMode.repair || mode == PlanningMode.adjust) {
       await _workoutRepo.deleteFutureWorkouts(
           goalId: goalId, fromDate: planStartDate);
     }

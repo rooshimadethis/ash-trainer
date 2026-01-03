@@ -21,6 +21,9 @@ class AppAnimations {
   /// Very slow animations (600ms) - for dramatic effects
   static const Duration verySlow = Duration(milliseconds: 600);
 
+  /// Workout card entry animation (500ms)
+  static const Duration workoutEntry = Duration(milliseconds: 500);
+
   // ============================================================================
   // SPECIFIC USE CASES
   // ============================================================================
@@ -70,6 +73,9 @@ class AppAnimations {
 
   /// Cubic bezier for smooth transitions
   static const Curve easeOutCubic = Curves.easeOutCubic;
+
+  /// Smooth entry for lists/cards
+  static const Curve entryCurve = Curves.easeOutQuart;
 
   /// Linear motion - use sparingly
   static const Curve linear = Curves.linear;

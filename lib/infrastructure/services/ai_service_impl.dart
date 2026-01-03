@@ -47,7 +47,12 @@ class AIServiceImpl implements AIService {
 
     // DEBUG: Log Request
     AppLogger.i('--- AI REQUEST (Generate Plan) ---');
-    AppLogger.i(prompt);
+    AppLogger.i('SYSTEM PROMPT: $systemPrompt');
+    AppLogger.i('CONTEXT:');
+    AppLogger.i(const JsonEncoder.withIndent('  ')
+        .convert(PlanGenerationContext.activeToJson(context)));
+    AppLogger.i('TASK PROMPT: $taskPrompt');
+    AppLogger.i('--- END AI REQUEST ---');
 
     final schema = _mapJsonSchemaToSdkSchema(responseSchema);
 
@@ -122,7 +127,9 @@ class AIServiceImpl implements AIService {
 
     // DEBUG: Log Request
     AppLogger.i('--- AI REQUEST (Adjust Workout) ---');
-    AppLogger.i(prompt);
+    AppLogger.i('CONTEXT:');
+    AppLogger.i(const JsonEncoder.withIndent('  ').convert(contextMap));
+    AppLogger.i('TASK PROMPT: $taskPrompt');
 
     final schema = _mapJsonSchemaToSdkSchema(responseSchema);
 
@@ -191,7 +198,9 @@ class AIServiceImpl implements AIService {
 
     // DEBUG: Log Request
     AppLogger.i('--- AI REQUEST (Reschedule Workouts) ---');
-    AppLogger.i(prompt);
+    AppLogger.i('CONTEXT:');
+    AppLogger.i(const JsonEncoder.withIndent('  ').convert(contextMap));
+    AppLogger.i('TASK PROMPT: $taskPrompt');
 
     final schema = _mapJsonSchemaToSdkSchema(responseSchema);
 
