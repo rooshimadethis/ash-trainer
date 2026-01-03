@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/shadows.dart';
+import '../../../../core/theme/borders.dart';
 import '../../../../core/utils/haptics.dart';
 
 enum AshButtonVariant { primary, secondary }
@@ -63,12 +64,12 @@ class _AshButtonState extends State<AshButton> {
                       : theme.colorScheme.surfaceContainerHighest))
               : theme.colorScheme.surfaceContainerHighest
                   .withValues(alpha: 0.5),
-          border: Border.all(
-            color: isDark
-                ? const Color(0xFFFF4D8C).withValues(alpha: 0.5)
-                : Colors.black.withValues(alpha: 0.1),
-            width: 1.5,
-          ),
+          border: AppBorders.card(context,
+              color: isEnabled
+                  ? null
+                  : (isDark
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : Colors.black.withValues(alpha: 0.1))),
           boxShadow: isEnabled
               ? (_isPressed
                   ? AppShadows.retroHover
