@@ -48,6 +48,16 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   }
 
   @override
+  Stream<List<TrainingBlock>> watchBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _trainingPlanDao
+        .watchBlocksForDateRange(startDate: startDate, endDate: endDate)
+        .map((dtos) => dtos.map((dto) => dto.toEntity()).toList());
+  }
+
+  @override
   Future<Workout?> getWorkout(String id) async {
     final dto = await _workoutDao.getWorkoutById(id);
     if (dto == null) return null;
@@ -252,6 +262,17 @@ class WorkoutRepositoryImpl implements WorkoutRepository {
   Future<void> deleteFutureWorkouts(
       {required String goalId, required DateTime fromDate}) {
     return _workoutDao.deleteFutureWorkouts(int.parse(goalId), fromDate);
+  }
+
+  @override
+  Future<void> clearFuturePlan(
+      {required String goalId, required DateTime fromDate}) async {
+    final gId = int.parse(goalId);
+    await _workoutDao.transaction(() async {
+      await _workoutDao.deleteFutureWorkouts(gId, fromDate);
+      await _trainingPlanDao.clearFutureBlocks(gId, fromDate);
+      await _trainingPlanDao.clearFuturePhases(gId, fromDate);
+    });
   }
 
   @override

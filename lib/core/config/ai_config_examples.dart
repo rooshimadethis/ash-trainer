@@ -4,7 +4,7 @@
 /// for different use cases beyond the predefined task types.
 library;
 
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 import 'ai_config.dart';
 
 class AIConfigExamples {

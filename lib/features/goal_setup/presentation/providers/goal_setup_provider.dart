@@ -5,6 +5,7 @@ import '../../../../features/shared/domain/entities/user.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../core/utils/logger.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 // State for the Goal Setup flow
 class GoalSetupState {
@@ -260,6 +261,7 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
 
   Future<void> submitGoal() async {
     state = state.copyWith(isGenerating: true, error: null);
+    ref.read(isAshThinkingProvider.notifier).state = true;
     try {
       final userRepo = ref.read(userRepositoryProvider);
       final goalRepo = ref.read(goalRepositoryProvider);
@@ -337,10 +339,12 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
         userId: createdUser.id,
       );
 
+      ref.read(isAshThinkingProvider.notifier).state = false;
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success
     } catch (e, stackTrace) {
       AppLogger.e('Failed to submit goal', error: e, stackTrace: stackTrace);
+      ref.read(isAshThinkingProvider.notifier).state = false;
       state = state.copyWith(isGenerating: false, error: e.toString());
     }
   }

@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../data/repositories/time_off_repository_impl.dart';
-import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../data/providers/repository_providers.dart';
+import '../../../../infrastructure/providers/service_providers.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
+
 import '../../../shared/domain/entities/time_off_entry.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/repositories/time_off_repository.dart';
@@ -38,6 +40,10 @@ class TimeOffController extends _$TimeOffController {
       final duration = end.difference(start).inDays + 1;
       final isLongBreak = duration > 2;
 
+      if (isLongBreak) {
+        ref.read(isAshThinkingProvider.notifier).state = true;
+      }
+
       // 1. Delete conflicts only for short breaks without AI adjustment.
       // For long breaks, we WANT the AI to see the workouts we are displacing
       // so it can intelligently reschedule them. The AI 'adjust' mode will
@@ -64,7 +70,9 @@ class TimeOffController extends _$TimeOffController {
       }
 
       // 4. Refresh list
-      return ref.read(timeOffRepositoryProvider).getAllTimeOffs();
+      final all = await ref.read(timeOffRepositoryProvider).getAllTimeOffs();
+      ref.read(isAshThinkingProvider.notifier).state = false;
+      return all;
     });
   }
 
@@ -81,7 +89,9 @@ class TimeOffController extends _$TimeOffController {
 
       // Trigger re-plan if we are removing a significant break
       if (duration > 2) {
+        ref.read(isAshThinkingProvider.notifier).state = true;
         await _triggerAIAdjustment(duration: duration);
+        ref.read(isAshThinkingProvider.notifier).state = false;
       }
 
       return repo.getAllTimeOffs();
@@ -126,7 +136,9 @@ class TimeOffController extends _$TimeOffController {
       // If the original entry was a long break, shifting it might require a re-plan
       final duration = entry.endDate.difference(entry.startDate).inDays + 1;
       if (duration > 2) {
+        ref.read(isAshThinkingProvider.notifier).state = true;
         await _triggerAIAdjustment(duration: duration);
+        ref.read(isAshThinkingProvider.notifier).state = false;
       }
 
       return repo.getAllTimeOffs();

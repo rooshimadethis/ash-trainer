@@ -20,18 +20,61 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
     return (delete(phases)..where((t) => t.goalId.equals(goalId))).go();
   }
 
+  Future<void> clearFuturePhases(int goalId, DateTime fromDate) async {
+    // 1. Delete phases that start strictly in the future
+    await (delete(phases)
+          ..where((t) =>
+              t.goalId.equals(goalId) &
+              t.startDate.isBiggerOrEqualValue(fromDate)))
+        .go();
+
+    // 2. Clip phases that overlap
+    await (update(phases)
+          ..where((t) =>
+              t.goalId.equals(goalId) &
+              t.startDate.isSmallerThanValue(fromDate) &
+              t.endDate.isBiggerOrEqualValue(fromDate)))
+        .write(PhasesCompanion(
+      endDate: Value(fromDate.subtract(const Duration(days: 1))),
+    ));
+  }
+
   Future<void> deleteBlocksForGoal(int goalId) async {
-    // Get all phase IDs for this goal
     final phaseIds = await (select(phases)
           ..where((t) => t.goalId.equals(goalId)))
         .map((row) => row.id)
         .get();
 
-    // Delete all blocks associated with those phases
     if (phaseIds.isNotEmpty) {
       await (delete(trainingBlocks)..where((t) => t.phaseId.isIn(phaseIds)))
           .go();
     }
+  }
+
+  Future<void> clearFutureBlocks(int goalId, DateTime fromDate) async {
+    final phaseIds = await (select(phases)
+          ..where((t) => t.goalId.equals(goalId)))
+        .map((row) => row.id)
+        .get();
+
+    if (phaseIds.isEmpty) return;
+
+    // 1. Delete blocks that start in the future
+    await (delete(trainingBlocks)
+          ..where((t) =>
+              t.phaseId.isIn(phaseIds) &
+              t.startDate.isBiggerOrEqualValue(fromDate)))
+        .go();
+
+    // 2. Clip blocks that overlap
+    await (update(trainingBlocks)
+          ..where((t) =>
+              t.phaseId.isIn(phaseIds) &
+              t.startDate.isSmallerThanValue(fromDate) &
+              t.endDate.isBiggerOrEqualValue(fromDate)))
+        .write(TrainingBlocksCompanion(
+      endDate: Value(fromDate.subtract(const Duration(days: 1))),
+    ));
   }
 
   Future<TrainingBlockDTO?> getBlockById(String id) {
@@ -53,6 +96,19 @@ class TrainingPlanDao extends DatabaseAccessor<AppDatabase>
           })
           ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
         .get();
+  }
+
+  Stream<List<TrainingBlockDTO>> watchBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return (select(trainingBlocks)
+          ..where((t) {
+            return t.startDate.isSmallerOrEqualValue(endDate) &
+                t.endDate.isBiggerOrEqualValue(startDate);
+          })
+          ..orderBy([(t) => OrderingTerm(expression: t.startDate)]))
+        .watch();
   }
 
   Future<void> updateBlockStats(String blockId, double distance, int duration) {

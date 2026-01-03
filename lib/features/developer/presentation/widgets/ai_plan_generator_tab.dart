@@ -11,6 +11,7 @@ import '../../../shared/domain/entities/goal.dart';
 import '../../../training/application/usecases/build_planning_context.dart';
 import '../../../training/application/usecases/build_plan_philosophy.dart';
 import '../../../../core/utils/logger.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 class AIPlanGeneratorTab extends ConsumerStatefulWidget {
   const AIPlanGeneratorTab({super.key});
@@ -134,6 +135,7 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
       _isLoading = true;
       _output = 'Generating plan...';
     });
+    ref.read(isAshThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -232,8 +234,11 @@ $contextJson
         responseSchema: AISchemas.trainingPlan,
       );
 
+      final costStr = result.totalCost != null
+          ? ' (\$${result.totalCost!.toStringAsFixed(4)})'
+          : '';
       final prettyOutput =
-          'Tokens: ${result.tokensUsed}\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic).toJson())}';
+          'Tokens: ${result.tokensUsed}$costStr\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic).toJson())}';
 
       setState(() {
         _rawResponse = result.text ?? 'No raw text';
@@ -259,6 +264,7 @@ $contextJson
       setState(() {
         _isLoading = false;
       });
+      ref.read(isAshThinkingProvider.notifier).state = false;
     }
   }
 

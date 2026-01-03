@@ -15,6 +15,7 @@ import 'package:collection/collection.dart';
 import '../widgets/calendar_grid_skeleton.dart';
 import '../widgets/workout_list_skeleton.dart';
 import '../../../developer/presentation/providers/debug_providers.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -103,7 +104,8 @@ class MonthlyView extends ConsumerWidget {
           const SizedBox(height: 12),
 
           // Ash context bubble
-          (ref.watch(debugShowShimmerSkeletonProvider))
+          (ref.watch(debugShowShimmerSkeletonProvider) ||
+                  ref.watch(isAshThinkingProvider))
               ? const AshChatBubble(text: "Thinking...", isThinking: true)
               : monthlyWorkoutsAsync.when(
                   data: (workouts) => monthlyBlocksAsync.when(

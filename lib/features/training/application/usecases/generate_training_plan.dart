@@ -103,7 +103,7 @@ class GenerateTrainingPlan {
     // If Repair or Adjust, we clear future workouts from the start date onwards
     // to prevent duplicates when the new plan is saved.
     if (mode == PlanningMode.repair || mode == PlanningMode.adjust) {
-      await _workoutRepo.deleteFutureWorkouts(
+      await _workoutRepo.clearFuturePlan(
           goalId: goalId, fromDate: planStartDate);
     }
 

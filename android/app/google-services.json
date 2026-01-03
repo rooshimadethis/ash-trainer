@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "119839812640",
+    "project_id": "ash-trainer",
+    "storage_bucket": "ash-trainer.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:119839812640:android:27d6b038c8aeea39eda045",
+        "android_client_info": {
+          "package_name": "com.example.ash_trainer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhcyBaFbOBbb0aTXF68SGZQb2jnYGMsm0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

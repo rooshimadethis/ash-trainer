@@ -286,6 +286,7 @@ mixin _$AIResponse<T> {
   String? get text => throw _privateConstructorUsedError;
   FunctionCall? get functionCall => throw _privateConstructorUsedError;
   int get tokensUsed => throw _privateConstructorUsedError;
+  double? get totalCost => throw _privateConstructorUsedError;
   DateTime get timestamp => throw _privateConstructorUsedError;
 
   /// Create a copy of AIResponse
@@ -306,6 +307,7 @@ abstract class $AIResponseCopyWith<T, $Res> {
       String? text,
       FunctionCall? functionCall,
       int tokensUsed,
+      double? totalCost,
       DateTime timestamp});
 
   $FunctionCallCopyWith<$Res>? get functionCall;
@@ -330,6 +332,7 @@ class _$AIResponseCopyWithImpl<T, $Res, $Val extends AIResponse<T>>
     Object? text = freezed,
     Object? functionCall = freezed,
     Object? tokensUsed = null,
+    Object? totalCost = freezed,
     Object? timestamp = null,
   }) {
     return _then(_value.copyWith(
@@ -349,6 +352,10 @@ class _$AIResponseCopyWithImpl<T, $Res, $Val extends AIResponse<T>>
           ? _value.tokensUsed
           : tokensUsed // ignore: cast_nullable_to_non_nullable
               as int,
+      totalCost: freezed == totalCost
+          ? _value.totalCost
+          : totalCost // ignore: cast_nullable_to_non_nullable
+              as double?,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
@@ -384,6 +391,7 @@ abstract class _$$AIResponseImplCopyWith<T, $Res>
       String? text,
       FunctionCall? functionCall,
       int tokensUsed,
+      double? totalCost,
       DateTime timestamp});
 
   @override
@@ -407,6 +415,7 @@ class __$$AIResponseImplCopyWithImpl<T, $Res>
     Object? text = freezed,
     Object? functionCall = freezed,
     Object? tokensUsed = null,
+    Object? totalCost = freezed,
     Object? timestamp = null,
   }) {
     return _then(_$AIResponseImpl<T>(
@@ -426,6 +435,10 @@ class __$$AIResponseImplCopyWithImpl<T, $Res>
           ? _value.tokensUsed
           : tokensUsed // ignore: cast_nullable_to_non_nullable
               as int,
+      totalCost: freezed == totalCost
+          ? _value.totalCost
+          : totalCost // ignore: cast_nullable_to_non_nullable
+              as double?,
       timestamp: null == timestamp
           ? _value.timestamp
           : timestamp // ignore: cast_nullable_to_non_nullable
@@ -442,6 +455,7 @@ class _$AIResponseImpl<T> implements _AIResponse<T> {
       this.text,
       this.functionCall,
       required this.tokensUsed,
+      this.totalCost,
       required this.timestamp});
 
   @override
@@ -453,11 +467,13 @@ class _$AIResponseImpl<T> implements _AIResponse<T> {
   @override
   final int tokensUsed;
   @override
+  final double? totalCost;
+  @override
   final DateTime timestamp;
 
   @override
   String toString() {
-    return 'AIResponse<$T>(data: $data, text: $text, functionCall: $functionCall, tokensUsed: $tokensUsed, timestamp: $timestamp)';
+    return 'AIResponse<$T>(data: $data, text: $text, functionCall: $functionCall, tokensUsed: $tokensUsed, totalCost: $totalCost, timestamp: $timestamp)';
   }
 
   @override
@@ -471,6 +487,8 @@ class _$AIResponseImpl<T> implements _AIResponse<T> {
                 other.functionCall == functionCall) &&
             (identical(other.tokensUsed, tokensUsed) ||
                 other.tokensUsed == tokensUsed) &&
+            (identical(other.totalCost, totalCost) ||
+                other.totalCost == totalCost) &&
             (identical(other.timestamp, timestamp) ||
                 other.timestamp == timestamp));
   }
@@ -482,6 +500,7 @@ class _$AIResponseImpl<T> implements _AIResponse<T> {
       text,
       functionCall,
       tokensUsed,
+      totalCost,
       timestamp);
 
   /// Create a copy of AIResponse
@@ -499,6 +518,7 @@ abstract class _AIResponse<T> implements AIResponse<T> {
       final String? text,
       final FunctionCall? functionCall,
       required final int tokensUsed,
+      final double? totalCost,
       required final DateTime timestamp}) = _$AIResponseImpl<T>;
 
   @override
@@ -509,6 +529,8 @@ abstract class _AIResponse<T> implements AIResponse<T> {
   FunctionCall? get functionCall;
   @override
   int get tokensUsed;
+  @override
+  double? get totalCost;
   @override
   DateTime get timestamp;
 

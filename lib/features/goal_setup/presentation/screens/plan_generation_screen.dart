@@ -8,6 +8,7 @@ import '../../../../core/utils/logger.dart';
 import '../../../shared/presentation/widgets/ash_scaffold.dart';
 import '../providers/goal_setup_provider.dart';
 import 'plan_review_screen.dart';
+import 'package:ash_trainer/features/shared/presentation/widgets/ash_chat_bubble.dart';
 
 class PlanGenerationScreen extends ConsumerStatefulWidget {
   const PlanGenerationScreen({super.key});
@@ -147,72 +148,12 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen>
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
-                  height: 80,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 400),
-                    transitionBuilder:
-                        (Widget child, Animation<double> animation) {
-                      return FadeTransition(
-                        opacity: animation,
-                        child: SlideTransition(
-                          position: Tween<Offset>(
-                            begin: const Offset(0.0, 0.4),
-                            end: Offset.zero,
-                          ).animate(CurvedAnimation(
-                            parent: animation,
-                            curve: Curves.easeOutBack,
-                          )),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      _messages[_messageIndex],
-                      key: ValueKey<int>(_messageIndex),
-                      style: AppTextStyles.bodyLarge.copyWith(
-                        color: theme.colorScheme.onSurface,
-                        fontStyle: FontStyle.italic,
-                        height: 1.4,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
+                  height: 120, // Increased height for bubble
+                  child: AshChatBubble(
+                    key: ValueKey<int>(_messageIndex),
+                    text: _messages[_messageIndex],
+                    showAvatar: false,
                   ),
-                ),
-                const SizedBox(height: 64),
-                // Simple status pulsing dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(3, (index) {
-                    return AnimatedBuilder(
-                      animation: _pulseController,
-                      builder: (context, child) {
-                        final isActive =
-                            (_pulseController.value * 3).floor() == index;
-                        return Container(
-                          width: 10,
-                          height: 10,
-                          margin: const EdgeInsets.symmetric(horizontal: 6),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isActive
-                                ? AppColors.primary
-                                : theme.colorScheme.onSurface
-                                    .withValues(alpha: 0.2),
-                            boxShadow: isActive
-                                ? [
-                                    BoxShadow(
-                                      color: AppColors.primary
-                                          .withValues(alpha: 0.4),
-                                      blurRadius: 8,
-                                      spreadRadius: 2,
-                                    )
-                                  ]
-                                : null,
-                          ),
-                        );
-                      },
-                    );
-                  }),
                 ),
               ],
             ),

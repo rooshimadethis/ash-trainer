@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'conversation.dart';
+export 'conversation.dart';
 
 part 'ai_types.freezed.dart';
 part 'ai_types.g.dart';
@@ -25,6 +26,7 @@ class AIResponse<T> with _$AIResponse<T> {
     String? text,
     FunctionCall? functionCall,
     required int tokensUsed,
+    double? totalCost,
     required DateTime timestamp,
   }) = _AIResponse;
 

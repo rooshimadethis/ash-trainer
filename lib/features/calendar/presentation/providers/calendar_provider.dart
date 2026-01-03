@@ -32,6 +32,18 @@ final todayWorkoutProvider = StreamProvider<Workout?>((ref) {
       .map((workouts) => workouts.isNotEmpty ? workouts.first : null);
 });
 
+/// Provider for today's training block
+final todayBlockProvider = StreamProvider<TrainingBlock?>((ref) {
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+  final tomorrow = today.add(const Duration(days: 1));
+
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository
+      .watchBlocksForDateRange(startDate: today, endDate: tomorrow)
+      .map((blocks) => blocks.isNotEmpty ? blocks.first : null);
+});
+
 /// Provider for a single workout by ID
 final workoutDetailProvider =
     StreamProvider.family<Workout?, String>((ref, id) {
@@ -80,28 +92,34 @@ final monthlyWorkoutsProvider = StreamProvider<List<Workout>>((ref) {
 
 /// Provider for fetching blocks for a specific date range
 final blocksForRangeProvider =
-    FutureProvider.family<List<TrainingBlock>, (DateTime, DateTime)>(
-        (ref, range) async {
+    StreamProvider.family<List<TrainingBlock>, (DateTime, DateTime)>(
+        (ref, range) {
   final workoutRepository = ref.watch(workoutRepositoryProvider);
-  return workoutRepository.getBlocksForDateRange(
+  return workoutRepository.watchBlocksForDateRange(
     startDate: range.$1,
     endDate: range.$2,
   );
 });
 
-/// Provider for the weekly blocks based on selectedWeekProvider
-final weeklyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
+final weeklyBlocksProvider = StreamProvider<List<TrainingBlock>>((ref) {
   final startOfWeek = ref.watch(selectedWeekProvider);
   final endOfWeek = startOfWeek.add(const Duration(days: 7));
 
-  return ref.watch(blocksForRangeProvider((startOfWeek, endOfWeek)).future);
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.watchBlocksForDateRange(
+    startDate: startOfWeek,
+    endDate: endOfWeek,
+  );
 });
 
-/// Provider for the monthly grid overview blocks
-final monthlyBlocksProvider = FutureProvider<List<TrainingBlock>>((ref) async {
+final monthlyBlocksProvider = StreamProvider<List<TrainingBlock>>((ref) {
   final focusedMonth = ref.watch(monthlyMonthProvider);
   final start = focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
   final end = start.add(const Duration(days: 42));
 
-  return ref.watch(blocksForRangeProvider((start, end)).future);
+  final workoutRepository = ref.watch(workoutRepositoryProvider);
+  return workoutRepository.watchBlocksForDateRange(
+    startDate: start,
+    endDate: end,
+  );
 });

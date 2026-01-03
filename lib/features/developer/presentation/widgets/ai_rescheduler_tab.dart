@@ -7,6 +7,7 @@ import '../../../shared/domain/entities/ai/context_models.dart';
 import '../../../../core/constants/ai_schemas.dart';
 import '../../../../core/constants/prompts.dart';
 import '../../../../core/utils/logger.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 class AIReschedulerTab extends ConsumerStatefulWidget {
   const AIReschedulerTab({super.key});
@@ -32,6 +33,7 @@ class _AIReschedulerTabState extends ConsumerState<AIReschedulerTab> {
       _isLoading = true;
       _output = 'Rescheduling...';
     });
+    ref.read(isAshThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -69,8 +71,11 @@ Context: ${context.toJson()}
         responseSchema: responseSchema,
       );
 
+      final costStr = result.totalCost != null
+          ? ' (\$${result.totalCost!.toStringAsFixed(4)})'
+          : '';
       final prettyOutput =
-          'Tokens: ${result.tokensUsed}\n\n${const JsonEncoder.withIndent('  ').convert((result.data as List<dynamic>?)?.map((w) => w.toJson()).toList())}';
+          'Tokens: ${result.tokensUsed}$costStr\n\n${const JsonEncoder.withIndent('  ').convert((result.data as List<dynamic>?)?.map((w) => w.toJson()).toList())}';
 
       setState(() {
         _output = prettyOutput;
@@ -80,6 +85,7 @@ Context: ${context.toJson()}
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);
+      ref.read(isAshThinkingProvider.notifier).state = false;
     }
   }
 

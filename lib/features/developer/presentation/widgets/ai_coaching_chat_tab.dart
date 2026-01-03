@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../infrastructure/providers/service_providers.dart';
-
-import '../../../shared/domain/entities/ai/context_models.dart';
-import '../../../../core/constants/prompts.dart';
 
 import '../../../../core/utils/logger.dart';
 
@@ -30,9 +26,8 @@ class _AICoachingChatTabState extends ConsumerState<AICoachingChatTab> {
     });
 
     try {
-      final service = ref.read(aiServiceProvider);
-
       // Mock Context - In real app, this comes from BuildCoachingChatContext
+      /*
       final context = CoachingChatContext(
         longTerm: LongTermContext(
           user: const UserContext(availableDays: ['mon', 'wed', 'fri']),
@@ -63,7 +58,11 @@ class _AICoachingChatTabState extends ConsumerState<AICoachingChatTab> {
           currentPainLevel: 3,
         ),
       );
+      */
 
+      // TODO: Chat functionality removed during Firebase AI migration
+      // Uncomment and update when chat is re-implemented
+      /*
       final response = await service.chat(
         userMessage: msg,
         context: context,
@@ -73,6 +72,10 @@ class _AICoachingChatTabState extends ConsumerState<AICoachingChatTab> {
 
       setState(() {
         _chatLog.add('ASH: ${response.data}');
+      });
+      */
+      setState(() {
+        _chatLog.add('ASH: Chat feature temporarily disabled during migration');
       });
     } catch (e, st) {
       AppLogger.e('Chat Error', error: e, stackTrace: st);

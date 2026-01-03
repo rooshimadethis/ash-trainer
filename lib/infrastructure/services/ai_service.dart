@@ -35,44 +35,6 @@ abstract class AIService {
     required String taskPrompt,
     required Map<String, dynamic> responseSchema,
   });
-
-  /// Daily coaching chat (non-streaming)
-  /// Uses CoachingChatContext built by BuildCoachingChatContext use case
-  Future<AIResponse<String>> chat({
-    required String userMessage,
-    required CoachingChatContext context,
-    required String systemPrompt,
-    required String taskPrompt,
-  });
-
-  /// Daily coaching chat (streaming)
-  /// Uses CoachingChatContext built by BuildCoachingChatContext use case
-  Stream<AIResponse<String>> chatStream({
-    required String userMessage,
-    required CoachingChatContext context,
-    required String systemPrompt,
-    required String taskPrompt,
-  });
-
-  /// Chat with function calling support (non-streaming)
-  /// AI can decide to call functions or respond with text
-  Future<AIResponse<String>> chatWithTools({
-    required String userMessage,
-    required CoachingChatContext context,
-    required String systemPrompt,
-    required String taskPrompt,
-    required List<FunctionDeclaration> tools,
-  });
-
-  /// Chat with function calling support (streaming)
-  /// AI can decide to call functions or respond with text
-  Stream<AIResponse<String>> chatStreamWithTools({
-    required String userMessage,
-    required CoachingChatContext context,
-    required String systemPrompt,
-    required String taskPrompt,
-    required List<FunctionDeclaration> tools,
-  });
 }
 
 class AIProcessingException implements Exception {

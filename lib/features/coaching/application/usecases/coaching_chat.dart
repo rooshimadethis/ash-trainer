@@ -1,7 +1,5 @@
 import 'package:ash_trainer/features/shared/domain/entities/ai/ai_types.dart';
-import 'package:ash_trainer/features/shared/domain/entities/ai/conversation.dart';
 import '../../../../infrastructure/services/ai_service.dart';
-import '../../../../core/constants/prompts.dart';
 import 'build_coaching_chat_context.dart';
 import '../../../training/application/usecases/reschedule_workouts.dart';
 import '../../../training/application/usecases/adjust_workout.dart';
@@ -62,11 +60,15 @@ class CoachingChat {
     required String conversationId,
     required String userMessage,
   }) async {
+    // ignore: unused_local_variable
     final context = await _contextBuilder.execute(
       userId: userId,
       conversationId: conversationId,
     );
 
+    // TODO: Chat functionality removed during Firebase AI migration
+    // Uncomment and update when chat is re-implemented
+    /*
     final response = await _aiService.chatWithTools(
       userMessage: userMessage,
       context: context,
@@ -80,8 +82,12 @@ class CoachingChat {
     } else {
       return response.text ?? "I'm not sure how to respond to that.";
     }
+    */
+
+    return "Chat feature temporarily disabled during migration";
   }
 
+  // ignore: unused_element
   Future<String> _executeFunctionCall(FunctionCall call) async {
     try {
       switch (call.name) {

@@ -21,6 +21,11 @@ abstract class WorkoutRepository {
     required DateTime endDate,
   });
 
+  Stream<List<TrainingBlock>> watchBlocksForDateRange({
+    required DateTime startDate,
+    required DateTime endDate,
+  });
+
   /// Get a single workout by ID
   Future<Workout?> getWorkout(String id);
 
@@ -60,6 +65,13 @@ abstract class WorkoutRepository {
 
   /// Delete all workouts scheduled after [fromDate]
   Future<void> deleteFutureWorkouts({
+    required String goalId,
+    required DateTime fromDate,
+  });
+
+  /// Clears workouts, blocks, and phases starting from [fromDate].
+  /// Components that overlap are clipped.
+  Future<void> clearFuturePlan({
     required String goalId,
     required DateTime fromDate,
   });

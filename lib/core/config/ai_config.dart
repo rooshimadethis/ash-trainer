@@ -1,4 +1,4 @@
-import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:firebase_ai/firebase_ai.dart';
 
 enum AITaskType {
   planGeneration,

@@ -8,6 +8,7 @@ import '../../../../core/constants/ai_schemas.dart';
 import '../../../../core/constants/prompts.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../../core/utils/logger.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 class AIWorkoutAdjusterTab extends ConsumerStatefulWidget {
   const AIWorkoutAdjusterTab({super.key});
@@ -34,6 +35,7 @@ class _AIWorkoutAdjusterTabState extends ConsumerState<AIWorkoutAdjusterTab> {
       _isLoading = true;
       _output = 'Adjusting...';
     });
+    ref.read(isAshThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -85,8 +87,11 @@ Context: ${context.toJson()}
         responseSchema: responseSchema,
       );
 
+      final costStr = result.totalCost != null
+          ? ' (\$${result.totalCost!.toStringAsFixed(4)})'
+          : '';
       final prettyOutput =
-          'Tokens: ${result.tokensUsed}\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic)?.toJson())}';
+          'Tokens: ${result.tokensUsed}$costStr\n\n${const JsonEncoder.withIndent('  ').convert((result.data as dynamic)?.toJson())}';
 
       setState(() {
         _output = prettyOutput;
@@ -96,6 +101,7 @@ Context: ${context.toJson()}
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);
+      ref.read(isAshThinkingProvider.notifier).state = false;
     }
   }
 

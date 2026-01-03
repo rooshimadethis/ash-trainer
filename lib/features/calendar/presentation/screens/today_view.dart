@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/text_styles.dart';
 import '../../../shared/presentation/widgets/ash_card.dart';
 import '../../../shared/presentation/widgets/workout_card.dart';
+import '../../../shared/domain/entities/training/training_block.dart';
 import '../providers/calendar_provider.dart';
 import 'package:ash_trainer/features/dashboard/presentation/widgets/recovery_widget.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,7 @@ import '../widgets/workout_list_skeleton.dart';
 import '../../../developer/presentation/providers/debug_providers.dart';
 import '../../../shared/presentation/widgets/shimmer_widget.dart';
 import '../../../../core/theme/borders.dart';
+import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -51,6 +53,12 @@ class _TodayViewState extends ConsumerState<TodayView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (ref.watch(isAshThinkingProvider) ||
+              ref.watch(debugShowShimmerSkeletonProvider))
+            const Padding(
+              padding: EdgeInsets.only(bottom: 24),
+              child: AshChatBubble(text: "Thinking...", isThinking: true),
+            ),
           Center(
             child: Column(
               children: [
@@ -92,8 +100,9 @@ class _TodayViewState extends ConsumerState<TodayView> {
                   )
                 : todayWorkoutAsync.when(
                     data: (workout) {
+                      final block = ref.watch(todayBlockProvider).valueOrNull;
                       if (workout == null) {
-                        return _restDayCard();
+                        return _restDayCard(block);
                       }
                       return AnimatedEntry(
                         key: ValueKey(
@@ -333,11 +342,16 @@ class _TodayViewState extends ConsumerState<TodayView> {
   }
 
   Widget _checkInCard() {
+    final block = ref.watch(todayBlockProvider).valueOrNull;
+    final intent = block?.intent;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const AshChatBubble(
-          text: 'Good morning! Ready to tackle today? How are you feeling?',
+        AshChatBubble(
+          text: intent != null && intent.isNotEmpty
+              ? intent
+              : 'Good morning! Ready to tackle today? How are you feeling?',
         ),
         const SizedBox(height: 12),
         Row(
@@ -382,12 +396,16 @@ class _TodayViewState extends ConsumerState<TodayView> {
     );
   }
 
-  Widget _restDayCard() {
-    return const Column(
+  Widget _restDayCard(TrainingBlock? block) {
+    final intent = block?.intent;
+    final message = intent != null && intent.isNotEmpty
+        ? intent
+        : "It's a Rest Day! 🧘\nListen to your body. Focus on mobility and hydration today.";
+
+    return Column(
       children: [
         AshChatBubble(
-          text:
-              "It's a Rest Day! 🧘\nListen to your body. Focus on mobility and hydration today.",
+          text: message,
         ),
       ],
     );

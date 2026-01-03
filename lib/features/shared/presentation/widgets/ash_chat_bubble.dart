@@ -14,6 +14,7 @@ class AshChatBubble extends StatefulWidget {
   final ChatBubbleSender sender;
   final Widget? icon;
   final bool isThinking;
+  final bool showAvatar;
 
   const AshChatBubble({
     super.key,
@@ -21,6 +22,7 @@ class AshChatBubble extends StatefulWidget {
     this.sender = ChatBubbleSender.ash,
     this.icon,
     this.isThinking = false,
+    this.showAvatar = true,
   });
 
   @override
@@ -166,7 +168,7 @@ class _AshChatBubbleState extends State<AshChatBubble>
             isAsh ? MainAxisAlignment.start : MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          if (isAsh) ...[
+          if (isAsh && widget.showAvatar) ...[
             _buildAvatar(context),
             SizedBox(width: AppDimensions.spacingSm),
           ],
