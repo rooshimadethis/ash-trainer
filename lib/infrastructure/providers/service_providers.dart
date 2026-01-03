@@ -7,6 +7,7 @@ import '../services/health_service_impl.dart';
 import '../services/mock_health_service.dart';
 import '../services/ai_service.dart';
 import '../services/ai_service_impl.dart';
+import '../../features/developer/presentation/providers/debug_providers.dart';
 
 final driftDatabaseProvider = Provider<AppDatabase>((ref) {
   final db = AppDatabase();
@@ -18,7 +19,13 @@ final driftDatabaseProvider = Provider<AppDatabase>((ref) {
 });
 
 final aiServiceProvider = Provider<AIService>((ref) {
-  return AIServiceImpl();
+  final useMock = ref.watch(debugUseMockAiProvider);
+  final alternate = ref.watch(debugAlternateMockPlanProvider);
+
+  return AIServiceImpl(
+    useMockAi: useMock,
+    alternateMockPlan: alternate,
+  );
 });
 
 /// Provider that determines if we are running on a physical device

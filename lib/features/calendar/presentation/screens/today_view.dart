@@ -93,7 +93,8 @@ class _TodayViewState extends ConsumerState<TodayView> {
           const SizedBox(height: 12),
           AnimatedSwitcher(
             duration: AppAnimations.normal,
-            child: (ref.watch(debugShowShimmerSkeletonProvider))
+            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
                 ? const WorkoutListSkeleton(
                     key: ValueKey('loading'),
                     cardCount: 1,
@@ -397,17 +398,46 @@ class _TodayViewState extends ConsumerState<TodayView> {
   }
 
   Widget _restDayCard(TrainingBlock? block) {
-    final intent = block?.intent;
-    final message = intent != null && intent.isNotEmpty
-        ? intent
-        : "It's a Rest Day! 🧘\nListen to your body. Focus on mobility and hydration today.";
-
-    return Column(
-      children: [
-        AshChatBubble(
-          text: message,
+    // The intent is already shown in the check-in bubble at the top.
+    // This card serves as a placeholder in the workout list to indicate Rest Day.
+    return AshCard(
+      child: Center(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.spa_rounded,
+                size: 32,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'Rest Day',
+              style: AppTextStyles.h3,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Active recovery & hydration',
+              style: AppTextStyles.bodyMedium.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

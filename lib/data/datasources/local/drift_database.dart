@@ -26,6 +26,9 @@ import 'daos/biomarker_dao.dart';
 import 'tables/time_off_table.dart';
 import 'daos/time_off_dao.dart';
 
+import 'tables/ai_tasks_table.dart';
+import 'daos/ai_task_dao.dart';
+
 part 'drift_database.g.dart';
 
 @DriftDatabase(tables: [
@@ -43,6 +46,7 @@ part 'drift_database.g.dart';
   MobilityModules,
   MobilityPhases,
   TimeOffs,
+  AiTasks,
 ], daos: [
   UserDao,
   GoalDao,
@@ -52,6 +56,7 @@ part 'drift_database.g.dart';
   TrainingPlanDao,
   BiomarkerDao,
   TimeOffDao,
+  AiTaskDao,
 ])
 class AppDatabase extends _$AppDatabase {
   static int _instanceCount = 0;
@@ -65,14 +70,13 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
         onUpgrade: (m, from, to) async {
           for (var i = from; i < to; i++) {
             if (i == 1) {
-              // Add columns for Phase 2: Workout Logging
               await m.addColumn(workouts, workouts.syncedFrom);
               await m.addColumn(phases, phases.actualDistance);
               await m.addColumn(phases, phases.actualDuration);
@@ -80,34 +84,31 @@ class AppDatabase extends _$AppDatabase {
               await m.addColumn(trainingBlocks, trainingBlocks.actualDuration);
             }
             if (i == 2) {
-              // Add biomarkers table for recovery widget
               await m.createTable(biomarkers);
             }
             if (i == 3) {
-              // Add isKey column for Algorithmic Rescheduling
               await m.addColumn(workouts, workouts.isKey);
             }
             if (i == 4) {
-              // Add rationale columns for Phase 2: AI Rationale
               await m.addColumn(goals, goals.rationaleOverallApproach);
               await m.addColumn(goals, goals.rationaleIntensityDistribution);
               await m.addColumn(goals, goals.rationaleKeyWorkouts);
               await m.addColumn(goals, goals.rationaleRecoveryStrategy);
             }
             if (i == 5) {
-              // Add detailed tables for Strength and Mobility (Phase 2 Refactor)
               await m.createTable(strengthExercises);
               await m.createTable(mobilityModules);
               await m.createTable(mobilityPhases);
             }
             if (i == 6) {
-              // Add structured fields for mobility phase intensity tracking
               await m.addColumn(mobilityPhases, mobilityPhases.intensityNotes);
               await m.addColumn(mobilityPhases, mobilityPhases.irradiationPct);
             }
             if (i == 7) {
-              // Add Time Off table
               await m.createTable(timeOffs);
+            }
+            if (i == 8) {
+              await m.createTable(aiTasks);
             }
           }
         },
@@ -141,6 +142,9 @@ LazyDatabase _openConnection() {
       print('💾 Database file size: $size bytes');
     }
 
-    return NativeDatabase.createInBackground(file);
+    return NativeDatabase.createInBackground(file, setup: (db) {
+      db.execute('PRAGMA journal_mode=WAL;');
+      db.execute('PRAGMA busy_timeout=5000;');
+    });
   });
 }

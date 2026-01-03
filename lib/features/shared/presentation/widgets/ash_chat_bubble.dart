@@ -15,6 +15,7 @@ class AshChatBubble extends StatefulWidget {
   final Widget? icon;
   final bool isThinking;
   final bool showAvatar;
+  final bool fast;
 
   const AshChatBubble({
     super.key,
@@ -23,6 +24,7 @@ class AshChatBubble extends StatefulWidget {
     this.icon,
     this.isThinking = false,
     this.showAvatar = true,
+    this.fast = false,
   });
 
   @override
@@ -104,16 +106,21 @@ class _AshChatBubbleState extends State<AshChatBubble>
     _popController.forward(from: 0.0);
     _textFadeController.value = 0.0;
 
-    // After 1 second, start the growth animation
-    _typingTimer = Timer(AppAnimations.typingDelay, () {
+    final delay = widget.fast ? Duration.zero : AppAnimations.typingDelay;
+
+    // After delay, start the growth animation
+    _typingTimer = Timer(delay, () {
       if (mounted) {
         // Start growing the bubble to full size
         setState(() {
           _isTyping = false;
         });
 
-        // After the bubble has grown (400ms for AnimatedSize), fade in the text
-        Timer(AppAnimations.chatBubbleGrowth, () {
+        final growthDelay =
+            widget.fast ? Duration.zero : AppAnimations.chatBubbleGrowth;
+
+        // After the bubble has grown, fade in the text
+        Timer(growthDelay, () {
           if (mounted) {
             _hasAnimated = true;
             _textFadeController.forward(from: 0.0);

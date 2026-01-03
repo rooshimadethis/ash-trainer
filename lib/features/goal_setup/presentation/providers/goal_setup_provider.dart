@@ -1,11 +1,17 @@
+// lib/features/goal_setup/presentation/providers/goal_setup_provider.dart
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../features/training/presentation/providers/use_case_providers.dart';
 import '../../../../features/shared/domain/entities/goal.dart';
 import '../../../../features/shared/domain/entities/user.dart';
 import '../../../../data/providers/repository_providers.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
 import '../../../../core/utils/logger.dart';
 import 'package:ash_trainer/features/shared/presentation/providers/ash_status_provider.dart';
+import 'package:ash_trainer/core/tasks/background_tasks.dart';
+import 'package:ash_trainer/features/shared/domain/entities/ai/context_models.dart';
+import 'package:ash_trainer/features/developer/presentation/providers/debug_providers.dart';
+import 'package:ash_trainer/data/providers/task_providers.dart';
+import 'package:drift/drift.dart';
+import 'package:ash_trainer/data/datasources/local/drift_database.dart';
 
 // State for the Goal Setup flow
 class GoalSetupState {
@@ -261,7 +267,7 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
 
   Future<void> submitGoal() async {
     state = state.copyWith(isGenerating: true, error: null);
-    ref.read(isAshThinkingProvider.notifier).state = true;
+    ref.read(uiThinkingProvider.notifier).state = true;
     try {
       final userRepo = ref.read(userRepositoryProvider);
       final goalRepo = ref.read(goalRepositoryProvider);
@@ -332,19 +338,76 @@ class GoalSetupNotifier extends StateNotifier<GoalSetupState> {
 
       final createdGoal = await goalRepo.createGoal(newGoal);
 
-      // Trigger plan generation via AI Service
-      final generatePlan = ref.read(generateTrainingPlanProvider);
-      await generatePlan.execute(
+      // Trigger plan generation via Background Task
+      final taskId = "plan_gen_${createdGoal.id}";
+      final dao = ref.read(aiTaskDaoProvider);
+
+      // 1. Manually insert 'running' task from foreground isolate for immediate UI feedback
+      await dao.upsertTask(AiTasksCompanion(
+        id: Value(taskId),
+        taskType: Value(BackgroundTasks.planGenerationTask),
+        status: Value('running'),
+        targetId: Value(createdGoal.id),
+        createdAt: Value(DateTime.now()),
+        updatedAt: Value(DateTime.now()),
+      ));
+
+      // 2. Schedule the background job for reliability
+      await BackgroundTasks.schedulePlanGeneration(
         goalId: createdGoal.id,
         userId: createdUser.id,
+        mode: PlanningMode.initial,
+        useMockAi: ref.read(debugUseMockAiProvider),
+        alternateMockPlan: ref.read(debugAlternateMockPlanProvider),
       );
 
-      ref.read(isAshThinkingProvider.notifier).state = false;
+      // 3. Wait for the plan to be generated (polling the AiTasks table)
+      bool isReady = false;
+      int attempts = 0;
+      const maxAttempts = 180; // 3 minutes
+
+      while (!isReady && attempts < maxAttempts) {
+        await Future.delayed(const Duration(seconds: 1));
+        try {
+          final task = await dao.getTask(taskId);
+
+          // If task is gone, it means it completed (or failed)
+          // We verify success by checking for workouts
+          if (task == null) {
+            final workouts = await ref
+                .read(workoutRepositoryProvider)
+                .getWorkoutsForGoal(createdGoal.id);
+            if (workouts.isNotEmpty) {
+              isReady = true;
+            } else {
+              // Check if it failed or if we're just in a race condition
+              // If we've been polling for a while and no workouts, it failed.
+              if (attempts > 5) {
+                throw Exception('Plan generation failed in background.');
+              }
+            }
+          }
+        } catch (e) {
+          if (e.toString().contains('locked')) {
+            AppLogger.w('Database locked during poll, retrying...');
+          } else {
+            rethrow;
+          }
+        }
+        attempts++;
+      }
+
+      if (!isReady) {
+        throw Exception(
+            'Plan generation timed out. Ash is taking longer than expected.');
+      }
+
+      ref.read(uiThinkingProvider.notifier).state = false;
       state = state.copyWith(isGenerating: false);
       nextStep(); // Move to Plan Review or Success
     } catch (e, stackTrace) {
       AppLogger.e('Failed to submit goal', error: e, stackTrace: stackTrace);
-      ref.read(isAshThinkingProvider.notifier).state = false;
+      ref.read(uiThinkingProvider.notifier).state = false;
       state = state.copyWith(isGenerating: false, error: e.toString());
     }
   }

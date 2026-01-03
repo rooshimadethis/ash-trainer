@@ -35,7 +35,7 @@ class _AIWorkoutAdjusterTabState extends ConsumerState<AIWorkoutAdjusterTab> {
       _isLoading = true;
       _output = 'Adjusting...';
     });
-    ref.read(isAshThinkingProvider.notifier).state = true;
+    ref.read(uiThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -101,7 +101,7 @@ Context: ${context.toJson()}
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);
-      ref.read(isAshThinkingProvider.notifier).state = false;
+      ref.read(uiThinkingProvider.notifier).state = false;
     }
   }
 

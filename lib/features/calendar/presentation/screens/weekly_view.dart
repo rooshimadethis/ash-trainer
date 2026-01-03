@@ -39,7 +39,8 @@ class WeeklyView extends ConsumerWidget {
           // Week grid
           SizedBox(
             height: 120,
-            child: (ref.watch(debugShowShimmerSkeletonProvider))
+            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
                 ? const CalendarGridSkeleton(isWeekly: true)
                 : weeklyWorkoutsAsync.when(
                     data: (workouts) => weeklyBlocksAsync.when(
@@ -81,7 +82,8 @@ class WeeklyView extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // Selected day workout list
-          (ref.watch(debugShowShimmerSkeletonProvider))
+          (ref.watch(debugShowShimmerSkeletonProvider) ||
+                  ref.watch(isAshThinkingProvider))
               ? const WorkoutListSkeleton()
               : weeklyWorkoutsAsync.when(
                   data: (workouts) => weeklyBlocksAsync.when(

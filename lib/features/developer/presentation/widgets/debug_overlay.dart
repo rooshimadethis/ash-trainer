@@ -230,6 +230,24 @@ class DebugOverlay extends StatelessWidget {
                       .set(value);
                 },
               ),
+              SwitchListTile(
+                secondary: const Icon(Icons.bug_report, color: Colors.green),
+                title: const Text('Use Mock AI'),
+                subtitle: const Text('Bypass real AI calls'),
+                value: ref.watch(debugUseMockAiProvider),
+                onChanged: (value) {
+                  ref.read(debugUseMockAiProvider.notifier).set(value);
+                },
+              ),
+              SwitchListTile(
+                secondary: const Icon(Icons.alt_route, color: Colors.blue),
+                title: const Text('Alternate Mock Plan'),
+                subtitle: const Text('Toggle Plan A / Plan B'),
+                value: ref.watch(debugAlternateMockPlanProvider),
+                onChanged: (value) {
+                  ref.read(debugAlternateMockPlanProvider.notifier).toggle();
+                },
+              ),
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.flag, color: Colors.blue),

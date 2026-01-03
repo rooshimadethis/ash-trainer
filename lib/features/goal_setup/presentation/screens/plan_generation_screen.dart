@@ -33,6 +33,7 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen>
   late Timer _messageTimer;
 
   final List<String> _messages = [
+    'Building your future. This could take a minute or two... I\'m building something special.',
     'Analyzing your biological signatures... (No, I\'m not looking at your browser history.)',
     'Crunching volume thresholds. Science is heavy.',
     'Arguing with the algorithm about your rest days. I won.',
@@ -153,6 +154,7 @@ class _PlanGenerationScreenState extends ConsumerState<PlanGenerationScreen>
                     key: ValueKey<int>(_messageIndex),
                     text: _messages[_messageIndex],
                     showAvatar: false,
+                    fast: true,
                   ),
                 ),
               ],

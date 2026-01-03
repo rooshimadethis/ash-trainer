@@ -6,14 +6,34 @@ part 'debug_providers.g.dart';
 class DebugShowShimmerSkeleton extends _$DebugShowShimmerSkeleton {
   @override
   bool build() {
-    return false; // Default to false
-  }
-
-  void toggle() {
-    state = !state;
+    return false;
   }
 
   void set(bool value) {
     state = value;
+  }
+}
+
+@riverpod
+class DebugUseMockAi extends _$DebugUseMockAi {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void set(bool value) {
+    state = value;
+  }
+}
+
+@riverpod
+class DebugAlternateMockPlan extends _$DebugAlternateMockPlan {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void toggle() {
+    state = !state;
   }
 }

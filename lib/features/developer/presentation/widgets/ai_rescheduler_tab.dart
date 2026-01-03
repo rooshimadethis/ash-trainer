@@ -33,7 +33,7 @@ class _AIReschedulerTabState extends ConsumerState<AIReschedulerTab> {
       _isLoading = true;
       _output = 'Rescheduling...';
     });
-    ref.read(isAshThinkingProvider.notifier).state = true;
+    ref.read(uiThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -85,7 +85,7 @@ Context: ${context.toJson()}
       setState(() => _output = 'Error: $e');
     } finally {
       setState(() => _isLoading = false);
-      ref.read(isAshThinkingProvider.notifier).state = false;
+      ref.read(uiThinkingProvider.notifier).state = false;
     }
   }
 

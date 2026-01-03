@@ -7755,6 +7755,352 @@ class TimeOffsCompanion extends UpdateCompanion<TimeOffDTO> {
   }
 }
 
+class $AiTasksTable extends AiTasks with TableInfo<$AiTasksTable, AiTaskDTO> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $AiTasksTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+      'id', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _taskTypeMeta =
+      const VerificationMeta('taskType');
+  @override
+  late final GeneratedColumn<String> taskType = GeneratedColumn<String>(
+      'task_type', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+      'status', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  static const VerificationMeta _targetIdMeta =
+      const VerificationMeta('targetId');
+  @override
+  late final GeneratedColumn<String> targetId = GeneratedColumn<String>(
+      'target_id', aliasedName, true,
+      type: DriftSqlType.string, requiredDuringInsert: false);
+  static const VerificationMeta _createdAtMeta =
+      const VerificationMeta('createdAt');
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+      'created_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  static const VerificationMeta _updatedAtMeta =
+      const VerificationMeta('updatedAt');
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+      'updated_at', aliasedName, false,
+      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, taskType, status, targetId, createdAt, updatedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'ai_tasks';
+  @override
+  VerificationContext validateIntegrity(Insertable<AiTaskDTO> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('task_type')) {
+      context.handle(_taskTypeMeta,
+          taskType.isAcceptableOrUnknown(data['task_type']!, _taskTypeMeta));
+    } else if (isInserting) {
+      context.missing(_taskTypeMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('target_id')) {
+      context.handle(_targetIdMeta,
+          targetId.isAcceptableOrUnknown(data['target_id']!, _targetIdMeta));
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(_createdAtMeta,
+          createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta));
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(_updatedAtMeta,
+          updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta));
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  AiTaskDTO map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return AiTaskDTO(
+      id: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
+      taskType: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}task_type'])!,
+      status: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}status'])!,
+      targetId: attachedDatabase.typeMapping
+          .read(DriftSqlType.string, data['${effectivePrefix}target_id']),
+      createdAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}created_at'])!,
+      updatedAt: attachedDatabase.typeMapping
+          .read(DriftSqlType.dateTime, data['${effectivePrefix}updated_at'])!,
+    );
+  }
+
+  @override
+  $AiTasksTable createAlias(String alias) {
+    return $AiTasksTable(attachedDatabase, alias);
+  }
+}
+
+class AiTaskDTO extends DataClass implements Insertable<AiTaskDTO> {
+  final String id;
+  final String taskType;
+  final String status;
+  final String? targetId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  const AiTaskDTO(
+      {required this.id,
+      required this.taskType,
+      required this.status,
+      this.targetId,
+      required this.createdAt,
+      required this.updatedAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['task_type'] = Variable<String>(taskType);
+    map['status'] = Variable<String>(status);
+    if (!nullToAbsent || targetId != null) {
+      map['target_id'] = Variable<String>(targetId);
+    }
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  AiTasksCompanion toCompanion(bool nullToAbsent) {
+    return AiTasksCompanion(
+      id: Value(id),
+      taskType: Value(taskType),
+      status: Value(status),
+      targetId: targetId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(targetId),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory AiTaskDTO.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return AiTaskDTO(
+      id: serializer.fromJson<String>(json['id']),
+      taskType: serializer.fromJson<String>(json['taskType']),
+      status: serializer.fromJson<String>(json['status']),
+      targetId: serializer.fromJson<String?>(json['targetId']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'taskType': serializer.toJson<String>(taskType),
+      'status': serializer.toJson<String>(status),
+      'targetId': serializer.toJson<String?>(targetId),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  AiTaskDTO copyWith(
+          {String? id,
+          String? taskType,
+          String? status,
+          Value<String?> targetId = const Value.absent(),
+          DateTime? createdAt,
+          DateTime? updatedAt}) =>
+      AiTaskDTO(
+        id: id ?? this.id,
+        taskType: taskType ?? this.taskType,
+        status: status ?? this.status,
+        targetId: targetId.present ? targetId.value : this.targetId,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
+  AiTaskDTO copyWithCompanion(AiTasksCompanion data) {
+    return AiTaskDTO(
+      id: data.id.present ? data.id.value : this.id,
+      taskType: data.taskType.present ? data.taskType.value : this.taskType,
+      status: data.status.present ? data.status.value : this.status,
+      targetId: data.targetId.present ? data.targetId.value : this.targetId,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AiTaskDTO(')
+          ..write('id: $id, ')
+          ..write('taskType: $taskType, ')
+          ..write('status: $status, ')
+          ..write('targetId: $targetId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode =>
+      Object.hash(id, taskType, status, targetId, createdAt, updatedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is AiTaskDTO &&
+          other.id == this.id &&
+          other.taskType == this.taskType &&
+          other.status == this.status &&
+          other.targetId == this.targetId &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt);
+}
+
+class AiTasksCompanion extends UpdateCompanion<AiTaskDTO> {
+  final Value<String> id;
+  final Value<String> taskType;
+  final Value<String> status;
+  final Value<String?> targetId;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const AiTasksCompanion({
+    this.id = const Value.absent(),
+    this.taskType = const Value.absent(),
+    this.status = const Value.absent(),
+    this.targetId = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  AiTasksCompanion.insert({
+    required String id,
+    required String taskType,
+    required String status,
+    this.targetId = const Value.absent(),
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  })  : id = Value(id),
+        taskType = Value(taskType),
+        status = Value(status),
+        createdAt = Value(createdAt),
+        updatedAt = Value(updatedAt);
+  static Insertable<AiTaskDTO> custom({
+    Expression<String>? id,
+    Expression<String>? taskType,
+    Expression<String>? status,
+    Expression<String>? targetId,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (taskType != null) 'task_type': taskType,
+      if (status != null) 'status': status,
+      if (targetId != null) 'target_id': targetId,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  AiTasksCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? taskType,
+      Value<String>? status,
+      Value<String?>? targetId,
+      Value<DateTime>? createdAt,
+      Value<DateTime>? updatedAt,
+      Value<int>? rowid}) {
+    return AiTasksCompanion(
+      id: id ?? this.id,
+      taskType: taskType ?? this.taskType,
+      status: status ?? this.status,
+      targetId: targetId ?? this.targetId,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (taskType.present) {
+      map['task_type'] = Variable<String>(taskType.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (targetId.present) {
+      map['target_id'] = Variable<String>(targetId.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('AiTasksCompanion(')
+          ..write('id: $id, ')
+          ..write('taskType: $taskType, ')
+          ..write('status: $status, ')
+          ..write('targetId: $targetId, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7777,6 +8123,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       $MobilityModulesTable(this);
   late final $MobilityPhasesTable mobilityPhases = $MobilityPhasesTable(this);
   late final $TimeOffsTable timeOffs = $TimeOffsTable(this);
+  late final $AiTasksTable aiTasks = $AiTasksTable(this);
   late final UserDao userDao = UserDao(this as AppDatabase);
   late final GoalDao goalDao = GoalDao(this as AppDatabase);
   late final ConversationDao conversationDao =
@@ -7787,6 +8134,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       TrainingPlanDao(this as AppDatabase);
   late final BiomarkerDao biomarkerDao = BiomarkerDao(this as AppDatabase);
   late final TimeOffDao timeOffDao = TimeOffDao(this as AppDatabase);
+  late final AiTaskDao aiTaskDao = AiTaskDao(this as AppDatabase);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7805,7 +8153,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         strengthExercises,
         mobilityModules,
         mobilityPhases,
-        timeOffs
+        timeOffs,
+        aiTasks
       ];
   @override
   StreamQueryUpdateRules get streamUpdateRules => const StreamQueryUpdateRules(
@@ -13232,6 +13581,186 @@ typedef $$TimeOffsTableProcessedTableManager = ProcessedTableManager<
     (TimeOffDTO, BaseReferences<_$AppDatabase, $TimeOffsTable, TimeOffDTO>),
     TimeOffDTO,
     PrefetchHooks Function()>;
+typedef $$AiTasksTableCreateCompanionBuilder = AiTasksCompanion Function({
+  required String id,
+  required String taskType,
+  required String status,
+  Value<String?> targetId,
+  required DateTime createdAt,
+  required DateTime updatedAt,
+  Value<int> rowid,
+});
+typedef $$AiTasksTableUpdateCompanionBuilder = AiTasksCompanion Function({
+  Value<String> id,
+  Value<String> taskType,
+  Value<String> status,
+  Value<String?> targetId,
+  Value<DateTime> createdAt,
+  Value<DateTime> updatedAt,
+  Value<int> rowid,
+});
+
+class $$AiTasksTableFilterComposer
+    extends Composer<_$AppDatabase, $AiTasksTable> {
+  $$AiTasksTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get taskType => $composableBuilder(
+      column: $table.taskType, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<String> get targetId => $composableBuilder(
+      column: $table.targetId, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnFilters(column));
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnFilters(column));
+}
+
+class $$AiTasksTableOrderingComposer
+    extends Composer<_$AppDatabase, $AiTasksTable> {
+  $$AiTasksTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+      column: $table.id, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get taskType => $composableBuilder(
+      column: $table.taskType, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get status => $composableBuilder(
+      column: $table.status, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<String> get targetId => $composableBuilder(
+      column: $table.targetId, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+      column: $table.createdAt, builder: (column) => ColumnOrderings(column));
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+      column: $table.updatedAt, builder: (column) => ColumnOrderings(column));
+}
+
+class $$AiTasksTableAnnotationComposer
+    extends Composer<_$AppDatabase, $AiTasksTable> {
+  $$AiTasksTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get taskType =>
+      $composableBuilder(column: $table.taskType, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get targetId =>
+      $composableBuilder(column: $table.targetId, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$AiTasksTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $AiTasksTable,
+    AiTaskDTO,
+    $$AiTasksTableFilterComposer,
+    $$AiTasksTableOrderingComposer,
+    $$AiTasksTableAnnotationComposer,
+    $$AiTasksTableCreateCompanionBuilder,
+    $$AiTasksTableUpdateCompanionBuilder,
+    (AiTaskDTO, BaseReferences<_$AppDatabase, $AiTasksTable, AiTaskDTO>),
+    AiTaskDTO,
+    PrefetchHooks Function()> {
+  $$AiTasksTableTableManager(_$AppDatabase db, $AiTasksTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$AiTasksTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$AiTasksTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$AiTasksTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback: ({
+            Value<String> id = const Value.absent(),
+            Value<String> taskType = const Value.absent(),
+            Value<String> status = const Value.absent(),
+            Value<String?> targetId = const Value.absent(),
+            Value<DateTime> createdAt = const Value.absent(),
+            Value<DateTime> updatedAt = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AiTasksCompanion(
+            id: id,
+            taskType: taskType,
+            status: status,
+            targetId: targetId,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String id,
+            required String taskType,
+            required String status,
+            Value<String?> targetId = const Value.absent(),
+            required DateTime createdAt,
+            required DateTime updatedAt,
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              AiTasksCompanion.insert(
+            id: id,
+            taskType: taskType,
+            status: status,
+            targetId: targetId,
+            createdAt: createdAt,
+            updatedAt: updatedAt,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$AiTasksTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $AiTasksTable,
+    AiTaskDTO,
+    $$AiTasksTableFilterComposer,
+    $$AiTasksTableOrderingComposer,
+    $$AiTasksTableAnnotationComposer,
+    $$AiTasksTableCreateCompanionBuilder,
+    $$AiTasksTableUpdateCompanionBuilder,
+    (AiTaskDTO, BaseReferences<_$AppDatabase, $AiTasksTable, AiTaskDTO>),
+    AiTaskDTO,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13264,4 +13793,6 @@ class $AppDatabaseManager {
       $$MobilityPhasesTableTableManager(_db, _db.mobilityPhases);
   $$TimeOffsTableTableManager get timeOffs =>
       $$TimeOffsTableTableManager(_db, _db.timeOffs);
+  $$AiTasksTableTableManager get aiTasks =>
+      $$AiTasksTableTableManager(_db, _db.aiTasks);
 }

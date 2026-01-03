@@ -9,9 +9,14 @@ import 'package:ash_trainer/features/shared/presentation/providers/ash_status_pr
 import '../../../shared/domain/entities/time_off_entry.dart';
 import '../../../shared/domain/entities/training/workout.dart';
 import '../../../shared/domain/repositories/time_off_repository.dart';
-import '../../../training/presentation/providers/use_case_providers.dart';
 import '../../../shared/domain/entities/ai/context_models.dart'; // For PlanningMode
 import '../../../../core/utils/logger.dart';
+import 'package:ash_trainer/core/tasks/background_tasks.dart';
+import 'package:drift/drift.dart';
+import 'package:ash_trainer/data/datasources/local/drift_database.dart';
+import 'package:ash_trainer/data/providers/task_providers.dart';
+import 'package:ash_trainer/features/calendar/presentation/providers/calendar_provider.dart';
+import 'package:ash_trainer/features/developer/presentation/providers/debug_providers.dart';
 
 part 'time_off_provider.g.dart';
 
@@ -41,7 +46,7 @@ class TimeOffController extends _$TimeOffController {
       final isLongBreak = duration > 2;
 
       if (isLongBreak) {
-        ref.read(isAshThinkingProvider.notifier).state = true;
+        ref.read(uiThinkingProvider.notifier).state = true;
       }
 
       // 1. Delete conflicts only for short breaks without AI adjustment.
@@ -62,16 +67,48 @@ class TimeOffController extends _$TimeOffController {
 
       // 3. Trigger Re-plan if duration > 2 days
       if (isLongBreak) {
-        await _triggerAIAdjustment(
-          duration: duration,
-          fallbackStart: deleteConflicts ? start : null,
-          fallbackEnd: deleteConflicts ? end : null,
-        );
+        final activeGoal =
+            await ref.read(goalRepositoryProvider).getActiveGoal();
+        if (activeGoal != null) {
+          final taskId = "plan_gen_${activeGoal.id}";
+          await _triggerAIAdjustment(duration: duration);
+
+          // Polling loop to wait for background task completion in foreground
+          // This ensures the UI stays in 'thinking' mode and refreshes once done
+          bool isDone = false;
+          int attempts = 0;
+          final dao = ref.read(aiTaskDaoProvider);
+
+          while (!isDone && attempts < 60) {
+            await Future.delayed(const Duration(seconds: 2));
+            try {
+              final task = await dao.getTask(taskId);
+              if (task == null) {
+                isDone = true;
+              }
+            } catch (e) {
+              AppLogger.w(
+                  'Polling task status failed (could be transient lock): $e');
+            }
+            attempts++;
+          }
+
+          // After AI task completes, invalidate the workouts providers to fetch fresh data
+          // from the disk (since background isolate's Drift doesn't trigger foreground streams)
+          ref.invalidate(monthlyWorkoutsProvider);
+          ref.invalidate(weeklyWorkoutsProvider);
+          ref.invalidate(todayWorkoutProvider);
+          ref.invalidate(monthlyBlocksProvider);
+          ref.invalidate(weeklyBlocksProvider);
+          ref.invalidate(todayBlockProvider);
+          ref.invalidate(selectedWeekProvider); // Force re-calc
+        }
+
+        ref.read(uiThinkingProvider.notifier).state = false;
       }
 
       // 4. Refresh list
       final all = await ref.read(timeOffRepositoryProvider).getAllTimeOffs();
-      ref.read(isAshThinkingProvider.notifier).state = false;
       return all;
     });
   }
@@ -89,9 +126,7 @@ class TimeOffController extends _$TimeOffController {
 
       // Trigger re-plan if we are removing a significant break
       if (duration > 2) {
-        ref.read(isAshThinkingProvider.notifier).state = true;
         await _triggerAIAdjustment(duration: duration);
-        ref.read(isAshThinkingProvider.notifier).state = false;
       }
 
       return repo.getAllTimeOffs();
@@ -136,9 +171,9 @@ class TimeOffController extends _$TimeOffController {
       // If the original entry was a long break, shifting it might require a re-plan
       final duration = entry.endDate.difference(entry.startDate).inDays + 1;
       if (duration > 2) {
-        ref.read(isAshThinkingProvider.notifier).state = true;
+        ref.read(uiThinkingProvider.notifier).state = true;
         await _triggerAIAdjustment(duration: duration);
-        ref.read(isAshThinkingProvider.notifier).state = false;
+        ref.read(uiThinkingProvider.notifier).state = false;
       }
 
       return repo.getAllTimeOffs();
@@ -147,8 +182,6 @@ class TimeOffController extends _$TimeOffController {
 
   Future<void> _triggerAIAdjustment({
     required int duration,
-    DateTime? fallbackStart,
-    DateTime? fallbackEnd,
   }) async {
     try {
       final goalRepo = ref.read(goalRepositoryProvider);
@@ -159,27 +192,33 @@ class TimeOffController extends _$TimeOffController {
       if (activeGoal != null && currentUser != null) {
         AppLogger.i(
             'Time off changed ($duration days). Triggering AI Adjustment...');
-        final generatePlan = ref.read(generateTrainingPlanProvider);
-        await generatePlan.execute(
+
+        final taskId = "plan_gen_${activeGoal.id}";
+
+        // 1. Manually insert 'running' task from foreground isolate
+        // This ensures the shimmer appears IMMEDIATELY before Workmanager even starts
+        final dao = ref.read(aiTaskDaoProvider);
+        await dao.upsertTask(AiTasksCompanion(
+          id: Value(taskId),
+          taskType: Value(BackgroundTasks.planGenerationTask),
+          status: Value('running'),
+          targetId: Value(activeGoal.id),
+          createdAt: Value(DateTime.now()),
+          updatedAt: Value(DateTime.now()),
+        ));
+
+        // 2. Schedule the background job for reliability
+        await BackgroundTasks.schedulePlanGeneration(
           goalId: activeGoal.id,
           userId: currentUser.id,
           mode: PlanningMode.adjust,
+          useMockAi: ref.read(debugUseMockAiProvider),
+          alternateMockPlan: ref.read(debugAlternateMockPlanProvider),
         );
-        AppLogger.i('AI Adjustment complete.');
       }
     } catch (e, st) {
       AppLogger.e('Failed to trigger AI adjustment for time off changes',
           error: e, stackTrace: st);
-
-      // Fallback: If AI fails and we have a range to clear, do it manually
-      if (fallbackStart != null && fallbackEnd != null) {
-        final workoutRepo = ref.read(workoutRepositoryProvider);
-        final conflicts = await workoutRepo.getWorkoutsForDateRange(
-            startDate: fallbackStart, endDate: fallbackEnd);
-        for (var workout in conflicts) {
-          await workoutRepo.deleteWorkout(workout.id);
-        }
-      }
     }
   }
 }

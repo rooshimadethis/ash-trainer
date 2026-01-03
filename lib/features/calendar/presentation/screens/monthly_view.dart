@@ -65,7 +65,8 @@ class MonthlyView extends ConsumerWidget {
           // Month grid
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: (ref.watch(debugShowShimmerSkeletonProvider))
+            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
                 ? const SizedBox(
                     height: 200, child: CalendarGridSkeleton(isWeekly: false))
                 : monthlyWorkoutsAsync.when(
@@ -123,7 +124,8 @@ class MonthlyView extends ConsumerWidget {
           const SizedBox(height: 32),
 
           // Selected day workout list
-          (ref.watch(debugShowShimmerSkeletonProvider))
+          (ref.watch(debugShowShimmerSkeletonProvider) ||
+                  ref.watch(isAshThinkingProvider))
               ? const WorkoutListSkeleton()
               : monthlyWorkoutsAsync.when(
                   data: (workouts) => monthlyBlocksAsync.when(

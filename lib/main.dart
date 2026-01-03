@@ -13,8 +13,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_displaymode/flutter_displaymode.dart';
 import 'package:firebase_core/firebase_core.dart';
 
+import 'package:workmanager/workmanager.dart';
+import 'package:ash_trainer/core/tasks/background_tasks.dart';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Workmanager
+  await Workmanager().initialize(
+    callbackDispatcher,
+  );
 
   // Initialize Firebase
   await Firebase.initializeApp();

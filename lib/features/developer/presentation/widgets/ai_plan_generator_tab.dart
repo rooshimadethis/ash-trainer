@@ -135,7 +135,7 @@ class _AIPlanGeneratorTabState extends ConsumerState<AIPlanGeneratorTab> {
       _isLoading = true;
       _output = 'Generating plan...';
     });
-    ref.read(isAshThinkingProvider.notifier).state = true;
+    ref.read(uiThinkingProvider.notifier).state = true;
 
     try {
       final service = ref.read(aiServiceProvider);
@@ -264,7 +264,7 @@ $contextJson
       setState(() {
         _isLoading = false;
       });
-      ref.read(isAshThinkingProvider.notifier).state = false;
+      ref.read(uiThinkingProvider.notifier).state = false;
     }
   }
 

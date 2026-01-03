@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:firebase_ai/firebase_ai.dart';
+import '../../core/config/ai_mock_data.dart';
 
 import '../../features/shared/domain/entities/ai/context_models.dart';
 import '../../features/shared/domain/entities/ai/ai_types.dart';
@@ -12,11 +13,18 @@ import 'ai_service.dart';
 
 class AIServiceImpl implements AIService {
   late final GenerativeModel _model;
+  final bool useMockAi;
+  final bool alternateMockPlan;
 
-  AIServiceImpl() {
-    _model = FirebaseAI.googleAI().generativeModel(
-      model: AIConstants.modelName,
-    );
+  AIServiceImpl({
+    this.useMockAi = false,
+    this.alternateMockPlan = false,
+  }) {
+    if (!useMockAi) {
+      _model = FirebaseAI.googleAI().generativeModel(
+        model: AIConstants.modelName,
+      );
+    }
   }
 
   // --- Plan Generation ---
@@ -28,6 +36,26 @@ class AIServiceImpl implements AIService {
     required String taskPrompt,
     required Map<String, dynamic> responseSchema,
   }) async {
+    if (useMockAi) {
+      AppLogger.i('--- MOCK AI REQUEST (Generate Plan) ---');
+      await Future.delayed(const Duration(seconds: 2));
+
+      final mockPlanJson = alternateMockPlan
+          ? jsonDecode(AIMockData.planB)
+          : jsonDecode(AIMockData.planA);
+
+      final plan = TrainingPlan.fromJson(mockPlanJson);
+
+      return AIResponse(
+        data: plan,
+        text: alternateMockPlan ? AIMockData.planB : AIMockData.planA,
+        functionCall: null,
+        tokensUsed: 0,
+        totalCost: 0,
+        timestamp: DateTime.now(),
+      );
+    }
+
     final prompt = _buildPrompt(
       systemPrompt: systemPrompt,
       taskPrompt: taskPrompt,
