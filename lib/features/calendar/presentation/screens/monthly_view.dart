@@ -32,53 +32,69 @@ class MonthlyView extends ConsumerWidget {
     final startOfRange =
         focusedMonth.subtract(Duration(days: focusedMonth.weekday - 1));
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context, ref, focusedMonth),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future.wait([
+          ref.refresh(monthlyWorkoutsProvider.future),
+          ref.refresh(monthlyBlocksProvider.future),
+          ref.refresh(timeOffControllerProvider.future),
+        ]);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context, ref, focusedMonth),
 
-          if (!DateUtils.isSameMonth(focusedMonth, DateTime.now())) ...[
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                final now = DateTime.now();
-                ref.read(monthlyMonthProvider.notifier).state =
-                    DateTime(now.year, now.month, 1);
-              },
-              child: Center(
-                child: Text(
-                  'BACK TO TODAY',
-                  style: AppTextStyles.labelSmall.copyWith(
-                    color: Theme.of(context).primaryColor,
-                    letterSpacing: 1.2,
-                    fontWeight: FontWeight.w800,
+            if (!DateUtils.isSameMonth(focusedMonth, DateTime.now())) ...[
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: () {
+                  final now = DateTime.now();
+                  ref.read(monthlyMonthProvider.notifier).state =
+                      DateTime(now.year, now.month, 1);
+                },
+                child: Center(
+                  child: Text(
+                    'BACK TO TODAY',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-          // Month grid
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
-                    ref.watch(isAshThinkingProvider))
-                ? const SizedBox(
-                    height: 200, child: CalendarGridSkeleton(isWeekly: false))
-                : monthlyWorkoutsAsync.when(
-                    data: (workouts) => monthlyBlocksAsync.when(
-                      data: (blocks) => timeOffAsync.when(
-                        data: (timeOffs) => _buildMonthlyGrid(
-                          startOfRange,
-                          focusedMonth,
-                          workouts,
-                          blocks,
-                          timeOffs,
-                          selectedDate,
+            // Month grid
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                      ref.watch(isAshThinkingProvider))
+                  ? const SizedBox(
+                      height: 200, child: CalendarGridSkeleton(isWeekly: false))
+                  : monthlyWorkoutsAsync.when(
+                      data: (workouts) => monthlyBlocksAsync.when(
+                        data: (blocks) => timeOffAsync.when(
+                          data: (timeOffs) => _buildMonthlyGrid(
+                            startOfRange,
+                            focusedMonth,
+                            workouts,
+                            blocks,
+                            timeOffs,
+                            selectedDate,
+                          ),
+                          loading: () => const SizedBox(
+                              height: 200,
+                              child: CalendarGridSkeleton(isWeekly: false)),
+                          error: (err, stack) => SizedBox(
+                              height: 200,
+                              child: Center(child: Text('Error: $err'))),
                         ),
                         loading: () => const SizedBox(
                             height: 200,
@@ -94,47 +110,45 @@ class MonthlyView extends ConsumerWidget {
                           height: 200,
                           child: Center(child: Text('Error: $err'))),
                     ),
-                    loading: () => const SizedBox(
-                        height: 200,
-                        child: CalendarGridSkeleton(isWeekly: false)),
-                    error: (err, stack) => SizedBox(
-                        height: 200, child: Center(child: Text('Error: $err'))),
-                  ),
-          ),
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Ash context bubble
-          (ref.watch(debugShowShimmerSkeletonProvider) ||
-                  ref.watch(isAshThinkingProvider))
-              ? const AshChatBubble(text: "Thinking...", isThinking: true)
-              : monthlyWorkoutsAsync.when(
-                  data: (workouts) => monthlyBlocksAsync.when(
-                    data: (blocks) =>
-                        _buildContextBubble(workouts, blocks, selectedDate),
+            // Ash context bubble
+            (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
+                ? const AshChatBubble(text: "Thinking...", isThinking: true)
+                : monthlyWorkoutsAsync.when(
+                    data: (workouts) => monthlyBlocksAsync.when(
+                      data: (blocks) =>
+                          _buildContextBubble(workouts, blocks, selectedDate),
+                      loading: () => const AshChatBubble(
+                          text: "Thinking...", isThinking: true),
+                      error: (_, __) => const SizedBox.shrink(),
+                    ),
                     loading: () => const AshChatBubble(
                         text: "Thinking...", isThinking: true),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
-                  loading: () => const AshChatBubble(
-                      text: "Thinking...", isThinking: true),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
 
-          const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          // Selected day workout list
-          (ref.watch(debugShowShimmerSkeletonProvider) ||
-                  ref.watch(isAshThinkingProvider))
-              ? const WorkoutListSkeleton()
-              : monthlyWorkoutsAsync.when(
-                  data: (workouts) => monthlyBlocksAsync.when(
-                    data: (blocks) => timeOffAsync.when(
-                      data: (timeOffs) => SelectedDayWorkoutList(
-                        selectedDate: selectedDate,
-                        allWorkouts: workouts,
-                        blocks: blocks,
-                        timeOffs: timeOffs,
+            // Selected day workout list
+            (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
+                ? const WorkoutListSkeleton()
+                : monthlyWorkoutsAsync.when(
+                    data: (workouts) => monthlyBlocksAsync.when(
+                      data: (blocks) => timeOffAsync.when(
+                        data: (timeOffs) => SelectedDayWorkoutList(
+                          selectedDate: selectedDate,
+                          allWorkouts: workouts,
+                          blocks: blocks,
+                          timeOffs: timeOffs,
+                        ),
+                        loading: () => const WorkoutListSkeleton(),
+                        error: (err, stack) =>
+                            Center(child: Text('Error: $err')),
                       ),
                       loading: () => const WorkoutListSkeleton(),
                       error: (err, stack) => Center(child: Text('Error: $err')),
@@ -142,11 +156,9 @@ class MonthlyView extends ConsumerWidget {
                     loading: () => const WorkoutListSkeleton(),
                     error: (err, stack) => Center(child: Text('Error: $err')),
                   ),
-                  loading: () => const WorkoutListSkeleton(),
-                  error: (err, stack) => Center(child: Text('Error: $err')),
-                ),
-          const SizedBox(height: 32),
-        ],
+            const SizedBox(height: 32),
+          ],
+        ),
       ),
     );
   }

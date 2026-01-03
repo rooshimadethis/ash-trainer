@@ -28,25 +28,64 @@ class WeeklyView extends ConsumerWidget {
     final weeklyBlocksAsync = ref.watch(weeklyBlocksProvider);
     final timeOffAsync = ref.watch(timeOffControllerProvider);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(context, ref, startOfWeek),
-          const SizedBox(height: 20),
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future.wait([
+          ref.refresh(weeklyWorkoutsProvider.future),
+          ref.refresh(weeklyBlocksProvider.future),
+          ref.refresh(timeOffControllerProvider.future),
+        ]);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildHeader(context, ref, startOfWeek),
 
-          // Week grid
-          SizedBox(
-            height: 120,
-            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
-                    ref.watch(isAshThinkingProvider))
-                ? const CalendarGridSkeleton(isWeekly: true)
-                : weeklyWorkoutsAsync.when(
-                    data: (workouts) => weeklyBlocksAsync.when(
-                      data: (blocks) => timeOffAsync.when(
-                        data: (timeOffs) => _buildWeekGrid(startOfWeek,
-                            workouts, blocks, timeOffs, selectedDate),
+            if (!DateUtils.isSameDay(
+                startOfWeek,
+                DateTime.now()
+                    .subtract(Duration(days: DateTime.now().weekday - 1)))) ...[
+              const SizedBox(height: 8),
+              GestureDetector(
+                onTap: () {
+                  final now = DateTime.now();
+                  final today = DateTime(now.year, now.month, now.day);
+                  ref.read(selectedWeekProvider.notifier).state =
+                      today.subtract(Duration(days: now.weekday - 1));
+                },
+                child: Center(
+                  child: Text(
+                    'BACK TO TODAY',
+                    style: AppTextStyles.labelSmall.copyWith(
+                      color: Theme.of(context).primaryColor,
+                      letterSpacing: 1.2,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+            const SizedBox(height: 20),
+
+            // Week grid
+            SizedBox(
+              height: 120,
+              child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                      ref.watch(isAshThinkingProvider))
+                  ? const CalendarGridSkeleton(isWeekly: true)
+                  : weeklyWorkoutsAsync.when(
+                      data: (workouts) => weeklyBlocksAsync.when(
+                        data: (blocks) => timeOffAsync.when(
+                          data: (timeOffs) => _buildWeekGrid(startOfWeek,
+                              workouts, blocks, timeOffs, selectedDate),
+                          loading: () =>
+                              const CalendarGridSkeleton(isWeekly: true),
+                          error: (err, stack) =>
+                              Center(child: Text('Error: $err')),
+                        ),
                         loading: () =>
                             const CalendarGridSkeleton(isWeekly: true),
                         error: (err, stack) =>
@@ -55,44 +94,45 @@ class WeeklyView extends ConsumerWidget {
                       loading: () => const CalendarGridSkeleton(isWeekly: true),
                       error: (err, stack) => Center(child: Text('Error: $err')),
                     ),
-                    loading: () => const CalendarGridSkeleton(isWeekly: true),
-                    error: (err, stack) => Center(child: Text('Error: $err')),
-                  ),
-          ),
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Ash context bubble
-          (ref.watch(debugShowShimmerSkeletonProvider) ||
-                  ref.watch(isAshThinkingProvider))
-              ? const AshChatBubble(text: "Thinking...", isThinking: true)
-              : weeklyWorkoutsAsync.when(
-                  data: (workouts) => weeklyBlocksAsync.when(
-                    data: (blocks) =>
-                        _buildContextBubble(workouts, blocks, selectedDate),
+            // Ash context bubble
+            (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
+                ? const AshChatBubble(text: "Thinking...", isThinking: true)
+                : weeklyWorkoutsAsync.when(
+                    data: (workouts) => weeklyBlocksAsync.when(
+                      data: (blocks) =>
+                          _buildContextBubble(workouts, blocks, selectedDate),
+                      loading: () => const AshChatBubble(
+                          text: "Thinking...", isThinking: true),
+                      error: (_, __) => const SizedBox.shrink(),
+                    ),
                     loading: () => const AshChatBubble(
                         text: "Thinking...", isThinking: true),
                     error: (_, __) => const SizedBox.shrink(),
                   ),
-                  loading: () => const AshChatBubble(
-                      text: "Thinking...", isThinking: true),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
 
-          const SizedBox(height: 32),
+            const SizedBox(height: 32),
 
-          // Selected day workout list
-          (ref.watch(debugShowShimmerSkeletonProvider) ||
-                  ref.watch(isAshThinkingProvider))
-              ? const WorkoutListSkeleton()
-              : weeklyWorkoutsAsync.when(
-                  data: (workouts) => weeklyBlocksAsync.when(
-                    data: (blocks) => timeOffAsync.when(
-                      data: (timeOffs) => SelectedDayWorkoutList(
-                        selectedDate: selectedDate,
-                        allWorkouts: workouts,
-                        blocks: blocks,
-                        timeOffs: timeOffs,
+            // Selected day workout list
+            (ref.watch(debugShowShimmerSkeletonProvider) ||
+                    ref.watch(isAshThinkingProvider))
+                ? const WorkoutListSkeleton()
+                : weeklyWorkoutsAsync.when(
+                    data: (workouts) => weeklyBlocksAsync.when(
+                      data: (blocks) => timeOffAsync.when(
+                        data: (timeOffs) => SelectedDayWorkoutList(
+                          selectedDate: selectedDate,
+                          allWorkouts: workouts,
+                          blocks: blocks,
+                          timeOffs: timeOffs,
+                        ),
+                        loading: () => const WorkoutListSkeleton(),
+                        error: (err, stack) =>
+                            Center(child: Text('Error: $err')),
                       ),
                       loading: () => const WorkoutListSkeleton(),
                       error: (err, stack) => Center(child: Text('Error: $err')),
@@ -100,11 +140,9 @@ class WeeklyView extends ConsumerWidget {
                     loading: () => const WorkoutListSkeleton(),
                     error: (err, stack) => Center(child: Text('Error: $err')),
                   ),
-                  loading: () => const WorkoutListSkeleton(),
-                  error: (err, stack) => Center(child: Text('Error: $err')),
-                ),
-          const SizedBox(height: 32),
-        ],
+            const SizedBox(height: 32),
+          ],
+        ),
       ),
     );
   }

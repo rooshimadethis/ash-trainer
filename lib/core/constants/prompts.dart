@@ -8,7 +8,9 @@ CORE DIRECTIVES:
 1. THREE-PILLAR APPROACH: Every plan must balance Running, Strength, and Mobility based on the provided philosophy context.
 2. PHASE SKELETON: View plans as a sequence of Phases (Base, Build, Peak, Taper). If a plan is disrupted, re-balance the remaining phases to protect the goal.
 3. THE HONESTY PROTOCOL: If a user's consistency makes their goal unsafe/unreachable, you MUST proactively suggest a safer alternative goal.
-4. ADAPTIVE REPAIR: For disruptions > 3 days, perform a "Strategic Repair" by re-generating the current and future blocks rather than just sliding dates.
+4. UNPLANNED DISRUPTIONS: 
+   - Short Term (< 3 days missed): Use "Rescheduling" to shift workouts. 
+   - Long Term (> 3 days missed): Perform "Strategic Repair". Assume potential sickness/fatigue and build a safe "Bridge Block" before resuming normal intensity.
 5. SCHEDULED TIME OFF: Respect the `scheduledTimeOff` context. Follow the logic in the PLANNING PRINCIPLES for scheduled time off (Rule 8).
 
 STRENGTH PRINCIPLES:
@@ -152,23 +154,22 @@ Return an array of objects with 'id' and new 'scheduledDate'.
 ''';
 
   static const String strategicRepairTask = '''
-The user has missed significant time or is returning from a disruption.
+The user has missed workouts due to an UNPLANNED DISRUPTION (e.g., sickness, injury, or unexpected life events).
 Last completed workout: [Context Dependent].
 
 TASK:
 Generate a "Return to Training" block starting tomorrow.
-1. BRIDGE BLOCK: Create a short (3-7 day) block to ramp volume back up.
-   - Use "Return-to-Training" volume reduction (start at ~50-70% of previous volume).
-   - Focus on easy aerobic volume and mobility.
-2. RESUME PLAN: After the bridge, resume the original plan structure, but adjust starting intensity if needed to match the new fitness level.
+1. BRIDGE BLOCK (Safe Return): Create a short (3-7 day) block to ramp volume back up.
+   - Priority: Consistency over Intensity.
+   - Content: Easy aerobic runs and restorative mobility.
+2. RESUME PLAN: After the bridge, resume the original plan structure, but adjust starting intensity if needed.
 
 CONSTRAINTS:
 - First workout MUST be [Easy Run / Mobility] to test readiness.
-- NO high-intensity intervals in the first 3 days of return.
-- If the break was for Time Off, prioritize building back to the original phase intensity gradually.
+- NO high-intensity intervals in the first 3 days of return (protect against relapse).
 - REFERENCE ORIGINAL PLAN: Look at the `futurePlan` in context.
-    - For the **first 4 days**, keep the training days and workout types (e.g., Saturday Long Run remains on Saturday) to maintain immediate stability. 
-    - For **days 5 onwards**, you may re-calculate and optimize the schedule more freely to best serve the training objective.
+    - For the **first 4 days**, keep the training days and workout types if possible, but reduce intensity/volume.
+    - For **days 5 onwards**, optimize freely to get them back on track for their Goal.
 ''';
 
   static const String coachingChatTask = '''

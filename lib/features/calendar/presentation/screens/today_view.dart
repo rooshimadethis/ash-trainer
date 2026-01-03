@@ -48,129 +48,142 @@ class _TodayViewState extends ConsumerState<TodayView> {
     final now = DateTime.now();
     final dateStr = DateFormat('EEEE, MMM d').format(now);
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (ref.watch(isAshThinkingProvider) ||
-              ref.watch(debugShowShimmerSkeletonProvider))
-            const Padding(
-              padding: EdgeInsets.only(bottom: 24),
-              child: AshChatBubble(text: "Thinking...", isThinking: true),
-            ),
-          Center(
-            child: Column(
-              children: [
-                Text(
-                  'TODAY',
-                  style: AppTextStyles.label.copyWith(
-                    letterSpacing: 2.5,
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w900,
+    return RefreshIndicator(
+      onRefresh: () async {
+        // Force refresh of all data providers
+        await Future.wait([
+          ref.refresh(todayWorkoutProvider.future),
+          ref.refresh(todayBlockProvider.future),
+          ref.refresh(activeGoalProvider.future),
+          ref.refresh(todaysExternalWorkoutsProvider.future),
+        ]);
+      },
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (ref.watch(isAshThinkingProvider) ||
+                ref.watch(debugShowShimmerSkeletonProvider))
+              const Padding(
+                padding: EdgeInsets.only(bottom: 24),
+                child: AshChatBubble(text: "Thinking...", isThinking: true),
+              ),
+            Center(
+              child: Column(
+                children: [
+                  Text(
+                    'TODAY',
+                    style: AppTextStyles.label.copyWith(
+                      letterSpacing: 2.5,
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w900,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  dateStr,
-                  style: AppTextStyles.h2,
-                ),
+                  const SizedBox(height: 8),
+                  Text(
+                    dateStr,
+                    style: AppTextStyles.h2,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            _checkInCard(),
+            const SizedBox(height: 48),
+            Row(
+              children: [
+                const Icon(Icons.directions_run_rounded,
+                    color: AppColors.rose,
+                    size: 20), // Rose for workout intensity
+                const SizedBox(width: 8),
+                Text('Workout', style: AppTextStyles.h4),
               ],
             ),
-          ),
-          const SizedBox(height: 32),
-          _checkInCard(),
-          const SizedBox(height: 48),
-          Row(
-            children: [
-              const Icon(Icons.directions_run_rounded,
-                  color: AppColors.rose,
-                  size: 20), // Rose for workout intensity
-              const SizedBox(width: 8),
-              Text('Workout', style: AppTextStyles.h4),
-            ],
-          ),
-          const SizedBox(height: 12),
-          AnimatedSwitcher(
-            duration: AppAnimations.normal,
-            child: (ref.watch(debugShowShimmerSkeletonProvider) ||
-                    ref.watch(isAshThinkingProvider))
-                ? const WorkoutListSkeleton(
-                    key: ValueKey('loading'),
-                    cardCount: 1,
-                  )
-                : todayWorkoutAsync.when(
-                    data: (workout) {
-                      final block = ref.watch(todayBlockProvider).valueOrNull;
-                      if (workout == null) {
-                        return _restDayCard(block);
-                      }
-                      return AnimatedEntry(
-                        key: ValueKey(
-                            'today_workout_${workout.id}_${workout.status}'),
-                        child: WorkoutCard(
-                          workout: workout,
-                          useWorkoutColor: true,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    WorkoutDetailScreen(workout: workout),
-                              ),
-                            );
-                          },
-                        ),
-                      );
-                    },
-                    loading: () => const WorkoutListSkeleton(
+            const SizedBox(height: 12),
+            AnimatedSwitcher(
+              duration: AppAnimations.normal,
+              child: (ref.watch(debugShowShimmerSkeletonProvider) ||
+                      ref.watch(isAshThinkingProvider))
+                  ? const WorkoutListSkeleton(
                       key: ValueKey('loading'),
                       cardCount: 1,
+                    )
+                  : todayWorkoutAsync.when(
+                      data: (workout) {
+                        final block = ref.watch(todayBlockProvider).valueOrNull;
+                        if (workout == null) {
+                          return _restDayCard(block);
+                        }
+                        return AnimatedEntry(
+                          key: ValueKey(
+                              'today_workout_${workout.id}_${workout.status}'),
+                          child: WorkoutCard(
+                            workout: workout,
+                            useWorkoutColor: true,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      WorkoutDetailScreen(workout: workout),
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                      loading: () => const WorkoutListSkeleton(
+                        key: ValueKey('loading'),
+                        cardCount: 1,
+                      ),
+                      error: (err, stack) => Text(
+                        'Error loading workout: $err',
+                        key: const ValueKey('error'),
+                      ),
                     ),
-                    error: (err, stack) => Text(
-                      'Error loading workout: $err',
-                      key: const ValueKey('error'),
+            ),
+            const SizedBox(height: 48),
+            const RecoveryWidget(),
+            const SizedBox(height: 48),
+            Row(
+              children: [
+                const Icon(Icons.analytics_outlined,
+                    color: AppColors.blue,
+                    size: 20), // Blue for progress/analytics
+                const SizedBox(width: 8),
+                Text('Progress', style: AppTextStyles.h4),
+              ],
+            ),
+            const SizedBox(height: 12),
+            ref.watch(activeGoalProvider).when(
+                  data: (goal) {
+                    if (goal == null || goal.targetDate == null) {
+                      return const SizedBox.shrink();
+                    }
+                    return CountdownCard(
+                      goalName: goal.name,
+                      targetDate: goal.targetDate!,
+                      createdAt: goal.createdAt,
+                    );
+                  },
+                  loading: () => ShimmerWidget(
+                    child: Container(
+                      height: 100,
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white10 : Colors.black12,
+                        borderRadius:
+                            BorderRadius.circular(AppBorders.radiusLg),
+                      ),
                     ),
                   ),
-          ),
-          const SizedBox(height: 48),
-          const RecoveryWidget(),
-          const SizedBox(height: 48),
-          Row(
-            children: [
-              const Icon(Icons.analytics_outlined,
-                  color: AppColors.blue,
-                  size: 20), // Blue for progress/analytics
-              const SizedBox(width: 8),
-              Text('Progress', style: AppTextStyles.h4),
-            ],
-          ),
-          const SizedBox(height: 12),
-          ref.watch(activeGoalProvider).when(
-                data: (goal) {
-                  if (goal == null || goal.targetDate == null) {
-                    return const SizedBox.shrink();
-                  }
-                  return CountdownCard(
-                    goalName: goal.name,
-                    targetDate: goal.targetDate!,
-                    createdAt: goal.createdAt,
-                  );
-                },
-                loading: () => ShimmerWidget(
-                  child: Container(
-                    height: 100,
-                    decoration: BoxDecoration(
-                      color: isDark ? Colors.white10 : Colors.black12,
-                      borderRadius: BorderRadius.circular(AppBorders.radiusLg),
-                    ),
-                  ),
+                  error: (_, __) => const SizedBox.shrink(),
                 ),
-                error: (_, __) => const SizedBox.shrink(),
-              ),
-          const SizedBox(height: 48),
-          _detectedWorkoutsSection(ref),
-        ],
+            const SizedBox(height: 48),
+            _detectedWorkoutsSection(ref),
+          ],
+        ),
       ),
     );
   }
@@ -354,6 +367,7 @@ class _TodayViewState extends ConsumerState<TodayView> {
               ? intent
               : 'Good morning! Ready to tackle today? How are you feeling?',
         ),
+        /*
         const SizedBox(height: 12),
         Row(
           children: [
@@ -372,10 +386,12 @@ class _TodayViewState extends ConsumerState<TodayView> {
             ),
           ],
         ),
+        */
       ],
     );
   }
 
+  /*
   Widget _moodChip(String label) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return AshCard(
@@ -396,6 +412,7 @@ class _TodayViewState extends ConsumerState<TodayView> {
       ),
     );
   }
+  */
 
   Widget _restDayCard(TrainingBlock? block) {
     // The intent is already shown in the check-in bubble at the top.

@@ -7,7 +7,8 @@ import '../../../../data/providers/repository_providers.dart';
 final selectedWeekProvider = StateProvider<DateTime>((ref) {
   // Default to the start of the current week (Monday)
   final now = DateTime.now();
-  return now.subtract(Duration(days: now.weekday - 1));
+  final today = DateTime(now.year, now.month, now.day);
+  return today.subtract(Duration(days: now.weekday - 1));
 });
 
 /// Provider for fetching workouts for a specific date range (Reactive)
