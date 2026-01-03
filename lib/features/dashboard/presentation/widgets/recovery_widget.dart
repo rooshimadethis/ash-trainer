@@ -5,6 +5,8 @@ import '../../../../core/theme/text_styles.dart';
 import '../../../../core/theme/colors.dart';
 import '../providers/biomarkers_provider.dart';
 import '../../../../infrastructure/providers/service_providers.dart';
+import '../../../shared/presentation/widgets/shimmer_widget.dart';
+import '../../../../core/theme/borders.dart';
 
 class RecoveryWidget extends ConsumerWidget {
   const RecoveryWidget({super.key});
@@ -155,12 +157,47 @@ class RecoveryWidget extends ConsumerWidget {
   }
 
   Widget _buildLoadingSkeleton() {
-    return const AshCard(
-      child: SizedBox(
-        height: 120,
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
+    return ShimmerWidget(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.favorite_outline,
+                  color: AppColors.neutral, size: 20),
+              const SizedBox(width: 8),
+              Container(
+                height: 16,
+                width: 80,
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(AppBorders.radiusSm),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            height: 110,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.zero,
+              itemCount: 4,
+              separatorBuilder: (_, __) => const SizedBox(width: 12),
+              itemBuilder: (_, __) => Container(
+                width: 160,
+                decoration: BoxDecoration(
+                  color: Colors.white10,
+                  borderRadius: BorderRadius.circular(AppBorders.radiusLg),
+                  border: Border.all(
+                    color: Colors.white12,
+                    width: AppBorders.medium,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

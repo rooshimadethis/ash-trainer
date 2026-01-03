@@ -83,7 +83,7 @@ class WorkoutDao extends DatabaseAccessor<AppDatabase> with _$WorkoutDaoMixin {
     return (delete(workouts)
           ..where((t) =>
               t.goalId.equals(goalId) &
-              t.scheduledDate.isBiggerThan(Variable(fromDate))))
+              t.scheduledDate.isBiggerOrEqual(Variable(fromDate))))
         .go();
   }
 

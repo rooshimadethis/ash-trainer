@@ -12,6 +12,9 @@ import '../widgets/selected_day_workout_list.dart';
 import '../../../shared/domain/entities/time_off_entry.dart';
 import '../providers/time_off_provider.dart';
 import 'package:collection/collection.dart';
+import '../widgets/calendar_grid_skeleton.dart';
+import '../widgets/workout_list_skeleton.dart';
+import '../../../developer/presentation/providers/debug_providers.dart';
 
 class MonthlyView extends ConsumerWidget {
   const MonthlyView({super.key});
@@ -61,72 +64,83 @@ class MonthlyView extends ConsumerWidget {
           // Month grid
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8),
-            child: monthlyWorkoutsAsync.when(
-              data: (workouts) => monthlyBlocksAsync.when(
-                data: (blocks) => timeOffAsync.when(
-                  data: (timeOffs) => _buildMonthlyGrid(
-                    startOfRange,
-                    focusedMonth,
-                    workouts,
-                    blocks,
-                    timeOffs,
-                    selectedDate,
+            child: (ref.watch(debugShowShimmerSkeletonProvider))
+                ? const SizedBox(
+                    height: 200, child: CalendarGridSkeleton(isWeekly: false))
+                : monthlyWorkoutsAsync.when(
+                    data: (workouts) => monthlyBlocksAsync.when(
+                      data: (blocks) => timeOffAsync.when(
+                        data: (timeOffs) => _buildMonthlyGrid(
+                          startOfRange,
+                          focusedMonth,
+                          workouts,
+                          blocks,
+                          timeOffs,
+                          selectedDate,
+                        ),
+                        loading: () => const SizedBox(
+                            height: 200,
+                            child: CalendarGridSkeleton(isWeekly: false)),
+                        error: (err, stack) => SizedBox(
+                            height: 200,
+                            child: Center(child: Text('Error: $err'))),
+                      ),
+                      loading: () => const SizedBox(
+                          height: 200,
+                          child: CalendarGridSkeleton(isWeekly: false)),
+                      error: (err, stack) => SizedBox(
+                          height: 200,
+                          child: Center(child: Text('Error: $err'))),
+                    ),
+                    loading: () => const SizedBox(
+                        height: 200,
+                        child: CalendarGridSkeleton(isWeekly: false)),
+                    error: (err, stack) => SizedBox(
+                        height: 200, child: Center(child: Text('Error: $err'))),
                   ),
-                  loading: () => const SizedBox(
-                      height: 200,
-                      child: Center(child: CircularProgressIndicator())),
-                  error: (err, stack) => SizedBox(
-                      height: 200, child: Center(child: Text('Error: $err'))),
-                ),
-                loading: () => const SizedBox(
-                    height: 200,
-                    child: Center(child: CircularProgressIndicator())),
-                error: (err, stack) => SizedBox(
-                    height: 200, child: Center(child: Text('Error: $err'))),
-              ),
-              loading: () => const SizedBox(
-                  height: 200,
-                  child: Center(child: CircularProgressIndicator())),
-              error: (err, stack) => SizedBox(
-                  height: 200, child: Center(child: Text('Error: $err'))),
-            ),
           ),
 
           const SizedBox(height: 12),
 
           // Ash context bubble
-          monthlyWorkoutsAsync.when(
-            data: (workouts) => monthlyBlocksAsync.when(
-              data: (blocks) =>
-                  _buildContextBubble(workouts, blocks, selectedDate),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
+          (ref.watch(debugShowShimmerSkeletonProvider))
+              ? const AshChatBubble(text: "Thinking...", isThinking: true)
+              : monthlyWorkoutsAsync.when(
+                  data: (workouts) => monthlyBlocksAsync.when(
+                    data: (blocks) =>
+                        _buildContextBubble(workouts, blocks, selectedDate),
+                    loading: () => const AshChatBubble(
+                        text: "Thinking...", isThinking: true),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                  loading: () => const AshChatBubble(
+                      text: "Thinking...", isThinking: true),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
 
           const SizedBox(height: 32),
 
           // Selected day workout list
-          monthlyWorkoutsAsync.when(
-            data: (workouts) => monthlyBlocksAsync.when(
-              data: (blocks) => timeOffAsync.when(
-                data: (timeOffs) => SelectedDayWorkoutList(
-                  selectedDate: selectedDate,
-                  allWorkouts: workouts,
-                  blocks: blocks,
-                  timeOffs: timeOffs,
+          (ref.watch(debugShowShimmerSkeletonProvider))
+              ? const WorkoutListSkeleton()
+              : monthlyWorkoutsAsync.when(
+                  data: (workouts) => monthlyBlocksAsync.when(
+                    data: (blocks) => timeOffAsync.when(
+                      data: (timeOffs) => SelectedDayWorkoutList(
+                        selectedDate: selectedDate,
+                        allWorkouts: workouts,
+                        blocks: blocks,
+                        timeOffs: timeOffs,
+                      ),
+                      loading: () => const WorkoutListSkeleton(),
+                      error: (err, stack) => Center(child: Text('Error: $err')),
+                    ),
+                    loading: () => const WorkoutListSkeleton(),
+                    error: (err, stack) => Center(child: Text('Error: $err')),
+                  ),
+                  loading: () => const WorkoutListSkeleton(),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text('Error: $err')),
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
-          ),
           const SizedBox(height: 32),
         ],
       ),

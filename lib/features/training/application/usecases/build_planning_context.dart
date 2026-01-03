@@ -94,7 +94,10 @@ class BuildPlanningContext {
         break;
 
       case PlanningMode.adjust:
-        startDate = today.add(const Duration(days: 1));
+        final hasTimeOffToday = scheduledTimeOff.any(
+            (t) => !t.startDate.isAfter(today) && !t.endDate.isBefore(today));
+        startDate =
+            hasTimeOffToday ? today : today.add(const Duration(days: 1));
 
         // Find if there's an immediate (within 7 days) upcoming break
         final nearFutureBreak = scheduledTimeOff.firstWhere(
@@ -107,10 +110,10 @@ class BuildPlanningContext {
 
         if (nearFutureBreak.startDate.year != 2100) {
           instruction =
-              "User has scheduled time off starting in ${nearFutureBreak.startDate.difference(startDate).inDays} days. Re-plan from tomorrow. Adjust volume leading into the break, and ensure safe return after.";
+              "User has scheduled time off starting in ${nearFutureBreak.startDate.difference(startDate).inDays} days. Re-plan from ${hasTimeOffToday ? 'today' : 'tomorrow'}. Adjust volume leading into the break, and ensure safe return after.";
         } else {
           instruction =
-              "User schedule has changed. Re-plan from tomorrow onwards.";
+              "User schedule has changed. Re-plan from ${hasTimeOffToday ? 'today' : 'tomorrow'} onwards.";
         }
         break;
     }

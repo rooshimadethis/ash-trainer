@@ -6,6 +6,7 @@ import 'package:ash_trainer/features/goal_setup/presentation/screens/plan_genera
 import '../screens/ai_test_screen.dart';
 import 'package:ash_trainer/infrastructure/providers/service_providers.dart';
 import 'package:ash_trainer/data/providers/repository_providers.dart';
+import '../providers/debug_providers.dart';
 
 class DebugOverlay extends StatelessWidget {
   final Widget child;
@@ -216,6 +217,17 @@ class DebugOverlay extends StatelessWidget {
                 onTap: () {
                   Navigator.pop(dialogContext);
                   navigateToTestHub(3);
+                },
+              ),
+              const Divider(),
+              SwitchListTile(
+                secondary: const Icon(Icons.flash_on, color: Colors.amber),
+                title: const Text('Always Show Shimmer'),
+                value: ref.watch(debugShowShimmerSkeletonProvider),
+                onChanged: (value) {
+                  ref
+                      .read(debugShowShimmerSkeletonProvider.notifier)
+                      .set(value);
                 },
               ),
               const Divider(),

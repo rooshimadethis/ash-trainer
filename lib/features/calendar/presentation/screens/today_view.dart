@@ -17,6 +17,10 @@ import '../../../shared/domain/services/health_service.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/animations.dart';
 import '../../../shared/presentation/widgets/animated_entry.dart';
+import '../widgets/workout_list_skeleton.dart';
+import '../../../developer/presentation/providers/debug_providers.dart';
+import '../../../shared/presentation/widgets/shimmer_widget.dart';
+import '../../../../core/theme/borders.dart';
 
 class TodayView extends ConsumerStatefulWidget {
   const TodayView({super.key});
@@ -38,6 +42,7 @@ class _TodayViewState extends ConsumerState<TodayView> {
   @override
   Widget build(BuildContext context) {
     final todayWorkoutAsync = ref.watch(todayWorkoutProvider);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final now = DateTime.now();
     final dateStr = DateFormat('EEEE, MMM d').format(now);
 
@@ -80,38 +85,43 @@ class _TodayViewState extends ConsumerState<TodayView> {
           const SizedBox(height: 12),
           AnimatedSwitcher(
             duration: AppAnimations.normal,
-            child: todayWorkoutAsync.when(
-              data: (workout) {
-                if (workout == null) {
-                  return _restDayCard();
-                }
-                return AnimatedEntry(
-                  key:
-                      ValueKey('today_workout_${workout.id}_${workout.status}'),
-                  child: WorkoutCard(
-                    workout: workout,
-                    useWorkoutColor: true,
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              WorkoutDetailScreen(workout: workout),
+            child: (ref.watch(debugShowShimmerSkeletonProvider))
+                ? const WorkoutListSkeleton(
+                    key: ValueKey('loading'),
+                    cardCount: 1,
+                  )
+                : todayWorkoutAsync.when(
+                    data: (workout) {
+                      if (workout == null) {
+                        return _restDayCard();
+                      }
+                      return AnimatedEntry(
+                        key: ValueKey(
+                            'today_workout_${workout.id}_${workout.status}'),
+                        child: WorkoutCard(
+                          workout: workout,
+                          useWorkoutColor: true,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    WorkoutDetailScreen(workout: workout),
+                              ),
+                            );
+                          },
                         ),
                       );
                     },
+                    loading: () => const WorkoutListSkeleton(
+                      key: ValueKey('loading'),
+                      cardCount: 1,
+                    ),
+                    error: (err, stack) => Text(
+                      'Error loading workout: $err',
+                      key: const ValueKey('error'),
+                    ),
                   ),
-                );
-              },
-              loading: () => const Center(
-                key: ValueKey('loading'),
-                child: CircularProgressIndicator(),
-              ),
-              error: (err, stack) => Text(
-                'Error loading workout: $err',
-                key: const ValueKey('error'),
-              ),
-            ),
           ),
           const SizedBox(height: 48),
           const RecoveryWidget(),
@@ -137,9 +147,14 @@ class _TodayViewState extends ConsumerState<TodayView> {
                     createdAt: goal.createdAt,
                   );
                 },
-                loading: () => const SizedBox(
-                  height: 100,
-                  child: Center(child: CircularProgressIndicator()),
+                loading: () => ShimmerWidget(
+                  child: Container(
+                    height: 100,
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.white10 : Colors.black12,
+                      borderRadius: BorderRadius.circular(AppBorders.radiusLg),
+                    ),
+                  ),
                 ),
                 error: (_, __) => const SizedBox.shrink(),
               ),

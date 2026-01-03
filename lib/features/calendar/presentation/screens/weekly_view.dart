@@ -12,6 +12,9 @@ import 'package:intl/intl.dart';
 import '../widgets/calendar_nav_button.dart';
 import '../widgets/calendar_day_cell.dart';
 import '../widgets/selected_day_workout_list.dart';
+import '../widgets/calendar_grid_skeleton.dart';
+import '../widgets/workout_list_skeleton.dart';
+import '../../../developer/presentation/providers/debug_providers.dart';
 
 class WeeklyView extends ConsumerWidget {
   const WeeklyView({super.key});
@@ -35,58 +38,67 @@ class WeeklyView extends ConsumerWidget {
           // Week grid
           SizedBox(
             height: 120,
-            child: weeklyWorkoutsAsync.when(
-              data: (workouts) => weeklyBlocksAsync.when(
-                data: (blocks) => timeOffAsync.when(
-                  data: (timeOffs) => _buildWeekGrid(
-                      startOfWeek, workouts, blocks, timeOffs, selectedDate),
-                  loading: () =>
-                      const Center(child: CircularProgressIndicator()),
-                  error: (err, stack) => Center(child: Text('Error: $err')),
-                ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text('Error: $err')),
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
+            child: (ref.watch(debugShowShimmerSkeletonProvider))
+                ? const CalendarGridSkeleton(isWeekly: true)
+                : weeklyWorkoutsAsync.when(
+                    data: (workouts) => weeklyBlocksAsync.when(
+                      data: (blocks) => timeOffAsync.when(
+                        data: (timeOffs) => _buildWeekGrid(startOfWeek,
+                            workouts, blocks, timeOffs, selectedDate),
+                        loading: () =>
+                            const CalendarGridSkeleton(isWeekly: true),
+                        error: (err, stack) =>
+                            Center(child: Text('Error: $err')),
+                      ),
+                      loading: () => const CalendarGridSkeleton(isWeekly: true),
+                      error: (err, stack) => Center(child: Text('Error: $err')),
+                    ),
+                    loading: () => const CalendarGridSkeleton(isWeekly: true),
+                    error: (err, stack) => Center(child: Text('Error: $err')),
+                  ),
           ),
 
           const SizedBox(height: 12),
 
           // Ash context bubble
-          weeklyWorkoutsAsync.when(
-            data: (workouts) => weeklyBlocksAsync.when(
-              data: (blocks) =>
-                  _buildContextBubble(workouts, blocks, selectedDate),
-              loading: () => const SizedBox.shrink(),
-              error: (_, __) => const SizedBox.shrink(),
-            ),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
-          ),
+          (ref.watch(debugShowShimmerSkeletonProvider))
+              ? const AshChatBubble(text: "Thinking...", isThinking: true)
+              : weeklyWorkoutsAsync.when(
+                  data: (workouts) => weeklyBlocksAsync.when(
+                    data: (blocks) =>
+                        _buildContextBubble(workouts, blocks, selectedDate),
+                    loading: () => const AshChatBubble(
+                        text: "Thinking...", isThinking: true),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                  loading: () => const AshChatBubble(
+                      text: "Thinking...", isThinking: true),
+                  error: (_, __) => const SizedBox.shrink(),
+                ),
 
           const SizedBox(height: 32),
 
           // Selected day workout list
-          weeklyWorkoutsAsync.when(
-            data: (workouts) => weeklyBlocksAsync.when(
-              data: (blocks) => timeOffAsync.when(
-                data: (timeOffs) => SelectedDayWorkoutList(
-                  selectedDate: selectedDate,
-                  allWorkouts: workouts,
-                  blocks: blocks,
-                  timeOffs: timeOffs,
+          (ref.watch(debugShowShimmerSkeletonProvider))
+              ? const WorkoutListSkeleton()
+              : weeklyWorkoutsAsync.when(
+                  data: (workouts) => weeklyBlocksAsync.when(
+                    data: (blocks) => timeOffAsync.when(
+                      data: (timeOffs) => SelectedDayWorkoutList(
+                        selectedDate: selectedDate,
+                        allWorkouts: workouts,
+                        blocks: blocks,
+                        timeOffs: timeOffs,
+                      ),
+                      loading: () => const WorkoutListSkeleton(),
+                      error: (err, stack) => Center(child: Text('Error: $err')),
+                    ),
+                    loading: () => const WorkoutListSkeleton(),
+                    error: (err, stack) => Center(child: Text('Error: $err')),
+                  ),
+                  loading: () => const WorkoutListSkeleton(),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
                 ),
-                loading: () => const Center(child: CircularProgressIndicator()),
-                error: (err, stack) => Center(child: Text('Error: $err')),
-              ),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => Center(child: Text('Error: $err')),
-            ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error: $err')),
-          ),
           const SizedBox(height: 32),
         ],
       ),

@@ -24,7 +24,7 @@ final timeOffRepositoryProvider =
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef TimeOffRepositoryRef = AutoDisposeProviderRef<TimeOffRepository>;
-String _$timeOffControllerHash() => r'0a966471683c933d542a105566e696b8d17a574e';
+String _$timeOffControllerHash() => r'b3c6749c0eb6be952e12daaa080ad4f6be2704ab';
 
 /// See also [TimeOffController].
 @ProviderFor(TimeOffController)

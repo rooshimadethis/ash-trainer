@@ -13,12 +13,14 @@ class AshChatBubble extends StatefulWidget {
   final String text;
   final ChatBubbleSender sender;
   final Widget? icon;
+  final bool isThinking;
 
   const AshChatBubble({
     super.key,
     required this.text,
     this.sender = ChatBubbleSender.ash,
     this.icon,
+    this.isThinking = false,
   });
 
   @override
@@ -258,8 +260,10 @@ class _AshChatBubbleState extends State<AshChatBubble>
           width: 1.5,
         ),
         boxShadow: isDark ? AppShadows.retroDark : AppShadows.retro,
-        image: const DecorationImage(
-          image: AssetImage('assets/images/ash_red_panda.png'),
+        image: DecorationImage(
+          image: AssetImage(widget.isThinking
+              ? 'assets/images/ash_red_panda_thinking.png'
+              : 'assets/images/ash_red_panda.png'),
           fit: BoxFit.cover,
         ),
       ),
